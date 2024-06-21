@@ -4,21 +4,18 @@ from typing import Any, Optional, List
 from pydantic import BaseModel, Field
 
 from wexample_prompt.const.colors import COLOR_RESET
+from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 from wexample_prompt.utils.prompt_response import PromptResponse
 from wexample_prompt.utils.prompt_response_line import PromptResponseLine
 
 
-class IOManager(BaseModel):
+class IOManager(BaseModel, WithIndent):
     theme: AbstractPromptTheme = Field(
         default_factory=DefaultPromptTheme,
         description="Allow to customize colors")
     _tty_width: int = shutil.get_terminal_size().columns
-
-    @staticmethod
-    def print(message: Any, **kwargs: Any) -> None:
-        print(message, **kwargs)
 
     def print_separator(self, message: Optional[str] = None, char: str = "_"):
         self.print(message.ljust(self._tty_width, char))
@@ -37,4 +34,8 @@ class IOManager(BaseModel):
         else:
             color_type = response.message_type
 
-        self.print(f'{self.theme.get_color(color_type)}{line.message}{COLOR_RESET}')
+        self.print(f'{self.build_indent()}{self.theme.get_color(color_type)}{line.message}{COLOR_RESET}')
+
+    @staticmethod
+    def print(message: Any, **kwargs: Any) -> None:
+        print(message, **kwargs)
