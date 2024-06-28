@@ -16,7 +16,8 @@ setup(
         'Operating System :: OS Independent',
     ],
     install_requires=[
-        'pydantic'
+        'pydantic',
+        'rich',
     ],
     python_requires='>=3.6',
 )
