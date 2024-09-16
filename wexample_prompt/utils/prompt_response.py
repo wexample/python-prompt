@@ -33,6 +33,13 @@ class PromptResponse(BaseModel):
         return response
 
     @staticmethod
+    def from_message(message: str) -> 'PromptResponse':
+        response = PromptResponse()
+        response.lines = [PromptResponseLine(message=message)]
+
+        return response
+
+    @staticmethod
     def from_multiline_message(message: str) -> 'PromptResponse':
         response = PromptResponse()
         response.lines = response.split_lines(message)
