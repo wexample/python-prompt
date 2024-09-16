@@ -1,5 +1,5 @@
 import shutil
-from typing import Any, Optional, List
+from typing import Any, List
 
 from pydantic import BaseModel, Field
 
@@ -16,9 +16,6 @@ class IOManager(BaseModel, WithIndent):
         default_factory=DefaultPromptTheme,
         description="Allow to customize colors")
     _tty_width: int = shutil.get_terminal_size().columns
-
-    def print_separator(self, message: Optional[str] = None, char: str = "_"):
-        self.print(message.ljust(self._tty_width, char))
 
     def print_responses(self, responses: List[PromptResponse]) -> None:
         for response in responses:
