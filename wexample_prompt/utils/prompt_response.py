@@ -18,6 +18,12 @@ class PromptResponse(BaseModel):
         if message:
             self.lines = self.split_lines(message)
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}(message_type={self.message_type})>"
+
+    def __str__(self) -> str:
+        return f"{self.__repr__}"
+
     @staticmethod
     def split_lines(message: str) -> List[PromptResponseLine]:
         lines = message.split(os.linesep)
