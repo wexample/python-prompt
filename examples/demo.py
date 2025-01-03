@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
-from wexample_prompt.common.prompt_response import PromptResponse
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.formats import TableFormat, ListFormat, TreeFormat, ProgressFormat
+from wexample_prompt.responses import (
+    BasePromptResponse,
+    TablePromptResponse,
+    ListPromptResponse,
+    TreePromptResponse,
+    ProgressPromptResponse
+)
 
 
 def demo_styles():
@@ -18,7 +24,7 @@ def demo_styles():
         PromptResponseSegment(text="Bold+Italic", styles=[TextStyle.BOLD, TextStyle.ITALIC]),
     ]
     line = PromptResponseLine(segments=segments)
-    response = PromptResponse(lines=[line])
+    response = BasePromptResponse(lines=[line])
     print(response.render())
 
 
@@ -31,7 +37,7 @@ def demo_table():
         ["Jane", "25", "San Francisco"],
         ["Bob", "35", "Chicago"]
     ]
-    table = TableFormat.create(data)
+    table = TablePromptResponse.create(data)
     print(table.render())
 
 
@@ -45,7 +51,7 @@ def demo_list():
         "  • Sub-item 1",
         "  • Sub-item 2"
     ]
-    list_output = ListFormat.create(items)
+    list_output = ListPromptResponse.create(items)
     print(list_output.render())
 
 
@@ -63,7 +69,7 @@ def demo_tree():
             }
         }
     }
-    tree = TreeFormat.create(data)
+    tree = TreePromptResponse.create(data)
     print(tree.render())
 
 
@@ -71,7 +77,7 @@ def demo_progress():
     """Demonstrate progress bar."""
     print("\n=== Progress Bar ===")
     for i in range(0, 101, 20):
-        progress = ProgressFormat.create(100, i)
+        progress = ProgressPromptResponse.create(100, i)
         print(progress.render() + "\r", end="", flush=True)
         import time
         time.sleep(0.5)
@@ -84,7 +90,7 @@ def demo_message_types():
     for msg_type in MessageType:
         segment = PromptResponseSegment(text=f"This is a {msg_type.value} message")
         line = PromptResponseLine(segments=[segment], line_type=msg_type)
-        response = PromptResponse(lines=[line], message_type=msg_type)
+        response = BasePromptResponse(lines=[line], message_type=msg_type)
         print(response.render())
 
 
