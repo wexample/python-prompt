@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, ClassVar
 from pydantic import BaseModel, Field
 
 from wexample_prompt.enums.message_type import MessageType
@@ -36,3 +36,8 @@ class BasePromptResponse(AbstractPromptResponse):
             metadata={**self.metadata, **other.metadata},
             message_type=self.message_type
         )
+
+    @classmethod
+    def create(cls, lines: List[PromptResponseLine]) -> 'BasePromptResponse':
+        """Create a new response with the given lines."""
+        return cls(lines=lines)

@@ -1,4 +1,3 @@
-from typing import Optional, List
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
