@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from wexample_prompt.const.types import LineDict
 from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.utils.prompt_response_line import PromptResponseLine
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
 
 class PromptResponse(BaseModel):

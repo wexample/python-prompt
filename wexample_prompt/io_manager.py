@@ -7,8 +7,8 @@ from wexample_prompt.const.colors import COLOR_RESET
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
-from wexample_prompt.utils.prompt_response import PromptResponse
-from wexample_prompt.utils.prompt_response_line import PromptResponseLine
+from wexample_prompt.common.prompt_response import PromptResponse
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
 
 class IOManager(BaseModel, WithIndent):
