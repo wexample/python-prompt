@@ -1,6 +1,7 @@
+from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
-from wexample_prompt.core.colors import ColorManager, TerminalColor
 
 
 class DefaultPromptTheme(AbstractPromptTheme):

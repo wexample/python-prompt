@@ -11,6 +11,8 @@ from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptT
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.responses import BasePromptResponse
+from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.color_manager import ColorManager
 
 
 class IOManager(BaseModel, WithIndent):
@@ -22,9 +24,16 @@ class IOManager(BaseModel, WithIndent):
     )
     
     # Private attributes
-    _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
-    _stdout: TextIO = PrivateAttr(default=sys.stdout)
-    _stdin: TextIO = PrivateAttr(default=sys.stdin)
+    _tty_width: int = PrivateAttr()
+    _stdout: TextIO = PrivateAttr()
+    _stdin: TextIO = PrivateAttr()
+    
+    def __init__(self, **data):
+        """Initialize IOManager with default values for private attributes."""
+        super().__init__(**data)
+        self._tty_width = shutil.get_terminal_size().columns
+        self._stdout = sys.stdout
+        self._stdin = sys.stdin
     
     class Config:
         """Pydantic configuration."""
@@ -60,12 +69,23 @@ class IOManager(BaseModel, WithIndent):
             response: Parent response containing the line
         """
         # Get color based on line type or response type
-        color = self.theme.get_color(line.line_type or response.message_type)
+        message_type = line.line_type or response.message_type
+        color = ColorManager.MESSAGE_COLORS.get(message_type, TerminalColor.RESET)
+        
+        # Create context with current terminal width
+        context = PromptContext(
+            terminal_width=self._tty_width,
+            is_tty=True
+        )
         
         # Build the line with indentation and color
-        rendered_line = line.render()
+        rendered_line = line.render(context)
         if rendered_line:
-            formatted_line = f"{self.build_indent()}{color}{rendered_line}{TerminalColor.RESET.value}"
+            # Apply color only if supported
+            if ColorManager.supports_color():
+                formatted_line = f"{self.build_indent()}{color.value}{rendered_line}{TerminalColor.RESET.value}"
+            else:
+                formatted_line = f"{self.build_indent()}{rendered_line}"
             self.print(formatted_line)
     
     def get_input(self, prompt: str = "") -> str:
