@@ -83,18 +83,6 @@ def demo_tree():
     tree = TreePromptResponse.create(data)
     print(tree.render())
 
-
-def demo_progress():
-    """Demonstrate progress bar."""
-    print("\n=== Progress Bar ===")
-    for i in range(0, 101, 20):
-        progress = ProgressPromptResponse.create(100, i)
-        print(progress.render() + "\r", end="", flush=True)
-        import time
-        time.sleep(0.5)
-    print()
-
-
 def demo_message_types():
     """Demonstrate different message types."""
     print("\n=== Message Types ===")
@@ -113,6 +101,16 @@ def demo_message_types():
     for message in messages:
         print(message.render())
 
+def demo_progress():
+    """Demonstrate progress bar."""
+    print("\n=== Progress Bar ===")
+    for i in range(0, 101, 20):
+        progress = ProgressPromptResponse.create(100, i)
+        print(progress.render() + "\r", end="", flush=True)
+        import time
+        time.sleep(0.5)
+    print()
+
 
 if __name__ == "__main__":
     print("=== Prompt Response Demo ===")
@@ -120,5 +118,5 @@ if __name__ == "__main__":
     demo_table()
     demo_list()
     demo_tree()
-    demo_progress()
     demo_message_types()
+    demo_progress()
