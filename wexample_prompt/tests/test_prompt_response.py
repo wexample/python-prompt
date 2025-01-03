@@ -6,7 +6,7 @@ from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response import PromptResponse
+from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 
@@ -16,7 +16,7 @@ class TestPromptResponse:
         line = PromptResponseLine(segments=[
             PromptResponseSegment(text="Hello World")
         ])
-        response = PromptResponse(
+        response = BasePromptResponse(
             lines=[line],
             response_type=ResponseType.PLAIN
         )
@@ -26,7 +26,7 @@ class TestPromptResponse:
     def test_create_table_response(self):
         """Test creating a table response."""
         data = [["Name", "Age"], ["John", "30"], ["Jane", "25"]]
-        response = PromptResponse.table(data)
+        response = BasePromptResponse.table(data)
         assert response.response_type == ResponseType.TABLE
         assert len(response.lines) == 3
         assert "Name" in str(response.lines[0])
@@ -34,7 +34,7 @@ class TestPromptResponse:
     def test_create_list_response(self):
         """Test creating a list response."""
         items = ["First", "Second", "Third"]
-        response = PromptResponse.list(items)
+        response = BasePromptResponse.list(items)
         assert response.response_type == ResponseType.LIST
         assert len(response.lines) == 3
         assert "•" in str(response.lines[0])  # Default bullet point
@@ -44,7 +44,7 @@ class TestPromptResponse:
         line = PromptResponseLine(segments=[
             PromptResponseSegment(text="Wide Text")
         ])
-        response = PromptResponse(
+        response = BasePromptResponse(
             lines=[line],
             response_type=ResponseType.PLAIN
         )
@@ -57,13 +57,13 @@ class TestPromptResponse:
 
     def test_response_combination(self):
         """Test combining two responses."""
-        resp1 = PromptResponse(
+        resp1 = BasePromptResponse(
             lines=[PromptResponseLine(segments=[
                 PromptResponseSegment(text="First")
             ])],
             response_type=ResponseType.PLAIN
         )
-        resp2 = PromptResponse(
+        resp2 = BasePromptResponse(
             lines=[PromptResponseLine(segments=[
                 PromptResponseSegment(text="Second")
             ])],
@@ -74,7 +74,7 @@ class TestPromptResponse:
 
     def test_styled_response(self):
         """Test applying style to entire response."""
-        response = PromptResponse(
+        response = BasePromptResponse(
             lines=[PromptResponseLine(segments=[
                 PromptResponseSegment(text="Text")
             ])],
@@ -93,7 +93,7 @@ class TestPromptResponse:
                 }
             }
         }
-        response = PromptResponse.tree(tree_data)
+        response = BasePromptResponse.tree(tree_data)
         assert response.response_type == ResponseType.TREE
         assert len(response.lines) > 1
         # Check for tree characters
@@ -101,7 +101,7 @@ class TestPromptResponse:
 
     def test_progress_response(self):
         """Test creating a progress response."""
-        response = PromptResponse.progress(total=100, current=50)
+        response = BasePromptResponse.progress(total=100, current=50)
         assert response.response_type == ResponseType.PROGRESS
         rendered = str(response.lines[0])
         assert "[" in rendered and "]" in rendered  # Progress bar brackets

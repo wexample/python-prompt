@@ -5,10 +5,16 @@ from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class BasePromptResponse(BaseModel):
-    """Base class for all prompt responses."""
+class BasePromptResponse(AbstractPromptResponse):
+    """Base class for all concrete prompt responses.
+    
+    This class inherits from AbstractPromptResponse and serves as the base
+    for all concrete response implementations. It provides the basic functionality
+    for rendering and manipulating prompt responses.
+    """
     lines: List[PromptResponseLine]
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)

@@ -28,6 +28,13 @@ class PromptResponseSegment(BaseModel):
             styles=list(set(self.styles + [style]))
         )
     
+    def with_styles(self, additional_styles: List[TextStyle]) -> 'PromptResponseSegment':
+        """Create a new segment with additional styles."""
+        return PromptResponseSegment(
+            text=self.text,
+            styles=list(set(self.styles + additional_styles))
+        )
+    
     def render(self, context: 'PromptContext') -> str:
         """Render the segment with its styles."""
         from wexample_prompt.common.prompt_context import PromptContext
