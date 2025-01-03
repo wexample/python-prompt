@@ -36,15 +36,22 @@ class PromptResponseSegment(BaseModel):
         if not context.should_use_color():
             return result
             
-        # Apply styles in order
+        # Apply all style codes first
+        style_codes = []
         for style in self.styles:
-            result = self._apply_ansi_style(result, style)
+            code = self._get_ansi_code(style)
+            if code:
+                style_codes.append(code)
+                
+        # Only add styles if we have any
+        if style_codes:
+            result = f"{''.join(style_codes)}{result}\033[0m"
             
         return result
     
     @staticmethod
-    def _apply_ansi_style(text: str, style: TextStyle) -> str:
-        """Apply ANSI style codes to text."""
+    def _get_ansi_code(style: TextStyle) -> str:
+        """Get ANSI style code without reset."""
         style_codes = {
             TextStyle.BOLD: "\033[1m",
             TextStyle.ITALIC: "\033[3m",
@@ -54,4 +61,4 @@ class PromptResponseSegment(BaseModel):
             TextStyle.REVERSE: "\033[7m",
             TextStyle.HIDDEN: "\033[8m",
         }
-        return f"{style_codes[style]}{text}\033[0m"
+        return style_codes.get(style, "")
