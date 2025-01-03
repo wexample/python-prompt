@@ -103,10 +103,10 @@ def demo_message_types():
         CriticalPromptResponse.create("This is a critical message"),
         DebugPromptResponse.create("This is a debug message"),
         ErrorPromptResponse.create("This is an error message"),
-        FailurePromptResponse.create("This is a failure message"),
+        FailurePromptResponse.create("Operation failed: Unable to connect"),
         InfoPromptResponse.create("This is an info message"),
         LogPromptResponse.create("This is a log message"),
-        SuccessPromptResponse.create("This is a success message"),
+        SuccessPromptResponse.create("Operation completed successfully"),
         TaskPromptResponse.create("This is a task message"),
         WarningPromptResponse.create("This is a warning message")
     ]
