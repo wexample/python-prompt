@@ -3,9 +3,9 @@
 from wexample_prompt.common.prompt_response import PromptResponse
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.formats import TableFormat, ListFormat, TreeFormat, ProgressFormat
 
 
 def demo_styles():
@@ -31,8 +31,8 @@ def demo_table():
         ["Jane", "25", "San Francisco"],
         ["Bob", "35", "Chicago"]
     ]
-    response = PromptResponse.table(data)
-    print(response.render())
+    table = TableFormat.create(data)
+    print(table.render())
 
 
 def demo_list():
@@ -45,8 +45,8 @@ def demo_list():
         "  • Sub-item 1",
         "  • Sub-item 2"
     ]
-    response = PromptResponse.list(items)
-    print(response.render())
+    list_output = ListFormat.create(items)
+    print(list_output.render())
 
 
 def demo_tree():
@@ -63,16 +63,16 @@ def demo_tree():
             }
         }
     }
-    response = PromptResponse.tree(data)
-    print(response.render())
+    tree = TreeFormat.create(data)
+    print(tree.render())
 
 
 def demo_progress():
     """Demonstrate progress bar."""
     print("\n=== Progress Bar ===")
     for i in range(0, 101, 20):
-        response = PromptResponse.progress(100, i)
-        print(response.render() + "\r", end="", flush=True)
+        progress = ProgressFormat.create(100, i)
+        print(progress.render() + "\r", end="", flush=True)
         import time
         time.sleep(0.5)
     print()
