@@ -4,13 +4,24 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
-from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.responses import (
     BasePromptResponse,
     TablePromptResponse,
     ListPromptResponse,
     TreePromptResponse,
     ProgressPromptResponse
+)
+from wexample_prompt.responses.messages import (
+    AlertPromptResponse,
+    CriticalPromptResponse,
+    DebugPromptResponse,
+    ErrorPromptResponse,
+    FailurePromptResponse,
+    InfoPromptResponse,
+    LogPromptResponse,
+    SuccessPromptResponse,
+    TaskPromptResponse,
+    WarningPromptResponse
 )
 
 
@@ -87,11 +98,20 @@ def demo_progress():
 def demo_message_types():
     """Demonstrate different message types."""
     print("\n=== Message Types ===")
-    for msg_type in MessageType:
-        segment = PromptResponseSegment(text=f"This is a {msg_type.value} message")
-        line = PromptResponseLine(segments=[segment], line_type=msg_type)
-        response = BasePromptResponse(lines=[line], message_type=msg_type)
-        print(response.render())
+    messages = [
+        AlertPromptResponse.create("This is an alert message"),
+        CriticalPromptResponse.create("This is a critical message"),
+        DebugPromptResponse.create("This is a debug message"),
+        ErrorPromptResponse.create("This is an error message"),
+        FailurePromptResponse.create("This is a failure message"),
+        InfoPromptResponse.create("This is an info message"),
+        LogPromptResponse.create("This is a log message"),
+        SuccessPromptResponse.create("This is a success message"),
+        TaskPromptResponse.create("This is a task message"),
+        WarningPromptResponse.create("This is a warning message")
+    ]
+    for message in messages:
+        print(message.render())
 
 
 if __name__ == "__main__":
