@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 from wexample_prompt.enums.message_type import MessageType
@@ -5,6 +7,8 @@ from wexample_prompt.enums.message_type import MessageType
 
 class TaskPromptResponse(BaseMessageResponse):
     """Response for task messages."""
+
+    SYMBOL: ClassVar[str] = "📋"
 
     @classmethod
     def create(cls, text: str) -> 'TaskPromptResponse':
