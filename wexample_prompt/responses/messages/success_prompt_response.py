@@ -1,5 +1,7 @@
-from typing import List, ClassVar
+from typing import ClassVar
 
+from wexample_prompt.common.color_manager import ColorManager
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -21,11 +23,18 @@ class SuccessPromptResponse(BaseMessageResponse):
         Returns:
             SuccessPromptResponse: A new success response with checkmark
         """
-        # Create the checkmark segment
-        checkmark = PromptResponseSegment(text=f"{cls.CHECKMARK} ")
+        # Get the success color
+        color = ColorManager.get_message_color(cls.get_message_type())
         
-        # Create the message segment
-        message = PromptResponseSegment(text=text)
+        # Create the checkmark segment with color
+        checkmark = PromptResponseSegment(
+            text=ColorManager.colorize(f"{cls.CHECKMARK} ", color, TerminalColor.BOLD)
+        )
+        
+        # Create the message segment with color
+        message = PromptResponseSegment(
+            text=ColorManager.colorize(text, color)
+        )
         
         # Create a line with both segments
         line = PromptResponseLine(

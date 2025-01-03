@@ -1,9 +1,9 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field, validator
 
+from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.enums.message_color import MessageColor
 from wexample_prompt.common.prompt_layout import PromptLayout
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
@@ -41,17 +41,12 @@ class PromptResponseLine(BaseModel):
         
         # Apply message type color if present and colors are enabled
         if self.line_type and context.should_use_color():
-            color_code = MessageColor.get_color_code(self.line_type)
-            if color_code:
-                result = f"{color_code}{result}\033[0m"
+            color = ColorManager.get_message_color(self.line_type)
+            result = ColorManager.colorize(result, color)
         
         # Apply indentation
         if self.indent_level > 0:
             result = "  " * self.indent_level + result
-            
-        # Apply layout if present
-        if self.layout:
-            result = self.layout.apply_to_text(result)
             
         return result
     

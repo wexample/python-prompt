@@ -1,9 +1,9 @@
+"""ANSI color and style codes for terminal output."""
 from enum import Enum
-from typing import Any, Type
 
 
-class Color(Enum):
-    """ANSI color codes for terminal output."""
+class TerminalColor(Enum):
+    """ANSI color and style codes for terminal output."""
     
     # Standard colors
     BLACK = "\033[0;30m"
@@ -15,7 +15,7 @@ class Color(Enum):
     CYAN = "\033[0;36m"
     WHITE = "\033[0;37m"
     
-    # Light colors
+    # Light/Bright colors
     LIGHT_RED = "\033[0;91m"
     LIGHT_GREEN = "\033[0;92m"
     LIGHT_YELLOW = "\033[0;93m"
@@ -23,15 +23,30 @@ class Color(Enum):
     LIGHT_MAGENTA = "\033[0;95m"
     LIGHT_CYAN = "\033[0;96m"
     
-    # Special colors
+    # Grayscale
     GRAY = "\033[0;90m"
     LIGHT_GRAY = "\033[0;37m"
+    
+    # Special
     DEFAULT = "\033[0m"
     RESET = "\033[0m"
     
+    # Text styles
+    BOLD = "\033[1m"
+    DIM = "\033[2m"
+    ITALIC = "\033[3m"
+    UNDERLINE = "\033[4m"
+    
     @classmethod
-    def get_color(cls, name: str) -> Type["Color"[Any]] | "Color":
-        """Get color by name, case-insensitive."""
+    def get_color(cls, name: str) -> "TerminalColor":
+        """Get color by name, case-insensitive.
+        
+        Args:
+            name (str): The name of the color to get
+            
+        Returns:
+            TerminalColor: The color enum value, or DEFAULT if not found
+        """
         try:
             return cls[name.upper()]
         except KeyError:

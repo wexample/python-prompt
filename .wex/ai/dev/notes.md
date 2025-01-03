@@ -22,20 +22,20 @@ The wexample-prompt package aims to be the centralized place for managing all te
 ### 3. Message Types and Formatting
 - [ ] Warning messages with parameters and fatal/trace options
 - [ ] Error messages with logger integration
-- [ ] Success messages with checkmark symbols
-- [ ] Failure messages with X symbols
+- [x] Success messages with checkmark symbols
+- [x] Failure messages with X symbols
 - [ ] Info messages with optional text
 - [ ] Command suggestion messages
 - [ ] Multiple command suggestions support
 
 ### 4. Color System
-- [ ] ANSI color support:
-  - [ ] CYAN (command suggestions)
-  - [ ] GRAY (log messages)
-  - [ ] GREEN (success)
-  - [ ] RED (errors)
-  - [ ] YELLOW (warnings)
-  - [ ] RESET support
+- [x] ANSI color support:
+  - [x] CYAN (command suggestions)
+  - [x] GRAY (log messages)
+  - [x] GREEN (success)
+  - [x] RED (errors)
+  - [x] YELLOW (warnings)
+  - [x] RESET support
 - [ ] Color theme customization
 - [ ] TTY detection for color support
 
