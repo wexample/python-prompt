@@ -15,6 +15,8 @@ from wexample_prompt.responses import (
     SubtitleResponse,
     ProgressPromptResponse,
     SuggestionsPromptResponse,
+    ChoicePromptResponse,
+    ChoiceDictPromptResponse
 )
 from wexample_prompt.responses.messages import (
     DebugPromptResponse,
@@ -27,6 +29,7 @@ from wexample_prompt.responses.messages import (
     WarningPromptResponse
 )
 from wexample_prompt.responses.progress import ProgressStep
+from InquirerPy.base.control import Choice
 
 
 def demo_styles(io: IOManager):
@@ -318,6 +321,46 @@ def demo_suggestions_verbosity(io: IOManager):
     debug_response.print(context=max_context)   # Will show
 
 
+def demo_choices(io: IOManager):
+    """Demonstrate choice prompts."""
+    io.print_response(MainTitleResponse.create("Choice Prompts"))
+    
+    # Simple list of choices
+    choices_response = ChoicePromptResponse.create(
+        question="Select your favorite color",
+        choices=["Red", "Green", "Blue", "Yellow"]
+    )
+    io.print_response(choices_response)
+    # Note: We don't call execute() in the demo to avoid blocking
+    
+    # Dictionary choices
+    choices_dict = {
+        "py": "Python",
+        "js": "JavaScript",
+        "go": "Golang",
+        "rs": "Rust"
+    }
+    dict_response = ChoiceDictPromptResponse.create(
+        question="Select your favorite programming language",
+        choices=choices_dict,
+        default="py"  # Python as default
+    )
+    io.print_response(dict_response)
+    
+    # Choices with Choice objects for more control
+    advanced_choices = [
+        Choice(value="opt1", name="🚀 Option One - Advanced"),
+        Choice(value="opt2", name="⚡ Option Two - Intermediate"),
+        Choice(value="opt3", name="🌟 Option Three - Beginner")
+    ]
+    advanced_response = ChoicePromptResponse.create(
+        question="Select difficulty level",
+        choices=advanced_choices,
+        abort="↩ Go back"
+    )
+    io.print_response(advanced_response)
+
+
 if __name__ == "__main__":
     io = IOManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
@@ -332,4 +375,5 @@ if __name__ == "__main__":
     demo_indentation(io)
     demo_suggestions(io)
     demo_suggestions_verbosity(io)
+    demo_choices(io)
     demo_progress(io)
