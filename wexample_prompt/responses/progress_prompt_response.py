@@ -16,11 +16,17 @@ class ProgressPromptResponse(BasePromptResponse):
     """Response for displaying progress bars."""
     
     # Class variables properly annotated for pydantic
-    FILL_CHAR: ClassVar[str] = "="  # Default to = for tests
-    EMPTY_CHAR: ClassVar[str] = " "  # Default to space for tests
+    FILL_CHAR: ClassVar[str] = "▰"  # Filled block
+    EMPTY_CHAR: ClassVar[str] = "▱"  # Empty block
+    
+    # ANSI color codes
+    CYAN: ClassVar[str] = "\033[36m"
+    BLUE: ClassVar[str] = "\033[34m"
+    GREEN: ClassVar[str] = "\033[32m"
+    RESET: ClassVar[str] = "\033[0m"
     
     @classmethod
-    def set_style(cls, fill_char: str = "▪", empty_char: str = "⬝"):
+    def set_style(cls, fill_char: str = "▰", empty_char: str = "▱"):
         """Set the progress bar style characters.
         
         Args:
@@ -63,26 +69,32 @@ class ProgressPromptResponse(BasePromptResponse):
         percentage = min(100, int(100 * current / total))
         filled = int(width * current / total)
         
-        lines = []
-        if label:
-            lines.append(PromptResponseLine(segments=[
-                PromptResponseSegment(text=label)
-            ]))
+        # Choose color based on progress
+        if percentage < 33:
+            color = cls.BLUE
+        elif percentage < 66:
+            color = cls.CYAN
+        else:
+            color = cls.GREEN
             
+        # Build progress bar without brackets
         bar = (
-            "[" +
+            color +
             cls.FILL_CHAR * filled +
             cls.EMPTY_CHAR * (width - filled) +
-            "]"
+            cls.RESET
         )
-        text = f"{bar} {percentage}%"
         
-        lines.append(PromptResponseLine(segments=[
-            PromptResponseSegment(text=text)
-        ]))
-        
+        # If we have a label, include the progress bar on the same line
+        if label:
+            text = f"{label} {bar} {percentage}%"
+            segments = [PromptResponseSegment(text=text)]
+        else:
+            text = f"{bar} {percentage}%"
+            segments = [PromptResponseSegment(text=text)]
+            
         return cls(
-            lines=lines,
+            lines=[PromptResponseLine(segments=segments)],
             response_type=ResponseType.PROGRESS,
             metadata={
                 "total": total,

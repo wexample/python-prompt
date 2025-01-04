@@ -3,6 +3,7 @@ from typing import List, Any, Optional, TypeVar, Generic, Callable
 from dataclasses import dataclass
 import time
 
+
 # Type variable for step function return type
 T = TypeVar('T')
 
@@ -43,15 +44,39 @@ class StepProgressContext:
     def __enter__(self) -> 'StepProgressContext':
         """Start the progress context."""
         self.start_time = time.time()
+        # Show initial progress
+        self._update_progress(self.steps[0].description if self.steps else "Starting")
         return self
         
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Clean up after progress is complete."""
         pass
         
-    def execute_steps(self) -> List[Any]:
+    def _update_progress(self, description: str) -> None:
+        # Avoid circular import
         from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
 
+        """Update the progress display.
+        
+        Args:
+            description: Current step description
+        """
+        # Calculate percentage
+        percentage = int(100 * self.current_weight / self.total_weight)
+        
+        # Create progress bar with label
+        label = f"{self.title}: {description}" if self.title else description
+        
+        # Use carriage return to overwrite previous line
+        progress = ProgressPromptResponse.create(
+            total=100,
+            current=percentage,
+            width=self.width,
+            label=label
+        )
+        progress.print(end="\n", flush=True)
+        
+    def execute_steps(self) -> List[Any]:
         """Execute all steps and return their results.
         
         Returns:
@@ -63,15 +88,6 @@ class StepProgressContext:
         results = []
         
         for step in self.steps:
-            # Update progress before step
-            progress = ProgressPromptResponse.create(
-                total=100,
-                current=int(100 * self.current_weight / self.total_weight),
-                width=self.width,
-                label=f"{self.title}: {step.description}" if self.title else step.description
-            )
-            progress.print(end="\r", flush=True)
-            
             # Execute step
             result = step.callback()
             if result is False:
@@ -82,13 +98,13 @@ class StepProgressContext:
             # Update progress
             self.current_weight += step.weight
             
-        # Show final progress
-        progress = ProgressPromptResponse.create(
-            total=100,
-            current=100,
-            width=self.width,
-            label=f"{self.title}: Complete" if self.title else "Complete"
-        )
-        progress.print(end="\n", flush=True)
+            # Show progress for next step or completion
+            next_step = self.steps[len(results)] if len(results) < len(self.steps) else None
+            if next_step:
+                self._update_progress(next_step.description)
+            else:
+                # Final progress
+                self._update_progress("Complete")
+                print()  # Add newline after completion
         
         return results
