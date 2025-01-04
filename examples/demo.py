@@ -106,8 +106,13 @@ def demo_list(io: IOManager):
         "First item",
         "Second item",
         "Third item with sub-items:",
-        "  • Sub-item 1",
-        "  • Sub-item 2"
+        "  Sub-item 1",
+        "  Sub-item 2",
+        "Fourth item",
+        "Fifth item with deep nesting:",
+        "  Level 2 item",
+        "    Level 3 item",
+        "      Level 4 item"
     ]
     list_output = ListPromptResponse.create(items)
     io.print_response(list_output)
