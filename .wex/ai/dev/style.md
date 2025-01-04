@@ -3,7 +3,7 @@
 ## How to modify this file
 
 - Respect existing content - correct typos but don't extensively rewrite content
-- Add only essential missing information - request further specifics if needed
+- Add only essential missing information - request further specifics if needed - add only the content we have been requested to do
 - Don't add extra section titles or subtitles
 - Be as concise as possible - avoid listing every file or type
 - Check for instruction redundancy
@@ -34,6 +34,7 @@
 - Use Pydantic models for data validation following best practices
 - Define Config class for model customization
 - Use validator decorators for complex validations
+- Use `pydantic.ConfigDict` instead of class-based Config (required for Pydantic v2+)
 
 ### Error Handling
 - Use ErrorContext for error management

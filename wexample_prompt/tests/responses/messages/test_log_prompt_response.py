@@ -56,4 +56,4 @@ class TestLogPromptResponse(unittest.TestCase):
         """Test log message with empty string."""
         response = LogPromptResponse.create("")
         rendered = response.render()
-        self.assertEquals("", rendered)
+        self.assertEqual("", rendered)
