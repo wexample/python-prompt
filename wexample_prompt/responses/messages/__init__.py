@@ -1,5 +1,3 @@
-from wexample_prompt.responses.messages.alert_prompt_response import AlertPromptResponse
-from wexample_prompt.responses.messages.critical_prompt_response import CriticalPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
@@ -10,8 +8,6 @@ from wexample_prompt.responses.messages.task_prompt_response import TaskPromptRe
 from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 
 __all__ = [
-    'AlertPromptResponse',
-    'CriticalPromptResponse',
     'DebugPromptResponse',
     'ErrorPromptResponse',
     'FailurePromptResponse',

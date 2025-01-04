@@ -2,7 +2,6 @@
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.responses import (
     BasePromptResponse,
@@ -12,8 +11,6 @@ from wexample_prompt.responses import (
     ProgressPromptResponse
 )
 from wexample_prompt.responses.messages import (
-    AlertPromptResponse,
-    CriticalPromptResponse,
     DebugPromptResponse,
     ErrorPromptResponse,
     FailurePromptResponse,
@@ -87,8 +84,6 @@ def demo_message_types():
     """Demonstrate different message types."""
     print("\n=== Message Types ===")
     messages = [
-        AlertPromptResponse.create("This is an alert message"),
-        CriticalPromptResponse.create("This is a critical message"),
         DebugPromptResponse.create("This is a debug message"),
         ErrorPromptResponse.create("This is an error message"),
         FailurePromptResponse.create("Operation failed: Unable to connect"),
