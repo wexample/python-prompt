@@ -6,6 +6,7 @@ from wexample_prompt.enums.text_style import TextStyle
 
 class PromptResponseSegment(BaseModel):
     """A segment of text with optional styling."""
+    
     text: str
     styles: List[TextStyle] = []
     

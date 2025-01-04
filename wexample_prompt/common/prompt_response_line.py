@@ -1,6 +1,5 @@
 """Prompt response line implementation."""
 from typing import List, Optional
-
 from pydantic import BaseModel, Field, field_validator
 
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -55,12 +54,15 @@ class PromptResponseLine(BaseModel):
         """
         from wexample_prompt.common.prompt_context import PromptContext
         
+        if context is None:
+            context = PromptContext()
+        
         # Render all segments
         rendered_segments = [seg.render(context) for seg in self.segments]
         result = "".join(rendered_segments)
         
         # Apply message type color if present and colors are enabled
-        if self.line_type and context and context.should_use_color():
+        if self.line_type and context.should_use_color():
             from wexample_prompt.common.color_manager import ColorManager
             color = ColorManager.get_message_color(self.line_type)
             result = ColorManager.colorize(result, color)

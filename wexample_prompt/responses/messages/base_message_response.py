@@ -11,13 +11,11 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 
 
-class BaseMessageResponse(BasePromptResponse, BaseModel):
+class BaseMessageResponse(BasePromptResponse):
     """Base class for all message responses."""
     
     # Symbol to display before the message, override in subclasses
     SYMBOL: ClassVar[str] = ""
-    
-    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     @classmethod
     @abstractmethod
