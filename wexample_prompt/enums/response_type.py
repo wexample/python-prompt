@@ -2,8 +2,10 @@ from enum import Enum
 
 
 class ResponseType(Enum):
-    PLAIN = "plain"
-    TABLE = "table"
+    """Types of prompt responses."""
     LIST = "list"
-    TREE = "tree"
+    PLAIN = "plain"
     PROGRESS = "progress"
+    TABLE = "table"
+    TITLE = "title"
+    TREE = "tree"

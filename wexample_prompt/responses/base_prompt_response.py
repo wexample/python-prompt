@@ -1,5 +1,5 @@
-from typing import List, Dict, Any, Optional, ClassVar
-from pydantic import BaseModel, Field
+from typing import List, Dict, Any, Optional
+from pydantic import Field
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
@@ -8,7 +8,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class BasePromptResponse(AbstractPromptResponse, BaseModel):
+class BasePromptResponse(AbstractPromptResponse):
     """Base class for all concrete prompt responses.
     
     This class inherits from AbstractPromptResponse and serves as the base

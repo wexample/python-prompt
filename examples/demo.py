@@ -8,6 +8,7 @@ from wexample_prompt.responses import (
     TablePromptResponse,
     ListPromptResponse,
     TreePromptResponse,
+    TitlePromptResponse,
     ProgressPromptResponse
 )
 from wexample_prompt.responses.messages import (
@@ -24,7 +25,9 @@ from wexample_prompt.responses.messages import (
 
 def demo_styles():
     """Demonstrate different text styles."""
-    print("\n=== Text Styles ===")
+    title = TitlePromptResponse.create("Text Styles")
+    print(title.render())
+    
     segments = [
         PromptResponseSegment(text="Normal, "),
         PromptResponseSegment(text="Bold, ", styles=[TextStyle.BOLD]),
@@ -38,7 +41,9 @@ def demo_styles():
 
 def demo_table():
     """Demonstrate table formatting."""
-    print("\n=== Table Format ===")
+    title = TitlePromptResponse.create("Table Format")
+    print(title.render())
+    
     data = [
         ["Name", "Age", "City"],
         ["John", "30", "New York"],
@@ -51,7 +56,9 @@ def demo_table():
 
 def demo_list():
     """Demonstrate list formatting."""
-    print("\n=== List Format ===")
+    title = TitlePromptResponse.create("List Format")
+    print(title.render())
+    
     items = [
         "First item",
         "Second item",
@@ -65,7 +72,9 @@ def demo_list():
 
 def demo_tree():
     """Demonstrate tree structure."""
-    print("\n=== Tree Format ===")
+    title = TitlePromptResponse.create("Tree Format")
+    print(title.render())
+    
     data = {
         "root": {
             "folder1": {
@@ -83,7 +92,10 @@ def demo_tree():
 
 def demo_message_types():
     """Demonstrate different message types."""
-    print("\n=== Message Types ===")
+    title = TitlePromptResponse.create("Message Types")
+    print(title.render())
+    
+    # Show message type examples
     messages = [
         DebugPromptResponse.create("This is a debug message"),
         ErrorPromptResponse.create("This is an error message"),
@@ -96,11 +108,24 @@ def demo_message_types():
     ]
     for message in messages:
         print(message.render())
+    
+    # Show title levels
+    subtitle = TitlePromptResponse.create("Title Levels Demo", level=2)
+    print(subtitle.render())
+    
+    messages = [
+        TitlePromptResponse.create("Level 1 Title", level=1),
+        TitlePromptResponse.create("Level 2 Title", level=2),
+        TitlePromptResponse.create("Custom Title", symbol="###")
+    ]
+    for message in messages:
+        print(message.render())
 
 
 def demo_indentation():
     """Demonstrate message indentation."""
-    print("\n=== Message Indentation ===")
+    title = TitlePromptResponse.create("Message Indentation")
+    print(title.render())
     
     # Simple indentation example
     log = LogPromptResponse.create("Root level message")
@@ -126,7 +151,9 @@ def demo_indentation():
 
 def demo_progress():
     """Demonstrate progress bar."""
-    print("\n=== Progress Bar ===")
+    title = TitlePromptResponse.create("Progress Bar")
+    print(title.render())
+    
     for i in range(0, 101, 20):
         progress = ProgressPromptResponse.create(100, i)
         print(progress.render() + "\r", end="", flush=True)
@@ -136,6 +163,9 @@ def demo_progress():
 
 
 if __name__ == "__main__":
+    main_title = TitlePromptResponse.create("Prompt Response Demo", symbol="***")
+    print(main_title.render())
+    
     demo_styles()
     demo_table()
     demo_list()
