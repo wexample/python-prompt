@@ -155,8 +155,14 @@ class IOManager(BaseModel, WithIndent):
         Args:
             response: Response to print
         """
-        for line in response.lines:
-            self.print_response_line(line, response)
+        # Create context with current theme and terminal width
+        context = PromptContext(
+            theme=self.theme,
+            terminal_width=self._tty_width
+        )
+        
+        # Use response's print function
+        response.print(output=self._stdout, context=context)
     
     def print_response_line(
         self,
@@ -169,26 +175,14 @@ class IOManager(BaseModel, WithIndent):
             line: Line to print
             response: Parent response containing the line
         """
-        # Get color based on line-type or response-type
-        message_type = line.line_type or response.message_type
-        color = ColorManager.MESSAGE_COLORS.get(message_type, TerminalColor.RESET)
-        
-        # Create context with current terminal width
-        context = PromptContext(
-            terminal_width=self._tty_width,
-            is_tty=True
+        # Create a single-line response and print it
+        temp_response = BasePromptResponse(
+            lines=[line],
+            response_type=response.response_type,
+            message_type=response.message_type
         )
-        
-        # Build the line with indentation and color
-        rendered_line = line.render(context)
-        if rendered_line:
-            # Apply color only if supported
-            if ColorManager.supports_color():
-                formatted_line = f"{self.build_indent()}{color.value}{rendered_line}{TerminalColor.RESET.value}"
-            else:
-                formatted_line = f"{self.build_indent()}{rendered_line}"
-            self.print(formatted_line)
-    
+        self.print_response(temp_response)
+
     def get_input(self, prompt: str = "") -> str:
         """Get input from the user.
         
@@ -203,12 +197,24 @@ class IOManager(BaseModel, WithIndent):
     def print(self, message: Any, **kwargs: Any) -> None:
         """Print a message to stdout.
         
+        This method is deprecated. Use print_response() instead.
+        
         Args:
             message: Message to print
             **kwargs: Additional arguments passed to print()
         """
-        print(message, file=self._stdout, **kwargs)
-    
+        # Convert message to response if it's not already one
+        if isinstance(message, BasePromptResponse):
+            self.print_response(message)
+        else:
+            # Create a simple response and print it
+            response = BasePromptResponse(
+                lines=[PromptResponseLine(segments=[
+                    PromptResponseSegment(text=str(message))
+                ])]
+            )
+            self.print_response(response)
+
     def update_terminal_width(self) -> None:
         """Update the stored terminal width."""
         self._tty_width = shutil.get_terminal_size().columns

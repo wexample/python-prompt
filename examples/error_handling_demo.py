@@ -7,6 +7,8 @@ from typing import Dict, Any, Tuple, Optional
 from functools import wraps
 
 from wexample_prompt.io_manager import IOManager
+from wexample_prompt.responses import MainTitleResponse
+from wexample_prompt.responses.messages import InfoPromptResponse
 
 
 def handle_errors(func):
@@ -49,11 +51,10 @@ def simulate_file_operation(filename: str) -> Dict[str, Any]:
 
 
 @handle_errors
-def demo_basic_errors() -> None:
+def demo_basic_errors(io: IOManager) -> None:
     """Demonstrate basic error and warning messages."""
-    io = IOManager()
-    
-    print("\n=== Basic Error Handling ===")
+    title = MainTitleResponse.create("Basic Error Handling")
+    io.print_response(title)
     
     # Simple error and warning
     io.error("Basic error message", trace=False)
@@ -72,11 +73,10 @@ def demo_basic_errors() -> None:
 
 
 @handle_errors
-def demo_error_traces() -> None:
+def demo_error_traces(io: IOManager) -> None:
     """Demonstrate error handling with stack traces."""
-    io = IOManager()
-    
-    print("\n=== Stack Traces ===")
+    title = MainTitleResponse.create("Stack Traces")
+    io.print_response(title)
     
     # Error with stack trace
     try:
@@ -100,46 +100,51 @@ def demo_error_traces() -> None:
             params={"error": str(e)},
             trace=True
         )
-        # Return without raising to prevent double traceback
-        return
 
 
 @handle_errors
-def demo_nested_errors() -> None:
+def demo_nested_errors(io: IOManager) -> None:
     """Demonstrate error handling in nested contexts."""
-    io = IOManager()
-    
-    print("\n=== Nested Error Handling ===")
-    
-    io.info("Starting nested operation...")
-    io._log_indent += 1
+    title = MainTitleResponse.create("Nested Error Handling")
+    io.print_response(title)
     
     try:
-        raise ValueError("Invalid configuration")
-    except ValueError as e:
+        # Outer operation
+        io.info("Starting outer operation...")
+        try:
+            # Inner operation that fails
+            result = simulate_file_operation("inner/data.locked")
+        except PermissionError as e:
+            # Handle inner error
+            io.error(
+                "Inner operation failed: {error}",
+                params={"error": str(e)},
+                trace=True
+            )
+            raise  # Re-raise to trigger outer handler
+    except Exception as e:
+        # Handle outer error
         io.error(
-            "Nested operation failed: {error}",
+            "Outer operation failed: {error}",
             params={"error": str(e)},
             trace=True
         )
-    
-    io._log_indent -= 1
-    io.info("Nested operation complete")
 
 
 @handle_errors
-def demo_fatal_error() -> None:
-    """Demonstrate fatal error handling (commented out)."""
-    io = IOManager()
+def demo_fatal_error(io: IOManager) -> None:
+    """Demonstrate fatal error handling."""
+    title = MainTitleResponse.create("Fatal Error Handling")
+    io.print_response(title)
     
-    print("\n=== Fatal Error Handling ===")
-    io.info("About to demonstrate fatal error (commented out)...")
+    io.info("This demo is skipped to prevent program termination")
+    io.info("In real usage, fatal=True would terminate the program")
     
-    # Uncomment to see fatal error behavior:
+    # Commented out to prevent actual termination
     # io.error(
-    #     "Critical system error",
+    #     "Fatal error occurred",
     #     fatal=True,
-    #     exit_code=1
+    #     trace=True
     # )
 
 
@@ -149,30 +154,32 @@ def run_demos() -> bool:
     Returns:
         True if all demos succeeded, False otherwise
     """
+    io = IOManager()
+    
+    title = MainTitleResponse.create("Error Handling Demo")
+    io.print_response(title)
+    
     demos = [
         ("Basic Error Handling", demo_basic_errors),
-        ("Error Traces", demo_error_traces),
-        ("Nested Errors", demo_nested_errors),
-        ("Fatal Error", demo_fatal_error)
+        ("Stack Traces", demo_error_traces),
+        ("Nested Error Handling", demo_nested_errors),
+        ("Fatal Error Handling", demo_fatal_error)
     ]
     
-    io = IOManager()
-    all_succeeded = True
-    
-    print("=== Error Handling Demo ===")
-    
+    success = True
     for name, demo in demos:
-        success, _ = demo()
-        if not success:
-            io.error(f"Demo '{name}' failed", trace=False)
-            all_succeeded = False
+        io.print_response(InfoPromptResponse.create(f"\nRunning {name}..."))
+        demo_success, _ = demo(io)
+        if not demo_success:
+            success = False
+            io.error(f"Demo '{name}' failed")
     
-    if all_succeeded:
-        io.success("\nAll demos completed successfully!")
+    if success:
+        io.success("\nAll demos completed successfully")
     else:
         io.error("\nSome demos failed", trace=False)
     
-    return all_succeeded
+    return success
 
 
 if __name__ == "__main__":

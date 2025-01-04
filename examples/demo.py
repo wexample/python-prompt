@@ -4,6 +4,7 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
+from wexample_prompt.io_manager import IOManager
 from wexample_prompt.responses import (
     BasePromptResponse,
     TablePromptResponse,
@@ -25,10 +26,10 @@ from wexample_prompt.responses.messages import (
 )
 
 
-def demo_styles():
+def demo_styles(io: IOManager):
     """Demonstrate different text styles."""
     title = MainTitleResponse.create("Text Styles")
-    print(title.render())
+    io.print_response(title)
     
     segments = [
         PromptResponseSegment(text="Normal, "),
@@ -38,16 +39,16 @@ def demo_styles():
     ]
     line = PromptResponseLine(segments=segments)
     response = BasePromptResponse(lines=[line])
-    print(response.render())
+    io.print_response(response)
 
 
-def demo_table():
+def demo_table(io: IOManager):
     """Demonstrate table formatting."""
     title = MainTitleResponse.create("Table Format")
-    print(title.render())
+    io.print_response(title)
     
     # Simple table with headers
-    print("\nSimple table with headers:")
+    io.print_response(InfoPromptResponse.create("Simple table with headers:"))
     data = [
         ["John", "30", "New York"],
         ["Jane", "25", "San Francisco"],
@@ -55,10 +56,10 @@ def demo_table():
     ]
     headers = ["Name", "Age", "City"]
     table = TablePromptResponse.create(data, headers=headers)
-    print(table.render())
+    io.print_response(table)
     
     # Table with title
-    print("\nTable with title:")
+    io.print_response(InfoPromptResponse.create("Table with title:"))
     data = [
         ["Python", "High", "Web, Data, AI"],
         ["JavaScript", "High", "Web, Frontend"],
@@ -70,10 +71,10 @@ def demo_table():
         headers=headers,
         title="Programming Languages"
     )
-    print(table.render())
+    io.print_response(table)
     
     # Table with varying column widths
-    print("\nTable with varying column widths:")
+    io.print_response(InfoPromptResponse.create("Table with varying column widths:"))
     data = [
         ["A short text", "This is a much longer text that will expand the column", "Short"],
         ["Row 2", "More text here", "Data"],
@@ -81,10 +82,10 @@ def demo_table():
     ]
     headers = ["Column 1", "Column 2", "Column 3"]
     table = TablePromptResponse.create(data, headers=headers)
-    print(table.render())
+    io.print_response(table)
     
     # Table with missing data
-    print("\nTable with missing data:")
+    io.print_response(InfoPromptResponse.create("Table with missing data:"))
     data = [
         ["Complete", "Row", "Here"],
         ["Missing", "Data"],
@@ -93,13 +94,13 @@ def demo_table():
     ]
     headers = ["Col 1", "Col 2", "Col 3"]
     table = TablePromptResponse.create(data, headers=headers)
-    print(table.render())
+    io.print_response(table)
 
 
-def demo_list():
+def demo_list(io: IOManager):
     """Demonstrate list formatting."""
     title = MainTitleResponse.create("List Format")
-    print(title.render())
+    io.print_response(title)
     
     items = [
         "First item",
@@ -109,13 +110,13 @@ def demo_list():
         "  • Sub-item 2"
     ]
     list_output = ListPromptResponse.create(items)
-    print(list_output.render())
+    io.print_response(list_output)
 
 
-def demo_tree():
+def demo_tree(io: IOManager):
     """Demonstrate tree structure."""
     title = MainTitleResponse.create("Tree Format")
-    print(title.render())
+    io.print_response(title)
     
     data = {
         "root": {
@@ -129,13 +130,13 @@ def demo_tree():
         }
     }
     tree = TreePromptResponse.create(data)
-    print(tree.render())
+    io.print_response(tree)
 
 
-def demo_message_types():
+def demo_message_types(io: IOManager):
     """Demonstrate different message types."""
     title = MainTitleResponse.create("Message Types")
-    print(title.render())
+    io.print_response(title)
     
     # Show message type examples
     messages = [
@@ -149,32 +150,32 @@ def demo_message_types():
         WarningPromptResponse.create("This is a warning message")
     ]
     for message in messages:
-        print(message.render())
+        io.print_response(message)
 
 
-def demo_titles():
+def demo_titles(io: IOManager):
     """Demonstrate title formatting."""
     main = MainTitleResponse.create("Main Title Demo", color=TerminalColor.GREEN)
-    print(main.render())
+    io.print_response(main)
     
     sub1 = SubtitleResponse.create("First Subtitle")
-    print(sub1.render())
+    io.print_response(sub1)
     
     sub2 = SubtitleResponse.create("Second Subtitle", color=TerminalColor.MAGENTA)
-    print(sub2.render())
+    io.print_response(sub2)
 
 
-def demo_indentation():
+def demo_indentation(io: IOManager):
     """Demonstrate message indentation."""
     title = MainTitleResponse.create("Message Indentation")
-    print(title.render())
+    io.print_response(title)
     
     # Simple indentation example
     log = LogPromptResponse.create("Root level message")
-    print(log.render())
+    io.print_response(log)
     
     log.lines[0].indent_level = 1
-    print(log.render())
+    io.print_response(log)
     
     # Multiline with indentation
     multiline_msg = (
@@ -187,32 +188,32 @@ def demo_indentation():
         "    - Saving results"
     )
     multiline = LogPromptResponse.create(multiline_msg)
-    print("\nMultiline example:")
-    print(multiline.render())
+    io.print_response(InfoPromptResponse.create("Multiline example:"))
+    io.print_response(multiline)
 
 
-def demo_progress():
+def demo_progress(io: IOManager):
     """Demonstrate progress bar."""
     title = MainTitleResponse.create("Progress Bar")
-    print(title.render())
+    io.print_response(title)
     
     for i in range(0, 101, 20):
         progress = ProgressPromptResponse.create(100, i)
-        print(progress.render() + "\r", end="", flush=True)
+        io.print_response(progress)
         import time
         time.sleep(0.5)
-    print()
 
 
 if __name__ == "__main__":
+    io = IOManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
-    print(main.render())
+    io.print_response(main)
     
-    demo_styles()
-    demo_table()
-    demo_list()
-    demo_tree()
-    demo_message_types()
-    demo_titles()
-    demo_indentation()
-    demo_progress()
+    demo_styles(io)
+    demo_table(io)
+    demo_list(io)
+    demo_tree(io)
+    demo_message_types(io)
+    demo_titles(io)
+    demo_indentation(io)
+    demo_progress(io)

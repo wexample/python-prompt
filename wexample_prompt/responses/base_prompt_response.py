@@ -1,4 +1,6 @@
-from typing import List, Dict, Any, Optional
+"""Base class for all prompt responses."""
+from typing import List, Dict, Any, Optional, TextIO
+import sys
 from pydantic import Field
 
 from wexample_prompt.enums.message_type import MessageType
@@ -28,6 +30,27 @@ class BasePromptResponse(AbstractPromptResponse):
             
         rendered_lines = [line.render(context) for line in self.lines]
         return "\n".join(rendered_lines)
+    
+    def print(
+        self,
+        output: TextIO = sys.stdout,
+        end: str = "\n",
+        flush: bool = True,
+        context: Optional[PromptContext] = None
+    ) -> None:
+        """Print the response to the specified output.
+        
+        This is the centralized print function for all responses. All output
+        from any response type should go through this function.
+        
+        Args:
+            output: Output stream to print to (default: sys.stdout)
+            end: String to append after the output (default: newline)
+            flush: Whether to flush the output stream (default: True)
+            context: Optional context for rendering (default: None)
+        """
+        rendered = self.render(context)
+        print(rendered, end=end, file=output, flush=flush)
     
     def append(self, other: 'BasePromptResponse') -> 'BasePromptResponse':
         """Combine this response with another."""
