@@ -24,6 +24,7 @@ from wexample_prompt.responses.messages import (
     TaskPromptResponse,
     WarningPromptResponse
 )
+from wexample_prompt.responses.progress import ProgressStep
 
 
 def demo_styles(io: IOManager):
@@ -202,11 +203,61 @@ def demo_progress(io: IOManager):
     title = MainTitleResponse.create("Progress Bar")
     io.print_response(title)
     
+    # Simple progress bar
+    io.print_response(InfoPromptResponse.create("Simple progress bar:"))
     for i in range(0, 101, 20):
         progress = ProgressPromptResponse.create(100, i)
         io.print_response(progress)
         import time
+        time.sleep(0.2)
+    
+    # Progress bar with label
+    io.print_response(InfoPromptResponse.create("\nProgress bar with label:"))
+    for i in range(0, 101, 20):
+        progress = ProgressPromptResponse.create(
+            total=100,
+            current=i,
+            label=f"Processing item {i}/100"
+        )
+        io.print_response(progress)
+        time.sleep(0.2)
+    
+    # Step-based progress
+    io.print_response(InfoPromptResponse.create("\nStep-based progress:"))
+    
+    def step1():
+        """Initialize system."""
         time.sleep(0.5)
+        return True
+        
+    def step2():
+        """Load configuration."""
+        time.sleep(0.8)
+        return True
+        
+    def step3():
+        """Process data."""
+        time.sleep(1.2)
+        return True
+        
+    def step4():
+        """Save results."""
+        time.sleep(0.7)
+        return True
+    
+    steps = [
+        ProgressStep(step1, "Initializing system", 1.0),
+        ProgressStep(step2, "Loading configuration", 1.5),
+        ProgressStep(step3, "Processing data", 2.0),
+        ProgressStep(step4, "Saving results", 1.0)
+    ]
+    
+    with ProgressPromptResponse.create_steps(
+        steps=steps,
+        title="System Setup",
+        width=40
+    ) as progress:
+        progress.execute_steps()
 
 
 if __name__ == "__main__":
