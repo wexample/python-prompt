@@ -2,15 +2,18 @@
 import io
 import sys
 import unittest
+from unittest.mock import patch
 
 from wexample_prompt.io_manager import IOManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_prompt.common.error_context import ErrorContext
 
 
 class TestIOManager(unittest.TestCase):
@@ -84,3 +87,51 @@ class TestIOManager(unittest.TestCase):
         output = self.stdout.getvalue()
         self.assertIn("\033[", output)  # ANSI color code
         self.assertIn("Test message", output)
+        
+    def test_error_with_context(self):
+        """Test error message with context."""
+        context = ErrorContext(
+            params={"code": "404"},
+            trace=False
+        )
+        self.io_manager.error(
+            "Error {code}",
+            params=context.params,
+            trace=context.trace
+        )
+        output = self.stdout.getvalue()
+        self.assertIn("Error 404", output)
+        self.assertNotIn("Traceback", output)
+        
+    def test_warning_with_context(self):
+        """Test warning message with context."""
+        context = ErrorContext(
+            params={"component": "api"},
+            trace=True
+        )
+        self.io_manager.warning(
+            "Warning in {component}",
+            params=context.params,
+            trace=context.trace
+        )
+        output = self.stdout.getvalue()
+        self.assertIn("Warning in api", output)
+        
+    @patch('sys.exit')
+    def test_fatal_error(self, mock_exit):
+        """Test fatal error handling."""
+        self.io_manager.error(
+            "Fatal error",
+            fatal=True,
+            exit_code=2
+        )
+        mock_exit.assert_called_once_with(2)
+        
+    def test_terminal_width_update(self):
+        """Test terminal width update."""
+        original_width = self.io_manager._tty_width
+        with patch('shutil.get_terminal_size') as mock_size:
+            mock_size.return_value = type('Size', (), {'columns': 100})()
+            self.io_manager.update_terminal_width()
+            self.assertEqual(self.io_manager._tty_width, 100)
+            self.assertNotEqual(self.io_manager._tty_width, original_width)

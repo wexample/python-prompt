@@ -38,11 +38,13 @@ class ErrorPromptResponse(BaseMessageResponse):
             context = ErrorContext()
             
         # Format message with parameters if any
-        message = context.format_message(text)
-        
+        message = context.format_message(text) if text else "Unknown error"
+            
         # Add stack trace if requested
         if context.trace:
-            message = f"{message}\n{traceback.format_exc()}"
+            trace = traceback.format_exc()
+            if trace and trace != 'NoneType: None\n':
+                message = f"{message}\n{trace}"
             
         # Create response
         response = cls._create_symbol_message(message, TerminalColor.RED)

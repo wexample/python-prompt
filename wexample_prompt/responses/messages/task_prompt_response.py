@@ -8,7 +8,7 @@ from wexample_prompt.enums.message_type import MessageType
 class TaskPromptResponse(BaseMessageResponse):
     """Response for task messages."""
 
-    SYMBOL: ClassVar[str] = "📋"
+    SYMBOL: ClassVar[str] = "⚡"
 
     @classmethod
     def create(cls, text: str) -> 'TaskPromptResponse':
