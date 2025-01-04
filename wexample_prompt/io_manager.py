@@ -1,7 +1,7 @@
 """Input/Output manager for the prompt system."""
 import shutil
 import sys
-from typing import Any, List, Optional, TextIO, Union
+from typing import Any, List, Optional, TextIO, Union, Dict
 
 from pydantic import BaseModel, Field, PrivateAttr
 
@@ -13,6 +13,12 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.color_manager import ColorManager
+from wexample_prompt.common.error_context import ErrorContext
+from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
 
 class IOManager(BaseModel, WithIndent):
@@ -38,6 +44,103 @@ class IOManager(BaseModel, WithIndent):
     class Config:
         """Pydantic configuration."""
         arbitrary_types_allowed = True
+    
+    def error(
+        self,
+        message: str,
+        params: Optional[Dict[str, Any]] = None,
+        fatal: bool = False,
+        trace: bool = True,
+        exit_code: int = 1
+    ) -> ErrorPromptResponse:
+        """Print an error message.
+        
+        Args:
+            message: Error message text
+            params: Optional parameters for message formatting
+            fatal: If True, exit after printing
+            trace: If True, include stack trace
+            exit_code: Exit code to use if fatal is True
+            
+        Returns:
+            ErrorPromptResponse instance
+            
+        Note:
+            If fatal is True, this method will not return
+        """
+        context = ErrorContext(
+            fatal=fatal,
+            trace=trace,
+            params=params,
+            exit_code=exit_code
+        )
+        response = ErrorPromptResponse.create(message, context)
+        self.print_response(response)
+        return response
+    
+    def warning(
+        self,
+        message: str,
+        params: Optional[Dict[str, Any]] = None,
+        trace: bool = False
+    ) -> WarningPromptResponse:
+        """Print a warning message.
+        
+        Args:
+            message: Warning message text
+            params: Optional parameters for message formatting
+            trace: If True, include stack trace
+            
+        Returns:
+            WarningPromptResponse instance
+        """
+        context = ErrorContext(
+            fatal=False,
+            trace=trace,
+            params=params
+        )
+        response = WarningPromptResponse.create(message, context)
+        self.print_response(response)
+        return response
+    
+    def success(self, message: str) -> SuccessPromptResponse:
+        """Print a success message.
+        
+        Args:
+            message: Success message text
+            
+        Returns:
+            SuccessPromptResponse instance
+        """
+        response = SuccessPromptResponse.create(message)
+        self.print_response(response)
+        return response
+    
+    def info(self, message: str) -> InfoPromptResponse:
+        """Print an info message.
+        
+        Args:
+            message: Info message text
+            
+        Returns:
+            InfoPromptResponse instance
+        """
+        response = InfoPromptResponse.create(message)
+        self.print_response(response)
+        return response
+    
+    def debug(self, message: str) -> DebugPromptResponse:
+        """Print a debug message.
+        
+        Args:
+            message: Debug message text
+            
+        Returns:
+            DebugPromptResponse instance
+        """
+        response = DebugPromptResponse.create(message)
+        self.print_response(response)
+        return response
     
     def print_responses(self, responses: List[BasePromptResponse]) -> None:
         """Print multiple responses in sequence.
