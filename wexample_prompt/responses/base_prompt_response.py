@@ -1,5 +1,5 @@
 from typing import List, Dict, Any, Optional, ClassVar
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
@@ -15,6 +15,8 @@ class BasePromptResponse(AbstractPromptResponse):
     for all concrete response implementations. It provides the basic functionality
     for rendering and manipulating prompt responses.
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    
     lines: List[PromptResponseLine]
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
