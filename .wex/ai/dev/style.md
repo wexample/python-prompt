@@ -45,3 +45,6 @@
 - Tests directory mirrors package structure
 - Test class names must match source class with "test_" prefix
 - Test all response rendering scenarios
+
+## Demo
+- Like test, every feature should have an implementation in the examples/demo.py file
