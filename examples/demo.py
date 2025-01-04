@@ -2,13 +2,15 @@
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.responses import (
     BasePromptResponse,
     TablePromptResponse,
     ListPromptResponse,
     TreePromptResponse,
-    TitlePromptResponse,
+    MainTitleResponse,
+    SubtitleResponse,
     ProgressPromptResponse
 )
 from wexample_prompt.responses.messages import (
@@ -25,7 +27,7 @@ from wexample_prompt.responses.messages import (
 
 def demo_styles():
     """Demonstrate different text styles."""
-    title = TitlePromptResponse.create("Text Styles")
+    title = MainTitleResponse.create("Text Styles")
     print(title.render())
     
     segments = [
@@ -41,7 +43,7 @@ def demo_styles():
 
 def demo_table():
     """Demonstrate table formatting."""
-    title = TitlePromptResponse.create("Table Format")
+    title = MainTitleResponse.create("Table Format")
     print(title.render())
     
     data = [
@@ -56,7 +58,7 @@ def demo_table():
 
 def demo_list():
     """Demonstrate list formatting."""
-    title = TitlePromptResponse.create("List Format")
+    title = MainTitleResponse.create("List Format")
     print(title.render())
     
     items = [
@@ -72,7 +74,7 @@ def demo_list():
 
 def demo_tree():
     """Demonstrate tree structure."""
-    title = TitlePromptResponse.create("Tree Format")
+    title = MainTitleResponse.create("Tree Format")
     print(title.render())
     
     data = {
@@ -92,7 +94,7 @@ def demo_tree():
 
 def demo_message_types():
     """Demonstrate different message types."""
-    title = TitlePromptResponse.create("Message Types")
+    title = MainTitleResponse.create("Message Types")
     print(title.render())
     
     # Show message type examples
@@ -108,23 +110,23 @@ def demo_message_types():
     ]
     for message in messages:
         print(message.render())
+
+
+def demo_titles():
+    """Demonstrate title formatting."""
+    main = MainTitleResponse.create("Main Title Demo", color=TerminalColor.GREEN)
+    print(main.render())
     
-    # Show title levels
-    subtitle = TitlePromptResponse.create("Title Levels Demo", level=2)
-    print(subtitle.render())
+    sub1 = SubtitleResponse.create("First Subtitle")
+    print(sub1.render())
     
-    messages = [
-        TitlePromptResponse.create("Level 1 Title", level=1),
-        TitlePromptResponse.create("Level 2 Title", level=2),
-        TitlePromptResponse.create("Custom Title", symbol="###")
-    ]
-    for message in messages:
-        print(message.render())
+    sub2 = SubtitleResponse.create("Second Subtitle", color=TerminalColor.MAGENTA)
+    print(sub2.render())
 
 
 def demo_indentation():
     """Demonstrate message indentation."""
-    title = TitlePromptResponse.create("Message Indentation")
+    title = MainTitleResponse.create("Message Indentation")
     print(title.render())
     
     # Simple indentation example
@@ -151,7 +153,7 @@ def demo_indentation():
 
 def demo_progress():
     """Demonstrate progress bar."""
-    title = TitlePromptResponse.create("Progress Bar")
+    title = MainTitleResponse.create("Progress Bar")
     print(title.render())
     
     for i in range(0, 101, 20):
@@ -163,13 +165,14 @@ def demo_progress():
 
 
 if __name__ == "__main__":
-    main_title = TitlePromptResponse.create("Prompt Response Demo", symbol="***")
-    print(main_title.render())
+    main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
+    print(main.render())
     
     demo_styles()
     demo_table()
     demo_list()
     demo_tree()
     demo_message_types()
+    demo_titles()
     demo_indentation()
     demo_progress()
