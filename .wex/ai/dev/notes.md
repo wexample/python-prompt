@@ -5,8 +5,6 @@ The wexample-prompt package aims to be the centralized place for managing all te
 
 ## Core Features from Legacy IOManager
 
-- [ ] Fix list sub items
-
 ### 1. Log Frame Management
 - [ ] Log frame functionality with message history
 - [ ] Methods for showing/hiding log frames
