@@ -1,7 +1,7 @@
 from abc import abstractmethod
-from typing import List, Optional, ClassVar
+from typing import Optional, ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
@@ -17,9 +17,7 @@ class BaseMessageResponse(BasePromptResponse, BaseModel):
     # Symbol to display before the message, override in subclasses
     SYMBOL: ClassVar[str] = ""
     
-    class Config:
-        """Pydantic configuration."""
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     
     @classmethod
     @abstractmethod
