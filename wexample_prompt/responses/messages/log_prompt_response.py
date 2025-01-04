@@ -5,6 +5,7 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 
+
 class LogPromptResponse(BaseMessageResponse):
     """Response for log messages."""
     
@@ -18,18 +19,25 @@ class LogPromptResponse(BaseMessageResponse):
         Returns:
             LogPromptResponse: A new log response
         """
-        # Create the message segment with gray color
-        message = PromptResponseSegment(
-            text=ColorManager.colorize(text, TerminalColor.GRAY)
-        )
+        # Split text into lines
+        text_lines = text.split('\n')
+        lines = []
         
-        # Create a line with the message
-        line = PromptResponseLine(
-            segments=[message],
-            line_type=cls.get_message_type()
-        )
+        # Create a line for each text line
+        for text_line in text_lines:
+            # Create the message segment with gray color
+            message = PromptResponseSegment(
+                text=ColorManager.colorize(text_line, TerminalColor.GRAY)
+            )
+            
+            # Create a line with the message
+            line = PromptResponseLine(
+                segments=[message],
+                line_type=cls.get_message_type()
+            )
+            lines.append(line)
         
-        return cls(lines=[line], message_type=cls.get_message_type())
+        return cls(lines=lines, message_type=cls.get_message_type())
     
     @classmethod
     def get_message_type(cls) -> MessageType:

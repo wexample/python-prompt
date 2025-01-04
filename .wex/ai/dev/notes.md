@@ -5,6 +5,10 @@ The wexample-prompt package aims to be the centralized place for managing all te
 
 ## Core Features from Legacy IOManager
 
+- [ ] Create titles and subtitles
+- [ ] Rework tables
+- [ ] Fix list sub items
+
 ### 1. Log Frame Management
 - [ ] Log frame functionality with message history
 - [ ] Methods for showing/hiding log frames
@@ -12,30 +16,14 @@ The wexample-prompt package aims to be the centralized place for managing all te
 - [ ] Clear last N lines functionality
 - [ ] Log frame cleanup and management
 
-### 2. Indentation System
-- [x] Indentation level management
-- [x] Configurable indent string
-- [x] Methods for increasing/decreasing indent
-- [x] Indent building with increments
-- [x] Support for nested indentation
-
 ### 3. Message Types and Formatting
 - [ ] Warning messages with parameters and fatal/trace options
 - [ ] Error messages with logger integration
-- [x] Success messages with checkmark symbols
-- [x] Failure messages with X symbols
 - [ ] Info messages with optional text
 - [ ] Command suggestion messages
 - [ ] Multiple command suggestions support
 
 ### 4. Color System
-- [x] ANSI color support:
-  - [x] CYAN (command suggestions)
-  - [x] GRAY (log messages)
-  - [x] GREEN (success)
-  - [x] RED (errors)
-  - [x] YELLOW (warnings)
-  - [x] RESET support
 - [ ] Color theme customization
 - [ ] TTY detection for color support
 

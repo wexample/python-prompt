@@ -80,6 +80,7 @@ def demo_tree():
     tree = TreePromptResponse.create(data)
     print(tree.render())
 
+
 def demo_message_types():
     """Demonstrate different message types."""
     print("\n=== Message Types ===")
@@ -95,6 +96,33 @@ def demo_message_types():
     ]
     for message in messages:
         print(message.render())
+
+
+def demo_indentation():
+    """Demonstrate message indentation."""
+    print("\n=== Message Indentation ===")
+    
+    # Simple indentation example
+    log = LogPromptResponse.create("Root level message")
+    print(log.render())
+    
+    log.lines[0].indent_level = 1
+    print(log.render())
+    
+    # Multiline with indentation
+    multiline_msg = (
+        "Processing started:\n"
+        "  Step 1: Data validation\n"
+        "    - Checking formats\n"
+        "    - Verifying integrity\n"
+        "  Step 2: Transformation\n"
+        "    - Applying rules\n"
+        "    - Saving results"
+    )
+    multiline = LogPromptResponse.create(multiline_msg)
+    print("\nMultiline example:")
+    print(multiline.render())
+
 
 def demo_progress():
     """Demonstrate progress bar."""
@@ -113,4 +141,5 @@ if __name__ == "__main__":
     demo_list()
     demo_tree()
     demo_message_types()
+    demo_indentation()
     demo_progress()
