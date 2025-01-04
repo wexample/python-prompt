@@ -179,10 +179,10 @@ def demo_indentation(io: IOManager):
     # Show different indentation levels
     io.print_response(InfoPromptResponse.create("No indentation"))
     
-    io._log_indent += 1
+    io.log_indent += 1
     io.print_response(InfoPromptResponse.create("One level indent"))
     
-    io._log_indent += 1
+    io.log_indent += 1
     io.print_response(InfoPromptResponse.create("Two levels indent"))
     
     # Show indented progress bar
@@ -194,7 +194,7 @@ def demo_indentation(io: IOManager):
     io.print_response(progress)
     
     # Reset indentation
-    io._log_indent = 0
+    io.log_indent = 0
     io.print_response(InfoPromptResponse.create("Back to no indentation"))
 
 
@@ -212,7 +212,7 @@ def demo_progress(io: IOManager):
         time.sleep(0.2)
     
     # Progress bar with label
-    io.print_response(InfoPromptResponse.create("\nProgress bar with label:"))
+    io.print_response(InfoPromptResponse.create("Progress bar with label:"))
     for i in range(0, 101, 20):
         progress = ProgressPromptResponse.create(
             total=100,
@@ -223,7 +223,7 @@ def demo_progress(io: IOManager):
         time.sleep(0.2)
     
     # Step-based progress
-    io.print_response(InfoPromptResponse.create("\nStep-based progress:"))
+    io.print_response(InfoPromptResponse.create("Step-based progress:"))
     
     def step1():
         """Initialize system."""

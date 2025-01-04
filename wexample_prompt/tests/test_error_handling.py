@@ -104,7 +104,7 @@ class TestErrorHandling(unittest.TestCase):
     
     def test_error_indentation(self):
         """Test error message with indentation."""
-        self.io_manager._log_indent = 2
+        self.io_manager.log_indent = 2
         self.io_manager.error("Indented error")
         output = self.stdout.getvalue()
         self.assertTrue(any(line.startswith("    ") for line in output.splitlines()))

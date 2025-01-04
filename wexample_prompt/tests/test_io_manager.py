@@ -66,7 +66,7 @@ class TestIOManager(unittest.TestCase):
         )
         
         # Set indentation level to 2 (4 spaces)
-        self.io_manager._log_indent = 2
+        self.io_manager.log_indent = 2
         
         # Print response
         self.io_manager.print_response(response)
