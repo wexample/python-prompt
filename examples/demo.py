@@ -113,7 +113,6 @@ def demo_progress():
 
 
 if __name__ == "__main__":
-    print("=== Prompt Response Demo ===")
     demo_styles()
     demo_table()
     demo_list()
