@@ -46,13 +46,53 @@ def demo_table():
     title = MainTitleResponse.create("Table Format")
     print(title.render())
     
+    # Simple table with headers
+    print("\nSimple table with headers:")
     data = [
-        ["Name", "Age", "City"],
         ["John", "30", "New York"],
         ["Jane", "25", "San Francisco"],
         ["Bob", "35", "Chicago"]
     ]
-    table = TablePromptResponse.create(data)
+    headers = ["Name", "Age", "City"]
+    table = TablePromptResponse.create(data, headers=headers)
+    print(table.render())
+    
+    # Table with title
+    print("\nTable with title:")
+    data = [
+        ["Python", "High", "Web, Data, AI"],
+        ["JavaScript", "High", "Web, Frontend"],
+        ["Rust", "Medium", "Systems, CLI"]
+    ]
+    headers = ["Language", "Usage", "Domains"]
+    table = TablePromptResponse.create(
+        data,
+        headers=headers,
+        title="Programming Languages"
+    )
+    print(table.render())
+    
+    # Table with varying column widths
+    print("\nTable with varying column widths:")
+    data = [
+        ["A short text", "This is a much longer text that will expand the column", "Short"],
+        ["Row 2", "More text here", "Data"],
+        ["Another row", "Content", "More"]
+    ]
+    headers = ["Column 1", "Column 2", "Column 3"]
+    table = TablePromptResponse.create(data, headers=headers)
+    print(table.render())
+    
+    # Table with missing data
+    print("\nTable with missing data:")
+    data = [
+        ["Complete", "Row", "Here"],
+        ["Missing", "Data"],
+        ["Also", "Incomplete"],
+        ["Full", "Row", "Again"]
+    ]
+    headers = ["Col 1", "Col 2", "Col 3"]
+    table = TablePromptResponse.create(data, headers=headers)
     print(table.render())
 
 
