@@ -13,11 +13,11 @@ The wexample-prompt package aims to be the centralized place for managing all te
 - [ ] Log frame cleanup and management
 
 ### 2. Indentation System
-- [ ] Indentation level management
-- [ ] Configurable indent string
-- [ ] Methods for increasing/decreasing indent
-- [ ] Indent building with increments
-- [ ] Support for nested indentation
+- [x] Indentation level management
+- [x] Configurable indent string
+- [x] Methods for increasing/decreasing indent
+- [x] Indent building with increments
+- [x] Support for nested indentation
 
 ### 3. Message Types and Formatting
 - [ ] Warning messages with parameters and fatal/trace options
