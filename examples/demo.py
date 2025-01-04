@@ -16,7 +16,9 @@ from wexample_prompt.responses import (
     ProgressPromptResponse,
     SuggestionsPromptResponse,
     ChoicePromptResponse,
-    ChoiceDictPromptResponse
+    ChoiceDictPromptResponse,
+    FilePickerPromptResponse,
+    DirPickerPromptResponse
 )
 from wexample_prompt.responses.messages import (
     DebugPromptResponse,
@@ -312,11 +314,11 @@ def demo_suggestions_verbosity(io: IOManager):
     normal_response.print(context=quiet_context)  # Won't show
     debug_response.print(context=quiet_context)   # Won't show
     
-    io.print_response(MainTitleResponse.create("\nDefault Context (verbosity=1)"))
+    io.print_response(MainTitleResponse.create("Default Context (verbosity=1)"))
     normal_response.print(context=default_context)  # Will show
     debug_response.print(context=default_context)   # Won't show
     
-    io.print_response(MainTitleResponse.create("\nMaximum Context (verbosity=3)"))
+    io.print_response(MainTitleResponse.create("Maximum Context (verbosity=3)"))
     normal_response.print(context=max_context)  # Will show
     debug_response.print(context=max_context)   # Will show
 
@@ -361,6 +363,26 @@ def demo_choices(io: IOManager):
     io.print_response(advanced_response)
 
 
+def demo_file_pickers(io: IOManager):
+    """Demonstrate file and directory pickers."""
+    io.print_response(MainTitleResponse.create("File & Directory Pickers"))
+    
+    # File picker
+    file_response = FilePickerPromptResponse.create(
+        question="Select a file to open",
+        abort="↩ Cancel"
+    )
+    io.print_response(file_response)
+    # Note: We don't call execute() in the demo to avoid blocking
+    
+    # Directory picker
+    dir_response = DirPickerPromptResponse.create(
+        question="Select a directory to use",
+        abort="↩ Cancel"
+    )
+    io.print_response(dir_response)
+
+
 if __name__ == "__main__":
     io = IOManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
@@ -376,4 +398,5 @@ if __name__ == "__main__":
     demo_suggestions(io)
     demo_suggestions_verbosity(io)
     demo_choices(io)
+    demo_file_pickers(io)
     demo_progress(io)
