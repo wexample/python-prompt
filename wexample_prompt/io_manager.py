@@ -3,7 +3,7 @@ import shutil
 import sys
 from typing import Any, List, Optional, TextIO, Union, Dict
 
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_indent import WithIndent
@@ -24,15 +24,17 @@ from wexample_prompt.responses.messages.debug_prompt_response import DebugPrompt
 class IOManager(BaseModel, WithIndent):
     """Manages input/output operations for the prompt system."""
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     theme: AbstractPromptTheme = Field(
         default_factory=DefaultPromptTheme,
         description="Theme for customizing colors and styles"
     )
     
-    # Private attributes
-    _tty_width: int = PrivateAttr()
-    _stdout: TextIO = PrivateAttr()
-    _stdin: TextIO = PrivateAttr()
+    # Private attributes using PrivateAttr for true private fields
+    _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
+    _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
+    _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
     
     def __init__(self, **data):
         """Initialize IOManager with default values for private attributes."""
@@ -40,10 +42,6 @@ class IOManager(BaseModel, WithIndent):
         self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
-    
-    class Config:
-        """Pydantic configuration."""
-        arbitrary_types_allowed = True
     
     def error(
         self,
