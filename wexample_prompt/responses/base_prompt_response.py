@@ -79,3 +79,28 @@ class BasePromptResponse(AbstractPromptResponse):
     def create(cls, lines: List[PromptResponseLine]) -> 'BasePromptResponse':
         """Create a new response with the given lines."""
         return cls(lines=lines)
+        
+    @classmethod
+    def create_from_text_lines(cls, text_lines: List[str]) -> 'BasePromptResponse':
+        """Create a new response from simple text lines.
+        
+        This is a convenience method that converts a list of text strings into
+        PromptResponseLine objects automatically.
+        
+        Args:
+            text_lines: List of text strings to convert into response lines
+            
+        Returns:
+            BasePromptResponse: A new response containing the text lines
+        """
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        
+        lines = []
+        for text in text_lines:
+            # Create a simple segment with the text
+            segment = PromptResponseSegment(text=text)
+            # Create a line with just this segment
+            line = PromptResponseLine(segments=[segment])
+            lines.append(line)
+            
+        return cls.create(lines)
