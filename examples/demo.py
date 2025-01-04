@@ -12,7 +12,8 @@ from wexample_prompt.responses import (
     TreePromptResponse,
     MainTitleResponse,
     SubtitleResponse,
-    ProgressPromptResponse
+    ProgressPromptResponse,
+    SuggestionsPromptResponse
 )
 from wexample_prompt.responses.messages import (
     DebugPromptResponse,
@@ -260,6 +261,28 @@ def demo_progress(io: IOManager):
         progress.execute_steps()
 
 
+def demo_suggestions(io: IOManager):
+    """Demonstrate suggestions display."""
+    io.print_response(
+        SuggestionsPromptResponse.create(
+            message="You might want to execute one of these commands",
+            suggestions=[
+                "pip install --upgrade package",
+                "python setup.py develop",
+                "pytest tests/"
+            ]
+        )
+    )
+
+    # Show single suggestion
+    io.print_response(
+        SuggestionsPromptResponse.create(
+            message="To continue, please run",
+            suggestions=["make build"]
+        )
+    )
+
+
 if __name__ == "__main__":
     io = IOManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
@@ -272,4 +295,5 @@ if __name__ == "__main__":
     demo_message_types(io)
     demo_titles(io)
     demo_indentation(io)
+    demo_suggestions(io)
     demo_progress(io)

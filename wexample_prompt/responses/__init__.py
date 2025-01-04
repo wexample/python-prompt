@@ -2,6 +2,7 @@
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.responses.list_prompt_response import ListPromptResponse
 from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
+from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
 from wexample_prompt.responses.table_prompt_response import TablePromptResponse
 from wexample_prompt.responses.titles.main_title_response import MainTitleResponse
 from wexample_prompt.responses.titles.subtitle_response import SubtitleResponse
@@ -13,6 +14,7 @@ __all__ = [
     'MainTitleResponse',
     'ProgressPromptResponse',
     'SubtitleResponse',
+    'SuggestionsPromptResponse',
     'TablePromptResponse',
     'TreePromptResponse'
 ]
