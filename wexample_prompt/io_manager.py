@@ -68,7 +68,7 @@ class IOManager(BaseModel, WithIndent):
             line: Line to print
             response: Parent response containing the line
         """
-        # Get color based on line type or response type
+        # Get color based on line-type or response-type
         message_type = line.line_type or response.message_type
         color = ColorManager.MESSAGE_COLORS.get(message_type, TerminalColor.RESET)
         
