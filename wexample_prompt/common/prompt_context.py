@@ -1,6 +1,7 @@
 import shutil
-from typing import Optional
 from pydantic import BaseModel, Field
+
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class PromptContext(BaseModel):
@@ -14,6 +15,7 @@ class PromptContext(BaseModel):
     )
     color_enabled: bool = Field(default=True)
     indentation: int = Field(default=0)  # Number of indentation levels
+    verbosity: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
     
     def get_effective_width(self) -> int:
         """Get the effective width considering terminal constraints."""
@@ -26,3 +28,14 @@ class PromptContext(BaseModel):
     def get_indentation(self) -> str:
         """Get the current indentation string."""
         return "  " * self.indentation  # Two spaces per level
+        
+    def should_show_message(self, required_verbosity: VerbosityLevel) -> bool:
+        """Check if a message should be shown based on verbosity level.
+        
+        Args:
+            required_verbosity: The minimum verbosity level required to show the message
+            
+        Returns:
+            bool: True if the message should be shown
+        """
+        return self.verbosity >= required_verbosity

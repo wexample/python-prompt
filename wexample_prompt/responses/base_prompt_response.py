@@ -5,6 +5,7 @@ from pydantic import Field
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -22,11 +23,16 @@ class BasePromptResponse(AbstractPromptResponse):
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
+    verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
     
     def render(self, context: Optional[PromptContext] = None) -> str:
         """Render the complete response."""
         if context is None:
             context = PromptContext()
+            
+        # Check if this message should be shown based on verbosity
+        if not context.should_show_message(self.verbosity_level):
+            return ""
             
         rendered_lines = []
         indent = context.get_indentation()
@@ -37,7 +43,7 @@ class BasePromptResponse(AbstractPromptResponse):
             rendered_lines.append(rendered)
             
         return "\n".join(rendered_lines)
-    
+        
     def print(
         self,
         output: TextIO = sys.stdout,
@@ -57,7 +63,8 @@ class BasePromptResponse(AbstractPromptResponse):
             context: Optional context for rendering (default: None)
         """
         rendered = self.render(context)
-        print(rendered, end=end, file=output, flush=flush)
+        if rendered:  # Only print if there's content after verbosity check
+            print(rendered, end=end, file=output, flush=flush)
     
     def append(self, other: 'BasePromptResponse') -> 'BasePromptResponse':
         """Combine this response with another."""

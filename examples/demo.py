@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.io_manager import IOManager
 from wexample_prompt.responses import (
     BasePromptResponse,
@@ -13,7 +14,7 @@ from wexample_prompt.responses import (
     MainTitleResponse,
     SubtitleResponse,
     ProgressPromptResponse,
-    SuggestionsPromptResponse
+    SuggestionsPromptResponse,
 )
 from wexample_prompt.responses.messages import (
     DebugPromptResponse,
@@ -283,6 +284,40 @@ def demo_suggestions(io: IOManager):
     )
 
 
+def demo_suggestions_verbosity(io: IOManager):
+    """Demonstrate verbosity levels with suggestions."""
+    # Create contexts with different verbosity levels
+    quiet_context = PromptContext(verbosity=VerbosityLevel.QUIET)
+    default_context = PromptContext(verbosity=VerbosityLevel.DEFAULT)
+    max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
+    
+    # Create responses with different verbosity requirements
+    normal_response = SuggestionsPromptResponse.create(
+        message="Standard commands",
+        suggestions=["command1", "command2"],
+        verbosity=VerbosityLevel.DEFAULT
+    )
+    
+    debug_response = SuggestionsPromptResponse.create(
+        message="Debug commands (only shown in maximum verbosity)",
+        suggestions=["debug1", "debug2"],
+        verbosity=VerbosityLevel.MAXIMUM
+    )
+    
+    # Demonstrate how verbosity affects visibility
+    io.print_response(MainTitleResponse.create("Quiet Context (verbosity=0)"))
+    normal_response.print(context=quiet_context)  # Won't show
+    debug_response.print(context=quiet_context)   # Won't show
+    
+    io.print_response(MainTitleResponse.create("\nDefault Context (verbosity=1)"))
+    normal_response.print(context=default_context)  # Will show
+    debug_response.print(context=default_context)   # Won't show
+    
+    io.print_response(MainTitleResponse.create("\nMaximum Context (verbosity=3)"))
+    normal_response.print(context=max_context)  # Will show
+    debug_response.print(context=max_context)   # Will show
+
+
 if __name__ == "__main__":
     io = IOManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
@@ -296,4 +331,5 @@ if __name__ == "__main__":
     demo_titles(io)
     demo_indentation(io)
     demo_suggestions(io)
+    demo_suggestions_verbosity(io)
     demo_progress(io)

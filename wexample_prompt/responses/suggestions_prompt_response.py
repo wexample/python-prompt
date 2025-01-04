@@ -7,18 +7,25 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class SuggestionsPromptResponse(BasePromptResponse):
     """Response for displaying a list of suggestions with optional descriptions."""
 
     @classmethod
-    def create(cls, message: str, suggestions: List[str]) -> 'SuggestionsPromptResponse':
+    def create(
+        cls,
+        message: str,
+        suggestions: List[str],
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+    ) -> 'SuggestionsPromptResponse':
         """Create a suggestions response.
         
         Args:
             message: The main message to display
             suggestions: List of suggested actions/commands
+            verbosity: Minimum verbosity level to display this message
             
         Returns:
             SuggestionsPromptResponse: A new suggestions response
@@ -51,4 +58,4 @@ class SuggestionsPromptResponse(BasePromptResponse):
                 ])
             )
         
-        return cls(lines=lines)
+        return cls(lines=lines, verbosity_level=verbosity)
