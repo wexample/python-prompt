@@ -155,10 +155,11 @@ class IOManager(BaseModel, WithIndent):
         Args:
             response: Response to print
         """
-        # Create context with current theme and terminal width
+        # Create context with current theme, terminal width, and indentation
         context = PromptContext(
             theme=self.theme,
-            terminal_width=self._tty_width
+            terminal_width=self._tty_width,
+            indentation=self._log_indent
         )
         
         # Use response's print function

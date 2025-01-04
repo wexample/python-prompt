@@ -172,30 +172,30 @@ def demo_titles(io: IOManager):
 
 
 def demo_indentation(io: IOManager):
-    """Demonstrate message indentation."""
-    title = MainTitleResponse.create("Message Indentation")
+    """Demonstrate indentation."""
+    title = MainTitleResponse.create("Indentation")
     io.print_response(title)
     
-    # Simple indentation example
-    log = LogPromptResponse.create("Root level message")
-    io.print_response(log)
+    # Show different indentation levels
+    io.print_response(InfoPromptResponse.create("No indentation"))
     
-    log.lines[0].indent_level = 1
-    io.print_response(log)
+    io._log_indent += 1
+    io.print_response(InfoPromptResponse.create("One level indent"))
     
-    # Multiline with indentation
-    multiline_msg = (
-        "Processing started:\n"
-        "  Step 1: Data validation\n"
-        "    - Checking formats\n"
-        "    - Verifying integrity\n"
-        "  Step 2: Transformation\n"
-        "    - Applying rules\n"
-        "    - Saving results"
+    io._log_indent += 1
+    io.print_response(InfoPromptResponse.create("Two levels indent"))
+    
+    # Show indented progress bar
+    progress = ProgressPromptResponse.create(
+        total=100,
+        current=50,
+        label="Indented progress"
     )
-    multiline = LogPromptResponse.create(multiline_msg)
-    io.print_response(InfoPromptResponse.create("Multiline example:"))
-    io.print_response(multiline)
+    io.print_response(progress)
+    
+    # Reset indentation
+    io._log_indent = 0
+    io.print_response(InfoPromptResponse.create("Back to no indentation"))
 
 
 def demo_progress(io: IOManager):

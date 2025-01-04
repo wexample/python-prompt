@@ -13,6 +13,7 @@ class PromptContext(BaseModel):
         and shutil.sys.stdout.isatty()
     )
     color_enabled: bool = Field(default=True)
+    indentation: int = Field(default=0)  # Number of indentation levels
     
     def get_effective_width(self) -> int:
         """Get the effective width considering terminal constraints."""
@@ -21,3 +22,7 @@ class PromptContext(BaseModel):
     def should_use_color(self) -> bool:
         """Determine if color should be used."""
         return self.color_enabled and self.is_tty
+        
+    def get_indentation(self) -> str:
+        """Get the current indentation string."""
+        return "  " * self.indentation  # Two spaces per level

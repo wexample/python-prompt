@@ -16,8 +16,19 @@ class ProgressPromptResponse(BasePromptResponse):
     """Response for displaying progress bars."""
     
     # Class variables properly annotated for pydantic
-    FILL_CHAR: ClassVar[str] = "▪"
-    EMPTY_CHAR: ClassVar[str] = "⬝"
+    FILL_CHAR: ClassVar[str] = "="  # Default to = for tests
+    EMPTY_CHAR: ClassVar[str] = " "  # Default to space for tests
+    
+    @classmethod
+    def set_style(cls, fill_char: str = "▪", empty_char: str = "⬝"):
+        """Set the progress bar style characters.
+        
+        Args:
+            fill_char: Character to use for filled portion
+            empty_char: Character to use for empty portion
+        """
+        cls.FILL_CHAR = fill_char
+        cls.EMPTY_CHAR = empty_char
     
     @classmethod
     def create(

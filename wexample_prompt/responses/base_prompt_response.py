@@ -28,7 +28,14 @@ class BasePromptResponse(AbstractPromptResponse):
         if context is None:
             context = PromptContext()
             
-        rendered_lines = [line.render(context) for line in self.lines]
+        rendered_lines = []
+        indent = context.get_indentation()
+        for line in self.lines:
+            rendered = line.render(context)
+            if rendered:  # Only indent non-empty lines
+                rendered = indent + rendered
+            rendered_lines.append(rendered)
+            
         return "\n".join(rendered_lines)
     
     def print(
