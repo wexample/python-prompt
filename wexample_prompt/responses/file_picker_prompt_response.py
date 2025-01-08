@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict, Optional
 
 from wexample_prompt.responses.choice_dict_prompt_response import ChoiceDictPromptResponse
-from wexample_helpers.helpers.dict_helper import dict_merge, dict_sort_values
+from wexample_helpers.helpers.dict import dict_merge, dict_sort_values
 
 
 class FilePickerPromptResponse(ChoiceDictPromptResponse):
