@@ -5,7 +5,6 @@ from pydantic import Field
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
@@ -21,7 +20,6 @@ class BasePromptResponse(AbstractPromptResponse):
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
-    context: PromptContext = Field(default_factory=PromptContext)
         
     def print(
         self,

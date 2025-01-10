@@ -7,7 +7,6 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
-
 from wexample_prompt.common.prompt_context import PromptContext
 
 
@@ -19,20 +18,9 @@ class SuggestionsPromptResponse(BasePromptResponse):
         cls,
         message: str,
         suggestions: List[str],
-        context:Optional[PromptContext]=None,
+        context: Optional[PromptContext] = None,
         **kwargs
     ) -> 'SuggestionsPromptResponse':
-        """Create a suggestions response.
-        
-        Args:
-            message: The main message to display
-            suggestions: List of suggested actions/commands
-            context: The context for this response
-            **kwargs: Additional arguments
-            
-        Returns:
-            SuggestionsPromptResponse: A new suggestions response
-        """
         lines = []
         
         # Add the message line with blue color and bold style
