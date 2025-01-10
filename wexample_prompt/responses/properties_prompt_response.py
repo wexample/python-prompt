@@ -37,39 +37,45 @@ class PropertiesPromptResponse(BasePromptResponse):
         if not self.properties:
             return ""
 
-        # Calculate the maximum width needed
+        # Calculate total width including borders and padding
+        total_width = self.context.terminal_width
+        # Content width is total minus borders (2) and padding (2)
+        content_width = total_width - 4
+
+        # Calculate the maximum width needed for content
         max_key_width = max(len(str(key)) for key in self.properties.keys())
         content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
-        
-        # Calculate total width needed
-        total_width = max(len(line) for line in content_lines) + 4  # Add padding
         
         lines = []
         
         # Add title if provided
         if self.title:
-            title_padding = (total_width - len(self.title)) // 2
+            title_padding = (content_width - len(self.title)) // 2
             title_line = PromptResponseLine(segments=[
-                PromptResponseSegment(text="┌" + "─" * title_padding),
+                PromptResponseSegment(text="+" + "-" * title_padding),
                 PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="─" * (total_width - title_padding - len(self.title) - 2) + "┐")
+                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title) - 2) + "+")
             ])
             lines.append(title_line)
         else:
             # Top border
-            lines.append(self._create_border_line(total_width, "┌", "┐"))
+            lines.append(self._create_border_line(content_width))
             
         # Add content lines
         for content in content_lines:
-            padding = total_width - len(content) - 2
+            # Ensure content doesn't exceed width
+            if len(content) > content_width:
+                content = content[:content_width - 3] + "..."
+            
+            padding = content_width - len(content)
             lines.append(PromptResponseLine(segments=[
-                PromptResponseSegment(text="│ "),
+                PromptResponseSegment(text="| "),
                 PromptResponseSegment(text=content),
-                PromptResponseSegment(text=" " * padding + "│")
+                PromptResponseSegment(text=" " * padding + "|")
             ]))
             
         # Bottom border
-        lines.append(self._create_border_line(total_width, "└", "┘"))
+        lines.append(self._create_border_line(content_width))
         
         # Update lines and render using parent class
         self.lines = lines
@@ -109,7 +115,7 @@ class PropertiesPromptResponse(BasePromptResponse):
         return lines
 
     @staticmethod
-    def _create_border_line(width: int, left: str = "├", right: str = "┤") -> PromptResponseLine:
+    def _create_border_line(width: int, left: str = "+", right: str = "+") -> PromptResponseLine:
         """Create a border line with the specified width and edge characters.
         
         Args:
@@ -121,5 +127,5 @@ class PropertiesPromptResponse(BasePromptResponse):
             PromptResponseLine: A line for the border
         """
         return PromptResponseLine(segments=[
-            PromptResponseSegment(text=f"{left}{'─' * (width - 2)}{right}")
+            PromptResponseSegment(text=f"{left}{'-' * (width - 2)}{right}")
         ])
