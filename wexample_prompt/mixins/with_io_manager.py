@@ -5,17 +5,19 @@ from wexample_prompt.io_manager import IoManager
 
 
 class WithIoManager(BaseModel):
-    io: Optional[IoManager] = Field(
+    io_manager: Optional[IoManager] = Field(
         default=None,
         description="IoManager instance that can be injected via constructor"
     )
     
     @property
     def io(self) -> IoManager:
-        if self.io is None:
-            self.io = IoManager()
-        return self.io
+        """Get the IoManager instance. Creates one if none exists."""
+        if self.io_manager is None:
+            self.io_manager = IoManager()
+        return self.io_manager
     
     @io.setter
     def io(self, manager: IoManager) -> None:
-        self.io = manager
+        """Set the IoManager instance."""
+        self.io_manager = manager
