@@ -1,7 +1,6 @@
 """Error response implementation."""
-import sys
 import traceback
-from typing import ClassVar, Optional, Dict, Any, Union
+from typing import ClassVar, Optional
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
@@ -36,7 +35,7 @@ class ErrorPromptResponse(BaseMessageResponse):
         # Create default context if none provided
         if context is None:
             context = ErrorContext()
-            
+
         # Format message with parameters if any
         message = context.format_message(text) if text else "Unknown error"
             
@@ -48,11 +47,7 @@ class ErrorPromptResponse(BaseMessageResponse):
             
         # Create response
         response = cls._create_symbol_message(message, TerminalColor.RED)
-        
-        # Exit if fatal
-        if context.fatal:
-            sys.exit(context.exit_code)
-            
+
         return response
     
     @classmethod

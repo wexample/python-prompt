@@ -87,7 +87,7 @@ class IoManager(BaseModel, WithIndent):
         )
         response = ErrorPromptResponse.create(message, context)
         self._logger.error(message, extra={"params": params} if params else None)
-        self.print_response(response)
+        self.print_response(response=response)
         return response
 
     def warning(
@@ -142,7 +142,6 @@ class IoManager(BaseModel, WithIndent):
             terminal_width=self._tty_width,
             indentation=self.log_indent
         )
-        
         # Use response's print function
         response.print(output=self._stdout, context=context)
     

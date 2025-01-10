@@ -53,18 +53,22 @@ class BasePromptResponse(AbstractPromptResponse):
     ) -> None:
         """Print the response to the specified output.
         
-        This is the centralized print function for all responses. All output
-        from any response type should go through this function.
-        
         Args:
-            output: Output stream to print to (default: sys.stdout)
-            end: String to append after the output (default: newline)
-            flush: Whether to flush the output stream (default: True)
-            context: Optional context for rendering (default: None)
+            output: Output stream to print to
+            end: String to append after the message
+            flush: Whether to flush the output
+            context: Optional rendering context
         """
+        if context is None:
+            context = PromptContext()
+            
         rendered = self.render(context)
-        if rendered:  # Only print if there's content after verbosity check
-            print(rendered, end=end, file=output, flush=flush)
+        if rendered:
+            print(rendered, file=output, end=end, flush=flush)
+
+        # Exit if fatal
+        if context.fatal:
+            sys.exit(context.exit_code)
     
     def append(self, other: 'BasePromptResponse') -> 'BasePromptResponse':
         """Combine this response with another."""
