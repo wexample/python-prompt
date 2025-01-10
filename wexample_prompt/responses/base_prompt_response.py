@@ -24,20 +24,18 @@ class BasePromptResponse(AbstractPromptResponse):
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
     verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
+    context: PromptContext = Field(default_factory=PromptContext)
     
-    def render(self, context: Optional[PromptContext] = None) -> str:
+    def render(self) -> str:
         """Render the complete response."""
-        if context is None:
-            context = PromptContext()
-            
         # Check if this message should be shown based on verbosity
-        if not context.should_show_message(self.verbosity_level):
+        if not self.context.should_show_message(self.verbosity_level):
             return ""
             
         rendered_lines = []
-        indent = context.get_indentation()
+        indent = self.context.get_indentation()
         for line in self.lines:
-            rendered = line.render(context)
+            rendered = line.render(self.context)
             if rendered:  # Only indent non-empty lines
                 rendered = indent + rendered
             rendered_lines.append(rendered)
@@ -49,7 +47,6 @@ class BasePromptResponse(AbstractPromptResponse):
         output: TextIO = sys.stdout,
         end: str = "\n",
         flush: bool = True,
-        context: Optional[PromptContext] = None
     ) -> None:
         """Print the response to the specified output.
         
@@ -57,18 +54,14 @@ class BasePromptResponse(AbstractPromptResponse):
             output: Output stream to print to
             end: String to append after the message
             flush: Whether to flush the output
-            context: Optional rendering context
         """
-        if context is None:
-            context = PromptContext()
-            
-        rendered = self.render(context)
+        rendered = self.render()
         if rendered:
             print(rendered, file=output, end=end, flush=flush)
 
         # Exit if fatal
-        if context.fatal:
-            sys.exit(context.exit_code)
+        if self.context.fatal:
+            sys.exit(self.context.exit_code)
     
     def append(self, other: 'BasePromptResponse') -> 'BasePromptResponse':
         """Combine this response with another."""

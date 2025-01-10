@@ -136,14 +136,8 @@ class IoManager(BaseModel, WithIndent):
             self.print_response(response)
     
     def print_response(self, response: BasePromptResponse) -> None:
-        # Create context with current theme, terminal width, and indentation
-        context = PromptContext(
-            theme=self.theme,
-            terminal_width=self._tty_width,
-            indentation=self.log_indent
-        )
-        # Use response's print function
-        response.print(output=self._stdout, context=context)
+        """Print a response using its own context."""
+        response.print(output=self._stdout)
     
     def print_response_line(
         self,

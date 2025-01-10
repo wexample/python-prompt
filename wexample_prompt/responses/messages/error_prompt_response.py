@@ -1,6 +1,7 @@
 """Error response implementation."""
+import sys
 import traceback
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Dict, Any, Union
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
@@ -45,9 +46,10 @@ class ErrorPromptResponse(BaseMessageResponse):
             if trace and trace != 'NoneType: None\n':
                 message = f"{message}\n{trace}"
             
-        # Create response
+        # Create response with context
         response = cls._create_symbol_message(message, TerminalColor.RED)
-
+        response.context = context  # Use the provided context
+        
         return response
     
     @classmethod
