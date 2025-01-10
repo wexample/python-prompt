@@ -17,6 +17,7 @@ from wexample_prompt.responses.messages.warning_prompt_response import WarningPr
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
 from wexample_helpers_api.common.http_request_payload import HttpRequestPayload
 
 
@@ -195,22 +196,24 @@ class IoManager(BaseModel, WithIndent):
     ) -> Union[requests.Response, None]:
         # Format request details for logging
         request_details = {
-            "url": request_context.url,
-            "method": request_context.method,
+            "URL": request_context.url,
+            "Method": request_context.method
         }
         if request_context.data:
-            request_details["data"] = request_context.data
+            request_details["Data"] = request_context.data
         if request_context.query_params:
-            request_details["query_params"] = request_context.query_params
+            request_details["Query Parameters"] = request_context.query_params
 
-        # Handle request failure (no response)
+        # Handle only when response is set to None.
         if response is None:
+            self.print_response(PropertiesPromptResponse.create(
+                request_details,
+                title="Request Details"
+            ))
+
             if exception:
-                self.error(
-                    f"Request failed: {str(exception)}",
-                    params=request_details,
-                    trace=True
-                )
+                error_msg = f"Request failed: {str(exception)}"
+                self.error(error_msg)
             return None
 
         # Log request details at debug level
@@ -233,11 +236,14 @@ class IoManager(BaseModel, WithIndent):
             if response.text:
                 error_msg = response.text
 
-        self.error(
-            f"Request failed: {error_msg}",
-            params=request_details,
-            trace=bool(exception)
-        )
+        # Add response status to request details
+        request_details["Status"] = response.status_code
+
+        self.print_response(PropertiesPromptResponse.create(
+            request_details,
+            title="Request Details"
+        ))
+
+        self.error(f"Request failed: {error_msg}")
 
         return None
-

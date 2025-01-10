@@ -6,6 +6,7 @@ class ResponseType(Enum):
     LIST = "list"
     PLAIN = "plain"
     PROGRESS = "progress"
+    PROPERTIES = "properties"
     TABLE = "table"
     TITLE = "title"
     TREE = "tree"
