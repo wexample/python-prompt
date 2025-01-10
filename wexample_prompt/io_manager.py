@@ -77,7 +77,8 @@ class IoManager(BaseModel, WithIndent):
             fatal=fatal,
             trace=trace,
             params=params,
-            exit_code=exit_code
+            exit_code=exit_code,
+            indentation=self.log_indent
         )
         response = ErrorPromptResponse.create(message, context)
         
@@ -98,7 +99,8 @@ class IoManager(BaseModel, WithIndent):
         context = ErrorContext(
             fatal=False,
             trace=trace,
-            params=params
+            params=params,
+            indentation=self.log_indent
         )
         response = WarningPromptResponse.create(message, context)
         
@@ -153,6 +155,10 @@ class IoManager(BaseModel, WithIndent):
 
     def print_response(self, response: BasePromptResponse) -> None:
         """Print a response using its own context."""
+        # If response has a context but no indentation, set it
+        if response.context.indentation == 0 and self.log_indent > 0:
+            response.context.indentation = self.log_indent
+            
         response.print(output=self._stdout)
 
     def print_response_line(

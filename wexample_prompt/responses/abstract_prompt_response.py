@@ -20,12 +20,14 @@ class AbstractPromptResponse(BaseModel, ABC):
     context: Optional[PromptContext] = None
     verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
 
-    def render(self) -> str:
-        """Render the complete response."""
+    def __init__(self, **data):
+        super().__init__(**data)
         # Create default context if none is provided
         if self.context is None:
             self.context = PromptContext()
-            
+
+    def render(self) -> str:
+        """Render the complete response."""
         # Check if this message should be shown based on verbosity
         if not self.context.should_show_message(self.verbosity_level):
             return ""
