@@ -1,8 +1,6 @@
 from abc import abstractmethod
 from typing import Optional, ClassVar
 
-from pydantic import BaseModel, ConfigDict
-
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.message_type import MessageType
@@ -10,26 +8,29 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 
+from wexample_prompt.common.prompt_context import PromptContext
+
 
 class BaseMessageResponse(BasePromptResponse):
     """Base class for all message responses."""
-    
+
     # Symbol to display before the message, override in subclasses
     SYMBOL: ClassVar[str] = ""
-    
+
     @classmethod
     @abstractmethod
     def get_message_type(cls) -> MessageType:
         """Get the message type for this response."""
         pass
-    
+
     @classmethod
     def _create_symbol_message(
         cls,
         text: str,
         color: TerminalColor,
         symbol: Optional[str] = None,
-        bold_symbol: bool = True
+        bold_symbol: bool = True,
+        context: Optional[PromptContext] = None
     ) -> 'BaseMessageResponse':
         """Create a message with an optional symbol.
         
@@ -43,7 +44,7 @@ class BaseMessageResponse(BasePromptResponse):
             BaseMessageResponse: A new message response
         """
         segments = []
-        
+
         # Add symbol if present
         if symbol or cls.SYMBOL:
             symbol_text = f"{symbol or cls.SYMBOL} "
@@ -55,17 +56,21 @@ class BaseMessageResponse(BasePromptResponse):
                 )
             )
             segments.append(symbol_segment)
-        
+
         # Add message text
         message = PromptResponseSegment(
             text=ColorManager.colorize(text, color)
         )
         segments.append(message)
-        
+
         # Create line with segments
         line = PromptResponseLine(
             segments=segments,
             line_type=cls.get_message_type()
         )
-        
-        return cls(lines=[line], message_type=cls.get_message_type())
+
+        return cls(
+            lines=[line],
+            message_type=cls.get_message_type(),
+            **({"context": context} if context is not None else {})
+        )

@@ -1,11 +1,9 @@
-"""Base class for all prompt responses."""
-from typing import List, Dict, Any, Optional, TextIO
+from typing import List, Dict, Any, TextIO
 import sys
 from pydantic import Field
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -23,24 +21,7 @@ class BasePromptResponse(AbstractPromptResponse):
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
-    verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
     context: PromptContext = Field(default_factory=PromptContext)
-    
-    def render(self) -> str:
-        """Render the complete response."""
-        # Check if this message should be shown based on verbosity
-        if not self.context.should_show_message(self.verbosity_level):
-            return ""
-            
-        rendered_lines = []
-        indent = self.context.get_indentation()
-        for line in self.lines:
-            rendered = line.render(self.context)
-            if rendered:  # Only indent non-empty lines
-                rendered = indent + rendered
-            rendered_lines.append(rendered)
-            
-        return "\n".join(rendered_lines)
         
     def print(
         self,

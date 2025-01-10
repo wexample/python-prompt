@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional, TypeVar, Generic
+from typing import List, Dict, Any, Optional
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
 
@@ -8,26 +8,40 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-T = TypeVar('T', bound='AbstractPromptResponse')
-C = TypeVar('C', bound=PromptContext)
 
-class AbstractPromptResponse(BaseModel, Generic[C], ABC):
+class AbstractPromptResponse(BaseModel, ABC):
     """Abstract base class for all prompt responses."""
     lines: List[PromptResponseLine]
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
-    context: Optional[C] = None
-    
+    context: Optional[PromptContext] = None
+    verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
+
     def render(self) -> str:
         """Render the complete response."""
-        rendered_lines = [line.render(self.context) for line in self.lines]
-        return "\n".join(rendered_lines)
-    
+        # Check if this message should be shown based on verbosity
+        if not self.context.should_show_message(self.verbosity_level):
+            return ""
+
+        rendered_lines = []
+        indent = self.context.get_indentation()
+        for line in self.lines:
+            rendered = line.render(self.context)
+            if rendered:  # Only indent non-empty lines
+                rendered = indent + rendered
+            rendered_lines.append(rendered)
+
+        # Format message with parameters if any
+        return self.context.format_message(
+            "\n".join(rendered_lines)
+        )
+
     @classmethod
     @abstractmethod
-    def create(cls: type[T], context: C, **kwargs) -> T:
+    def create(cls: "AbstractPromptResponse", context: PromptContext = None, **kwargs) -> "AbstractPromptResponse":
         """
         Create a new instance of the response.
         
