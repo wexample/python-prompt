@@ -5,7 +5,7 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.responses import (
     BasePromptResponse,
     TablePromptResponse,

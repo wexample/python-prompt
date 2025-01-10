@@ -6,7 +6,7 @@ import sys
 from typing import Dict, Any, Tuple, Optional
 from functools import wraps
 
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.responses import MainTitleResponse
 from wexample_prompt.responses.messages import InfoPromptResponse
 

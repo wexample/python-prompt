@@ -4,7 +4,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.error_context import ErrorContext
 
 

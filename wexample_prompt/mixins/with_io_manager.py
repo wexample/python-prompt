@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel, Field
 
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 
 
 class WithIoManager(BaseModel):

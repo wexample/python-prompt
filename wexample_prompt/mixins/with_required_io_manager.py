@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from wexample_prompt.io_manager import IoManager
+from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
