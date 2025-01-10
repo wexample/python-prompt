@@ -1,29 +1,16 @@
-"""Error context for error handling."""
-from typing import Optional, Dict, Any
-
 from wexample_prompt.common.prompt_context import PromptContext
+import traceback
 
 
 class ErrorContext(PromptContext):
-    """Context for error handling.
-    
-    This class holds information about how an error should be handled:
-    - trace: If True, include stack trace in output
-    - params: Optional parameters for message formatting
-    """
-    
     trace: bool = True
-    params: Optional[Dict[str, Any]] = None
-    
+
     def format_message(self, message: str) -> str:
-        """Format message with parameters if any.
-        
-        Args:
-            message: Message template
-            
-        Returns:
-            Formatted message
-        """
-        if self.params:
-            return message.format(**self.params)
+        message = super().format_message(message)
+
+        if self.trace:
+            trace = traceback.format_exc()
+            if trace and trace != 'NoneType: None\n':
+                message = f"{message}\n{trace}"
+
         return message
