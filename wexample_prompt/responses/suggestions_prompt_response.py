@@ -8,6 +8,7 @@ from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class SuggestionsPromptResponse(BasePromptResponse):
@@ -19,6 +20,7 @@ class SuggestionsPromptResponse(BasePromptResponse):
         message: str,
         suggestions: List[str],
         context: Optional[PromptContext] = None,
+        verbosity: Optional[VerbosityLevel] = None,
         **kwargs
     ) -> 'SuggestionsPromptResponse':
         lines = []
@@ -47,4 +49,13 @@ class SuggestionsPromptResponse(BasePromptResponse):
                 ])
             )
             
-        return cls(lines=lines, context=context)
+        # Create the response with the specified verbosity level
+        response_kwargs = {
+            'lines': lines,
+            'context': context,
+            **kwargs
+        }
+        if verbosity is not None:
+            response_kwargs['verbosity_level'] = verbosity
+            
+        return cls(**response_kwargs)

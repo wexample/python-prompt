@@ -36,7 +36,7 @@ class PromptContext(BaseModel):
 
     def should_show_message(self, required_verbosity: VerbosityLevel) -> bool:
         """Check if a message should be shown based on verbosity level."""
-        return self.verbosity >= required_verbosity
+        return required_verbosity <= self.verbosity
 
     def format_message(self, message: str) -> str:
         if self.params:

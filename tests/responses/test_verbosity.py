@@ -19,56 +19,61 @@ class TestVerbosity(unittest.TestCase):
         max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
 
         # Create responses with different verbosity requirements
-        quiet_response = SuggestionsPromptResponse.create(
+        critical_response = SuggestionsPromptResponse.create(
             message="Critical message",
             suggestions=["critical command"],
-            verbosity=VerbosityLevel.QUIET,
-            context=quiet_context
+            verbosity=VerbosityLevel.QUIET  # Show even in quiet mode
         )
         
         normal_response = SuggestionsPromptResponse.create(
             message="Normal message",
             suggestions=["normal command"],
-            verbosity=VerbosityLevel.DEFAULT,
-            context=default_context
+            verbosity=VerbosityLevel.DEFAULT  # Show in default and higher
         )
         
         debug_response = SuggestionsPromptResponse.create(
             message="Debug message",
             suggestions=["debug command"],
-            verbosity=VerbosityLevel.MAXIMUM,
-            context=max_context
+            verbosity=VerbosityLevel.MAXIMUM  # Only show in maximum verbosity
         )
 
-        # Test quiet context - should only show QUIET messages
-        output = StringIO()
-        quiet_response.print(output=output)
-        normal_response.print(output=output)
-        debug_response.print(output=output)
-        quiet_output = output.getvalue()
-        self.assertIn("Critical message", quiet_output)
-        self.assertNotIn("Normal message", quiet_output)
-        self.assertNotIn("Debug message", quiet_output)
+        def test_context_output(context, expected_messages):
+            """Helper to test output in a given context."""
+            for response in [critical_response, normal_response, debug_response]:
+                response.context = context
+            
+            output = StringIO()
+            critical_response.print(output=output)
+            normal_response.print(output=output)
+            debug_response.print(output=output)
+            result = output.getvalue()
+            
+            for message, should_appear in expected_messages.items():
+                if should_appear:
+                    self.assertIn(message, result)
+                else:
+                    self.assertNotIn(message, result)
 
-        # Test default context - should show QUIET and DEFAULT messages
-        output = StringIO()
-        quiet_response.print(output=output)
-        normal_response.print(output=output)
-        debug_response.print(output=output)
-        default_output = output.getvalue()
-        self.assertIn("Critical message", default_output)
-        self.assertIn("Normal message", default_output)
-        self.assertNotIn("Debug message", default_output)
+        # Test quiet context - should only show critical messages
+        test_context_output(quiet_context, {
+            "Critical message": True,
+            "Normal message": False,
+            "Debug message": False
+        })
+
+        # Test default context - should show critical and normal messages
+        test_context_output(default_context, {
+            "Critical message": True,
+            "Normal message": True,
+            "Debug message": False
+        })
 
         # Test maximum context - should show all messages
-        output = StringIO()
-        quiet_response.print(output=output)
-        normal_response.print(output=output)
-        debug_response.print(output=output)
-        max_output = output.getvalue()
-        self.assertIn("Critical message", max_output)
-        self.assertIn("Normal message", max_output)
-        self.assertIn("Debug message", max_output)
+        test_context_output(max_context, {
+            "Critical message": True,
+            "Normal message": True,
+            "Debug message": True
+        })
 
     def test_should_show_message(self):
         """Test the should_show_message method of PromptContext."""
