@@ -2,7 +2,7 @@ import shutil
 import sys
 import logging
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict
+from typing import Any, List, Optional, TextIO, Dict, Union
 from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
 import requests
 
@@ -17,6 +17,7 @@ from wexample_prompt.responses.messages.warning_prompt_response import WarningPr
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+from wexample_helpers_api.common.http_request_payload import HttpRequestPayload
 
 
 class IoManager(BaseModel, WithIndent):
@@ -186,31 +187,57 @@ class IoManager(BaseModel, WithIndent):
     def terminal_width(self) -> int:
         return self._tty_width
 
-    def api_response(
+    def handle_api_response(
         self,
-        response: requests.Response,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Optional[ErrorPromptResponse]:
-        if response.status_code >= 400:
-            params = {
-                "status_code": response.status_code,
-                "url": response.url,
-                **(context or {})
-            }
+        response: Optional[requests.Response],
+        request_context: HttpRequestPayload,
+        exception: Optional[Exception] = None,
+    ) -> Union[requests.Response, None]:
+        # Format request details for logging
+        request_details = {
+            "url": request_context.url,
+            "method": request_context.method,
+        }
+        if request_context.data:
+            request_details["data"] = request_context.data
+        if request_context.query_params:
+            request_details["query_params"] = request_context.query_params
 
-            try:
-                error_data = response.json()
-                if isinstance(error_data, dict):
-                    params["response"] = error_data
-            except (ValueError, AttributeError):
-                params["response_text"] = response.text[:500]  # Limit text length
+        # Handle request failure (no response)
+        if not response:
+            if exception:
+                self.error(
+                    f"Request failed: {str(exception)}",
+                    params=request_details,
+                    trace=True
+                )
+            return None
 
-            error_message = f"API Error {response.status_code}"
-            if response.status_code >= 500:
-                error_message = f"Server Error {response.status_code}"
-            elif response.status_code >= 400:
-                error_message = f"Client Error {response.status_code}"
+        # Log request details at debug level
+        self.debug(
+            f"{request_context.method} {request_context.url} "
+            f"-> Status: {response.status_code}"
+        )
 
-            return self.error(error_message, params=params)
+        # Handle response based on status code
+        if 200 <= response.status_code < 300:
+            return response
+        
+        # Handle error response
+        error_msg = f"HTTP {response.status_code}"
+        try:
+            error_data = response.json()
+            if isinstance(error_data, dict):
+                error_msg = error_data.get("message", error_data.get("error", error_msg))
+        except (ValueError, AttributeError):
+            if response.text:
+                error_msg = response.text
+
+        self.error(
+            f"Request failed: {error_msg}",
+            params=request_details,
+            trace=bool(exception)
+        )
 
         return None
+

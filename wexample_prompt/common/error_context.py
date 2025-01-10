@@ -34,6 +34,35 @@ class ErrorContext(PromptContext):
         if self.trace:
             trace = traceback.format_exc()
             if trace and trace != 'NoneType: None\n':
-                message = f"{message}\n{trace}"
+                message = f"{message}{self._format_traceback(trace)}"
 
         return message
+
+    def _format_traceback(self, trace: str) -> str:
+        """Format a traceback string with visual delimiters.
+
+        Args:
+            trace: The traceback string to format
+
+        Returns:
+            Formatted traceback string
+        """
+        if not trace:
+            return ""
+
+        lines = trace.strip().split('\n')
+        formatted_lines = []
+
+        # Add top delimiter
+        formatted_lines.append("┌─" + "─" * 78)
+        formatted_lines.append("│ Traceback:")
+        formatted_lines.append("├─" + "─" * 78)
+
+        # Format each line of the trace
+        for line in lines:
+            formatted_lines.append(f"│ {line}")
+
+        # Add bottom delimiter
+        formatted_lines.append("└─" + "─" * 78)
+
+        return "\n".join(formatted_lines)
