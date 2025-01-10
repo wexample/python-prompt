@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, Field
 
 from wexample_prompt.io_manager import IoManager
 
@@ -11,7 +11,10 @@ class WithIoManager(BaseModel):
     or be unique to each instance.
     """
     
-    _io: Optional[IoManager] = PrivateAttr(default=None)
+    _io: Optional[IoManager] = Field(
+        default=None,
+        description="IoManager instance that can be injected via constructor"
+    )
     
     @property
     def io(self) -> IoManager:
