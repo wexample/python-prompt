@@ -1,5 +1,7 @@
 import shutil
 import sys
+import logging
+from logging import Logger
 from typing import Any, List, Optional, TextIO, Dict
 from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
 
@@ -25,7 +27,16 @@ class IoManager(BaseModel, WithIndent):
         default_factory=DefaultPromptTheme,
         description="Theme for customizing colors and styles"
     )
+    log_level: int = Field(
+        default=logging.INFO,
+        description="Minimum log level for file logging"
+    )
+    log_file: Optional[str] = Field(
+        default=None,
+        description="Path to log file. If None, file logging is disabled"
+    )
     
+    _logger: Logger = PrivateAttr()
     _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
@@ -35,6 +46,30 @@ class IoManager(BaseModel, WithIndent):
         self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
+        self._setup_logger()
+    
+    def _setup_logger(self) -> None:
+        """Configure the Python logger with proper formatting and handlers."""
+        self._logger = logging.getLogger("prompt")
+        self._logger.setLevel(self.log_level)
+
+        # Clear any existing handlers
+        self._logger.handlers.clear()
+
+        # Console handler with custom formatting
+        console_handler = logging.StreamHandler(self._stdout)
+        console_handler.setFormatter(
+            logging.Formatter('%(levelname)s: %(message)s')
+        )
+        self._logger.addHandler(console_handler)
+
+        # File handler if log_file is specified
+        if self.log_file:
+            file_handler = logging.FileHandler(self.log_file)
+            file_handler.setFormatter(
+                logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            )
+            self._logger.addHandler(file_handler)
     
     def error(
         self,
@@ -51,9 +86,10 @@ class IoManager(BaseModel, WithIndent):
             exit_code=exit_code
         )
         response = ErrorPromptResponse.create(message, context)
+        self._logger.error(message, extra={"params": params} if params else None)
         self.print_response(response)
         return response
-    
+
     def warning(
         self,
         message: str,
@@ -66,23 +102,34 @@ class IoManager(BaseModel, WithIndent):
             params=params
         )
         response = WarningPromptResponse.create(message, context)
+        self._logger.warning(message, extra={"params": params} if params else None)
         self.print_response(response)
         return response
-    
+
     def success(self, message: str) -> SuccessPromptResponse:
         response = SuccessPromptResponse.create(message)
+        self._logger.info(f"SUCCESS: {message}")
         self.print_response(response)
         return response
-    
+
     def info(self, message: str) -> InfoPromptResponse:
         response = InfoPromptResponse.create(message)
+        self._logger.info(message)
         self.print_response(response)
         return response
-    
+
     def debug(self, message: str) -> DebugPromptResponse:
         response = DebugPromptResponse.create(message)
+        self._logger.debug(message)
         self.print_response(response)
         return response
+
+    def log_raw(self, level: int, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Log a message directly to the logger without UI formatting.
+        Useful for internal logging or passing data between processes.
+        """
+        self._logger.log(level, message, extra=extra)
     
     def print_responses(self, responses: List[BasePromptResponse]) -> None:
         for response in responses:
