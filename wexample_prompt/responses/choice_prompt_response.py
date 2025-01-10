@@ -25,18 +25,6 @@ class ChoicePromptResponse(BasePromptResponse):
         abort: Optional[str] = "> Abort",
         **kwargs: Any
     ) -> 'ChoicePromptResponse':
-        """Create a choice prompt response.
-        
-        Args:
-            question: The question to display
-            choices: List of choices to present
-            default: Optional default choice
-            abort: Optional abort choice text (None to disable)
-            **kwargs: Additional arguments for inquirer.select
-            
-        Returns:
-            ChoicePromptResponse: A new choice prompt response
-        """
         lines = []
         
         # Add the question line with blue color and bold style
