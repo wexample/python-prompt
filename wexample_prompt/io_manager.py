@@ -1,24 +1,23 @@
 """Input/Output manager for the prompt system."""
 import shutil
 import sys
-from typing import Any, List, Optional, TextIO, Union, Dict
+from typing import Any, List, Optional, TextIO, Dict
 
 from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
 
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 
 class IOManager(BaseModel, WithIndent):
