@@ -1,5 +1,5 @@
 """Response for displaying suggestions with optional descriptions."""
-from typing import List
+from typing import List, Optional
 
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -7,7 +7,8 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
+from wexample_prompt.common.prompt_context import PromptContext
 
 
 class SuggestionsPromptResponse(BasePromptResponse):
@@ -18,14 +19,16 @@ class SuggestionsPromptResponse(BasePromptResponse):
         cls,
         message: str,
         suggestions: List[str],
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        context:Optional[PromptContext]=None,
+        **kwargs
     ) -> 'SuggestionsPromptResponse':
         """Create a suggestions response.
         
         Args:
             message: The main message to display
             suggestions: List of suggested actions/commands
-            verbosity: Minimum verbosity level to display this message
+            context: The context for this response
+            **kwargs: Additional arguments
             
         Returns:
             SuggestionsPromptResponse: A new suggestions response
@@ -48,14 +51,12 @@ class SuggestionsPromptResponse(BasePromptResponse):
                 PromptResponseLine(segments=[
                     # Arrow indicator with cyan color
                     PromptResponseSegment(
-                        text=ColorManager.colorize("  → ", TerminalColor.CYAN)
+                        text=ColorManager.colorize("  → ", TerminalColor.CYAN),
+                        styles=[TextStyle.BOLD]
                     ),
-                    # Command with light gray color and dim style for a modern look
-                    PromptResponseSegment(
-                        text=ColorManager.colorize(suggestion, TerminalColor.GRAY),
-                        styles=[TextStyle.DIM]
-                    )
+                    # Suggestion text
+                    PromptResponseSegment(text=suggestion)
                 ])
             )
-        
-        return cls(lines=lines, verbosity_level=verbosity)
+            
+        return cls(lines=lines, context=context)
