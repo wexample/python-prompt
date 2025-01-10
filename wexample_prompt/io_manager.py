@@ -35,19 +35,19 @@ class IoManager(BaseModel, WithIndent):
         default=None,
         description="Path to log file. If None, file logging is disabled"
     )
-    
+
     _logger: Logger = PrivateAttr()
     _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
-    
+
     def __init__(self, **data):
         super().__init__(**data)
         self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
         self._setup_logger()
-    
+
     def _setup_logger(self) -> None:
         """Configure the Python logger with proper formatting and handlers."""
         self._logger = logging.getLogger("prompt")
@@ -56,21 +56,14 @@ class IoManager(BaseModel, WithIndent):
         # Clear any existing handlers
         self._logger.handlers.clear()
 
-        # Console handler with custom formatting
-        console_handler = logging.StreamHandler(self._stdout)
-        console_handler.setFormatter(
-            logging.Formatter('%(levelname)s: %(message)s')
-        )
-        self._logger.addHandler(console_handler)
-
-        # File handler if log_file is specified
+        # Only add file handler if log_file is specified
         if self.log_file:
             file_handler = logging.FileHandler(self.log_file)
             file_handler.setFormatter(
                 logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             )
             self._logger.addHandler(file_handler)
-    
+
     def error(
         self,
         message: str,
@@ -79,6 +72,7 @@ class IoManager(BaseModel, WithIndent):
         trace: bool = True,
         exit_code: int = 1
     ) -> ErrorPromptResponse:
+        # Create context and response
         context = ErrorContext(
             fatal=fatal,
             trace=trace,
@@ -86,8 +80,13 @@ class IoManager(BaseModel, WithIndent):
             exit_code=exit_code
         )
         response = ErrorPromptResponse.create(message, context)
-        self._logger.error(message, extra={"params": params} if params else None)
-        self.print_response(response=response)
+        
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.error(message, extra={"params": params} if params else None)
+        
+        # Display formatted message
+        self.print_response(response)
         return response
 
     def warning(
@@ -102,25 +101,41 @@ class IoManager(BaseModel, WithIndent):
             params=params
         )
         response = WarningPromptResponse.create(message, context)
-        self._logger.warning(message, extra={"params": params} if params else None)
+        
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.warning(message, extra={"params": params} if params else None)
+        
         self.print_response(response)
         return response
 
     def success(self, message: str) -> SuccessPromptResponse:
         response = SuccessPromptResponse.create(message)
-        self._logger.info(f"SUCCESS: {message}")
+        
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.info(f"SUCCESS: {message}")
+        
         self.print_response(response)
         return response
 
     def info(self, message: str) -> InfoPromptResponse:
         response = InfoPromptResponse.create(message)
-        self._logger.info(message)
+        
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.info(message)
+        
         self.print_response(response)
         return response
 
     def debug(self, message: str) -> DebugPromptResponse:
         response = DebugPromptResponse.create(message)
-        self._logger.debug(message)
+        
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.debug(message)
+        
         self.print_response(response)
         return response
 
@@ -129,48 +144,39 @@ class IoManager(BaseModel, WithIndent):
         Log a message directly to the logger without UI formatting.
         Useful for internal logging or passing data between processes.
         """
-        self._logger.log(level, message, extra=extra)
-    
+        if self._logger.handlers:
+            self._logger.log(level, message, extra=extra)
+
     def print_responses(self, responses: List[BasePromptResponse]) -> None:
         for response in responses:
             self.print_response(response)
-    
+
     def print_response(self, response: BasePromptResponse) -> None:
         """Print a response using its own context."""
         response.print(output=self._stdout)
-    
+
     def print_response_line(
         self,
         line: PromptResponseLine,
         response: BasePromptResponse
     ) -> None:
-        # Create a single-line response and print it
-        temp_response = BasePromptResponse(
-            lines=[line],
-            response_type=response.response_type,
-            message_type=response.message_type
-        )
-        self.print_response(temp_response)
+        line.print(self._stdout, response.context)
 
     def get_input(self, prompt: str = "") -> str:
         return input(prompt)
-    
+
     def print(self, message: Any, **kwargs: Any) -> None:
         # Convert message to response if it's not already one
         if isinstance(message, BasePromptResponse):
-            self.print_response(message)
+            response = message
         else:
-            # Create a simple response and print it
-            response = BasePromptResponse(
-                lines=[PromptResponseLine(segments=[
-                    PromptResponseSegment(text=str(message))
-                ])]
-            )
-            self.print_response(response)
+            response = InfoPromptResponse.create(str(message))
+        
+        self.print_response(response)
 
     def update_terminal_width(self) -> None:
         self._tty_width = shutil.get_terminal_size().columns
-    
+
     @property
     def terminal_width(self) -> int:
         return self._tty_width
