@@ -204,7 +204,7 @@ class IoManager(BaseModel, WithIndent):
             request_details["query_params"] = request_context.query_params
 
         # Handle request failure (no response)
-        if not response:
+        if response is None:
             if exception:
                 self.error(
                     f"Request failed: {str(exception)}",
