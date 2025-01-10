@@ -4,20 +4,19 @@ import logging
 from logging import Logger
 from typing import Any, List, Optional, TextIO, Dict
 from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
+import requests
 
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.responses import BasePromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 
 class IoManager(BaseModel, WithIndent):
@@ -186,3 +185,32 @@ class IoManager(BaseModel, WithIndent):
     @property
     def terminal_width(self) -> int:
         return self._tty_width
+
+    def api_response(
+        self,
+        response: requests.Response,
+        context: Optional[Dict[str, Any]] = None,
+    ) -> Optional[ErrorPromptResponse]:
+        if response.status_code >= 400:
+            params = {
+                "status_code": response.status_code,
+                "url": response.url,
+                **(context or {})
+            }
+
+            try:
+                error_data = response.json()
+                if isinstance(error_data, dict):
+                    params["response"] = error_data
+            except (ValueError, AttributeError):
+                params["response_text"] = response.text[:500]  # Limit text length
+
+            error_message = f"API Error {response.status_code}"
+            if response.status_code >= 500:
+                error_message = f"Server Error {response.status_code}"
+            elif response.status_code >= 400:
+                error_message = f"Client Error {response.status_code}"
+
+            return self.error(error_message, params=params)
+
+        return None
