@@ -48,7 +48,8 @@ class TestErrorPromptResponse(unittest.TestCase):
     def test_fatal_error(self, mock_exit):
         """Test fatal error handling."""
         context = ErrorContext(fatal=True, exit_code=2)
-        ErrorPromptResponse.create("Fatal error", context=context)
+        response = ErrorPromptResponse.create("Fatal error", context=context)
+        response.print()
         mock_exit.assert_called_once_with(2)
         
     def test_message_type(self):

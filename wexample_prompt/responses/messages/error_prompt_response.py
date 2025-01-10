@@ -1,4 +1,3 @@
-"""Error response implementation."""
 import sys
 import traceback
 from typing import ClassVar, Optional, Dict, Any, Union
@@ -10,8 +9,6 @@ from wexample_prompt.common.error_context import ErrorContext
 
 
 class ErrorPromptResponse(BaseMessageResponse):
-    """Response for error messages."""
-    
     SYMBOL: ClassVar[str] = "❌"
     
     @classmethod
@@ -20,19 +17,6 @@ class ErrorPromptResponse(BaseMessageResponse):
         text: str,
         context: Optional[ErrorContext] = None,
     ) -> 'ErrorPromptResponse':
-        """Create an error message.
-        
-        Args:
-            text: The error message text
-            context: Optional error context for handling behavior
-            
-        Returns:
-            ErrorPromptResponse: A new error response
-            
-        Note:
-            If context.fatal is True, this will exit the program with context.exit_code
-            If context.trace is True, stack trace will be included in the message
-        """
         # Create default context if none provided
         if context is None:
             context = ErrorContext()
@@ -45,7 +29,7 @@ class ErrorPromptResponse(BaseMessageResponse):
             trace = traceback.format_exc()
             if trace and trace != 'NoneType: None\n':
                 message = f"{message}\n{trace}"
-            
+
         # Create response with context
         response = cls._create_symbol_message(message, TerminalColor.RED)
         response.context = context  # Use the provided context
