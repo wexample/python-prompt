@@ -21,11 +21,12 @@ class TestChoicePromptResponse(unittest.TestCase):
         """Test creating response with simple choices."""
         response = ChoicePromptResponse.create(
             question="Select an option:",
-            choices=["Option 1", "Option 2"]
+            choices=["Option 1", "Option 2"],
+            context=self.context
         )
         
         # Check question and choices are present
-        rendered = response.render(self.context)
+        rendered = response.render()
         self.assertIn("Select an option:", rendered)
         self.assertIn("Option 1", rendered)
         self.assertIn("Option 2", rendered)
@@ -41,10 +42,11 @@ class TestChoicePromptResponse(unittest.TestCase):
         ]
         response = ChoicePromptResponse.create(
             question="Select:",
-            choices=choices
+            choices=choices,
+            context=self.context
         )
         
-        rendered = response.render(self.context)
+        rendered = response.render()
         self.assertIn("Display 1", rendered)
         self.assertIn("Display 2", rendered)
 
@@ -53,10 +55,11 @@ class TestChoicePromptResponse(unittest.TestCase):
         response = ChoicePromptResponse.create(
             question="Select:",
             choices=["Option"],
-            abort="Cancel"
+            abort="Cancel",
+            context=self.context
         )
         
-        rendered = response.render(self.context)
+        rendered = response.render()
         self.assertIn("Cancel", rendered)
 
     @patch('InquirerPy.inquirer.select')
@@ -89,10 +92,11 @@ class TestChoiceDictPromptResponse(unittest.TestCase):
         """Test creating response with dictionary choices."""
         response = ChoiceDictPromptResponse.create(
             question="Select:",
-            choices=self.choices
+            choices=self.choices,
+            context=self.context
         )
         
-        rendered = response.render(self.context)
+        rendered = response.render()
         self.assertIn("Value 1", rendered)
         self.assertIn("Value 2", rendered)
         # Keys should not be visible in the output

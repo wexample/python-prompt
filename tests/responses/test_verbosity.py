@@ -22,26 +22,29 @@ class TestVerbosity(unittest.TestCase):
         quiet_response = SuggestionsPromptResponse.create(
             message="Critical message",
             suggestions=["critical command"],
-            verbosity=VerbosityLevel.QUIET
+            verbosity=VerbosityLevel.QUIET,
+            context=quiet_context
         )
         
         normal_response = SuggestionsPromptResponse.create(
             message="Normal message",
             suggestions=["normal command"],
-            verbosity=VerbosityLevel.DEFAULT
+            verbosity=VerbosityLevel.DEFAULT,
+            context=default_context
         )
         
         debug_response = SuggestionsPromptResponse.create(
             message="Debug message",
             suggestions=["debug command"],
-            verbosity=VerbosityLevel.MAXIMUM
+            verbosity=VerbosityLevel.MAXIMUM,
+            context=max_context
         )
 
         # Test quiet context - should only show QUIET messages
         output = StringIO()
-        quiet_response.print(output=output, context=quiet_context)
-        normal_response.print(output=output, context=quiet_context)
-        debug_response.print(output=output, context=quiet_context)
+        quiet_response.print(output=output)
+        normal_response.print(output=output)
+        debug_response.print(output=output)
         quiet_output = output.getvalue()
         self.assertIn("Critical message", quiet_output)
         self.assertNotIn("Normal message", quiet_output)
@@ -49,9 +52,9 @@ class TestVerbosity(unittest.TestCase):
 
         # Test default context - should show QUIET and DEFAULT messages
         output = StringIO()
-        quiet_response.print(output=output, context=default_context)
-        normal_response.print(output=output, context=default_context)
-        debug_response.print(output=output, context=default_context)
+        quiet_response.print(output=output)
+        normal_response.print(output=output)
+        debug_response.print(output=output)
         default_output = output.getvalue()
         self.assertIn("Critical message", default_output)
         self.assertIn("Normal message", default_output)
@@ -59,9 +62,9 @@ class TestVerbosity(unittest.TestCase):
 
         # Test maximum context - should show all messages
         output = StringIO()
-        quiet_response.print(output=output, context=max_context)
-        normal_response.print(output=output, context=max_context)
-        debug_response.print(output=output, context=max_context)
+        quiet_response.print(output=output)
+        normal_response.print(output=output)
+        debug_response.print(output=output)
         max_output = output.getvalue()
         self.assertIn("Critical message", max_output)
         self.assertIn("Normal message", max_output)
@@ -83,9 +86,10 @@ class TestVerbosity(unittest.TestCase):
         response = SuggestionsPromptResponse.create(
             message="Hidden message",
             suggestions=["hidden command"],
-            verbosity=VerbosityLevel.MAXIMUM
+            verbosity=VerbosityLevel.MAXIMUM,
+            context=context
         )
         
         # Test direct render
-        rendered = response.render(context=context)
+        rendered = response.render()
         self.assertEqual(rendered, "")

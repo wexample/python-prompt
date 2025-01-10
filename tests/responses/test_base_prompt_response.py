@@ -38,7 +38,7 @@ class TestBasePromptResponse(unittest.TestCase):
             terminal_width=40,
             is_tty=True
         )
-        rendered = response.render(context)
+        rendered = response.render()
         self.assertLessEqual(len(rendered), 40)
 
     def test_response_combination(self):
