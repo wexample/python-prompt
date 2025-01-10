@@ -4,17 +4,17 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from wexample_prompt.io_manager import IOManager
+from wexample_prompt.io_manager import IoManager
 from wexample_prompt.common.error_context import ErrorContext
 
 
 class TestErrorHandling(unittest.TestCase):
-    """Test cases for error handling in IOManager."""
+    """Test cases for error handling in IoManager."""
     
     def setUp(self):
         """Set up test cases."""
         self.stdout = io.StringIO()
-        self.io_manager = IOManager()
+        self.io_manager = IoManager()
         self.io_manager._stdout = self.stdout
     
     def tearDown(self):

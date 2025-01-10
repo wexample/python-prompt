@@ -1,10 +1,10 @@
-"""Tests for IOManager."""
+"""Tests for IoManager."""
 import io
 import sys
 import unittest
 from unittest.mock import patch
 
-from wexample_prompt.io_manager import IOManager
+from wexample_prompt.io_manager import IoManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
@@ -16,15 +16,15 @@ from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.common.error_context import ErrorContext
 
 
-class TestIOManager(unittest.TestCase):
-    """Test cases for IOManager."""
+class TestIoManager(unittest.TestCase):
+    """Test cases for IoManager."""
     
     def setUp(self):
         """Set up test cases."""
         # Mock stdout with StringIO
         self.stdout = io.StringIO()
         sys.stdout = self.stdout
-        self.io_manager = IOManager()
+        self.io_manager = IoManager()
         self.io_manager._stdout = self.stdout
         
         # Force color support for tests

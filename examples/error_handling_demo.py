@@ -6,7 +6,7 @@ import sys
 from typing import Dict, Any, Tuple, Optional
 from functools import wraps
 
-from wexample_prompt.io_manager import IOManager
+from wexample_prompt.io_manager import IoManager
 from wexample_prompt.responses import MainTitleResponse
 from wexample_prompt.responses.messages import InfoPromptResponse
 
@@ -51,7 +51,7 @@ def simulate_file_operation(filename: str) -> Dict[str, Any]:
 
 
 @handle_errors
-def demo_basic_errors(io: IOManager) -> None:
+def demo_basic_errors(io: IoManager) -> None:
     """Demonstrate basic error and warning messages."""
     title = MainTitleResponse.create("Basic Error Handling")
     io.print_response(title)
@@ -73,7 +73,7 @@ def demo_basic_errors(io: IOManager) -> None:
 
 
 @handle_errors
-def demo_error_traces(io: IOManager) -> None:
+def demo_error_traces(io: IoManager) -> None:
     """Demonstrate error handling with stack traces."""
     title = MainTitleResponse.create("Stack Traces")
     io.print_response(title)
@@ -103,7 +103,7 @@ def demo_error_traces(io: IOManager) -> None:
 
 
 @handle_errors
-def demo_nested_errors(io: IOManager) -> None:
+def demo_nested_errors(io: IoManager) -> None:
     """Demonstrate error handling in nested contexts."""
     title = MainTitleResponse.create("Nested Error Handling")
     io.print_response(title)
@@ -132,7 +132,7 @@ def demo_nested_errors(io: IOManager) -> None:
 
 
 @handle_errors
-def demo_fatal_error(io: IOManager) -> None:
+def demo_fatal_error(io: IoManager) -> None:
     """Demonstrate fatal error handling."""
     title = MainTitleResponse.create("Fatal Error Handling")
     io.print_response(title)
@@ -154,7 +154,7 @@ def run_demos() -> bool:
     Returns:
         True if all demos succeeded, False otherwise
     """
-    io = IOManager()
+    io = IoManager()
     
     title = MainTitleResponse.create("Error Handling Demo")
     io.print_response(title)

@@ -5,7 +5,7 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.io_manager import IOManager
+from wexample_prompt.io_manager import IoManager
 from wexample_prompt.responses import (
     BasePromptResponse,
     TablePromptResponse,
@@ -34,7 +34,7 @@ from wexample_prompt.responses.progress import ProgressStep
 from InquirerPy.base.control import Choice
 
 
-def demo_styles(io: IOManager):
+def demo_styles(io: IoManager):
     """Demonstrate different text styles."""
     title = MainTitleResponse.create("Text Styles")
     io.print_response(title)
@@ -50,7 +50,7 @@ def demo_styles(io: IOManager):
     io.print_response(response)
 
 
-def demo_table(io: IOManager):
+def demo_table(io: IoManager):
     """Demonstrate table formatting."""
     title = MainTitleResponse.create("Table Format")
     io.print_response(title)
@@ -105,7 +105,7 @@ def demo_table(io: IOManager):
     io.print_response(table)
 
 
-def demo_list(io: IOManager):
+def demo_list(io: IoManager):
     """Demonstrate list formatting."""
     title = MainTitleResponse.create("List Format")
     io.print_response(title)
@@ -126,7 +126,7 @@ def demo_list(io: IOManager):
     io.print_response(list_output)
 
 
-def demo_tree(io: IOManager):
+def demo_tree(io: IoManager):
     """Demonstrate tree structure."""
     title = MainTitleResponse.create("Tree Format")
     io.print_response(title)
@@ -146,7 +146,7 @@ def demo_tree(io: IOManager):
     io.print_response(tree)
 
 
-def demo_message_types(io: IOManager):
+def demo_message_types(io: IoManager):
     """Demonstrate different message types."""
     title = MainTitleResponse.create("Message Types")
     io.print_response(title)
@@ -166,7 +166,7 @@ def demo_message_types(io: IOManager):
         io.print_response(message)
 
 
-def demo_titles(io: IOManager):
+def demo_titles(io: IoManager):
     """Demonstrate title formatting."""
     main = MainTitleResponse.create("Main Title Demo", color=TerminalColor.GREEN)
     io.print_response(main)
@@ -178,7 +178,7 @@ def demo_titles(io: IOManager):
     io.print_response(sub2)
 
 
-def demo_indentation(io: IOManager):
+def demo_indentation(io: IoManager):
     """Demonstrate indentation."""
     title = MainTitleResponse.create("Indentation")
     io.print_response(title)
@@ -205,7 +205,7 @@ def demo_indentation(io: IOManager):
     io.print_response(InfoPromptResponse.create("Back to no indentation"))
 
 
-def demo_progress(io: IOManager):
+def demo_progress(io: IoManager):
     """Demonstrate progress bar."""
     title = MainTitleResponse.create("Progress Bar")
     io.print_response(title)
@@ -267,7 +267,7 @@ def demo_progress(io: IOManager):
         progress.execute_steps()
 
 
-def demo_suggestions(io: IOManager):
+def demo_suggestions(io: IoManager):
     """Demonstrate suggestions display."""
     io.print_response(
         SuggestionsPromptResponse.create(
@@ -289,7 +289,7 @@ def demo_suggestions(io: IOManager):
     )
 
 
-def demo_suggestions_verbosity(io: IOManager):
+def demo_suggestions_verbosity(io: IoManager):
     """Demonstrate verbosity levels with suggestions."""
     # Create contexts with different verbosity levels
     quiet_context = PromptContext(verbosity=VerbosityLevel.QUIET)
@@ -323,7 +323,7 @@ def demo_suggestions_verbosity(io: IOManager):
     debug_response.print(context=max_context)   # Will show
 
 
-def demo_choices(io: IOManager):
+def demo_choices(io: IoManager):
     """Demonstrate choice prompts."""
     io.print_response(MainTitleResponse.create("Choice Prompts"))
     
@@ -363,7 +363,7 @@ def demo_choices(io: IOManager):
     io.print_response(advanced_response)
 
 
-def demo_file_pickers(io: IOManager):
+def demo_file_pickers(io: IoManager):
     """Demonstrate file and directory pickers."""
     io.print_response(MainTitleResponse.create("File & Directory Pickers"))
     
@@ -384,7 +384,7 @@ def demo_file_pickers(io: IOManager):
 
 
 if __name__ == "__main__":
-    io = IOManager()
+    io = IoManager()
     main = MainTitleResponse.create("Prompt Response Demo", color=TerminalColor.GREEN)
     io.print_response(main)
     

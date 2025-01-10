@@ -18,7 +18,7 @@ from wexample_prompt.responses.messages.debug_prompt_response import DebugPrompt
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 
-class IOManager(BaseModel, WithIndent):
+class IoManager(BaseModel, WithIndent):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     theme: AbstractPromptTheme = Field(
