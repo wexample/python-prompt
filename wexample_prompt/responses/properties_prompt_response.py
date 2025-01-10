@@ -1,4 +1,3 @@
-"""Properties response for displaying key-value pairs in a formatted box."""
 from typing import Dict, Any, Optional
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -9,8 +8,6 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 
 class PropertiesPromptResponse(BasePromptResponse):
-    """Response for displaying properties in a box layout with borders."""
-
     properties: Dict[str, Any]
     title: Optional[str] = None
     nested_indent: int = 2
@@ -45,7 +42,7 @@ class PropertiesPromptResponse(BasePromptResponse):
         # Calculate the maximum width needed for content
         max_key_width = max(len(str(key)) for key in self.properties.keys())
         content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
-        
+
         lines = []
         
         # Add title if provided
@@ -54,7 +51,7 @@ class PropertiesPromptResponse(BasePromptResponse):
             title_line = PromptResponseLine(segments=[
                 PromptResponseSegment(text="+" + "-" * title_padding),
                 PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title) - 2) + "+")
+                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title) - 4) + "+")
             ])
             lines.append(title_line)
         else:
@@ -66,8 +63,8 @@ class PropertiesPromptResponse(BasePromptResponse):
             # Ensure content doesn't exceed width
             if len(content) > content_width:
                 content = content[:content_width - 3] + "..."
-            
-            padding = content_width - len(content)
+
+            padding = content_width - len(content) - 3
             lines.append(PromptResponseLine(segments=[
                 PromptResponseSegment(text="| "),
                 PromptResponseSegment(text=content),
@@ -88,17 +85,6 @@ class PropertiesPromptResponse(BasePromptResponse):
         indent: int,
         current_indent: int = 0
     ) -> list[str]:
-        """Format properties into lines, handling nested dictionaries.
-        
-        Args:
-            properties: Dictionary of properties to format
-            key_width: Width to align keys to
-            indent: Number of spaces for each indentation level
-            current_indent: Current indentation level
-            
-        Returns:
-            List of formatted lines
-        """
         lines = []
         indent_str = " " * current_indent
         
@@ -116,16 +102,6 @@ class PropertiesPromptResponse(BasePromptResponse):
 
     @staticmethod
     def _create_border_line(width: int, left: str = "+", right: str = "+") -> PromptResponseLine:
-        """Create a border line with the specified width and edge characters.
-        
-        Args:
-            width: Total width of the line
-            left: Left edge character
-            right: Right edge character
-            
-        Returns:
-            PromptResponseLine: A line for the border
-        """
         return PromptResponseLine(segments=[
             PromptResponseSegment(text=f"{left}{'-' * (width - 2)}{right}")
         ])
