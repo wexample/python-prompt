@@ -10,7 +10,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a directory picker interface."""
 
     @classmethod
-    def create(
+    def create_dir_picker(
         cls,
         base_dir: Optional[str] = None,
         question: str = "Select a directory:",
@@ -47,7 +47,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
         choices_dirs[base_dir] = "> Select this directory"
         
         # Create response
-        response = super().create(
+        response = super().create_choice_dict(
             question=question,
             choices=choices_dirs,
             abort=abort,
@@ -75,7 +75,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
         # Otherwise, join with base dir and recurse if needed
         full_path = os.path.join(self._base_dir, selected)
         if os.path.isdir(full_path):
-            next_response = self.__class__.create(
+            next_response = self.__class__.create_dir_picker(
                 base_dir=full_path,
                 question=self.lines[0].render()  # Keep same question
             )
