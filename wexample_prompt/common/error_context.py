@@ -19,10 +19,6 @@ class ErrorContext(PromptContext):
         default=None,
         description="Parameters to format the message with"
     )
-    exit_code: int = Field(
-        default=1,
-        description="Exit code to use when fatal is True"
-    )
     indentation: int = Field(
         default=0,
         description="Indentation level for the message"

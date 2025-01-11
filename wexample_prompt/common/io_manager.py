@@ -69,14 +69,12 @@ class IoManager(BaseModel, WithIndent):
         exception = None,
         fatal: bool = True,
         trace: bool = True,
-        exit_code: int = 1
     ) -> ErrorPromptResponse:
         # Create context and response
         context = ErrorContext(
             fatal=fatal,
             trace=trace,
             params=params,
-            exit_code=exit_code,
             indentation=self.log_indent
         )
         response = ErrorPromptResponse.create_error(

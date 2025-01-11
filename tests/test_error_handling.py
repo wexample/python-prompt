@@ -67,11 +67,16 @@ class TestErrorHandling(unittest.TestCase):
         self.assertNotIn("ValueError", output)
         self.assertNotIn("cause_error", output)
     
-    @patch('sys.exit')
-    def test_fatal_error(self, mock_exit):
+    def test_fatal_error(self):
+        class TestFatalError(Exception):
+            pass
+
         """Test fatal error handling."""
-        self.io_manager.error("Fatal error", fatal=True, exit_code=2)
-        mock_exit.assert_called_once_with(2)
+        with self.assertRaises(TestFatalError) as context:
+            self.io_manager.error("Fatal error", fatal=True, exception=TestFatalError)
+        
+        output = self.stdout.getvalue()
+        self.assertIn("Fatal error", output)
     
     def test_warning_basic(self):
         """Test basic warning message."""
