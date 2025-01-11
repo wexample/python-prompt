@@ -2,23 +2,20 @@ import shutil
 import sys
 import logging
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict, Union
-from pydantic import BaseModel, Field, ConfigDict, PrivateAttr
-import requests
+from typing import Any, List, Optional, TextIO, Dict
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from wexample_prompt.mixins.with_indent import WithIndent
-from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
-from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.responses import BasePromptResponse
+from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.common.error_context import ErrorContext
+from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
-from wexample_helpers_api.common.http_request_payload import HttpRequestPayload
+from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
+from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 
 
 class IoManager(BaseModel, WithIndent):
@@ -192,63 +189,3 @@ class IoManager(BaseModel, WithIndent):
     @property
     def terminal_width(self) -> int:
         return self._tty_width
-
-    def handle_api_response(
-        self,
-        response: Optional[requests.Response],
-        request_context: HttpRequestPayload,
-        exception: Optional[Exception] = None,
-    ) -> Union[requests.Response, None]:
-        # Format request details for logging
-        request_details = {
-            "URL": request_context.url,
-            "Method": request_context.method
-        }
-        if request_context.data:
-            request_details["Data"] = request_context.data
-        if request_context.query_params:
-            request_details["Query Parameters"] = request_context.query_params
-
-        # Handle only when response is set to None.
-        if response is None:
-            self.print_response(PropertiesPromptResponse.create(
-                request_details,
-                title="Request Details"
-            ))
-
-            if exception:
-                error_msg = f"Request failed: {str(exception)}"
-                self.error(error_msg, exception=exception)
-            return None
-
-        # Log request details at debug level
-        self.debug(
-            f"{request_context.method} {request_context.url} "
-            f"-> Status: {response.status_code}"
-        )
-
-        # Handle response based on status code
-        if 200 <= response.status_code < 300:
-            return response
-        
-        # Handle error response
-        error_msg = f"HTTP {response.status_code}"
-        try:
-            error_data = response.json()
-            if isinstance(error_data, dict):
-                error_msg = error_data.get("message", error_data.get("error", error_msg))
-        except (ValueError, AttributeError):
-            if response.text:
-                error_msg = response.text
-
-        # Add response status to request details
-        request_details["Status"] = response.status_code
-
-        self.print_response(PropertiesPromptResponse.create(
-            request_details,
-            title="Request Details"
-        ))
-
-        self.error(f"Request failed: {error_msg}")
-
-        return None
