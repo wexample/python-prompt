@@ -7,7 +7,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
 
 
-class TestVerbosity(unittest.TestCase):
+class TestVerbosityLevel(unittest.TestCase):
     """Test cases for verbosity functionality."""
 
     def test_verbosity_levels(self):
