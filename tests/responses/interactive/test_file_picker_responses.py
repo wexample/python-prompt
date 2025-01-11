@@ -81,7 +81,6 @@ class TestFilePickerPromptResponse(unittest.TestCase):
         """Test navigating into a directory."""
         mock_listdir.return_value = ["dir1"]
         mock_isdir.return_value = True
-        subdir = os.path.join(self.test_dir, "dir1")
 
         with patch('InquirerPy.inquirer.select') as mock_select:
             # First select the directory, then abort

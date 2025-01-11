@@ -48,7 +48,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         choices_files = dict_sort_values(choices_files)
         
         # Create response with merged choices
-        response = super().create(
+        response = super().create_choice_dict(
             question=question,
             choices=dict_merge(choices_dirs, choices_files),
             abort=abort,
