@@ -11,16 +11,20 @@ class TestTablePromptResponse(unittest.TestCase):
     def setUp(self):
         """Set up test cases."""
         self.context = PromptContext(terminal_width=80)
-        self.test_data = [
-            ["Name", "Age", "City"],
+        self.headers = ["Name", "Age", "City"]
+        self.data = [
             ["John", "30", "New York"],
             ["Jane", "25", "San Francisco"],
             ["Bob", "35", "Chicago"]
         ]
         
-    def test_create_table(self):
-        """Test table creation."""
-        table = TablePromptResponse.create(self.test_data)
+    def test_create_table_with_headers(self):
+        """Test table creation with separate headers."""
+        table = TablePromptResponse.create_table(
+            data=self.data,
+            headers=self.headers,
+            context=self.context
+        )
         rendered = table.render()
         
         # Check header
@@ -33,28 +37,66 @@ class TestTablePromptResponse(unittest.TestCase):
         self.assertIn("30", rendered)
         self.assertIn("New York", rendered)
         
+    def test_create_table_without_headers(self):
+        """Test table creation without headers."""
+        table = TablePromptResponse.create_table(
+            data=self.data,
+            context=self.context
+        )
+        rendered = table.render()
+        
+        # Check data is present without headers
+        self.assertIn("John", rendered)
+        self.assertIn("30", rendered)
+        self.assertIn("New York", rendered)
+        
     def test_empty_table(self):
         """Test empty table handling."""
-        table = TablePromptResponse.create([])
+        table = TablePromptResponse.create_table(
+            data=[],
+            context=self.context
+        )
         rendered = table.render()
         self.assertEqual(rendered.strip(), "")
         
     def test_single_column(self):
         """Test single column table."""
         data = [
-            ["Header"],
             ["Row 1"],
             ["Row 2"]
         ]
-        table = TablePromptResponse.create(data)
+        headers = ["Header"]
+        table = TablePromptResponse.create_table(
+            data=data,
+            headers=headers,
+            context=self.context
+        )
         rendered = table.render()
         self.assertIn("Header", rendered)
         self.assertIn("Row 1", rendered)
         self.assertIn("Row 2", rendered)
         
+    def test_table_with_title(self):
+        """Test table with title."""
+        title = "Employee List"
+        table = TablePromptResponse.create_table(
+            data=self.data,
+            headers=self.headers,
+            title=title,
+            context=self.context
+        )
+        rendered = table.render()
+        self.assertIn(title, rendered)
+        self.assertIn("John", rendered)
+        
     def test_column_alignment(self):
         """Test that columns are properly aligned."""
-        rendered = TablePromptResponse.create(self.test_data).render()
+        table = TablePromptResponse.create_table(
+            data=self.data,
+            headers=self.headers,
+            context=self.context
+        )
+        rendered = table.render()
         lines = rendered.split('\n')
         
         # Find lines with data
