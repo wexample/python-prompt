@@ -38,9 +38,11 @@ class TestDirPickerPromptResponse(unittest.TestCase):
         self.assertIn("..", rendered)
         self.assertIn("> Select this directory", rendered)
 
+    @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_select_current(self, mock_isdir):
+    def test_execute_select_current(self, mock_isdir, mock_listdir):
         """Test selecting current directory."""
+        mock_listdir.return_value = ["dir1"]
         mock_isdir.return_value = False
 
         with patch('InquirerPy.inquirer.select') as mock_select:
@@ -54,9 +56,11 @@ class TestDirPickerPromptResponse(unittest.TestCase):
             result = response.execute()
             self.assertEqual(result, self.test_dir)
 
+    @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_navigate_parent(self, mock_isdir):
+    def test_execute_navigate_parent(self, mock_isdir, mock_listdir):
         """Test navigating to parent directory."""
+        mock_listdir.return_value = ["dir1"]
         mock_isdir.return_value = True
         parent_dir = os.path.dirname(self.test_dir)
 
