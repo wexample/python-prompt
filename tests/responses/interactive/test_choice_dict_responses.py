@@ -19,7 +19,7 @@ class TestChoiceDictPromptResponse(unittest.TestCase):
 
     def test_create_with_dict(self):
         """Test creating response with dictionary choices."""
-        response = ChoiceDictPromptResponse.create_choice(
+        response = ChoiceDictPromptResponse.create_choice_dict(
             question=self.question,
             choices=self.choices,
             context=self.context
@@ -37,7 +37,7 @@ class TestChoiceDictPromptResponse(unittest.TestCase):
         """Test execute returns the dictionary key."""
         mock_select.return_value.execute.return_value = "key1"
 
-        response = ChoiceDictPromptResponse.create_choice(
+        response = ChoiceDictPromptResponse.create_choice_dict(
             question=self.question,
             choices=self.choices,
             context=self.context

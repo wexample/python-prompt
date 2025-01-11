@@ -18,7 +18,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @classmethod
-    def create_choice(
+    def create_choice_dict(
         cls,
         question: str,
         choices: Dict[str, str],
@@ -54,5 +54,5 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
             abort=abort,
             **kwargs
         )
-        response._original_choices = choices
+        response.original_choices = choices
         return response
