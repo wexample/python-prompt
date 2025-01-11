@@ -68,7 +68,7 @@ class StepProgressContext:
         label = f"{self.title}: {description}" if self.title else description
         
         # Use carriage return to overwrite previous line
-        progress = ProgressPromptResponse.create(
+        progress = ProgressPromptResponse.create_progress(
             total=100,
             current=percentage,
             width=self.width,
