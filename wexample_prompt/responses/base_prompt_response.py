@@ -53,7 +53,7 @@ class BasePromptResponse(AbstractPromptResponse):
         import os
 
         return cls.create_from_text_lines(
-            text_lines=text.split(os.sep),
+            text_lines=text.split(os.linesep),
             context=context,
             **kwargs
         )
