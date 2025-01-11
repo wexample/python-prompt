@@ -7,7 +7,7 @@ from wexample_prompt.responses.titles.base_title_response import BaseTitleRespon
 
 class TitleResponse(BaseTitleResponse):
     """Response for main titles with arrow prefix."""
-    
+
     @classmethod
     def create_title(
         cls,
@@ -15,7 +15,7 @@ class TitleResponse(BaseTitleResponse):
         color: Optional[TerminalColor] = TerminalColor.CYAN,
         fill_char: str = "⎯"
     ) -> 'TitleResponse':
-        return super().create(text=text, color=color, fill_char=fill_char)
+        return super()._create(text=text, color=color, fill_char=fill_char)
     
     @classmethod
     def get_prefix(cls) -> str:

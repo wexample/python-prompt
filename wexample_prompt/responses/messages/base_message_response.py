@@ -55,7 +55,7 @@ class BaseMessageResponse(BasePromptResponse):
             line_type=cls.get_message_type()
         )
 
-        return cls.create(
+        return cls._create(
             lines=[line],
             message_type=cls.get_message_type(),
             **({"context": context} if context is not None else {})

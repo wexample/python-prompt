@@ -75,7 +75,7 @@ class BasePromptResponse(AbstractPromptResponse):
             line = PromptResponseLine(segments=[segment])
             lines.append(line)
 
-        return cls.create(
+        return cls._create(
             lines=lines,
             context=context,
             **kwargs

@@ -1,7 +1,8 @@
 from typing import List, Dict, Any, Optional
-from abc import ABC, abstractmethod
+from abc import ABC
 from pydantic import BaseModel, Field
 
+from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import HasSnakeShortClassNameClassMixin
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -11,7 +12,7 @@ from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
-class AbstractPromptResponse(BaseModel, ABC):
+class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
     """Abstract base class for all prompt responses."""
     lines: List[PromptResponseLine]
     response_type: ResponseType = ResponseType.PLAIN
@@ -22,9 +23,27 @@ class AbstractPromptResponse(BaseModel, ABC):
 
     def __init__(self, **data):
         super().__init__(**data)
+
+        # Validate the presence of the expected creation method
+        self._validate_creation_method()
+
         # Create default context if none is provided
         if self.context is None:
             self.context = PromptContext()
+
+    def _validate_creation_method(self):
+        short_name = self.get_snake_short_class_name()
+        expected_method_name = f"create_{short_name}"
+
+        if not hasattr(self.__class__, expected_method_name):
+            raise NotImplementedError(
+                f"The method '{expected_method_name}' is not implemented in the class {self.__class__.__name__}. "
+                "Ensure that this method is defined to handle this response type."
+            )
+
+    @classmethod
+    def get_class_name_suffix(cls) -> Optional[str]:
+        return "PromptResponse"
 
     def render(self) -> str:
         """Render the complete response."""
@@ -46,7 +65,7 @@ class AbstractPromptResponse(BaseModel, ABC):
         )
 
     @classmethod
-    def create(
+    def _create(
         cls: "AbstractPromptResponse",
         lines: List[PromptResponseLine],
         context: PromptContext = None,

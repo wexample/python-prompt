@@ -25,7 +25,7 @@ class SubtitleResponse(BaseTitleResponse):
         Returns:
             SubtitleResponse: A new subtitle response
         """
-        return super().create(text=text, color=color, fill_char=fill_char)
+        return super()._create(text=text, color=color, fill_char=fill_char)
     
     @classmethod
     def get_prefix(cls) -> str:
