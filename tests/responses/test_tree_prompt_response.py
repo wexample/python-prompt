@@ -25,7 +25,10 @@ class TestTreePromptResponse(unittest.TestCase):
         
     def test_create_tree(self):
         """Test tree creation and rendering."""
-        tree = TreePromptResponse.create(self.test_data)
+        tree = TreePromptResponse.create_tree(
+            data=self.test_data,
+            context=self.context
+        )
         rendered = tree.render()
         
         # Check structure
@@ -36,16 +39,28 @@ class TestTreePromptResponse(unittest.TestCase):
         self.assertIn("file2", rendered)
         self.assertIn("file3", rendered)
         
+        # Check default styles
+        self.assertIn("├", rendered)  # branch
+        self.assertIn("└", rendered)  # leaf
+        self.assertIn("│", rendered)  # pipe
+        self.assertIn("──", rendered)  # dash
+        
     def test_empty_tree(self):
         """Test empty tree handling."""
-        tree = TreePromptResponse.create({})
+        tree = TreePromptResponse.create_tree(
+            data={},
+            context=self.context
+        )
         rendered = tree.render()
         self.assertEqual(rendered.strip(), "")
         
     def test_single_node(self):
         """Test tree with single node."""
         data = {"root": "value"}
-        tree = TreePromptResponse.create(data)
+        tree = TreePromptResponse.create_tree(
+            data=data,
+            context=self.context
+        )
         rendered = tree.render()
         self.assertIn("root", rendered)
         self.assertIn("value", rendered)
@@ -61,7 +76,10 @@ class TestTreePromptResponse(unittest.TestCase):
                 }
             }
         }
-        tree = TreePromptResponse.create(data)
+        tree = TreePromptResponse.create_tree(
+            data=data,
+            context=self.context
+        )
         rendered = tree.render()
         
         # Check all levels are present
@@ -75,3 +93,24 @@ class TestTreePromptResponse(unittest.TestCase):
         lines = rendered.split('\n')
         indents = [len(line) - len(line.lstrip()) for line in lines if line.strip()]
         self.assertEqual(sorted(indents), indents, "Indentation should increase with depth")
+        
+    def test_none_values(self):
+        """Test tree with None values."""
+        data = {
+            "root": {
+                "valid": "value",
+                "none": None
+            }
+        }
+        tree = TreePromptResponse.create_tree(
+            data=data,
+            context=self.context
+        )
+        rendered = tree.render()
+        
+        # Check structure
+        self.assertIn("root", rendered)
+        self.assertIn("valid", rendered)
+        self.assertIn("value", rendered)
+        self.assertIn("none", rendered)
+        self.assertNotIn("None", rendered)  # None values should be skipped
