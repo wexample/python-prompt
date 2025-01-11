@@ -1,5 +1,5 @@
 """Progress response package."""
-from wexample_prompt.responses.progress.step_progress_context import (
+from wexample_prompt.progress.step_progress_context import (
     ProgressStep,
     StepProgressContext
 )

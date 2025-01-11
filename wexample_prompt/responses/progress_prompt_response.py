@@ -6,7 +6,7 @@ from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.responses.progress.step_progress_context import (
+from wexample_prompt.progress.step_progress_context import (
     ProgressStep,
     StepProgressContext
 )
