@@ -103,7 +103,7 @@ class IoManager(BaseModel, WithIndent):
             params=params,
             indentation=self.log_indent
         )
-        response = WarningPromptResponse.create(message, context)
+        response = WarningPromptResponse.create_warning(message, context)
         
         # Log to file/system if configured
         if self._logger.handlers:
@@ -113,7 +113,7 @@ class IoManager(BaseModel, WithIndent):
         return response
 
     def success(self, message: str) -> SuccessPromptResponse:
-        response = SuccessPromptResponse.create(message)
+        response = SuccessPromptResponse.create_success(message)
         
         # Log to file/system if configured
         if self._logger.handlers:
@@ -123,7 +123,7 @@ class IoManager(BaseModel, WithIndent):
         return response
 
     def info(self, message: str) -> InfoPromptResponse:
-        response = InfoPromptResponse.create(message)
+        response = InfoPromptResponse.create_info(message)
         
         # Log to file/system if configured
         if self._logger.handlers:
@@ -133,7 +133,7 @@ class IoManager(BaseModel, WithIndent):
         return response
 
     def debug(self, message: str) -> DebugPromptResponse:
-        response = DebugPromptResponse.create(message)
+        response = DebugPromptResponse.create_debug(message)
         
         # Log to file/system if configured
         if self._logger.handlers:
@@ -177,7 +177,7 @@ class IoManager(BaseModel, WithIndent):
         if isinstance(message, BasePromptResponse):
             response = message
         else:
-            response = InfoPromptResponse.create(str(message))
+            response = InfoPromptResponse.create_info(str(message))
         
         self.print_response(response)
 

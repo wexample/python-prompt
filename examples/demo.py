@@ -158,7 +158,7 @@ def demo_message_types(io: IoManager):
         FailurePromptResponse.create("Operation failed: Unable to connect"),
         InfoPromptResponse.create("This is an info message"),
         LogPromptResponse.create("This is a log message"),
-        SuccessPromptResponse.create("Operation completed successfully"),
+        SuccessPromptResponse.create_success("Operation completed successfully"),
         TaskPromptResponse.create("This is a task message"),
         WarningPromptResponse.create("This is a warning message")
     ]

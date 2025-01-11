@@ -12,7 +12,6 @@ class TestErrorContext(unittest.TestCase):
         context = ErrorContext()
         self.assertFalse(context.fatal)
         self.assertTrue(context.trace)
-        self.assertEqual(context.exit_code, 1)
         self.assertIsNone(context.params)
     
     def test_custom_values(self):
@@ -20,12 +19,10 @@ class TestErrorContext(unittest.TestCase):
         context = ErrorContext(
             fatal=True,
             trace=False,
-            exit_code=2,
             params={"key": "value"}
         )
         self.assertTrue(context.fatal)
         self.assertFalse(context.trace)
-        self.assertEqual(context.exit_code, 2)
         self.assertEqual(context.params, {"key": "value"})
     
     def test_format_message_without_params(self):

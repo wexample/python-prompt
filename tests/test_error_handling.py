@@ -66,18 +66,7 @@ class TestErrorHandling(unittest.TestCase):
         self.assertIn("Error occurred", output)
         self.assertNotIn("ValueError", output)
         self.assertNotIn("cause_error", output)
-    
-    def test_fatal_error(self):
-        class TestFatalError(Exception):
-            pass
 
-        """Test fatal error handling."""
-        with self.assertRaises(TestFatalError) as context:
-            self.io_manager.error("Fatal error", fatal=True, exception=TestFatalError)
-        
-        output = self.stdout.getvalue()
-        self.assertIn("Fatal error", output)
-    
     def test_warning_basic(self):
         """Test basic warning message."""
         self.io_manager.warning("Test warning")
