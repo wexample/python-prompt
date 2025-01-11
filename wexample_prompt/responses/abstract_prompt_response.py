@@ -47,17 +47,12 @@ class AbstractPromptResponse(BaseModel, ABC):
 
     @classmethod
     @abstractmethod
-    def create(cls: "AbstractPromptResponse", context: PromptContext = None, **kwargs) -> "AbstractPromptResponse":
-        """
-        Create a new instance of the response.
-        
-        Args:
-            context: The context for this response
-            **kwargs: Additional arguments specific to each response type
-            
-        Returns:
-            A new instance of the response
-        """
+    def create(
+        cls: "AbstractPromptResponse",
+        lines: List[PromptResponseLine],
+        context: PromptContext = None,
+        **kwargs
+    ) -> "AbstractPromptResponse":
         pass
     
     def append(self, other: 'AbstractPromptResponse') -> 'AbstractPromptResponse':
