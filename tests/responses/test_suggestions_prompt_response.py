@@ -69,13 +69,26 @@ class TestSuggestionsPromptResponse(unittest.TestCase):
 
     def test_with_verbosity(self):
         """Test suggestions with verbosity level."""
+        # Test with maximum verbosity
+        max_context = PromptContext(terminal_width=80, verbosity=VerbosityLevel.MAXIMUM)
         response = SuggestionsPromptResponse.create_suggestions(
             message=self.message,
             suggestions=self.suggestions,
             verbosity=VerbosityLevel.MAXIMUM,
-            context=self.context
+            context=max_context
         )
         rendered = response.render()
         self.assertIn(self.message, rendered)
         for suggestion in self.suggestions:
             self.assertIn(suggestion, rendered)
+
+        # Test with quiet verbosity - should not show anything
+        quiet_context = PromptContext(terminal_width=80, verbosity=VerbosityLevel.QUIET)
+        response = SuggestionsPromptResponse.create_suggestions(
+            message=self.message,
+            suggestions=self.suggestions,
+            verbosity=VerbosityLevel.MAXIMUM,
+            context=quiet_context
+        )
+        rendered = response.render()
+        self.assertEqual("", rendered)

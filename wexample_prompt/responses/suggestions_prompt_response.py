@@ -48,7 +48,7 @@ class SuggestionsPromptResponse(BasePromptResponse):
             suggestions=suggestions,
             arrow_style=arrow_style,
             context=context,
-            verbosity=verbosity
+            verbosity_level=verbosity or VerbosityLevel.DEFAULT
         )
 
     def render(self) -> str:
