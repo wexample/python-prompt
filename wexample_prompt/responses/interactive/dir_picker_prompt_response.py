@@ -2,7 +2,7 @@
 import os
 from typing import Any, Dict, Optional
 
-from wexample_prompt.responses.choice_dict_prompt_response import ChoiceDictPromptResponse
+from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_helpers.helpers.dict import dict_sort_values
 
 

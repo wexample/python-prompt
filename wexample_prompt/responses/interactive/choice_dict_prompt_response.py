@@ -1,7 +1,7 @@
 """Response for displaying and handling dictionary-based choice prompts."""
 from typing import Any, Dict, Optional
 
-from wexample_prompt.responses.choice_prompt_response import ChoicePromptResponse
+from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 
 class ChoiceDictPromptResponse(ChoicePromptResponse):
