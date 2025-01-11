@@ -10,7 +10,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a file picker interface."""
 
     @classmethod
-    def create(
+    def create_file_picker(
         cls,
         base_dir: Optional[str] = None,
         question: str = "Select a file:",
@@ -73,7 +73,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         
         # If directory selected, create new picker for that directory
         if os.path.isdir(full_path):
-            next_response = self.__class__.create(
+            next_response = self.__class__.create_file_picker(
                 base_dir=full_path,
                 question=self.lines[0].render()  # Keep same question
             )
