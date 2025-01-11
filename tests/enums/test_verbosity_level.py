@@ -4,7 +4,7 @@ from io import StringIO
 
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
+from wexample_prompt.responses.suggestions_prompt_response import BasePromptResponse
 
 
 class TestVerbosityLevel(unittest.TestCase):
@@ -19,20 +19,20 @@ class TestVerbosityLevel(unittest.TestCase):
         max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
 
         # Create responses with different verbosity requirements
-        critical_response = SuggestionsPromptResponse.create_suggestions(
-            message="Critical message",
+        critical_response = BasePromptResponse.create_from_text(
+            text="Critical message",
             suggestions=["critical command"],
             verbosity=VerbosityLevel.QUIET  # Show even in quiet mode
         )
         
-        normal_response = SuggestionsPromptResponse.create_suggestions(
-            message="Normal message",
+        normal_response = BasePromptResponse.create_from_text(
+            text="Normal message",
             suggestions=["normal command"],
             verbosity=VerbosityLevel.DEFAULT  # Show in default and higher
         )
         
-        debug_response = SuggestionsPromptResponse.create_suggestions(
-            message="Debug message",
+        debug_response = BasePromptResponse.create_from_text(
+            text="Debug message",
             suggestions=["debug command"],
             verbosity=VerbosityLevel.MAXIMUM  # Only show in maximum verbosity
         )
@@ -88,8 +88,8 @@ class TestVerbosityLevel(unittest.TestCase):
     def test_empty_output_when_hidden(self):
         """Test that hidden messages produce no output at all."""
         context = PromptContext(verbosity=VerbosityLevel.QUIET)
-        response = SuggestionsPromptResponse.create_suggestions(
-            message="Hidden message",
+        response = BasePromptResponse.create_from_text(
+            text="Hidden message",
             suggestions=["hidden command"],
             verbosity=VerbosityLevel.MAXIMUM,
             context=context
