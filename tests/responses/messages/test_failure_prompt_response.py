@@ -3,6 +3,7 @@ import unittest
 
 from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.common.prompt_context import PromptContext
 
 
 class TestFailurePromptResponse(unittest.TestCase):
@@ -11,7 +12,7 @@ class TestFailurePromptResponse(unittest.TestCase):
     def test_create_failure(self):
         """Test failure message creation."""
         message = "Test failure message"
-        response = FailurePromptResponse.create(message)
+        response = FailurePromptResponse.create_failure(message)
         rendered = response.render()
         
         # Check message content
@@ -20,13 +21,13 @@ class TestFailurePromptResponse(unittest.TestCase):
         
     def test_message_type(self):
         """Test failure message type."""
-        response = FailurePromptResponse.create("Test")
+        response = FailurePromptResponse.create_failure("Test")
         self.assertEqual(response.get_message_type(), MessageType.FAILURE)
         
     def test_multiline_failure(self):
         """Test multiline failure message."""
         message = "Line 1\nLine 2"
-        response = FailurePromptResponse.create(message)
+        response = FailurePromptResponse.create_failure(message)
         rendered = response.render()
         
         # Check both lines are present
@@ -39,7 +40,7 @@ class TestFailurePromptResponse(unittest.TestCase):
         details = "Connection timeout after 30 seconds"
         message = f"{main_message}: {details}"
         
-        response = FailurePromptResponse.create(message)
+        response = FailurePromptResponse.create_failure(message)
         rendered = response.render()
         
         self.assertIn(main_message, rendered)
@@ -47,6 +48,18 @@ class TestFailurePromptResponse(unittest.TestCase):
         
     def test_empty_failure(self):
         """Test failure message with empty string."""
-        response = FailurePromptResponse.create("")
+        response = FailurePromptResponse.create_failure("")
         rendered = response.render()
-        self.assertIn("❌", rendered)  # Should still show the failure symbol
+        self.assertIn("❌", rendered)
+        
+    def test_failure_with_context(self):
+        """Test failure message with context."""
+        message = "Operation failed: {error_code}"
+        context = PromptContext(params={"error_code": "500"})
+        response = FailurePromptResponse.create_failure(
+            message,
+            context=context
+        )
+        rendered = response.render()
+        self.assertIn("Operation failed", rendered)
+        self.assertIn("500", rendered)
