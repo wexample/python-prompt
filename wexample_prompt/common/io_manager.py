@@ -69,7 +69,7 @@ class IoManager(BaseModel, WithIndent):
         self,
         message: str,
         params: Optional[Dict[str, Any]] = None,
-        fatal: bool = False,
+        fatal: bool = True,
         trace: bool = True,
         exit_code: int = 1
     ) -> ErrorPromptResponse:
@@ -210,6 +210,9 @@ class IoManager(BaseModel, WithIndent):
                 request_details,
                 title="Request Details"
             ))
+
+            print('ERRRR')
+            print(exception)
 
             if exception:
                 error_msg = f"Request failed: {str(exception)}"
