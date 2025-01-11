@@ -34,6 +34,9 @@ class BasePromptResponse(AbstractPromptResponse):
     def _on_fatal(self):
         sys.exit(self.context.exit_code)
 
+    def create_base(self, *args, **kwargs):
+        return self._create(*args, **kwargs)
+
     def append(self, other: 'BasePromptResponse') -> 'BasePromptResponse':
         """Combine this response with another."""
         return self.__class__(
