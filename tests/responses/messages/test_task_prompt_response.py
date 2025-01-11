@@ -3,6 +3,7 @@ import unittest
 
 from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.common.prompt_context import PromptContext
 
 
 class TestTaskPromptResponse(unittest.TestCase):
@@ -11,7 +12,7 @@ class TestTaskPromptResponse(unittest.TestCase):
     def test_create_task(self):
         """Test task message creation."""
         message = "Test task message"
-        response = TaskPromptResponse.create(message)
+        response = TaskPromptResponse.create_task(message)
         rendered = response.render()
         
         # Check message content
@@ -20,13 +21,13 @@ class TestTaskPromptResponse(unittest.TestCase):
         
     def test_message_type(self):
         """Test task message type."""
-        response = TaskPromptResponse.create("Test")
+        response = TaskPromptResponse.create_task("Test")
         self.assertEqual(response.get_message_type(), MessageType.TASK)
         
     def test_multiline_task(self):
         """Test multiline task message."""
         message = "Line 1\nLine 2"
-        response = TaskPromptResponse.create(message)
+        response = TaskPromptResponse.create_task(message)
         rendered = response.render()
         
         # Check both lines are present
@@ -39,7 +40,7 @@ class TestTaskPromptResponse(unittest.TestCase):
         status = "In Progress"
         message = f"{task} - {status}"
         
-        response = TaskPromptResponse.create(message)
+        response = TaskPromptResponse.create_task(message)
         rendered = response.render()
         
         self.assertIn(task, rendered)
@@ -47,6 +48,16 @@ class TestTaskPromptResponse(unittest.TestCase):
         
     def test_empty_task(self):
         """Test task message with empty string."""
-        response = TaskPromptResponse.create("")
+        response = TaskPromptResponse.create_task("")
         rendered = response.render()
-        self.assertIn("⚡", rendered)  # Should still show the task symbol
+        self.assertIn("⚡", rendered)
+        
+    def test_task_with_context(self):
+        """Test task message with context."""
+        message = "Processing item {item_id} of {total}"
+        context = PromptContext(params={"item_id": "5", "total": "10"})
+        response = TaskPromptResponse.create_task(message, context=context)
+        rendered = response.render()
+        self.assertIn("Processing item", rendered)
+        self.assertIn("5", rendered)
+        self.assertIn("10", rendered)
