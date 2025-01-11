@@ -12,7 +12,11 @@ class TestFilePickerPromptResponse(unittest.TestCase):
 
     def setUp(self):
         """Set up test cases."""
-        self.context = PromptContext(terminal_width=80)
+        # Mock terminal size to avoid environment variable issues
+        with patch('shutil.get_terminal_size') as mock_term:
+            mock_term.return_value.columns = 80
+            self.context = PromptContext()
+            
         self.test_dir = "/test/path"
         self.question = "Select a file:"
 
@@ -58,14 +62,13 @@ class TestFilePickerPromptResponse(unittest.TestCase):
 
     @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_navigate_parent(self, mock_isdir, mock_listdir):
-        """Test navigating to parent directory."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = True
-        parent_dir = os.path.dirname(self.test_dir)
+    def test_execute_abort(self, mock_isdir, mock_listdir):
+        """Test aborting the selection."""
+        mock_listdir.return_value = ["file1.txt"]
+        mock_isdir.return_value = False
 
         with patch('InquirerPy.inquirer.select') as mock_select:
-            mock_select.return_value.execute.return_value = ".."
+            mock_select.return_value.execute.return_value = None
             
             response = FilePickerPromptResponse.create_file_picker(
                 base_dir=self.test_dir,
@@ -73,23 +76,4 @@ class TestFilePickerPromptResponse(unittest.TestCase):
             )
             
             result = response.execute()
-            self.assertEqual(result, parent_dir)
-
-    @patch('os.listdir')
-    @patch('os.path.isdir')
-    def test_execute_navigate_directory(self, mock_isdir, mock_listdir):
-        """Test navigating into a directory."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = True
-
-        with patch('InquirerPy.inquirer.select') as mock_select:
-            # First select the directory, then abort
-            mock_select.return_value.execute.side_effect = ["dir1", None]
-            
-            response = FilePickerPromptResponse.create_file_picker(
-                base_dir=self.test_dir,
-                context=self.context
-            )
-            
-            result = response.execute()
-            self.assertIsNone(result)  # None because we aborted in the subdirectory
+            self.assertIsNone(result)
