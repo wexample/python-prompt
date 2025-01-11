@@ -11,17 +11,19 @@ class ErrorPromptResponse(BaseMessageResponse):
     exception: Optional[Any] = None
 
     @classmethod
-    def create(
-        cls,
+    def create_error(
+        cls: "ErrorPromptResponse",
         message: str,
         context: Optional[ErrorContext] = None,
-        exception=None
-    ) -> 'ErrorPromptResponse':
+        exception: Optional[Any] = None,
+        **kwargs
+    ) -> "ErrorPromptResponse":
         # Create response with context
         response = cls._create_symbol_message(
             text=message,
             color=TerminalColor.RED,
-            context=context
+            context=context,
+            **kwargs
         )
 
         response.exception = exception
@@ -29,7 +31,8 @@ class ErrorPromptResponse(BaseMessageResponse):
         return response
 
     def _on_fatal(self):
-        raise self.exception
+        if self.exception:
+            raise self.exception
 
     @classmethod
     def get_message_type(cls) -> MessageType:

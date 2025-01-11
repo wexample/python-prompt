@@ -82,7 +82,7 @@ class IoManager(BaseModel, WithIndent):
             exit_code=exit_code,
             indentation=self.log_indent
         )
-        response = ErrorPromptResponse.create(
+        response = ErrorPromptResponse.create_error(
             message=message,
             context=context,
             exception=exception

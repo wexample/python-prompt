@@ -153,8 +153,8 @@ def demo_message_types(io: IoManager):
     
     # Show message type examples
     messages = [
-        DebugPromptResponse.create("This is a debug message"),
-        ErrorPromptResponse.create("This is an error message"),
+        DebugPromptResponse.create_debug("This is a debug message"),
+        ErrorPromptResponse.create_error("This is an error message"),
         FailurePromptResponse.create("Operation failed: Unable to connect"),
         InfoPromptResponse.create("This is an info message"),
         LogPromptResponse.create("This is a log message"),
