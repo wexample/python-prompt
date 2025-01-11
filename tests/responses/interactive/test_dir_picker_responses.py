@@ -12,7 +12,11 @@ class TestDirPickerPromptResponse(unittest.TestCase):
 
     def setUp(self):
         """Set up test cases."""
-        self.context = PromptContext(terminal_width=80)
+        # Mock terminal size to avoid environment variable issues
+        with patch('shutil.get_terminal_size') as mock_term:
+            mock_term.return_value.columns = 80
+            self.context = PromptContext()
+            
         self.test_dir = "/test/path"
         self.question = "Select a directory:"
 
@@ -58,20 +62,18 @@ class TestDirPickerPromptResponse(unittest.TestCase):
 
     @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_navigate_parent(self, mock_isdir, mock_listdir):
-        """Test navigating to parent directory."""
+    def test_execute_abort(self, mock_isdir, mock_listdir):
+        """Test aborting selection."""
         mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = True
-        parent_dir = os.path.dirname(self.test_dir)
+        mock_isdir.return_value = False
 
         with patch('InquirerPy.inquirer.select') as mock_select:
-            mock_select.return_value.execute.return_value = ".."
+            mock_select.return_value.execute.return_value = None
             
             response = DirPickerPromptResponse.create_dir_picker(
                 base_dir=self.test_dir,
                 context=self.context
             )
             
-            next_response = response.execute()
-            self.assertIsInstance(next_response, DirPickerPromptResponse)
-            self.assertEqual(next_response._base_dir, parent_dir)
+            result = response.execute()
+            self.assertIsNone(result)
