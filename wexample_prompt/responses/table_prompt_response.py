@@ -1,44 +1,50 @@
 """Table response for displaying data in a formatted table layout."""
-import os
-from typing import List, Any, Optional, Union
+from typing import List, Any, Optional
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_prompt.common.prompt_context import PromptContext
 
 
 class TablePromptResponse(BasePromptResponse):
     """Response for displaying data in a table layout with borders and formatting."""
 
+    data: List[List[Any]]
+    headers: Optional[List[str]] = None
+    title: Optional[str] = None
+
     @classmethod
-    def create(
+    def create_table(
         cls,
         data: List[List[Any]],
         headers: Optional[List[str]] = None,
-        title: Optional[str] = None
+        title: Optional[str] = None,
+        context: Optional[PromptContext] = None
     ) -> 'TablePromptResponse':
-        """Create a table response.
-        
-        Args:
-            data: List of rows, each row is a list of values
-            headers: Optional list of column headers
-            title: Optional table title
-            
-        Returns:
-            TablePromptResponse: A new table response
-        """
-        if not data and not headers:
-            return cls(lines=[], response_type=ResponseType.TABLE)
+        return cls(
+            lines=[],  # Lines will be generated in render()
+            response_type=ResponseType.TABLE,
+            data=data,
+            headers=headers,
+            title=title,
+            context=context
+        )
+
+    def render(self) -> str:
+        """Render the table with borders and formatting."""
+        if not self.data and not self.headers:
+            return ""
 
         # Combine headers and data for width calculation
         all_rows = []
-        if headers:
-            all_rows.append(headers)
-        all_rows.extend(data)
+        if self.headers:
+            all_rows.append(self.headers)
+        all_rows.extend(self.data)
 
         # Calculate column widths
-        max_widths = cls._calculate_max_widths(all_rows)
+        max_widths = self._calculate_max_widths(all_rows)
         
         # Calculate total line length for borders
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
@@ -46,33 +52,35 @@ class TablePromptResponse(BasePromptResponse):
         lines = []
         
         # Add title if provided
-        if title:
-            title_padding = (total_width - len(title)) // 2
+        if self.title:
+            title_padding = (total_width - len(self.title)) // 2
             title_line = PromptResponseLine(segments=[
                 PromptResponseSegment(text="+" + "-" * title_padding),
-                PromptResponseSegment(text=f" {title} "),
-                PromptResponseSegment(text="-" * (total_width - title_padding - len(title) - 2) + "+")
+                PromptResponseSegment(text=f" {self.title} "),
+                PromptResponseSegment(text="-" * (total_width - title_padding - len(self.title) - 2) + "+")
             ])
             lines.append(title_line)
         else:
             # Top border
-            lines.append(cls._create_border_line(total_width))
+            lines.append(self._create_border_line(total_width))
             
         # Add headers if provided
-        if headers:
-            header_segments = cls._create_row_segments(headers, max_widths)
+        if self.headers:
+            header_segments = self._create_row_segments(self.headers, max_widths)
             lines.append(PromptResponseLine(segments=header_segments))
-            lines.append(cls._create_border_line(total_width))
+            lines.append(self._create_border_line(total_width))
             
         # Add data rows
-        for row in data:
-            row_segments = cls._create_row_segments(row, max_widths)
+        for row in self.data:
+            row_segments = self._create_row_segments(row, max_widths)
             lines.append(PromptResponseLine(segments=row_segments))
             
         # Bottom border
-        lines.append(cls._create_border_line(total_width))
+        lines.append(self._create_border_line(total_width))
         
-        return cls(lines=lines, response_type=ResponseType.TABLE)
+        # Update lines and render
+        self.lines = lines
+        return super().render()
     
     @staticmethod
     def _calculate_max_widths(rows: List[List[Any]]) -> List[int]:
