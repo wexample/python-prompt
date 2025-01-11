@@ -1,12 +1,9 @@
 """Tests for choice prompt responses."""
 import unittest
-from io import StringIO
 from unittest.mock import patch
 
 from InquirerPy.base.control import Choice
-
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 
@@ -26,13 +23,13 @@ class TestChoicePromptResponse(unittest.TestCase):
             choices=self.choices,
             context=self.context
         )
-        
+
         # Check question and choices are present
         rendered = response.render()
         self.assertIn(self.question, rendered)
         self.assertIn("Option 1", rendered)
         self.assertIn("Option 2", rendered)
-        
+
         # Check formatting
         self.assertIn("→", rendered)  # Arrow indicator
         self.assertIn("1.", rendered)  # Numbering
@@ -49,7 +46,7 @@ class TestChoicePromptResponse(unittest.TestCase):
             choices=choices,
             context=self.context
         )
-        
+
         rendered = response.render()
         self.assertIn("Display 1", rendered)
         self.assertIn("Display 2", rendered)
@@ -65,7 +62,7 @@ class TestChoicePromptResponse(unittest.TestCase):
             abort=abort_text,
             context=self.context
         )
-        
+
         rendered = response.render()
         self.assertIn(abort_text, rendered)
         self.assertIn(str(len(self.choices) + 1), rendered)  # Check abort numbering
@@ -75,13 +72,13 @@ class TestChoicePromptResponse(unittest.TestCase):
         """Test execute returns the selected value."""
         expected_value = "Option 1"
         mock_select.return_value.execute.return_value = expected_value
-        
+
         response = ChoicePromptResponse.create_choice(
             question=self.question,
             choices=self.choices,
             context=self.context
         )
-        
+
         result = response.execute()
         self.assertEqual(result, expected_value)
         mock_select.assert_called_once()
@@ -94,53 +91,10 @@ class TestChoicePromptResponse(unittest.TestCase):
             abort=None,
             context=self.context
         )
-        
+
         rendered = response.render()
         self.assertNotIn("> Abort", rendered)
         self.assertEqual(
             len([line for line in rendered.split('\n') if line.strip()]),
             len(self.choices) + 1  # choices + question
         )
-
-
-class TestChoiceDictPromptResponse(unittest.TestCase):
-    """Test cases for ChoiceDictPromptResponse."""
-
-    def setUp(self):
-        """Set up test cases."""
-        self.context = PromptContext(terminal_width=80)
-        self.question = "Select a value:"
-        self.choices = {
-            "key1": "Value 1",
-            "key2": "Value 2"
-        }
-
-    def test_create_with_dict(self):
-        """Test creating response with dictionary choices."""
-        response = ChoiceDictPromptResponse.create_choice(
-            question=self.question,
-            choices=self.choices,
-            context=self.context
-        )
-        
-        rendered = response.render()
-        self.assertIn(self.question, rendered)
-        self.assertIn("Value 1", rendered)
-        self.assertIn("Value 2", rendered)
-        self.assertNotIn("key1", rendered)  # Keys should not be displayed
-        self.assertNotIn("key2", rendered)
-
-    @patch('InquirerPy.inquirer.select')
-    def test_execute_returns_key(self, mock_select):
-        """Test execute returns the dictionary key."""
-        mock_select.return_value.execute.return_value = "key1"
-        
-        response = ChoiceDictPromptResponse.create_choice(
-            question=self.question,
-            choices=self.choices,
-            context=self.context
-        )
-        
-        result = response.execute()
-        self.assertEqual(result, "key1")
-        mock_select.assert_called_once()

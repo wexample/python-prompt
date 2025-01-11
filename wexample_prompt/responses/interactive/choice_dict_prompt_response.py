@@ -12,7 +12,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
     """Response for displaying choices from a dictionary and returning the selected key."""
 
     # Store the original dictionary for key lookup
-    _original_choices: Dict[str, str] = Field(default_factory=dict)
+    original_choices: Dict[str, str] = Field(default_factory=dict)
 
     # Pydantic configuration
     model_config = ConfigDict(arbitrary_types_allowed=True)
