@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from InquirerPy.base.control import Choice
 
-from wexample_prompt.responses import ChoicePromptResponse, ChoiceDictPromptResponse
+from wexample_prompt.responses.interactive import ChoicePromptResponse, ChoiceDictPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 
