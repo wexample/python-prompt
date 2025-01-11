@@ -3,6 +3,7 @@ import unittest
 
 from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
@@ -13,24 +14,21 @@ class TestLogPromptResponse(unittest.TestCase):
     def test_create_log(self):
         """Test log message creation."""
         message = "Test log message"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         rendered = response.render()
-        
-        # Check message content
         self.assertIn(message, rendered)
 
     def test_message_type(self):
         """Test log message type."""
-        response = LogPromptResponse.create("Test")
+        response = LogPromptResponse.create_log("Test")
         self.assertEqual(response.get_message_type(), MessageType.LOG)
         
     def test_multiline_log(self):
         """Test multiline log message."""
         message = "Line 1\nLine 2"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         rendered = response.render()
         
-        # Check both lines are present
         self.assertIn("Line 1", rendered)
         self.assertIn("Line 2", rendered)
         
@@ -39,7 +37,7 @@ class TestLogPromptResponse(unittest.TestCase):
         timestamp = "2025-01-04 12:00:00"
         message = f"[{timestamp}] System started"
         
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         rendered = response.render()
         
         self.assertIn(timestamp, rendered)
@@ -48,22 +46,30 @@ class TestLogPromptResponse(unittest.TestCase):
     def test_log_with_level(self):
         """Test log message with log level."""
         message = "[INFO] Application initialized"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         rendered = response.render()
-        
         self.assertIn("[INFO]", rendered)
         self.assertIn("Application initialized", rendered)
         
+    def test_log_with_context(self):
+        """Test log message with context."""
+        message = "Processing request: {request_id}"
+        context = PromptContext(params={"request_id": "123"})
+        response = LogPromptResponse.create_log(message, context=context)
+        rendered = response.render()
+        self.assertIn("Processing request", rendered)
+        self.assertIn("123", rendered)
+
     def test_empty_log(self):
         """Test log message with empty string."""
-        response = LogPromptResponse.create("")
+        response = LogPromptResponse.create_log("")
         rendered = response.render()
         self.assertEqual("", rendered)
 
     def test_single_indentation(self):
         """Test log message with single level indentation."""
         message = "Indented message"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         response.lines[0].indent_level = 1
         rendered = response.render()
         
@@ -103,7 +109,7 @@ class TestLogPromptResponse(unittest.TestCase):
         """Test indentation with multiline messages."""
         # Create multiline message
         message = "First line\nSecond line\nThird line"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         
         # Set different indentation for each line
         for i, line in enumerate(response.lines):
@@ -120,7 +126,7 @@ class TestLogPromptResponse(unittest.TestCase):
     def test_zero_indentation(self):
         """Test explicit zero indentation."""
         message = "No indent"
-        response = LogPromptResponse.create(message)
+        response = LogPromptResponse.create_log(message)
         response.lines[0].indent_level = 0
         rendered = response.render()
         
