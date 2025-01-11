@@ -9,39 +9,69 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.enums.response_type import ResponseType
 
 
 class SuggestionsPromptResponse(BasePromptResponse):
     """Response for displaying a list of suggestions with optional descriptions."""
 
+    # Instance variables
+    message: str
+    suggestions: List[str]
+    arrow_style: str = "→"
+
     @classmethod
-    def create(
+    def create_suggestions(
         cls,
         message: str,
         suggestions: List[str],
         context: Optional[PromptContext] = None,
         verbosity: Optional[VerbosityLevel] = None,
-        **kwargs
+        arrow_style: str = "→"
     ) -> 'SuggestionsPromptResponse':
+        """Create a suggestions response.
+
+        Args:
+            message: The message to display above suggestions
+            suggestions: List of suggestion strings to display
+            context: Optional prompt context for formatting
+            verbosity: Optional verbosity level for output detail
+            arrow_style: Character to use as bullet point (default: →)
+
+        Returns:
+            SuggestionsPromptResponse instance
+        """
+        return cls(
+            lines=[],  # Lines will be generated in render()
+            response_type=ResponseType.SUGGESTIONS,
+            message=message,
+            suggestions=suggestions,
+            arrow_style=arrow_style,
+            context=context,
+            verbosity=verbosity
+        )
+
+    def render(self) -> str:
+        """Render the suggestions with styling."""
         lines = []
         
         # Add the message line with blue color and bold style
         lines.append(
             PromptResponseLine(segments=[
                 PromptResponseSegment(
-                    text=ColorManager.colorize(f"{message}:", TerminalColor.BLUE),
+                    text=ColorManager.colorize(f"{self.message}:", TerminalColor.BLUE),
                     styles=[TextStyle.BOLD]
                 )
             ])
         )
         
         # Add each suggestion with a modern arrow and styling
-        for suggestion in suggestions:
+        for suggestion in self.suggestions:
             lines.append(
                 PromptResponseLine(segments=[
                     # Arrow indicator with cyan color
                     PromptResponseSegment(
-                        text=ColorManager.colorize("  → ", TerminalColor.CYAN),
+                        text=ColorManager.colorize(f"  {self.arrow_style} ", TerminalColor.CYAN),
                         styles=[TextStyle.BOLD]
                     ),
                     # Suggestion text
@@ -49,13 +79,6 @@ class SuggestionsPromptResponse(BasePromptResponse):
                 ])
             )
             
-        # Create the response with the specified verbosity level
-        response_kwargs = {
-            'lines': lines,
-            'context': context,
-            **kwargs
-        }
-        if verbosity is not None:
-            response_kwargs['verbosity_level'] = verbosity
-            
-        return cls(**response_kwargs)
+        # Update lines and render using parent class
+        self.lines = lines
+        return super().render()
