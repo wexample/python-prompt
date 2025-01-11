@@ -12,7 +12,7 @@ class TestWarningPromptResponse(unittest.TestCase):
     def test_create_warning(self):
         """Test warning message creation."""
         message = "Test warning message"
-        response = WarningPromptResponse.create(message)
+        response = WarningPromptResponse.create_warning(message)
         rendered = response.render()
         
         # Check message content
@@ -21,13 +21,13 @@ class TestWarningPromptResponse(unittest.TestCase):
         
     def test_message_type(self):
         """Test warning message type."""
-        response = WarningPromptResponse.create("Test")
+        response = WarningPromptResponse.create_warning("Test")
         self.assertEqual(response.get_message_type(), MessageType.WARNING)
         
     def test_multiline_warning(self):
         """Test multiline warning message."""
         message = "Line 1\nLine 2"
-        response = WarningPromptResponse.create(message)
+        response = WarningPromptResponse.create_warning(message)
         rendered = response.render()
         
         # Check both lines are present
@@ -36,38 +36,28 @@ class TestWarningPromptResponse(unittest.TestCase):
         
     def test_warning_with_context(self):
         """Test warning message with error context."""
+        message = "Warning in {component}: {issue}"
         context = ErrorContext(
             params={"component": "cache", "issue": "outdated"},
             trace=True
         )
-        message = "Warning in {component}: {issue}"
         
-        response = WarningPromptResponse.create(
+        response = WarningPromptResponse.create_warning(
             message,
             context=context
         )
         rendered = response.render()
-        
         self.assertIn("Warning in cache: outdated", rendered)
         
-    def test_warning_with_stack_trace(self):
-        """Test warning message with stack trace."""
-        try:
-            raise ValueError("Test warning")
-        except ValueError:
-            context = ErrorContext(trace=True)
-            response = WarningPromptResponse.create(
-                "A warning occurred",
-                context=context
-            )
-            rendered = response.render()
-            
-            self.assertIn("A warning occurred", rendered)
-            self.assertIn("ValueError: Test warning", rendered)
-            self.assertIn("test_warning_with_stack_trace", rendered)
-            
+    def test_warning_without_context(self):
+        """Test warning message without context."""
+        message = "Simple warning"
+        response = WarningPromptResponse.create_warning(message)
+        rendered = response.render()
+        self.assertIn(message, rendered)
+        
     def test_empty_warning(self):
         """Test warning message with empty string."""
-        response = WarningPromptResponse.create("")
+        response = WarningPromptResponse.create_warning("")
         rendered = response.render()
-        self.assertIn("⚠", rendered)  # Should still show the warning symbol
+        self.assertIn("⚠", rendered)

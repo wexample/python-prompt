@@ -1,7 +1,6 @@
 """Tests for BasePromptResponse."""
 import unittest
 
-from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
