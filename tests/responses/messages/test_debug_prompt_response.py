@@ -11,7 +11,7 @@ class TestDebugPromptResponse(unittest.TestCase):
     def test_create_debug(self):
         """Test debug message creation."""
         message = "Test debug message"
-        response = DebugPromptResponse.create(message)
+        response = DebugPromptResponse.create_debug(message=message)
         rendered = response.render()
         
         # Check message content
@@ -20,13 +20,13 @@ class TestDebugPromptResponse(unittest.TestCase):
         
     def test_message_type(self):
         """Test debug message type."""
-        response = DebugPromptResponse.create("Test")
+        response = DebugPromptResponse.create_debug(message="Test")
         self.assertEqual(response.get_message_type(), MessageType.DEBUG)
         
     def test_multiline_debug(self):
         """Test multiline debug message."""
         message = "Line 1\nLine 2"
-        response = DebugPromptResponse.create(message)
+        response = DebugPromptResponse.create_debug(message=message)
         rendered = response.render()
         
         # Check both lines are present

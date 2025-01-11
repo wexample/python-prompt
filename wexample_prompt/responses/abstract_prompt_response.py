@@ -46,15 +46,15 @@ class AbstractPromptResponse(BaseModel, ABC):
         )
 
     @classmethod
-    @abstractmethod
     def create(
         cls: "AbstractPromptResponse",
         lines: List[PromptResponseLine],
         context: PromptContext = None,
         **kwargs
     ) -> "AbstractPromptResponse":
-        pass
-    
+        """Create a new response with the given lines."""
+        return cls(lines=lines, context=context, **kwargs)
+
     def append(self, other: 'AbstractPromptResponse') -> 'AbstractPromptResponse':
         """Combine this response with another."""
         return self.__class__(

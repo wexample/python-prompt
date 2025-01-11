@@ -69,6 +69,7 @@ class IoManager(BaseModel, WithIndent):
         self,
         message: str,
         params: Optional[Dict[str, Any]] = None,
+        exception = None,
         fatal: bool = True,
         trace: bool = True,
         exit_code: int = 1
@@ -81,7 +82,11 @@ class IoManager(BaseModel, WithIndent):
             exit_code=exit_code,
             indentation=self.log_indent
         )
-        response = ErrorPromptResponse.create(message, context)
+        response = ErrorPromptResponse.create(
+            message=message,
+            context=context,
+            exception=exception
+        )
         
         # Log to file/system if configured
         if self._logger.handlers:
@@ -211,12 +216,9 @@ class IoManager(BaseModel, WithIndent):
                 title="Request Details"
             ))
 
-            print('ERRRR')
-            print(exception)
-
             if exception:
                 error_msg = f"Request failed: {str(exception)}"
-                self.error(error_msg)
+                self.error(error_msg, exception=exception)
             return None
 
         # Log request details at debug level

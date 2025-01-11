@@ -12,15 +12,12 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 
 class BaseMessageResponse(BasePromptResponse):
-    """Base class for all message responses."""
-
     # Symbol to display before the message, override in subclasses
     SYMBOL: ClassVar[str] = ""
 
     @classmethod
     @abstractmethod
     def get_message_type(cls) -> MessageType:
-        """Get the message type for this response."""
         pass
 
     @classmethod
@@ -32,17 +29,6 @@ class BaseMessageResponse(BasePromptResponse):
         bold_symbol: bool = True,
         context: Optional[PromptContext] = None
     ) -> 'BaseMessageResponse':
-        """Create a message with an optional symbol.
-        
-        Args:
-            text (str): The message text
-            color (TerminalColor): The color to use
-            symbol (Optional[str]): The symbol to use, defaults to cls.SYMBOL
-            bold_symbol (bool): Whether to make the symbol bold
-            
-        Returns:
-            BaseMessageResponse: A new message response
-        """
         segments = []
 
         # Add symbol if present
@@ -69,7 +55,7 @@ class BaseMessageResponse(BasePromptResponse):
             line_type=cls.get_message_type()
         )
 
-        return cls(
+        return cls.create(
             lines=[line],
             message_type=cls.get_message_type(),
             **({"context": context} if context is not None else {})
