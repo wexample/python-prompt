@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -13,7 +13,7 @@ class PropertiesPromptResponse(BasePromptResponse):
     nested_indent: int = 2
 
     @classmethod
-    def create(
+    def create_properties(
         cls,
         properties: Dict[str, Any],
         title: Optional[str] = None,
@@ -35,7 +35,7 @@ class PropertiesPromptResponse(BasePromptResponse):
             return ""
 
         # Calculate total width including borders and padding
-        total_width = self.context.terminal_width
+        total_width = self.context.terminal_width if self.context else 80
         # Content width is total minus borders (2) and padding (2)
         content_width = total_width - 4
 
@@ -64,11 +64,11 @@ class PropertiesPromptResponse(BasePromptResponse):
             if len(content) > content_width:
                 content = content[:content_width - 3] + "..."
 
-            padding = content_width - len(content) - 3
+            padding = content_width - len(content)
             lines.append(PromptResponseLine(segments=[
                 PromptResponseSegment(text="| "),
                 PromptResponseSegment(text=content),
-                PromptResponseSegment(text=" " * padding + "|")
+                PromptResponseSegment(text=" " * padding + " |")
             ]))
             
         # Bottom border
@@ -84,7 +84,7 @@ class PropertiesPromptResponse(BasePromptResponse):
         key_width: int,
         indent: int,
         current_indent: int = 0
-    ) -> list[str]:
+    ) -> List[str]:
         lines = []
         indent_str = " " * current_indent
         
@@ -103,5 +103,5 @@ class PropertiesPromptResponse(BasePromptResponse):
     @staticmethod
     def _create_border_line(width: int, left: str = "+", right: str = "+") -> PromptResponseLine:
         return PromptResponseLine(segments=[
-            PromptResponseSegment(text=f"{left}{'-' * (width - 2)}{right}")
+            PromptResponseSegment(text=f"{left}{'-' * width}{right}")
         ])
