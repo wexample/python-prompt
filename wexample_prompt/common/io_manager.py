@@ -68,7 +68,6 @@ class IoManager(BaseModel, WithIndent):
         params: Optional[Dict[str, Any]] = None,
         exception = None,
         fatal: bool = True,
-        trace: bool = True,
     ) -> ErrorPromptResponse:
         message = str(message)
 
