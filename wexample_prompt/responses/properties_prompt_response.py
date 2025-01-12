@@ -1,10 +1,10 @@
 from typing import Dict, Any, Optional, List
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
 
 
 class PropertiesPromptResponse(BasePromptResponse):
@@ -44,20 +44,20 @@ class PropertiesPromptResponse(BasePromptResponse):
         content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
 
         lines = []
-        
+
         # Add title if provided
         if self.title:
             title_padding = (content_width - len(self.title)) // 2
             title_line = PromptResponseLine(segments=[
                 PromptResponseSegment(text="+" + "-" * title_padding),
                 PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title) - 4) + "+")
+                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title)) + "+")
             ])
             lines.append(title_line)
         else:
             # Top border
             lines.append(self._create_border_line(content_width))
-            
+
         # Add content lines
         for content in content_lines:
             # Ensure content doesn't exceed width
@@ -70,10 +70,10 @@ class PropertiesPromptResponse(BasePromptResponse):
                 PromptResponseSegment(text=content),
                 PromptResponseSegment(text=" " * padding + " |")
             ]))
-            
+
         # Bottom border
         lines.append(self._create_border_line(content_width))
-        
+
         # Update lines and render using parent class
         self.lines = lines
         return super().render()
@@ -87,7 +87,7 @@ class PropertiesPromptResponse(BasePromptResponse):
     ) -> List[str]:
         lines = []
         indent_str = " " * current_indent
-        
+
         for key, value in properties.items():
             if isinstance(value, dict):
                 lines.append(f"{indent_str}{str(key)}:")
@@ -97,11 +97,11 @@ class PropertiesPromptResponse(BasePromptResponse):
             else:
                 key_str = str(key).ljust(key_width)
                 lines.append(f"{indent_str}{key_str} : {str(value)}")
-                
+
         return lines
 
     @staticmethod
     def _create_border_line(width: int, left: str = "+", right: str = "+") -> PromptResponseLine:
         return PromptResponseLine(segments=[
-            PromptResponseSegment(text=f"{left}{'-' * width}{right}")
+            PromptResponseSegment(text=f"{left}{'-' * (width + 2)}{right}")
         ])
