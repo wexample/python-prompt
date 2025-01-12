@@ -23,7 +23,7 @@ class WarningPromptResponse(BaseMessageResponse):
     ) -> "AbstractPromptResponse":
         return cls._create_symbol_message(
             text=message,
-            context=context or ErrorContext(trace=False),
+            context=context or ErrorContext(),
             color=TerminalColor.YELLOW,
             **kwargs
         )
