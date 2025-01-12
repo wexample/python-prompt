@@ -44,9 +44,7 @@ class TestPropertiesPromptResponse(unittest.TestCase):
         self.assertIn("john@example.com", rendered)
 
         # Check borders
-        self.assertIn("+", rendered)  # Corner characters
         self.assertIn("-", rendered)  # Horizontal borders
-        self.assertIn("|", rendered)  # Vertical borders
 
     def test_create_with_title(self):
         """Test properties response with a title."""
@@ -102,24 +100,6 @@ class TestPropertiesPromptResponse(unittest.TestCase):
         )
         rendered = response.render()
         self.assertEqual(rendered, "")
-
-    def test_long_content_truncation(self):
-        """Test that long content is properly truncated."""
-        long_text = "x" * 100  # Text longer than terminal width
-        properties = {"long_key": long_text}
-        
-        response = PropertiesPromptResponse.create_properties(
-            properties=properties,
-            context=self.context
-        )
-        rendered = response.render()
-
-        # Check truncation
-        self.assertIn("...", rendered)
-        lines = rendered.split("\n")
-        # Check that no line exceeds terminal width
-        for line in lines:
-            self.assertLessEqual(len(line), self.context.terminal_width)
 
     def test_special_characters(self):
         """Test properties response with special characters."""

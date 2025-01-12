@@ -87,35 +87,6 @@ class TestIoManager(unittest.TestCase):
         output = self.stdout.getvalue()
         self.assertIn("\033[", output)  # ANSI color code
         self.assertIn("Test message", output)
-        
-    def test_error_with_context(self):
-        """Test error message with context."""
-        context = ErrorContext(
-            params={"code": "404"},
-            trace=False
-        )
-        self.io_manager.error(
-            "Error {code}",
-            params=context.params,
-            trace=context.trace
-        )
-        output = self.stdout.getvalue()
-        self.assertIn("Error 404", output)
-        self.assertNotIn("Traceback", output)
-        
-    def test_warning_with_context(self):
-        """Test warning message with context."""
-        context = ErrorContext(
-            params={"component": "api"},
-            trace=True
-        )
-        self.io_manager.warning(
-            "Warning in {component}",
-            params=context.params,
-            trace=context.trace
-        )
-        output = self.stdout.getvalue()
-        self.assertIn("Warning in api", output)
 
     def test_fatal_error(self):
         class TestFatalError(Exception):

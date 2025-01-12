@@ -11,18 +11,15 @@ class TestErrorContext(unittest.TestCase):
         """Test default values are set correctly."""
         context = ErrorContext()
         self.assertFalse(context.fatal)
-        self.assertTrue(context.trace)
         self.assertIsNone(context.params)
     
     def test_custom_values(self):
         """Test custom values are set correctly."""
         context = ErrorContext(
             fatal=True,
-            trace=False,
             params={"key": "value"}
         )
         self.assertTrue(context.fatal)
-        self.assertFalse(context.trace)
         self.assertEqual(context.params, {"key": "value"})
     
     def test_format_message_without_params(self):

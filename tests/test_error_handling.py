@@ -36,36 +36,6 @@ class TestErrorHandling(unittest.TestCase):
         )
         output = self.stdout.getvalue()
         self.assertIn("Error: 404 - Not Found", output)
-    
-    def test_error_with_trace(self):
-        """Test error message with stack trace."""
-        def cause_error():
-            raise ValueError("Test error")
-            
-        try:
-            cause_error()
-        except ValueError:
-            self.io_manager.error("Error occurred", trace=True)
-            
-        output = self.stdout.getvalue()
-        self.assertIn("Error occurred", output)
-        self.assertIn("ValueError", output)
-        self.assertIn("cause_error", output)
-    
-    def test_error_without_trace(self):
-        """Test error message without stack trace."""
-        def cause_error():
-            raise ValueError("Test error")
-            
-        try:
-            cause_error()
-        except ValueError:
-            self.io_manager.error("Error occurred", trace=False)
-            
-        output = self.stdout.getvalue()
-        self.assertIn("Error occurred", output)
-        self.assertNotIn("ValueError", output)
-        self.assertNotIn("cause_error", output)
 
     def test_warning_basic(self):
         """Test basic warning message."""
@@ -73,20 +43,7 @@ class TestErrorHandling(unittest.TestCase):
         output = self.stdout.getvalue()
         self.assertIn("Test warning", output)
         self.assertIn("⚠️", output)  # Warning symbol
-    
-    def test_warning_with_trace(self):
-        """Test warning message with stack trace."""
-        try:
-            # Raise a warning directly
-            raise Warning("Test warning message")
-        except Warning:
-            self.io_manager.warning("Warning occurred", trace=True)
-            
-        output = self.stdout.getvalue()
-        self.assertIn("Warning occurred", output)
-        self.assertIn("Warning: Test warning message", output)
-        self.assertIn("test_warning_with_trace", output)  # Function name should be in trace
-    
+
     def test_warning_params(self):
         """Test warning message with parameters."""
         self.io_manager.warning(

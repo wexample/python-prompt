@@ -28,23 +28,7 @@ class TestErrorPromptResponse(unittest.TestCase):
         )
         rendered = response.render()
         self.assertIn("Error 404: Not Found", rendered)
-        
-    def test_error_with_trace(self):
-        """Test error message with stack trace."""
-        try:
-            raise ValueError("Test error")
-        except ValueError as e:
-            context = ErrorContext(trace=True)
-            response = ErrorPromptResponse.create_error(
-                "An error occurred",
-                context=context,
-                exception=e
-            )
-            rendered = response.render()
-            self.assertIn("An error occurred", rendered)
-            self.assertIn("ValueError: Test error", rendered)
-            self.assertIn("test_error_with_trace", rendered)
-            
+
     @patch('sys.exit')
     def test_fatal_error(self, mock_exit):
         """Test fatal error handling."""

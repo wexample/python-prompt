@@ -39,7 +39,6 @@ class TestWarningPromptResponse(unittest.TestCase):
         message = "Warning in {component}: {issue}"
         context = ErrorContext(
             params={"component": "cache", "issue": "outdated"},
-            trace=True
         )
         
         response = WarningPromptResponse.create_warning(
