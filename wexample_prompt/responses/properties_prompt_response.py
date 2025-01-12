@@ -34,10 +34,10 @@ class PropertiesPromptResponse(BasePromptResponse):
         if not self.properties:
             return ""
 
-        # Calculate total width including borders and padding
+        # Calculate total width including padding
         total_width = self.context.terminal_width if self.context else 80
-        # Content width is total minus borders (2) and padding (2)
-        content_width = total_width - 4
+        # Content width is total minus padding (2)
+        content_width = total_width - 2
 
         # Calculate the maximum width needed for content
         max_key_width = max(len(str(key)) for key in self.properties.keys())
@@ -49,9 +49,9 @@ class PropertiesPromptResponse(BasePromptResponse):
         if self.title:
             title_padding = (content_width - len(self.title)) // 2
             title_line = PromptResponseLine(segments=[
-                PromptResponseSegment(text="+" + "-" * title_padding),
+                PromptResponseSegment(text="-" * title_padding),
                 PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title)) + "+")
+                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title)))
             ])
             lines.append(title_line)
         else:
@@ -60,15 +60,9 @@ class PropertiesPromptResponse(BasePromptResponse):
 
         # Add content lines
         for content in content_lines:
-            # Ensure content doesn't exceed width
-            if len(content) > content_width:
-                content = content[:content_width - 3] + "..."
-
-            padding = content_width - len(content)
             lines.append(PromptResponseLine(segments=[
-                PromptResponseSegment(text="| "),
-                PromptResponseSegment(text=content),
-                PromptResponseSegment(text=" " * padding + " |")
+                PromptResponseSegment(text=" "),
+                PromptResponseSegment(text=content)
             ]))
 
         # Bottom border
@@ -101,7 +95,7 @@ class PropertiesPromptResponse(BasePromptResponse):
         return lines
 
     @staticmethod
-    def _create_border_line(width: int, left: str = "+", right: str = "+") -> PromptResponseLine:
+    def _create_border_line(width: int, left: str = "", right: str = "") -> PromptResponseLine:
         return PromptResponseLine(segments=[
-            PromptResponseSegment(text=f"{left}{'-' * (width + 2)}{right}")
+            PromptResponseSegment(text=f"{left}{'-' * width}{right}")
         ])
