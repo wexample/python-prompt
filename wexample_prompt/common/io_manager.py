@@ -2,7 +2,7 @@ import shutil
 import sys
 import logging
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict
+from typing import Any, List, Optional, TextIO, Dict, Union
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -64,12 +64,14 @@ class IoManager(BaseModel, WithIndent):
 
     def error(
         self,
-        message: str,
+        message: Union[str, Exception],
         params: Optional[Dict[str, Any]] = None,
         exception = None,
         fatal: bool = True,
         trace: bool = True,
     ) -> ErrorPromptResponse:
+        message = str(message)
+
         # Create context and response
         context = ErrorContext(
             fatal=fatal,
