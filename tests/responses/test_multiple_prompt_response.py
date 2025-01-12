@@ -29,7 +29,7 @@ class TestMultiplePromptResponse(unittest.TestCase):
 
     def test_create_multiple_response(self):
         """Test creating a multiple response."""
-        multiple_response = MultiplePromptResponse.create([
+        multiple_response = MultiplePromptResponse.create_multiple([
             self.base_response1,
             self.base_response2
         ])
@@ -40,7 +40,7 @@ class TestMultiplePromptResponse(unittest.TestCase):
 
     def test_append_response(self):
         """Test appending a response."""
-        multiple_response = MultiplePromptResponse.create([self.base_response1])
+        multiple_response = MultiplePromptResponse.create_multiple([self.base_response1])
         multiple_response.append_response(self.base_response2)
 
         self.assertEqual(len(multiple_response.responses), 2)
@@ -55,7 +55,7 @@ class TestMultiplePromptResponse(unittest.TestCase):
 
     def test_extend_responses(self):
         """Test extending with multiple responses."""
-        multiple_response = MultiplePromptResponse.create([])
+        multiple_response = MultiplePromptResponse.create_multiple([])
         multiple_response.extend_responses([
             self.base_response1,
             self.base_response2
@@ -65,7 +65,7 @@ class TestMultiplePromptResponse(unittest.TestCase):
 
     def test_render_multiple_responses(self):
         """Test rendering multiple responses."""
-        multiple_response = MultiplePromptResponse.create([
+        multiple_response = MultiplePromptResponse.create_multiple([
             self.base_response1,
             self.base_response2
         ])
@@ -78,7 +78,7 @@ class TestMultiplePromptResponse(unittest.TestCase):
 
     def test_empty_multiple_response(self):
         """Test creating an empty multiple response."""
-        multiple_response = MultiplePromptResponse.create([])
+        multiple_response = MultiplePromptResponse.create_multiple([])
 
         self.assertEqual(len(multiple_response.responses), 0)
         self.assertEqual(multiple_response.render(), "")

@@ -33,9 +33,14 @@ class MultiplePromptResponse(BasePromptResponse):
             response.print(*args, **kwargs)
 
     @classmethod
-    def create(cls, responses: List[AbstractPromptResponse]) -> 'MultiplePromptResponse':
+    def create_multiple(cls, responses: List[AbstractPromptResponse]) -> 'MultiplePromptResponse':
         """Create a new MultiplePromptResponse from a list of responses."""
         return cls(responses=responses)
+
+    @classmethod
+    def create(cls, *args, **kwargs) -> 'MultiplePromptResponse':
+        """Create a new MultiplePromptResponse instance."""
+        return cls.create_multiple(*args, **kwargs)
 
     def append_response(self, response: AbstractPromptResponse) -> 'MultiplePromptResponse':
         """Add a new response to the list."""
