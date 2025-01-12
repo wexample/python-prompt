@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 
-from wexample_prompt.responses.titles.subtitle_response import SubtitleResponse
+from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -17,7 +17,7 @@ class TestSubtitleResponse(unittest.TestCase):
     
     def test_create_subtitle(self):
         """Test creating a subtitle with default settings."""
-        subtitle = SubtitleResponse.create_subtitle(text=self.subtitle_text)
+        subtitle = SubtitlePromptResponse.create_subtitle(text=self.subtitle_text)
         rendered = subtitle.render()
         
         # Check content
@@ -35,7 +35,7 @@ class TestSubtitleResponse(unittest.TestCase):
     def test_custom_color(self, mock_supports_color):
         """Test subtitle with custom color."""
         mock_supports_color.return_value = True
-        subtitle = SubtitleResponse.create_subtitle(
+        subtitle = SubtitlePromptResponse.create_subtitle(
             text=self.subtitle_text,
             color=TerminalColor.GREEN
         )
@@ -51,7 +51,7 @@ class TestSubtitleResponse(unittest.TestCase):
     def test_custom_fill_char(self):
         """Test subtitle with custom fill character."""
         fill_char = "."
-        subtitle = SubtitleResponse.create_subtitle(
+        subtitle = SubtitlePromptResponse.create_subtitle(
             text=self.subtitle_text,
             fill_char=fill_char
         )
@@ -63,7 +63,7 @@ class TestSubtitleResponse(unittest.TestCase):
         
     def test_no_color(self):
         """Test subtitle without color."""
-        subtitle = SubtitleResponse.create_subtitle(
+        subtitle = SubtitlePromptResponse.create_subtitle(
             text=self.subtitle_text,
             color=None
         )
@@ -74,7 +74,7 @@ class TestSubtitleResponse(unittest.TestCase):
         
     def test_indentation_consistency(self):
         """Test that subtitle prefix maintains correct indentation."""
-        subtitle = SubtitleResponse.create_subtitle(text=self.subtitle_text)
+        subtitle = SubtitlePromptResponse.create_subtitle(text=self.subtitle_text)
         rendered = subtitle.render()
         
         # The prefix should start with exactly two spaces

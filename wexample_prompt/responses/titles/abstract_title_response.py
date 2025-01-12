@@ -12,16 +12,16 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 
 
-class BaseTitleResponse(BasePromptResponse):
+class AbstractTitleResponse(BasePromptResponse):
     """Abstract base class for title responses."""
 
     @classmethod
-    def create(
+    def _create_title(
         cls,
         text: str,
         color: Optional[TerminalColor] = TerminalColor.CYAN,
         fill_char: str = "⎯"
-    ) -> 'BaseTitleResponse':
+    ) -> 'AbstractTitleResponse':
         """Create a title response.
         
         Args:
@@ -30,7 +30,7 @@ class BaseTitleResponse(BasePromptResponse):
             fill_char (str): Character to use for filling the line
             
         Returns:
-            BaseTitleResponse: A new title response
+            AbstractTitleResponse: A new title response
         """
         # Get terminal width, default to 80 if not available
         term_width = shutil.get_terminal_size().columns or 80

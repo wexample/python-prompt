@@ -12,7 +12,7 @@ from wexample_prompt.responses import (
     ListPromptResponse,
     TreePromptResponse,
     MainTitleResponse,
-    SubtitleResponse,
+    SubtitlePromptResponse,
     ProgressPromptResponse,
     SuggestionsPromptResponse,
     ChoicePromptResponse,
@@ -171,10 +171,10 @@ def demo_titles(io: IoManager):
     main = MainTitleResponse.create("Main Title Demo", color=TerminalColor.GREEN)
     io.print_response(main)
     
-    sub1 = SubtitleResponse.create("First Subtitle")
+    sub1 = SubtitlePromptResponse.create("First Subtitle")
     io.print_response(sub1)
     
-    sub2 = SubtitleResponse.create("Second Subtitle", color=TerminalColor.MAGENTA)
+    sub2 = SubtitlePromptResponse.create("Second Subtitle", color=TerminalColor.MAGENTA)
     io.print_response(sub2)
 
 

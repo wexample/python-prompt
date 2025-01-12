@@ -2,10 +2,10 @@
 from typing import Optional
 
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses.titles.base_title_response import BaseTitleResponse
+from wexample_prompt.responses.titles.abstract_title_response import AbstractTitleResponse
 
 
-class TitleResponse(BaseTitleResponse):
+class TitlePromptResponse(AbstractTitleResponse):
     """Response for main titles with arrow prefix."""
 
     @classmethod
@@ -14,8 +14,8 @@ class TitleResponse(BaseTitleResponse):
         text: str,
         color: Optional[TerminalColor] = TerminalColor.CYAN,
         fill_char: str = "⎯"
-    ) -> 'TitleResponse':
-        return super()._create(text=text, color=color, fill_char=fill_char)
+    ) -> 'TitlePromptResponse':
+        return super()._create_title(text=text, color=color, fill_char=fill_char)
     
     @classmethod
     def get_prefix(cls) -> str:

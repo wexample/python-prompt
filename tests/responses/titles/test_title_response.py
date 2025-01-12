@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import patch
 
-from wexample_prompt.responses.titles.title_response import TitleResponse
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -17,7 +17,7 @@ class TestTitleResponse(unittest.TestCase):
     
     def test_create_title(self):
         """Test creating a title with default settings."""
-        title = TitleResponse.create_title(text=self.title_text)
+        title = TitlePromptResponse._create_title(text=self.title_text)
         rendered = title.render()
         
         # Check content
@@ -35,7 +35,7 @@ class TestTitleResponse(unittest.TestCase):
     def test_custom_color(self, mock_supports_color):
         """Test title with custom color."""
         mock_supports_color.return_value = True
-        title = TitleResponse.create_title(
+        title = TitlePromptResponse._create_title(
             text=self.title_text,
             color=TerminalColor.RED
         )
@@ -51,7 +51,7 @@ class TestTitleResponse(unittest.TestCase):
     def test_custom_fill_char(self):
         """Test title with custom fill character."""
         fill_char = "="
-        title = TitleResponse.create_title(
+        title = TitlePromptResponse._create_title(
             text=self.title_text,
             fill_char=fill_char
         )
@@ -63,7 +63,7 @@ class TestTitleResponse(unittest.TestCase):
         
     def test_no_color(self):
         """Test title without color."""
-        title = TitleResponse.create_title(
+        title = TitlePromptResponse._create_title(
             text=self.title_text,
             color=None
         )
