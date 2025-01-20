@@ -2,21 +2,23 @@ import shutil
 import sys
 import logging
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict, Union
+from typing import Any, List, Optional, TextIO, Dict, Union, TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.responses import BasePromptResponse
-from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
-from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
-from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 
+if TYPE_CHECKING:
+    from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+    from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+    from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+    from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 
 class IoManager(BaseModel, WithIndent):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -68,7 +70,9 @@ class IoManager(BaseModel, WithIndent):
         params: Optional[Dict[str, Any]] = None,
         exception = None,
         fatal: bool = True,
-    ) -> ErrorPromptResponse:
+    ) -> "ErrorPromptResponse":
+        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+
         message = str(message)
 
         # Create context and response
@@ -96,7 +100,8 @@ class IoManager(BaseModel, WithIndent):
         message: str,
         params: Optional[Dict[str, Any]] = None,
         trace: bool = False
-    ) -> WarningPromptResponse:
+    ) -> "WarningPromptResponse":
+        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
         context = ErrorContext(
             fatal=False,
             params=params,
@@ -111,7 +116,9 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def success(self, message: str) -> SuccessPromptResponse:
+    def success(self, message: str) -> "SuccessPromptResponse":
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+
         response = SuccessPromptResponse.create_success(message)
         
         # Log to file/system if configured
@@ -121,7 +128,9 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def info(self, message: str) -> InfoPromptResponse:
+    def info(self, message: str) -> "InfoPromptResponse":
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+
         response = InfoPromptResponse.create_info(message)
         
         # Log to file/system if configured
@@ -131,13 +140,40 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def debug(self, message: str) -> DebugPromptResponse:
+    def debug(self, message: str) -> "DebugPromptResponse":
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+
         response = DebugPromptResponse.create_debug(message)
         
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.debug(message)
         
+        self.print_response(response)
+        return response
+
+    def title(self, message: str) -> "TitlePromptResponse":
+        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+
+        response = TitlePromptResponse.create_title(message)
+
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.debug(message)
+
+        self.print_response(response)
+        return response
+
+
+    def log(self, message: str) -> "TitlePromptResponse":
+        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+
+        response = LogPromptResponse.create_log(message)
+
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.debug(message)
+
         self.print_response(response)
         return response
 
