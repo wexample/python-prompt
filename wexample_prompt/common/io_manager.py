@@ -66,7 +66,7 @@ class IoManager(BaseModel, WithIndent):
 
     def error(
         self,
-        message: Union[str, Exception],
+        message: Optional[Union[str, Exception]] = None,
         params: Optional[Dict[str, Any]] = None,
         exception = None,
         fatal: bool = True,
