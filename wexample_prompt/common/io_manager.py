@@ -194,7 +194,7 @@ class IoManager(BaseModel, WithIndent):
         # If response has a context but no indentation, set it
         if response.context.indentation == 0 and self.log_indent > 0:
             response.context.indentation = self.log_indent
-            
+
         response.print(output=self._stdout)
 
     def get_input(self, prompt: str = "") -> str:
