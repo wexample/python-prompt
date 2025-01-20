@@ -73,8 +73,6 @@ class IoManager(BaseModel, WithIndent):
     ) -> "ErrorPromptResponse":
         from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 
-        message = str(message)
-
         # Create context and response
         context = ErrorContext(
             fatal=fatal,

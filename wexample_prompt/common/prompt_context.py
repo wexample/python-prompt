@@ -19,6 +19,7 @@ class PromptContext(BaseModel):
     indentation: int = Field(default=0)  # Number of indentation levels
     verbosity: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
     fatal: bool = Field(default=False, description="If True, process will exit after printing")
+    exit_code: int = Field(default=1, description="Exit code to use when fatal is True")
     params: Optional[Dict[str, Any]] = None
 
     def get_effective_width(self) -> int:
