@@ -3,12 +3,16 @@ import os
 import sys
 from typing import Dict, Optional
 
+from colorama import init, Style
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class ColorManager:
     """Manages color application and terminal capabilities."""
+    
+    # Initialize colorama when class is loaded
+    init()
     
     # Default message type to color mapping
     MESSAGE_COLORS: Dict[MessageType, TerminalColor] = {
@@ -31,18 +35,12 @@ class ColorManager:
         if os.environ.get('NO_COLOR') is not None:
             return False
             
-        # Check if we're on Windows
-        if sys.platform == 'win32':
-            return False
-            
         # Check if we're in a TTY
         if not sys.stdout.isatty():
             return False
             
-        # Check for common color-supporting terminal types
-        term = os.environ.get('TERM', '').lower()
-        return term in ('xterm', 'xterm-color', 'xterm-256color', 'linux',
-                       'screen', 'screen-256color', 'ansi')
+        # With colorama, Windows support is handled automatically
+        return True
     
     @classmethod
     def colorize(cls, text: str, color: Optional[TerminalColor] = None, 
@@ -67,7 +65,7 @@ class ColorManager:
             prefix += str(style)
             
         if prefix:
-            return f"{prefix}{text}{TerminalColor.RESET}"
+            return f"{prefix}{text}{Style.RESET_ALL}"
         return text
     
     @classmethod

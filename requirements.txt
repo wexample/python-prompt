@@ -10,6 +10,8 @@ build==1.2.2.post1
     # via pip-tools
 click==8.1.8
     # via pip-tools
+colorama==0.4.6
+    # via -r requirements.in
 iniconfig==2.0.0
     # via pytest
 packaging==24.2
