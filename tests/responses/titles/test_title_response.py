@@ -22,7 +22,7 @@ class TestTitleResponse(unittest.TestCase):
         
         # Check content
         self.assertIn(self.title_text, rendered)
-        self.assertIn("▶", rendered)  # Check prefix
+        self.assertIn("❯", rendered)  # Check prefix
         self.assertIn("⎯", rendered)  # Check fill character
         
         # Check structure
@@ -43,7 +43,7 @@ class TestTitleResponse(unittest.TestCase):
         
         # Basic checks
         self.assertIn(self.title_text, rendered)
-        self.assertIn("▶", rendered)
+        self.assertIn("❯", rendered)
         
         # Color check (basic, as actual color rendering depends on terminal)
         self.assertIn("\033[", rendered)  # ANSI color code start
