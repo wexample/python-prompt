@@ -19,4 +19,4 @@ class TitlePromptResponse(AbstractTitleResponse):
     
     @classmethod
     def get_prefix(cls) -> str:
-        return "▶"
+        return "❯"
