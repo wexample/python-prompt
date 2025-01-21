@@ -66,7 +66,7 @@ class ChoicePromptResponse(BasePromptResponse):
                     ),
                     # Choice text with gray color and dim style
                     PromptResponseSegment(
-                        text=ColorManager.colorize(choice_text, TerminalColor.GRAY),
+                        text=ColorManager.colorize(choice_text, TerminalColor.WHITE),
                         styles=[TextStyle.DIM]
                     )
                 ])

@@ -22,7 +22,7 @@ class ColorManager:
         MessageType.ERROR: TerminalColor.RED,
         MessageType.FAILURE: TerminalColor.RED,
         MessageType.INFO: TerminalColor.LIGHT_BLUE,
-        MessageType.LOG: TerminalColor.GRAY,
+        MessageType.LOG: TerminalColor.WHITE,
         MessageType.SUCCESS: TerminalColor.GREEN,
         MessageType.TASK: TerminalColor.MAGENTA,
         MessageType.WARNING: TerminalColor.YELLOW,

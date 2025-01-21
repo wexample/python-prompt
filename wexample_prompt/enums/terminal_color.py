@@ -24,10 +24,6 @@ class TerminalColor(Enum):
     LIGHT_MAGENTA = Fore.LIGHTMAGENTA_EX
     LIGHT_CYAN = Fore.LIGHTCYAN_EX
     
-    # Grayscale
-    GRAY = Fore.BLACK
-    LIGHT_GRAY = Fore.WHITE
-    
     # Special
     DEFAULT = Fore.RESET
     RESET = Style.RESET_ALL

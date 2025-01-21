@@ -27,7 +27,7 @@ class LogPromptResponse(BaseMessageResponse):
         
         for text_line in text_lines:
             message_segment = PromptResponseSegment(
-                text=ColorManager.colorize(text_line, TerminalColor.GRAY)
+                text=ColorManager.colorize(text_line, TerminalColor.WHITE)
             )
             
             line = PromptResponseLine(
