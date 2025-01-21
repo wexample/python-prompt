@@ -38,7 +38,7 @@ class AbstractTitleResponse(BasePromptResponse):
         # Get the prefix and text with padding
         prefix = cls.get_prefix()
         text_with_padding = f" {text} "
-        fill_char = fill_char or "/"
+        fill_char = fill_char or "⫻"
 
         # Calculate remaining width for fill characters
         remaining_width = term_width - len(prefix) - len(text_with_padding)
