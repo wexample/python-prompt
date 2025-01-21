@@ -20,7 +20,7 @@ class AbstractTitleResponse(BasePromptResponse):
         cls,
         text: str,
         color: Optional[TerminalColor] = TerminalColor.CYAN,
-        fill_char: str = "⎯"
+        fill_char: Optional[str] = None
     ) -> 'AbstractTitleResponse':
         """Create a title response.
         
@@ -38,7 +38,8 @@ class AbstractTitleResponse(BasePromptResponse):
         # Get the prefix and text with padding
         prefix = cls.get_prefix()
         text_with_padding = f" {text} "
-        
+        fill_char = fill_char or "/"
+
         # Calculate remaining width for fill characters
         remaining_width = term_width - len(prefix) - len(text_with_padding)
         fill_text = fill_char * remaining_width

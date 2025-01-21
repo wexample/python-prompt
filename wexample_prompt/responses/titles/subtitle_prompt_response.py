@@ -13,7 +13,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         cls,
         text: str,
         color: Optional[TerminalColor] = TerminalColor.BLUE,
-        fill_char: str = "-"
+        fill_char: Optional[str] = None
     ) -> 'SubtitlePromptResponse':
         return super()._create_title(text=text, color=color, fill_char=fill_char)
 
