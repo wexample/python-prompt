@@ -23,7 +23,7 @@ class TestTitleResponse(unittest.TestCase):
         # Check content
         self.assertIn(self.title_text, rendered)
         self.assertIn("❯", rendered)  # Check prefix
-        self.assertIn("⎯", rendered)  # Check fill character
+        self.assertIn("⫻", rendered)  # Check fill character
         
         # Check structure
         lines = rendered.split("\n")

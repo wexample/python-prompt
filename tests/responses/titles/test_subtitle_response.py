@@ -22,8 +22,8 @@ class TestSubtitleResponse(unittest.TestCase):
         
         # Check content
         self.assertIn(self.subtitle_text, rendered)
-        self.assertIn("  ▷", rendered)  # Check prefix with correct indentation
-        self.assertIn("-", rendered)  # Check default fill character
+        self.assertIn("  ❯", rendered)  # Check prefix with correct indentation
+        self.assertIn("⫻", rendered)  # Check default fill character
         
         # Check structure
         lines = rendered.split("\n")
@@ -43,7 +43,7 @@ class TestSubtitleResponse(unittest.TestCase):
         
         # Basic checks
         self.assertIn(self.subtitle_text, rendered)
-        self.assertIn("  ▷", rendered)
+        self.assertIn("  ❯", rendered)
         
         # Color check (basic, as actual color rendering depends on terminal)
         self.assertIn("\033[", rendered)  # ANSI color code start
@@ -80,4 +80,4 @@ class TestSubtitleResponse(unittest.TestCase):
         # The prefix should start with exactly two spaces
         lines = rendered.split("\n")
         title_line = lines[1]  # The middle line contains the actual subtitle
-        self.assertTrue(title_line.startswith("  ▷"), "Subtitle should start with two spaces and arrow")
+        self.assertTrue(title_line.startswith("  ❯"), "Subtitle should start with two spaces and arrow")
