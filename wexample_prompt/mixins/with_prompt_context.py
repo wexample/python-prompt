@@ -4,16 +4,16 @@ from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class WithPromptContext(WithIoManager):
-    _prompt_context_parent: Optional['WithPromptContext'] = None
+    prompt_context_parent: Optional['WithPromptContext'] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
 
     def get_prompt_context_parent(self) -> Optional['WithPromptContext']:
         """Get the parent context for indentation. By default, returns None."""
-        return self._prompt_context_parent
+        return self.prompt_context_parent
 
     def set_prompt_context_parent(self, parent: 'WithPromptContext') -> None:
         """Set the parent context for indentation."""
-        self._prompt_context_parent = parent
+        self.prompt_context_parent = parent
 
     def get_context_indent_level(self) -> int:
         """Calculate the indentation level based on parent contexts."""
