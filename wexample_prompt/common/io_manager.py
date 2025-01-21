@@ -40,12 +40,14 @@ class IoManager(BaseModel, WithIndent):
     _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
+    _last_context: Optional[str] = PrivateAttr(default=None)
 
     def __init__(self, **data):
         super().__init__(**data)
         self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
+        self._last_context = None
         self._setup_logger()
 
     def _setup_logger(self) -> None:

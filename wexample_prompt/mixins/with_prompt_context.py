@@ -22,35 +22,34 @@ class WithPromptContext(WithIoManager):
             return 0
         return parent.get_context_indent_level() + 1
 
-    def get_context_prefix(self) -> str:
-        """Get the prefix for messages, including the class name."""
-        return f"[{self.__class__.__name__}]"
+    def format_message(self, message: str) -> str:
+        """Format the message according to the bullet point style."""
+        indent = " " * (self.get_context_indent_level() * self._context_indent)
+        context_name = self.__class__.__name__
 
-    def get_context_indent(self) -> str:
-        """Get the indentation string based on the context level."""
-        return " " * (self.get_context_indent_level() * self._context_indent)
+        if self.io._last_context != context_name:
+            self.io._last_context = context_name
+            return f"{indent}• {context_name}: {message}"
+
+        return f"{indent}  ⋮ {message}"
 
     def log(self, message: str, **kwargs) -> None:
-        """Format and send a message through the IO manager with proper indentation and prefix."""
-        formatted_message = f"{self.get_context_indent()}{self.get_context_prefix()} {message}"
+        """Format and send a message through the IO manager."""
+        formatted_message = self.format_message(message)
         self.io.log(formatted_message, **kwargs)
 
     def debug(self, message: str, **kwargs) -> None:
-        """Format and send a debug message with proper indentation and prefix."""
-        formatted_message = f"{self.get_context_indent()}{self.get_context_prefix()} {message}"
+        formatted_message = self.format_message(message)
         self.io.debug(formatted_message, **kwargs)
 
     def info(self, message: str, **kwargs) -> None:
-        """Format and send an info message with proper indentation and prefix."""
-        formatted_message = f"{self.get_context_indent()}{self.get_context_prefix()} {message}"
+        formatted_message = self.format_message(message)
         self.io.info(formatted_message, **kwargs)
 
     def warning(self, message: str, **kwargs) -> None:
-        """Format and send a warning message with proper indentation and prefix."""
-        formatted_message = f"{self.get_context_indent()}{self.get_context_prefix()} {message}"
+        formatted_message = self.format_message(message)
         self.io.warning(formatted_message, **kwargs)
 
     def error(self, message: str, **kwargs) -> None:
-        """Format and send an error message with proper indentation and prefix."""
-        formatted_message = f"{self.get_context_indent()}{self.get_context_prefix()} {message}"
+        formatted_message = self.format_message(message)
         self.io.error(formatted_message, **kwargs)
