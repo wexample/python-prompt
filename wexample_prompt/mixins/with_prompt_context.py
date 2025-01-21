@@ -1,10 +1,7 @@
-from typing import Optional, TYPE_CHECKING
-from pydantic import BaseModel
+from typing import Optional
 
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
-if TYPE_CHECKING:
-    from wexample_prompt.common.io_manager import IoManager
 
 class WithPromptContext(WithIoManager):
     _prompt_context_parent: Optional['WithPromptContext'] = None
