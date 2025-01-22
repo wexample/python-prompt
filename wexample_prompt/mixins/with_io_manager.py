@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from wexample_prompt.common.io_manager import IoManager
 
 
-class WithIoManager(BaseModel):
+class WithIoManager:
     io_manager: Optional[IoManager] = Field(
         default=None,
         description="IoManager instance that can be injected via constructor"

@@ -1,10 +1,10 @@
-from typing import Optional
+from typing import Optional, Any
 
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class WithPromptContext(WithIoManager):
-    prompt_context_parent: Optional['WithPromptContext'] = None
+    prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
 
     def get_prompt_context_parent(self) -> Optional['WithPromptContext']:
