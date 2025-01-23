@@ -21,8 +21,9 @@ classifiers = [
 dependencies = [
     "colorama",
     "inquirerpy",
+    "pip-tools",
     "pydantic",
-    "rich",
+    "pytest",
 ]
 
 [project.readme]
