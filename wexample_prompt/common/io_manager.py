@@ -164,6 +164,18 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
+    def subtitle(self, message: str) -> "TitlePromptResponse":
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+
+        response = SubtitlePromptResponse.create_subtitle(message)
+
+        # Log to file/system if configured
+        if self._logger.handlers:
+            self._logger.debug(message)
+
+        self.print_response(response)
+        return response
+
 
     def log(self, message: str) -> "TitlePromptResponse":
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
