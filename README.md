@@ -1,12 +1,31 @@
-# wexample-prompt
+# Prompt
 
-CLI prompt utilities for Python applications with rich terminal output support.
+Helper for your tty interactions
 
-## License
+Version: 0.0.19
 
-MIT License - See LICENSE file for details.
+## Requirements
+
+- Python >=3.6
+
+## Dependencies
+
+- colorama
+- inquirerpy
+- pip-tools
+- pydantic
+- pytest
+
+## Installation
+
+```bash
+pip install wexample-prompt
+```
 
 ## Links
 
-- [GitHub Repository](https://github.com/wexample/python-prompt)
-- [Issues](https://github.com/wexample/python-prompt/issues)
+- Homepage: https://github.com/wexample/python-prompt
+
+## License
+
+MIT
