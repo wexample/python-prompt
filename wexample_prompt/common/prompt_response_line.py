@@ -43,7 +43,7 @@ class PromptResponseLine(BaseModel):
             layout=self.layout or other.layout
         )
     
-    def render(self, context: Optional[PromptContext] = None) -> str:
+    def render(self, context: PromptContext) -> str:
         """Render the line with all its segments.
         
         Args:
@@ -52,11 +52,7 @@ class PromptResponseLine(BaseModel):
         Returns:
             Rendered line as string
         """
-        from wexample_prompt.common.prompt_context import PromptContext
-        
-        if context is None:
-            context = PromptContext()
-        
+
         # Render all segments
         rendered_segments = [seg.render(context) for seg in self.segments]
         result = "".join(rendered_segments)

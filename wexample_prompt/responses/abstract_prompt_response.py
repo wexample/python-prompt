@@ -18,7 +18,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
-    context: Optional[PromptContext] = None
+    context: PromptContext= Field(...)
     verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
 
     def __init__(self, **data):
@@ -27,9 +27,6 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
         # Validate the presence of the expected creation method
         self._validate_creation_method()
 
-        # Create default context if none is provided
-        if self.context is None:
-            self.context = PromptContext()
 
     def _validate_creation_method(self):
         short_name = self.get_snake_short_class_name()

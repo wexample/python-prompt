@@ -292,9 +292,9 @@ def demo_suggestions(io: IoManager):
 def demo_suggestions_verbosity(io: IoManager):
     """Demonstrate verbosity levels with suggestions."""
     # Create contexts with different verbosity levels
-    quiet_context = PromptContext(verbosity=VerbosityLevel.QUIET)
-    default_context = PromptContext(verbosity=VerbosityLevel.DEFAULT)
-    max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
+    quiet_context = PromptContext(terminal_width=io.terminal_width, verbosity=VerbosityLevel.QUIET)
+    default_context = PromptContext(terminal_width=io.terminal_width, verbosity=VerbosityLevel.DEFAULT)
+    max_context = PromptContext(terminal_width=io.terminal_width, verbosity=VerbosityLevel.MAXIMUM)
     
     # Create responses with different verbosity requirements
     normal_response = SuggestionsPromptResponse.create(

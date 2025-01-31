@@ -1,12 +1,14 @@
+import logging
 import shutil
 import sys
-import logging
 from logging import Logger
 from typing import Any, List, Optional, TextIO, Dict, Union, TYPE_CHECKING
+
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.common.error_context import ErrorContext
+from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
@@ -19,6 +21,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
     from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
     from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+
 
 class IoManager(BaseModel, WithIndent):
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -70,7 +73,7 @@ class IoManager(BaseModel, WithIndent):
         self,
         message: Optional[Union[str, Exception]] = None,
         params: Optional[Dict[str, Any]] = None,
-        exception = None,
+        exception=None,
         fatal: bool = True,
     ) -> "ErrorPromptResponse":
         from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
@@ -79,18 +82,19 @@ class IoManager(BaseModel, WithIndent):
         context = ErrorContext(
             fatal=fatal,
             params=params,
-            indentation=self.log_indent
+            indentation=self.log_indent,
+            terminal_width=self.terminal_width,
         )
         response = ErrorPromptResponse.create_error(
             message=message,
             context=context,
             exception=exception
         )
-        
+
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.error(message, extra={"params": params} if params else None)
-        
+
         # Display formatted message
         self.print_response(response)
         return response
@@ -102,60 +106,81 @@ class IoManager(BaseModel, WithIndent):
         trace: bool = False
     ) -> "WarningPromptResponse":
         from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-        context = ErrorContext(
-            fatal=False,
-            params=params,
-            indentation=self.log_indent
+        response = WarningPromptResponse.create_warning(
+            message,
+            ErrorContext(
+                fatal=False,
+                params=params,
+                indentation=self.log_indent,
+                terminal_width=self.terminal_width,
+            )
         )
-        response = WarningPromptResponse.create_warning(message, context)
-        
+
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.warning(message, extra={"params": params} if params else None)
-        
+
         self.print_response(response)
         return response
+
+    def _create_context(self):
+        return PromptContext(
+            indentation=self.log_indent,
+            terminal_width=self.terminal_width
+        )
 
     def success(self, message: str) -> "SuccessPromptResponse":
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 
-        response = SuccessPromptResponse.create_success(message)
-        
+        response = SuccessPromptResponse.create_success(
+            message=message,
+            context=self._create_context(),
+        )
+
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.info(f"SUCCESS: {message}")
-        
+
         self.print_response(response)
         return response
 
     def info(self, message: str) -> "InfoPromptResponse":
         from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 
-        response = InfoPromptResponse.create_info(message)
-        
+        response = InfoPromptResponse.create_info(
+            message=message,
+            context=self._create_context(),
+        )
+
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.info(message)
-        
+
         self.print_response(response)
         return response
 
     def debug(self, message: str) -> "DebugPromptResponse":
         from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
-        response = DebugPromptResponse.create_debug(message)
-        
+        response = DebugPromptResponse.create_debug(
+            message=message,
+            context=self._create_context()
+        )
+
         # Log to file/system if configured
         if self._logger.handlers:
             self._logger.debug(message)
-        
+
         self.print_response(response)
         return response
 
     def title(self, message: str) -> "TitlePromptResponse":
         from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
-        response = TitlePromptResponse.create_title(message)
+        response = TitlePromptResponse.create_title(
+            text=message,
+            context=self._create_context(),
+        )
 
         # Log to file/system if configured
         if self._logger.handlers:
@@ -167,7 +192,10 @@ class IoManager(BaseModel, WithIndent):
     def subtitle(self, message: str) -> "TitlePromptResponse":
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
 
-        response = SubtitlePromptResponse.create_subtitle(message)
+        response = SubtitlePromptResponse.create_subtitle(
+            text=message,
+            context=self._create_context(),
+        )
 
         # Log to file/system if configured
         if self._logger.handlers:
@@ -176,11 +204,13 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-
     def log(self, message: str) -> "TitlePromptResponse":
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 
-        response = LogPromptResponse.create_log(message)
+        response = LogPromptResponse.create_log(
+            message=message,
+            context=self._create_context(),
+        )
 
         # Log to file/system if configured
         if self._logger.handlers:
@@ -218,7 +248,7 @@ class IoManager(BaseModel, WithIndent):
             response = message
         else:
             response = InfoPromptResponse.create_info(str(message))
-        
+
         self.print_response(response)
 
     def update_terminal_width(self) -> None:
