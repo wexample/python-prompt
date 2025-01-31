@@ -10,6 +10,7 @@ from wexample_helpers.helpers.debug import debug_trace_and_die
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_indent import WithIndent
+from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
@@ -22,9 +23,12 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
     from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
     from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+    from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+    from wexample_prompt.responses.list_prompt_response import ListPromptResponse
+    from wexample_prompt.responses.table_prompt_response import TablePromptResponse
 
 
-class IoManager(BaseModel, WithIndent):
+class IoManager(BaseModel, WithIndent, IoHandlerProtocol):
     """Manager for handling I/O operations in the prompt system."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -178,7 +182,7 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def title(self, message: str) -> "TitlePromptResponse":
+    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
         from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
         response = TitlePromptResponse.create_title(
@@ -193,7 +197,7 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def subtitle(self, message: str) -> "TitlePromptResponse":
+    def subtitle(self, message: str, **kwargs) -> "SubtitlePromptResponse":
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
 
         response = SubtitlePromptResponse.create_subtitle(
@@ -208,7 +212,7 @@ class IoManager(BaseModel, WithIndent):
         self.print_response(response)
         return response
 
-    def log(self, message: str) -> "TitlePromptResponse":
+    def log(self, message: str, **kwargs) -> "LogPromptResponse":
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 
         response = LogPromptResponse.create_log(

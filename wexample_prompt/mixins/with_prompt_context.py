@@ -1,9 +1,16 @@
-from typing import Optional, Any
+from typing import Optional, Any, TYPE_CHECKING
 
 from wexample_prompt.mixins.with_io_manager import WithIoManager
+from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
+
+if TYPE_CHECKING:
+    from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+    from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+    from wexample_prompt.responses.list_prompt_response import ListPromptResponse
+    from wexample_prompt.responses.table_prompt_response import TablePromptResponse
 
 
-class WithPromptContext(WithIoManager):
+class WithPromptContext(WithIoManager, IoHandlerProtocol):
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
 
@@ -53,3 +60,17 @@ class WithPromptContext(WithIoManager):
     def error(self, message: str, **kwargs) -> None:
         formatted_message = self.format_message(message)
         self.io.error(formatted_message, **kwargs)
+
+    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.title(formatted_message, **kwargs)
+
+    def subtitle(self, message: str, **kwargs) -> "SubtitlePromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.subtitle(formatted_message, **kwargs)
+
+    def list(self, items: list, **kwargs) -> "ListPromptResponse":
+        return self.io.list(items, **kwargs)
+
+    def table(self, data: list, **kwargs) -> "TablePromptResponse":
+        return self.io.table(data, **kwargs)
