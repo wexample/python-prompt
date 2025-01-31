@@ -12,9 +12,6 @@ class WithIoManager:
     
     @property
     def io(self) -> IoManager:
-        """Get the IoManager instance. Creates one if none exists."""
-        if self.io_manager is None:
-            self.io_manager = IoManager()
         return self.io_manager
     
     @io.setter

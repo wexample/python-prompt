@@ -6,6 +6,7 @@ from typing import Any, List, Optional, TextIO, Dict, Union, TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
+from wexample_helpers.helpers.debug import debug_trace_and_die
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_indent import WithIndent
@@ -24,6 +25,8 @@ if TYPE_CHECKING:
 
 
 class IoManager(BaseModel, WithIndent):
+    """Manager for handling I/O operations in the prompt system."""
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     theme: AbstractPromptTheme = Field(
@@ -40,6 +43,7 @@ class IoManager(BaseModel, WithIndent):
     )
 
     _logger: Logger = PrivateAttr()
+    _instance_count: int = PrivateAttr(default=0)
     _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
