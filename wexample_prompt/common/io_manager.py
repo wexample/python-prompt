@@ -2,7 +2,7 @@ import logging
 import shutil
 import sys
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict, Union, TYPE_CHECKING
+from typing import Any, List, Optional, TextIO, Dict, Union
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
@@ -12,34 +12,21 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponseIoManagerMixin
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 
-if TYPE_CHECKING:
-    from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
-    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
-    from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-    from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-    from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
-    from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
-    from wexample_prompt.responses.list_prompt_response import ListPromptResponse
-    from wexample_prompt.responses.table_prompt_response import TablePromptResponse
-    from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
-    from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
-    from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
-    from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
-    from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
-    from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
-    from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
-    from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-    from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
-    from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
-    from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
 
-
-class IoManager(BaseModel, WithIndent, IoHandlerProtocol):
+class IoManager(
+    BaseModel,
+    WithIndent,
+    TitlePromptResponseIoManagerMixin,
+    SubtitlePromptResponseIoManagerMixin,
+    LogPromptResponseIoManagerMixin,
+    IoHandlerProtocol
+):
     """Manager for handling I/O operations in the prompt system."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -88,13 +75,12 @@ class IoManager(BaseModel, WithIndent, IoHandlerProtocol):
             )
             self._logger.addHandler(file_handler)
 
-    def log_raw(self, level: int, message: str, extra: Optional[Dict[str, Any]] = None) -> None:
-        """
-        Log a message directly to the logger without UI formatting.
-        Useful for internal logging or passing data between processes.
-        """
-        if self._logger.handlers:
-            self._logger.log(level, message, extra=extra)
+    def _create_context(self) -> PromptContext:
+        """Create a context with current indentation and terminal width."""
+        return PromptContext(
+            indentation=self.log_indent,
+            terminal_width=self.terminal_width,
+        )
 
     def print_responses(self, responses: List[BasePromptResponse]) -> None:
         for response in responses:
@@ -116,6 +102,7 @@ class IoManager(BaseModel, WithIndent, IoHandlerProtocol):
         if isinstance(message, BasePromptResponse):
             response = message
         else:
+            from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
             response = InfoPromptResponse.create_info(str(message))
 
         self.print_response(response)
@@ -126,326 +113,3 @@ class IoManager(BaseModel, WithIndent, IoHandlerProtocol):
     @property
     def terminal_width(self) -> int:
         return self._tty_width
-
-    def error(
-        self,
-        message: Optional[Union[str, Exception]] = None,
-        params: Optional[Dict[str, Any]] = None,
-        exception=None,
-        fatal: bool = True,
-    ) -> "ErrorPromptResponse":
-        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
-
-        # Create context and response
-        context = ErrorContext(
-            fatal=fatal,
-            params=params,
-            indentation=self.log_indent,
-            terminal_width=self.terminal_width,
-        )
-        response = ErrorPromptResponse.create_error(
-            message=message,
-            context=context,
-            exception=exception
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.error(message, extra={"params": params} if params else None)
-
-        # Display formatted message
-        self.print_response(response)
-        return response
-
-    def warning(
-        self,
-        message: str,
-        params: Optional[Dict[str, Any]] = None,
-        trace: bool = False
-    ) -> "WarningPromptResponse":
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-        response = WarningPromptResponse.create_warning(
-            message,
-            ErrorContext(
-                fatal=False,
-                params=params,
-                indentation=self.log_indent,
-                terminal_width=self.terminal_width,
-            )
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.warning(message, extra={"params": params} if params else None)
-
-        self.print_response(response)
-        return response
-
-    def _create_context(self):
-        return PromptContext(
-            indentation=self.log_indent,
-            terminal_width=self.terminal_width
-        )
-
-    def success(self, message: str) -> "SuccessPromptResponse":
-        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-
-        response = SuccessPromptResponse.create_success(
-            message=message,
-            context=self._create_context(),
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.info(f"SUCCESS: {message}")
-
-        self.print_response(response)
-        return response
-
-    def info(self, message: str) -> "InfoPromptResponse":
-        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
-
-        response = InfoPromptResponse.create_info(
-            message=message,
-            context=self._create_context(),
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.info(message)
-
-        self.print_response(response)
-        return response
-
-    def debug(self, message: str) -> "DebugPromptResponse":
-        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-
-        response = DebugPromptResponse.create_debug(
-            message=message,
-            context=self._create_context()
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
-        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-
-        response = TitlePromptResponse.create_title(
-            text=message,
-            context=self._create_context(),
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-    def subtitle(self, message: str, **kwargs) -> "SubtitlePromptResponse":
-        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
-
-        response = SubtitlePromptResponse.create_subtitle(
-            text=message,
-            context=self._create_context(),
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-    def log(self, message: str, **kwargs) -> "LogPromptResponse":
-        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
-
-        response = LogPromptResponse.create_log(
-            message=message,
-            context=self._create_context(),
-        )
-
-        # Log to file/system if configured
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-    def debug(self, message: str, **kwargs) -> "DebugPromptResponse":
-        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-
-        response = DebugPromptResponse.create_debug(
-            message=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-    def failure(self, message: str, **kwargs) -> "FailurePromptResponse":
-        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
-
-        response = FailurePromptResponse.create_failure(
-            message=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.error(message)
-
-        self.print_response(response)
-        return response
-
-    def success(self, message: str, **kwargs) -> "SuccessPromptResponse":
-        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-
-        response = SuccessPromptResponse.create_success(
-            message=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.info(message)
-
-        self.print_response(response)
-        return response
-
-    def task(self, message: str, **kwargs) -> "TaskPromptResponse":
-        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
-
-        response = TaskPromptResponse.create_task(
-            message=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.info(message)
-
-        self.print_response(response)
-        return response
-
-    def warning(self, message: str, **kwargs) -> "WarningPromptResponse":
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-
-        response = WarningPromptResponse.create_warning(
-            message=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.warning(message)
-
-        self.print_response(response)
-        return response
-
-    def tree(self, data: Dict[str, Any], **kwargs) -> "TreePromptResponse":
-        from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
-
-        response = TreePromptResponse.create_tree(
-            data=data,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def properties(self, properties: Dict[str, Any], **kwargs) -> "PropertiesPromptResponse":
-        from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
-
-        response = PropertiesPromptResponse.create_properties(
-            properties=properties,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def suggestions(self, suggestions: List[str], **kwargs) -> "SuggestionsPromptResponse":
-        from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
-
-        response = SuggestionsPromptResponse.create_suggestions(
-            suggestions=suggestions,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def progress(self, total: int, message: Optional[str] = None, **kwargs) -> "ProgressPromptResponse":
-        from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
-
-        response = ProgressPromptResponse.create_progress(
-            total=total,
-            message=message,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def multiple(self, responses: List[Any], **kwargs) -> "MultiplePromptResponse":
-        from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
-
-        response = MultiplePromptResponse.create_multiple(
-            responses=responses,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def choice(self, choices: List[str], message: Optional[str] = None, **kwargs) -> "ChoicePromptResponse":
-        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-
-        response = ChoicePromptResponse.create_choice(
-            choices=choices,
-            message=message,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def choice_dict(self, choices: Dict[str, Any], message: Optional[str] = None, **kwargs) -> "ChoiceDictPromptResponse":
-        from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
-
-        response = ChoiceDictPromptResponse.create_choice_dict(
-            choices=choices,
-            message=message,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def file_picker(self, path: str, pattern: Optional[str] = None, **kwargs) -> "FilePickerPromptResponse":
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
-
-        response = FilePickerPromptResponse.create_file_picker(
-            path=path,
-            pattern=pattern,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response
-
-    def dir_picker(self, path: str, **kwargs) -> "DirPickerPromptResponse":
-        from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
-
-        response = DirPickerPromptResponse.create_dir_picker(
-            path=path,
-            context=self._create_context(),
-        )
-
-        self.print_response(response)
-        return response

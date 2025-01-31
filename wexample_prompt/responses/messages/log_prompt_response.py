@@ -1,4 +1,4 @@
-from typing import ClassVar, TYPE_CHECKING
+from typing import ClassVar, TYPE_CHECKING, Optional
 
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
@@ -10,6 +10,32 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+
+
+class LogPromptResponseIoManagerMixin:
+    """Mixin for IoManager to handle log responses."""
+
+    def log(self, message: str, **kwargs) -> "LogPromptResponse":
+        """Create and display a log response."""
+        response = LogPromptResponse.create_log(
+            message=message,
+            context=self._create_context(),
+        )
+
+        if self._logger.handlers:
+            self._logger.debug(message)
+
+        self.print_response(response)
+        return response
+
+
+class LogPromptResponsePromptContextMixin:
+    """Mixin for WithPromptContext to handle log responses with context formatting."""
+
+    def log(self, message: str, **kwargs) -> "LogPromptResponse":
+        """Create and display a log response with context formatting."""
+        formatted_message = self.format_message(message)
+        return self.io.log(formatted_message, **kwargs)
 
 
 class LogPromptResponse(BaseMessageResponse):

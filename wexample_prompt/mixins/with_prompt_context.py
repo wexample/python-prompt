@@ -1,33 +1,19 @@
-from typing import Optional, Any, TYPE_CHECKING, Dict, List, Union
+from typing import Optional, Any
 
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
-
-if TYPE_CHECKING:
-    from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-    from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
-    from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
-    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
-    from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-    from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
-    from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
-    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-    from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
-    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-    from wexample_prompt.responses.list_prompt_response import ListPromptResponse
-    from wexample_prompt.responses.table_prompt_response import TablePromptResponse
-    from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
-    from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
-    from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
-    from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
-    from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
-    from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-    from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
-    from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
-    from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponsePromptContextMixin
+from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponsePromptContextMixin
+from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponsePromptContextMixin
 
 
-class WithPromptContext(WithIoManager, IoHandlerProtocol):
+class WithPromptContext(
+    WithIoManager,
+    IoHandlerProtocol,
+    TitlePromptResponsePromptContextMixin,
+    SubtitlePromptResponsePromptContextMixin,
+    LogPromptResponsePromptContextMixin
+):
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
 
@@ -57,38 +43,30 @@ class WithPromptContext(WithIoManager, IoHandlerProtocol):
 
         return f"{indent}  ⋮ {message}"
 
+    def _format_if_message(self, message: Optional[str]) -> Optional[str]:
+        """Format message if it exists, otherwise return None."""
+        return self.format_message(message) if message else None
+
+    # Override methods from AllResponsesMixin to add context formatting
     def log(self, message: str, **kwargs) -> "LogPromptResponse":
-        """Format and send a message through the IO manager."""
         formatted_message = self.format_message(message)
         return self.io.log(formatted_message, **kwargs)
-
-    def debug(self, message: str, **kwargs) -> "DebugPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.debug(formatted_message, **kwargs)
 
     def info(self, message: str, **kwargs) -> "InfoPromptResponse":
         formatted_message = self.format_message(message)
         return self.io.info(formatted_message, **kwargs)
 
+    def debug(self, message: str, **kwargs) -> "DebugPromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.debug(formatted_message, **kwargs)
+
+    def error(self, message: str, **kwargs) -> "ErrorPromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.error(formatted_message, **kwargs)
+
     def warning(self, message: str, **kwargs) -> "WarningPromptResponse":
         formatted_message = self.format_message(message)
         return self.io.warning(formatted_message, **kwargs)
-
-    def error(self, message: str, exception: Optional[Exception] = None, fatal: bool = True, **kwargs) -> "ErrorPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.error(formatted_message, exception=exception, fatal=fatal, **kwargs)
-
-    def failure(self, message: str, **kwargs) -> "FailurePromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.failure(formatted_message, **kwargs)
-
-    def success(self, message: str, **kwargs) -> "SuccessPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.success(formatted_message, **kwargs)
-
-    def task(self, message: str, **kwargs) -> "TaskPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.task(formatted_message, **kwargs)
 
     def title(self, message: str, **kwargs) -> "TitlePromptResponse":
         formatted_message = self.format_message(message)
@@ -98,6 +76,19 @@ class WithPromptContext(WithIoManager, IoHandlerProtocol):
         formatted_message = self.format_message(message)
         return self.io.subtitle(formatted_message, **kwargs)
 
+    def success(self, message: str, **kwargs) -> "SuccessPromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.success(formatted_message, **kwargs)
+
+    def failure(self, message: str, **kwargs) -> "FailurePromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.failure(formatted_message, **kwargs)
+
+    def task(self, message: str, **kwargs) -> "TaskPromptResponse":
+        formatted_message = self.format_message(message)
+        return self.io.task(formatted_message, **kwargs)
+
+    # Methods that don't need message formatting
     def list(self, items: list, **kwargs) -> "ListPromptResponse":
         return self.io.list(items, **kwargs)
 
@@ -113,23 +104,21 @@ class WithPromptContext(WithIoManager, IoHandlerProtocol):
     def suggestions(self, suggestions: List[str], **kwargs) -> "SuggestionsPromptResponse":
         return self.io.suggestions(suggestions, **kwargs)
 
+    # Methods that have optional messages
     def progress(self, total: int, message: Optional[str] = None, **kwargs) -> "ProgressPromptResponse":
-        if message:
-            message = self.format_message(message)
-        return self.io.progress(total, message=message, **kwargs)
+        formatted_message = self._format_if_message(message)
+        return self.io.progress(total, message=formatted_message, **kwargs)
+
+    def choice(self, choices: List[str], message: Optional[str] = None, **kwargs) -> "ChoicePromptResponse":
+        formatted_message = self._format_if_message(message)
+        return self.io.choice(choices, message=formatted_message, **kwargs)
+
+    def choice_dict(self, choices: Dict[str, Any], message: Optional[str] = None, **kwargs) -> "ChoiceDictPromptResponse":
+        formatted_message = self._format_if_message(message)
+        return self.io.choice_dict(choices, message=formatted_message, **kwargs)
 
     def multiple(self, responses: List[Any], **kwargs) -> "MultiplePromptResponse":
         return self.io.multiple(responses, **kwargs)
-
-    def choice(self, choices: List[str], message: Optional[str] = None, **kwargs) -> "ChoicePromptResponse":
-        if message:
-            message = self.format_message(message)
-        return self.io.choice(choices, message=message, **kwargs)
-
-    def choice_dict(self, choices: Dict[str, Any], message: Optional[str] = None, **kwargs) -> "ChoiceDictPromptResponse":
-        if message:
-            message = self.format_message(message)
-        return self.io.choice_dict(choices, message=message, **kwargs)
 
     def file_picker(self, path: str, pattern: Optional[str] = None, **kwargs) -> "FilePickerPromptResponse":
         return self.io.file_picker(path, pattern=pattern, **kwargs)
