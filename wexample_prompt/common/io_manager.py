@@ -9,6 +9,10 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manager_mixin import \
+    LogPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.messages.info_prompt_response_manager_mixin import \
+    InfoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \
@@ -31,7 +35,6 @@ class IoManager(
     LogPromptResponseManagerMixin,
     InfoPromptResponseManagerMixin,
     DebugPromptResponseManagerMixin,
-    IoHandlerProtocol
 ):
     """Manager for handling I/O operations in the prompt system."""
 
@@ -49,21 +52,42 @@ class IoManager(
         default=None,
         description="Path to log file. If None, file logging is disabled"
     )
-
-    _logger: Logger = PrivateAttr()
+    terminal_width: int = Field(
+        default_factory=lambda: shutil.get_terminal_size().columns,
+        description="Width of the terminal"
+    )
+    _logger: Optional[Logger] = PrivateAttr(default=None)
+    _log_file_handler: Optional[TextIO] = PrivateAttr(default=None)
     _instance_count: int = PrivateAttr(default=0)
     _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
     _last_context: Optional[str] = PrivateAttr(default=None)
 
-    def __init__(self, **data):
-        super().__init__(**data)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
         self._last_context = None
         self._setup_logger()
+
+    def _setup_logger(self):
+        """Set up logging configuration."""
+        self._logger = logging.getLogger(__name__)
+        self._logger.setLevel(self.log_level)
+        
+        # Clear any existing handlers
+        self._logger.handlers.clear()
+        
+        if self.log_file:
+            self._log_file_handler = logging.FileHandler(self.log_file)
+            self._logger.addHandler(self._log_file_handler)
+
+    def __del__(self):
+        """Clean up resources."""
+        if self._log_file_handler:
+            self._log_file_handler.close()
 
     def get_response_types(self) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
@@ -112,22 +136,6 @@ class IoManager(
             TreePromptResponse
         ]
 
-    def _setup_logger(self) -> None:
-        """Configure the Python logger with proper formatting and handlers."""
-        self._logger = logging.getLogger("prompt")
-        self._logger.setLevel(self.log_level)
-
-        # Clear any existing handlers
-        self._logger.handlers.clear()
-
-        # Only add file handler if log_file is specified
-        if self.log_file:
-            file_handler = logging.FileHandler(self.log_file)
-            file_handler.setFormatter(
-                logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            )
-            self._logger.addHandler(file_handler)
-
     def _create_context(self) -> PromptContext:
         """Create a context with current indentation and terminal width."""
         return PromptContext(
@@ -162,7 +170,3 @@ class IoManager(
 
     def update_terminal_width(self) -> None:
         self._tty_width = shutil.get_terminal_size().columns
-
-    @property
-    def terminal_width(self) -> int:
-        return self._tty_width

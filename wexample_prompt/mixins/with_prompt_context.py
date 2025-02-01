@@ -7,12 +7,10 @@ from wexample_prompt.mixins.response.context.titles.subtitle_prompt_response_con
 from wexample_prompt.mixins.response.context.titles.title_prompt_response_context_mixin import \
     TitlePromptResponsePromptContextMixin
 from wexample_prompt.mixins.with_io_manager import WithIoManager
-from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 
 
 class WithPromptContext(
     WithIoManager,
-    IoHandlerProtocol,
     TitlePromptResponsePromptContextMixin,
     SubtitlePromptResponsePromptContextMixin,
     DebugPromptResponsePromptContextMixin
@@ -49,82 +47,3 @@ class WithPromptContext(
     def _format_if_message(self, message: Optional[str]) -> Optional[str]:
         """Format message if it exists, otherwise return None."""
         return self.format_message(message) if message else None
-
-    # Override methods from AllResponsesMixin to add context formatting
-    def log(self, message: str, **kwargs) -> "LogPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.log(formatted_message, **kwargs)
-
-    def info(self, message: str, **kwargs) -> "InfoPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.info(formatted_message, **kwargs)
-
-    def debug(self, message: str, **kwargs) -> "DebugPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.debug(formatted_message, **kwargs)
-
-    def error(self, message: str, **kwargs) -> "ErrorPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.error(formatted_message, **kwargs)
-
-    def warning(self, message: str, **kwargs) -> "WarningPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.warning(formatted_message, **kwargs)
-
-    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.title(formatted_message, **kwargs)
-
-    def subtitle(self, message: str, **kwargs) -> "SubtitlePromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.subtitle(formatted_message, **kwargs)
-
-    def success(self, message: str, **kwargs) -> "SuccessPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.success(formatted_message, **kwargs)
-
-    def failure(self, message: str, **kwargs) -> "FailurePromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.failure(formatted_message, **kwargs)
-
-    def task(self, message: str, **kwargs) -> "TaskPromptResponse":
-        formatted_message = self.format_message(message)
-        return self.io.task(formatted_message, **kwargs)
-
-    # Methods that don't need message formatting
-    def list(self, items: list, **kwargs) -> "ListPromptResponse":
-        return self.io.list(items, **kwargs)
-
-    def table(self, data: list, **kwargs) -> "TablePromptResponse":
-        return self.io.table(data, **kwargs)
-
-    def tree(self, data: Dict[str, Any], **kwargs) -> "TreePromptResponse":
-        return self.io.tree(data, **kwargs)
-
-    def properties(self, properties: Dict[str, Any], **kwargs) -> "PropertiesPromptResponse":
-        return self.io.properties(properties, **kwargs)
-
-    def suggestions(self, suggestions: List[str], **kwargs) -> "SuggestionsPromptResponse":
-        return self.io.suggestions(suggestions, **kwargs)
-
-    # Methods that have optional messages
-    def progress(self, total: int, message: Optional[str] = None, **kwargs) -> "ProgressPromptResponse":
-        formatted_message = self._format_if_message(message)
-        return self.io.progress(total, message=formatted_message, **kwargs)
-
-    def choice(self, choices: List[str], message: Optional[str] = None, **kwargs) -> "ChoicePromptResponse":
-        formatted_message = self._format_if_message(message)
-        return self.io.choice(choices, message=formatted_message, **kwargs)
-
-    def choice_dict(self, choices: Dict[str, Any], message: Optional[str] = None, **kwargs) -> "ChoiceDictPromptResponse":
-        formatted_message = self._format_if_message(message)
-        return self.io.choice_dict(choices, message=formatted_message, **kwargs)
-
-    def multiple(self, responses: List[Any], **kwargs) -> "MultiplePromptResponse":
-        return self.io.multiple(responses, **kwargs)
-
-    def file_picker(self, path: str, pattern: Optional[str] = None, **kwargs) -> "FilePickerPromptResponse":
-        return self.io.file_picker(path, pattern=pattern, **kwargs)
-
-    def dir_picker(self, path: str, **kwargs) -> "DirPickerPromptResponse":
-        return self.io.dir_picker(path, **kwargs)
