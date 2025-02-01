@@ -2,19 +2,18 @@ import logging
 import shutil
 import sys
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Dict, Union
+from typing import Any, List, Optional, TextIO, Type
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
-from wexample_helpers.helpers.debug import debug_trace_and_die
-from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponseIoManagerMixin
-from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponseIoManagerMixin
+from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponseIoManagerMixin
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 
@@ -58,6 +57,11 @@ class IoManager(
         self._stdin = sys.stdin
         self._last_context = None
         self._setup_logger()
+
+    def get_response_types(self) -> List[Type["AbstractPromptResponse"]]:
+        return [
+
+        ]
 
     def _setup_logger(self) -> None:
         """Configure the Python logger with proper formatting and handlers."""
