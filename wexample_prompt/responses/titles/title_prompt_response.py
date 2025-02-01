@@ -1,10 +1,10 @@
 """Title response implementation."""
 from typing import Optional, TYPE_CHECKING, ClassVar
 
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.titles.abstract_title_response import AbstractTitleResponse
 
 if TYPE_CHECKING:
+    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.common.prompt_context import PromptContext
 
 
@@ -17,15 +17,17 @@ class TitlePromptResponse(AbstractTitleResponse):
     def create_title(
         cls,
         text: str,
-        context: Optional[PromptContext] = None,
-        color: Optional[TerminalColor] = TerminalColor.CYAN,
+        context: "PromptContext",
+        color: Optional["TerminalColor"] = None,
         fill_char: Optional[str] = None
     ) -> 'TitlePromptResponse':
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
         return super()._create_title(
             text=text,
-            color=color,
+            context=context,
+            color=color or TerminalColor.CYAN,
             fill_char=fill_char,
-            context=context
         )
 
     @classmethod
