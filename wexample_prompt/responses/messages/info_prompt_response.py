@@ -37,7 +37,6 @@ class InfoPromptResponsePromptContextMixin:
 
 class InfoPromptResponse(BaseMessageResponse):
     """Response for info messages."""
-
     SYMBOL: ClassVar[str] = "ℹ️"
 
     @classmethod
