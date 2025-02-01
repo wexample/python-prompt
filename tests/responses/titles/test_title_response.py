@@ -50,7 +50,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assert_contains_text(rendered, self.test_message)
 
         # Context-specific checks
-        self.assert_contains_text(rendered, "[EXAMPLE|TestContextClass]:")  # Should include class prefix
+        self.assert_contains_text(rendered, "[EXAMPLE|ExampleClassWithContext]:")  # Should include class prefix
         self.assertIsInstance(response, TitlePromptResponse)
 
     @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
