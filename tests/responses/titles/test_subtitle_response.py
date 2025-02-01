@@ -20,7 +20,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
     def get_response_class(self) -> Type["AbstractPromptResponse"]:
         return SubtitlePromptResponse
 
-    def create_response(self, text: str, **kwargs) -> "AbstractPromptResponse":
+    def create_test_response(self, text: str, **kwargs) -> "AbstractPromptResponse":
         return SubtitlePromptResponse.create_subtitle(
             text=text,
             context=kwargs.get('context', self.context),
@@ -37,7 +37,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
 
     def test_response_class(self):
         """Test SubtitlePromptResponse class behavior."""
-        response = self.create_response(self.test_message)
+        response = self.create_test_response(self.test_message)
 
         rendered = response.render()
 
@@ -74,7 +74,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
     @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
     def test_custom_color(self, mock_supports_color):
         mock_supports_color.return_value = True
-        response = self.create_response(self.test_message, color=TerminalColor.GREEN)
+        response = self.create_test_response(self.test_message, color=TerminalColor.GREEN)
         rendered = response.render()
 
         # Common checks
@@ -86,7 +86,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
 
     def test_custom_fill_char(self):
         fill_char = "."
-        subtitle = self.create_response(self.test_message, fill_char=fill_char)
+        subtitle = self.create_test_response(self.test_message, fill_char=fill_char)
         rendered = subtitle.render()
 
         # Common checks

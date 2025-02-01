@@ -1,13 +1,12 @@
 """Tests for TitleResponse."""
 from typing import Type
-
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 from unittest.mock import patch
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
 class TestTitleResponse(AbstractPromptResponseTest):
@@ -37,7 +36,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
 
     def test_response_class(self):
         """Test TitlePromptResponse class behavior."""
-        response = self.create_response(self.test_message)
+        response = self.create_test_response(self.test_message)
 
         rendered = response.render()
 
@@ -77,7 +76,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
     def test_custom_color(self, mock_supports_color):
         context = self.create_colored_test_context(mock_supports_color)
 
-        response = self.create_response(
+        response = self.create_test_response(
             self.test_message,
             context=context,
             color=TerminalColor.RED,
@@ -90,7 +89,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
 
     def test_custom_fill_char(self):
         fill_char = "="
-        title = self.create_response(
+        title = self.create_test_response(
             self.test_message,
             fill_char=fill_char
         )
