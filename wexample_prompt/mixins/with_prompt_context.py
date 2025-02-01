@@ -5,6 +5,8 @@ from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponsePromptContextMixin
 from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponsePromptContextMixin
 from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponsePromptContextMixin
+from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponsePromptContextMixin
+from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponsePromptContextMixin
 
 
 class WithPromptContext(
@@ -13,6 +15,7 @@ class WithPromptContext(
     TitlePromptResponsePromptContextMixin,
     SubtitlePromptResponsePromptContextMixin,
     LogPromptResponsePromptContextMixin
+    InfoPromptResponsePromptContextMixin,
 ):
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level

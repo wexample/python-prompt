@@ -11,9 +11,9 @@ from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponseIoManagerMixin
-from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
 from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
+from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponseIoManagerMixin
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
 
@@ -24,6 +24,7 @@ class IoManager(
     TitlePromptResponseIoManagerMixin,
     SubtitlePromptResponseIoManagerMixin,
     LogPromptResponseIoManagerMixin,
+    InfoPromptResponseIoManagerMixin,
     IoHandlerProtocol
 ):
     """Manager for handling I/O operations in the prompt system."""
