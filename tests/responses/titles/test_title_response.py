@@ -27,7 +27,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
         # Use common assertions
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.title_text)
-        
+
         # Title-specific assertions
         self.assertIn("❯", rendered)  # Check prefix
         self.assertIn("⫻", rendered)  # Check fill character
@@ -48,10 +48,11 @@ class TestTitleResponse(AbstractPromptResponseTest):
     def test_prompt_context_title(self):
         from pydantic import BaseModel
         """Test PromptContext implementation of title()."""
+
         # Create a test class with context
         class TestContextClass(WithPromptContext, BaseModel):
-            def get_prefix(self) -> str:
-                return "TEST:"
+            def _format_context_prompt_message(self, message: str, indent: str) -> str:
+                return f"{indent}[TEST|{self.__class__.__name__}]: {message}"
 
         test_context = TestContextClass(io_manager=self.io_manager)
         title_response = test_context.title(self.title_text)
@@ -60,16 +61,16 @@ class TestTitleResponse(AbstractPromptResponseTest):
         # Common structure checks
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.title_text)
-        
+
         # Context-specific checks
-        self.assert_contains_text(rendered, "TEST:")  # Should include class prefix
+        self.assert_contains_text(rendered, "[TEST|TestContextClass]:")  # Should include class prefix
         self.assertIsInstance(title_response, TitlePromptResponse)
 
     @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
     def test_custom_color(self, mock_supports_color):
         """Test title with custom color."""
         context = self.create_colored_test_context(mock_supports_color)
-        
+
         title = TitlePromptResponse._create_title(
             text=self.title_text,
             context=context,

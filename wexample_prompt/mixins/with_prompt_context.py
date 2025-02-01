@@ -40,9 +40,15 @@ class WithPromptContext(
 
         if self.io._last_context != context_name:
             self.io._last_context = context_name
-            return f"{indent}• {context_name}: {message}"
+            return self._format_context_prompt_message(
+                message=message,
+                indent=indent
+            )
 
         return f"{indent}  ⋮ {message}"
+
+    def _format_context_prompt_message(self, message: str, indent: str) -> str:
+        return f"{indent}[{self.__class__.__name__}]: {message}"
 
     def _format_if_message(self, message: Optional[str]) -> Optional[str]:
         """Format message if it exists, otherwise return None."""
