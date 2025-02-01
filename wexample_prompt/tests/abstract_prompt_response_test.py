@@ -94,7 +94,10 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
     def test_prompt_context(self):
         """Test PromptContext implementation."""
         context = self.context
-        class_with_context = ExampleClassWithContext(context=context)
+        class_with_context = ExampleClassWithContext(
+            context=context,
+            io_manager=self.io_manager
+        )
         method = getattr(class_with_context, self.get_io_method_name())
         response = method(self.test_message)
         rendered = response.render()
