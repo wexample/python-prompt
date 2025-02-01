@@ -1,12 +1,13 @@
 from typing import Optional, Any
 
+from wexample_prompt.mixins.response.context.messages.debug_prompt_response_context_mixin import \
+    DebugPromptResponsePromptContextMixin
+from wexample_prompt.mixins.response.context.titles.subtitle_prompt_response_context_mixin import \
+    SubtitlePromptResponsePromptContextMixin
+from wexample_prompt.mixins.response.context.titles.title_prompt_response_context_mixin import \
+    TitlePromptResponsePromptContextMixin
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponsePromptContextMixin
-from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponsePromptContextMixin
-from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponsePromptContextMixin
-from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponsePromptContextMixin
-from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponsePromptContextMixin
 
 
 class WithPromptContext(
@@ -14,8 +15,6 @@ class WithPromptContext(
     IoHandlerProtocol,
     TitlePromptResponsePromptContextMixin,
     SubtitlePromptResponsePromptContextMixin,
-    LogPromptResponsePromptContextMixin,
-    InfoPromptResponsePromptContextMixin,
     DebugPromptResponsePromptContextMixin
 ):
     prompt_context_parent: Optional[Any] = None
