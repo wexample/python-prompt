@@ -1,64 +1,58 @@
 """Tests for InfoPromptResponse."""
+from typing import Type
 import unittest
 
-from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestInfoPromptResponse(unittest.TestCase):
+class TestInfoPromptResponse(AbstractPromptResponseTest):
     """Test cases for InfoPromptResponse."""
-    
-    def test_create_info(self):
-        """Test info message creation."""
-        message = "Test info message"
-        response = InfoPromptResponse.create_info(message)
-        rendered = response.render()
-        
-        # Check message content
-        self.assertIn(message, rendered)
-        self.assertIn("ℹ", rendered)  # Info symbol
-        
+
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return InfoPromptResponse
+
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        context = kwargs.pop('context', self.context)
+        return InfoPromptResponse.create_info(
+            message=text,
+            context=context,
+            **kwargs
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'info'
+
+    def _assert_specific_format(self, rendered: str):
+        self.assertIn("ℹ️", rendered)  # Info symbol
+
+    def get_expected_lines(self) -> int:
+        return 1  # Info messages are single line
+
+    @unittest.skip("Info messages do not support custom fill characters")
+    def test_custom_fill_char(self):
+        pass
+
     def test_message_type(self):
-        """Test info message type."""
-        response = InfoPromptResponse.create_info("Test")
+        response = self.create_test_response(self.test_message)
         self.assertEqual(response.get_message_type(), MessageType.INFO)
-        
+
     def test_multiline_info(self):
-        """Test multiline info message."""
         message = "Line 1\nLine 2"
-        response = InfoPromptResponse.create_info(message)
+        response = self.create_test_response(message)
         rendered = response.render()
-        
-        # Check both lines are present
-        self.assertIn("Line 1", rendered)
-        self.assertIn("Line 2", rendered)
-        
+
+        self.assert_contains_text(rendered, "Line 1")
+        self.assert_contains_text(rendered, "Line 2")
+
     def test_info_with_formatting(self):
-        """Test info message with special formatting."""
         message = "Status: {status}\nTime: {time}"
         formatted = message.format(status="Active", time="12:00")
-        
-        response = InfoPromptResponse.create_info(formatted)
+
+        response = self.create_test_response(formatted)
         rendered = response.render()
-        
-        self.assertIn("Status: Active", rendered)
-        self.assertIn("Time: 12:00", rendered)
-        
-    def test_empty_info(self):
-        """Test info message with empty string."""
-        response = InfoPromptResponse.create_info("")
-        rendered = response.render()
-        self.assertIn("ℹ", rendered)  # Should still show the info symbol
-        
-    def test_info_with_context(self):
-        """Test info message with context."""
-        message = "System status: {status}"
-        context = PromptContext(params={"status": "online"})
-        response = InfoPromptResponse.create_info(
-            message,
-            context=context
-        )
-        rendered = response.render()
-        self.assertIn("System status", rendered)
-        self.assertIn("online", rendered)
+
+        self.assert_contains_text(rendered, "Status: Active")
+        self.assert_contains_text(rendered, "Time: 12:00")

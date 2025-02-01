@@ -1,4 +1,3 @@
-"""Debug prompt response."""
 from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
@@ -35,12 +34,10 @@ class DebugPromptResponse(BaseMessageResponse):
     def get_message_type(cls) -> "MessageType":
         from wexample_prompt.enums.message_type import MessageType
 
-        """Get the message type for debug messages."""
         return MessageType.DEBUG
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         from wexample_prompt.example.response.messages.debug_example import DebugExample
 
-        """Get the example class for this response type."""
         return DebugExample
