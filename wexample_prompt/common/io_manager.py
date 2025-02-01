@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \
+    SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
@@ -22,11 +24,11 @@ if TYPE_CHECKING:
 class IoManager(
     BaseModel,
     WithIndent,
-    TitlePromptResponseIoManagerMixin,
-    SubtitlePromptResponseIoManagerMixin,
-    LogPromptResponseIoManagerMixin,
-    InfoPromptResponseIoManagerMixin,
-    DebugPromptResponseIoManagerMixin,
+    TitlePromptResponseManagerMixin,
+    SubtitlePromptResponseManagerMixin,
+    LogPromptResponseManagerMixin,
+    InfoPromptResponseManagerMixin,
+    DebugPromptResponseManagerMixin,
     IoHandlerProtocol
 ):
     """Manager for handling I/O operations in the prompt system."""
