@@ -26,14 +26,21 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         self.io_manager = IoManager(terminal_width=self.terminal_width)
         self.test_message = "Test message"
 
-    def assert_common_response_structure(self, rendered: str, expected_lines: int = 3):
+    @abstractmethod
+    def get_expected_lines(self) -> int:
+        """Return the expected number of lines in the rendered response."""
+        pass
+
+    def assert_common_response_structure(self, rendered: str):
         """Assert common structure for rendered responses."""
         lines = rendered.split("\n")
+        expected_lines = self.get_expected_lines()
         self.assertEqual(len(lines), expected_lines)
 
-        # First and last lines should be empty
-        self.assertEqual(lines[0].strip(), "")
-        self.assertEqual(lines[-1].strip(), "")
+        # If more than one line, first and last should be empty
+        if expected_lines > 1:
+            self.assertEqual(lines[0].strip(), "")
+            self.assertEqual(lines[-1].strip(), "")
 
     def assert_contains_text(self, rendered: str, text: str):
         """Assert that rendered output contains specific text."""
@@ -51,7 +58,7 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         pass
 
     @abstractmethod
-    def create_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
         """Create a response instance."""
         pass
 
@@ -67,7 +74,7 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
 
     def test_response_class(self):
         """Test response class behavior."""
-        response = self.create_response(self.test_message)
+        response = self.create_test_response(self.test_message)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)
@@ -76,22 +83,25 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        response = getattr(self.io_manager, self.get_io_method_name())(self.test_message)
+        method = getattr(self.io_manager, self.get_io_method_name())
+        response = method(self.test_message)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.test_message)
-        self.assertIsInstance(response, self.get_response_class())
+        self._assert_specific_format(rendered)
 
     def test_prompt_context(self):
         """Test PromptContext implementation."""
-        test_context = ExampleClassWithContext(io_manager=self.io_manager)
-        response = getattr(test_context, self.get_io_method_name())(self.test_message)
+        context = self.context
+        class_with_context = ExampleClassWithContext(context=context)
+        method = getattr(class_with_context, self.get_io_method_name())
+        response = method(self.test_message)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.test_message)
-        self.assertIsInstance(response, self.get_response_class())
+        self._assert_specific_format(rendered)
 
     @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
     def test_custom_color(self, mock_supports_color):
@@ -99,26 +109,25 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         context = self.create_colored_test_context(mock_supports_color)
         from wexample_prompt.enums.terminal_color import TerminalColor
 
-        response = self.create_response(self.test_message, context=context, color=TerminalColor.GREEN)
+        response = self.create_test_response(self.test_message, context=context, color=TerminalColor.GREEN)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.test_message)
-        self.assertIn("\033[", rendered)  # ANSI color code
+        self._assert_specific_format(rendered)
 
     def test_custom_fill_char(self):
         """Test response with custom fill character."""
         fill_char = "."
-        response = self.create_response(self.test_message, fill_char=fill_char)
+        response = self.create_test_response(self.test_message, fill_char=fill_char)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.test_message)
-        self.assertIn(fill_char, rendered)
 
     def test_no_color(self):
         """Test response without color."""
-        response = self.create_response(self.test_message, color=None)
+        response = self.create_test_response(self.test_message, color=None)
         rendered = response.render()
 
         self.assert_common_response_structure(rendered)

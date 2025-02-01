@@ -34,6 +34,10 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assertIn("❯", rendered)  # Check prefix
         self.assertIn("⫻", rendered)  # Check fill character
 
+    def get_expected_lines(self) -> int:
+        """Return the expected number of lines in the rendered response."""
+        return 3  # Title messages have empty lines before and after
+
     def test_response_class(self):
         """Test TitlePromptResponse class behavior."""
         response = self.create_test_response(self.test_message)

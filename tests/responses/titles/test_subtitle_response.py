@@ -35,6 +35,10 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
         self.assertIn("  ❯", rendered)  # Check prefix with correct indentation
         self.assertIn("⫻", rendered)  # Check fill character
 
+    def get_expected_lines(self) -> int:
+        """Return the expected number of lines in the rendered response."""
+        return 3  # Subtitle messages have empty lines before and after
+
     def test_response_class(self):
         """Test SubtitlePromptResponse class behavior."""
         response = self.create_test_response(self.test_message)
