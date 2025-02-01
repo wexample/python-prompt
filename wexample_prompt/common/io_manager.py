@@ -7,6 +7,8 @@ from typing import Any, List, Optional, TextIO, Type, TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
+    DebugPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \

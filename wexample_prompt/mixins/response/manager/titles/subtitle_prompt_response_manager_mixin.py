@@ -8,6 +8,8 @@ class SubtitlePromptResponseManagerMixin:
     """Mixin for IoManager to handle subtitle responses."""
 
     def subtitle(self, message: str, **kwargs) -> "SubtitlePromptResponse":
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+        
         """Create and display a subtitle response."""
         response = SubtitlePromptResponse.create_subtitle(
             text=message,
