@@ -8,37 +8,7 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 
-class TitlePromptResponseIoManagerMixin:
-    """Mixin for IoManager to handle title responses."""
-
-    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
-        """Create and display a title response."""
-        response = TitlePromptResponse.create_title(
-            text=message,
-            context=self._create_context(),
-        )
-
-        if self._logger.handlers:
-            self._logger.debug(message)
-
-        self.print_response(response)
-        return response
-
-
-class TitlePromptResponsePromptContextMixin:
-    """Mixin for WithPromptContext to handle title responses with context formatting."""
-
-    def title(self, message: str, **kwargs) -> "TitlePromptResponse":
-        """Create and display a title response with context formatting."""
-        formatted_message = self.format_message(message)
-        return self.io.title(formatted_message, **kwargs)
-
-
-class TitlePromptResponse(
-    AbstractTitleResponse,
-    TitlePromptResponseIoManagerMixin,
-    TitlePromptResponsePromptContextMixin
-):
+class TitlePromptResponse(AbstractTitleResponse):
     """Response for main titles with arrow prefix."""
 
     TITLE_CHAR: ClassVar[str] = "="

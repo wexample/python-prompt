@@ -2,22 +2,21 @@ import logging
 import shutil
 import sys
 from logging import Logger
-from typing import Any, List, Optional, TextIO, Type
+from typing import Any, List, Optional, TextIO, Type, TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
+    TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.protocol.io_handler_protocol import IoHandlerProtocol
 from wexample_prompt.responses import BasePromptResponse
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponseIoManagerMixin
-from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponseIoManagerMixin
-from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponseIoManagerMixin
-from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponseIoManagerMixin
-from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponseIoManagerMixin
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
+
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
 class IoManager(
@@ -63,8 +62,50 @@ class IoManager(
         self._setup_logger()
 
     def get_response_types(self) -> List[Type["AbstractPromptResponse"]]:
-        return [
+        from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+        from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
+        from wexample_prompt.responses.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
+        from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+        from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
 
+        return [
+            ChoiceDictPromptResponse,
+            ChoicePromptResponse,
+            DirPickerPromptResponse,
+            FilePickerPromptResponse,
+            ListPromptResponse,
+            DebugPromptResponse,
+            ErrorPromptResponse,
+            FailurePromptResponse,
+            InfoPromptResponse,
+            LogPromptResponse,
+            SuccessPromptResponse,
+            TaskPromptResponse,
+            WarningPromptResponse,
+            MultiplePromptResponse,
+            ProgressPromptResponse,
+            PropertiesPromptResponse,
+            SuggestionsPromptResponse,
+            TablePromptResponse,
+            SubtitlePromptResponse,
+            TitlePromptResponse,
+            TreePromptResponse
         ]
 
     def _setup_logger(self) -> None:
