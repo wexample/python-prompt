@@ -19,6 +19,25 @@ self.info('Info message')
 # Prompt Response
 The manager returns PromptResponse types such as info, log, success, title, table, choice, etc. Each PromptResponse corresponds to a method:
   - In the manager: `self.io.title('My title')`        # ❯ MY TITLE ⫻⫻⫻⫻⫻  
-    - This method is defined in `mixins/response/manager/` and added to the IoManager class in `common/io_manager.py`
+    - This method is defined in `wexample_prompt/mixins/response/manager/` and added to the IoManager class in `common/io_manager.py`
   - In the prompt context: `self.title('My title')`    # ❯ CLASS PREFIX: MY TITLE ⫻⫻⫻⫻⫻  
-    - This method is defined in `mixins/response/context/` and added via the mixin `mixins/with_prompt_context.py`
+    - This method is defined in `wexample_prompt/mixins/response/context/` and added via the mixin `mixins/with_prompt_context.py`
+
+# Testing Prompt Responses
+
+Each Prompt Response has associated test files located in the `/tests/` directory. These tests ensure the proper functioning of the response system at different levels:
+
+- **Response Class Testing**: Tests the standalone response class (e.g., `TitlePromptResponse`)
+- **IoManager Method Testing**: Tests the IoManager method implementation (e.g., `io_manager.title()`)
+- **PromptContext Implementation Testing**: Tests classes implementing PromptContext with the response method (e.g., `self.title()`)
+
+Example test file structure for the Title response:
+```
+/tests/responses/titles/test_title_response.py
+```
+
+Each test file should cover:
+- Response class behavior and properties
+- Correct output formatting
+- Integration with IoManager
+- Proper implementation in PromptContext classes
