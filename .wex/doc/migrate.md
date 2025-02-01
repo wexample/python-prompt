@@ -41,3 +41,20 @@ Each test file should cover:
 - Correct output formatting
 - Integration with IoManager
 - Proper implementation in PromptContext classes
+
+# Example Classes
+
+Each Prompt Response type also comes with an example class that demonstrates its usage in different contexts. These examples are crucial for understanding how the response behaves in various scenarios:
+
+- **Example Class Implementation**: Shows how the response works in a class context
+- **Example Manager Usage**: Demonstrates direct usage through the IoManager
+- **Example Context Usage**: Shows usage within a PromptContext implementation
+
+Example classes can be found in the response type's associated directory and are automatically executed through the `examples/all.py` script, which runs all available examples for each response type.
+
+To see examples in action, run:
+```bash
+python3 examples/all.py
+```
+
+This will demonstrate each response type's behavior in different contexts, making it easier to understand their implementation and usage patterns.
