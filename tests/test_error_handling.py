@@ -1,33 +1,30 @@
 """Tests for error handling functionality."""
 import io
-import sys
 import unittest
-from unittest.mock import patch
 
 from wexample_prompt.common.io_manager import IoManager
-from wexample_prompt.common.error_context import ErrorContext
 
 
 class TestErrorHandling(unittest.TestCase):
     """Test cases for error handling in IoManager."""
-    
+
     def setUp(self):
         """Set up test cases."""
         self.stdout = io.StringIO()
         self.io_manager = IoManager()
         self.io_manager._stdout = self.stdout
-    
+
     def tearDown(self):
         """Clean up after tests."""
         self.stdout.close()
-    
+
     def test_error_basic(self):
         """Test basic error message."""
         self.io_manager.error("Test error")
         output = self.stdout.getvalue()
         self.assertIn("Test error", output)
         self.assertIn("❌", output)  # Error symbol
-    
+
     def test_error_with_params(self):
         """Test error message with parameters."""
         self.io_manager.error(
@@ -52,7 +49,7 @@ class TestErrorHandling(unittest.TestCase):
         )
         output = self.stdout.getvalue()
         self.assertIn("Warning: old_api is deprecated", output)
-    
+
     def test_error_indentation(self):
         """Test error message with indentation."""
         self.io_manager.log_indent = 2
