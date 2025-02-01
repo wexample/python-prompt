@@ -99,13 +99,3 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assertIn(self.test_message, rendered)
         self.assertIn(fill_char, rendered)
         self.assertNotIn("⎯", rendered)  # Default fill char should not be present
-
-    def test_no_color(self):
-        response = self.create_response(
-            self.test_message,
-            color=None
-        )
-        rendered = response.render()
-
-        self.assertIn(self.test_message, rendered)
-        self.assertNotIn("\033[", rendered)  # No ANSI color codes

@@ -115,3 +115,12 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.test_message)
         self.assertIn(fill_char, rendered)
+
+    def test_no_color(self):
+        """Test response without color."""
+        response = self.create_response(self.test_message, color=None)
+        rendered = response.render()
+
+        self.assert_common_response_structure(rendered)
+        self.assert_contains_text(rendered, self.test_message)
+        self.assertNotIn("\033[", rendered)  # No ANSI color codes
