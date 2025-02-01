@@ -1,22 +1,43 @@
+"""Tests for TitleResponse."""
+from typing import Type
+
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 from unittest.mock import patch
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
-from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
 class TestTitleResponse(AbstractPromptResponseTest):
+    """Test cases for TitleResponse."""
+
     def setUp(self):
         super().setUp()
         self.test_message = "Test message"
 
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return TitlePromptResponse
+
+    def create_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        return TitlePromptResponse._create_title(
+            text=text,
+            context=kwargs.get('context', self.context),
+            color=kwargs.get('color'),
+            fill_char=kwargs.get('fill_char'),
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'title'
+
+    def _assert_specific_format(self, rendered: str):
+        self.assertIn("❯", rendered)  # Check prefix
+        self.assertIn("⫻", rendered)  # Check fill character
+
     def test_response_class(self):
         """Test TitlePromptResponse class behavior."""
-        response = TitlePromptResponse._create_title(
-            text=self.test_message,
-            context=self.context,
-        )
+        response = self.create_response(self.test_message)
 
         rendered = response.render()
 
@@ -25,8 +46,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assert_contains_text(rendered, self.test_message)
 
         # specific assertions
-        self.assertIn("❯", rendered)  # Check prefix
-        self.assertIn("⫻", rendered)  # Check fill character
+        self._assert_specific_format(rendered)
 
     def test_io_manager(self):
         # Test through IoManager
@@ -57,8 +77,8 @@ class TestTitleResponse(AbstractPromptResponseTest):
     def test_custom_color(self, mock_supports_color):
         context = self.create_colored_test_context(mock_supports_color)
 
-        response = TitlePromptResponse._create_title(
-            text=self.test_message,
+        response = self.create_response(
+            self.test_message,
             context=context,
             color=TerminalColor.RED,
         )
@@ -70,9 +90,8 @@ class TestTitleResponse(AbstractPromptResponseTest):
 
     def test_custom_fill_char(self):
         fill_char = "="
-        title = TitlePromptResponse._create_title(
-            text=self.test_message,
-            context=self.context,
+        title = self.create_response(
+            self.test_message,
             fill_char=fill_char
         )
         rendered = title.render()
@@ -82,9 +101,8 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assertNotIn("⎯", rendered)  # Default fill char should not be present
 
     def test_no_color(self):
-        response = TitlePromptResponse._create_title(
-            text=self.test_message,
-            context=self.context,
+        response = self.create_response(
+            self.test_message,
             color=None
         )
         rendered = response.render()
