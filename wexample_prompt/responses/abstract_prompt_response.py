@@ -1,15 +1,18 @@
-from typing import List, Dict, Any, Optional
-from abc import ABC
+from abc import ABC, abstractmethod
+from typing import List, Dict, Any, Optional, Type, TYPE_CHECKING
+
 from pydantic import BaseModel, Field
 
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import HasSnakeShortClassNameClassMixin
+from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.text_style import TextStyle
-
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
@@ -18,7 +21,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
     response_type: ResponseType = ResponseType.PLAIN
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
-    context: PromptContext= Field(...)
+    context: PromptContext = Field(...)
     verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
 
     def __init__(self, **data):
@@ -27,6 +30,10 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
         # Validate the presence of the expected creation method
         self._validate_creation_method()
 
+    @classmethod
+    @abstractmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        pass
 
     def _validate_creation_method(self):
         short_name = self.get_snake_short_class_name()
@@ -80,7 +87,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
             message_type=self.message_type,
             context=self.context
         )
-    
+
     def wrap(self, styles: List[TextStyle]) -> 'AbstractPromptResponse':
         """Apply styles to all segments in all lines."""
         new_lines = []

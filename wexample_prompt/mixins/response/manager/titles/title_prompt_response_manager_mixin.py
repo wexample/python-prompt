@@ -13,7 +13,7 @@ class TitlePromptResponseManagerMixin:
         """Create and display a title response."""
         response = TitlePromptResponse.create_title(
             text=message,
-            context=self._create_context(),
+            context=self.create_context(),
         )
 
         if self._logger.handlers:

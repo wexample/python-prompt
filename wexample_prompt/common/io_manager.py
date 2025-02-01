@@ -9,10 +9,6 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manager_mixin import \
-    LogPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.messages.info_prompt_response_manager_mixin import \
-    InfoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \
@@ -32,8 +28,6 @@ class IoManager(
     WithIndent,
     TitlePromptResponseManagerMixin,
     SubtitlePromptResponseManagerMixin,
-    LogPromptResponseManagerMixin,
-    InfoPromptResponseManagerMixin,
     DebugPromptResponseManagerMixin,
 ):
     """Manager for handling I/O operations in the prompt system."""
@@ -89,7 +83,8 @@ class IoManager(
         if self._log_file_handler:
             self._log_file_handler.close()
 
-    def get_response_types(self) -> List[Type["AbstractPromptResponse"]]:
+    @classmethod
+    def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
@@ -113,30 +108,30 @@ class IoManager(
         from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
 
         return [
-            ChoiceDictPromptResponse,
-            ChoicePromptResponse,
-            DirPickerPromptResponse,
-            FilePickerPromptResponse,
-            ListPromptResponse,
-            DebugPromptResponse,
-            ErrorPromptResponse,
-            FailurePromptResponse,
-            InfoPromptResponse,
-            LogPromptResponse,
-            SuccessPromptResponse,
-            TaskPromptResponse,
-            WarningPromptResponse,
-            MultiplePromptResponse,
-            ProgressPromptResponse,
-            PropertiesPromptResponse,
-            SuggestionsPromptResponse,
-            TablePromptResponse,
-            SubtitlePromptResponse,
+            # ChoiceDictPromptResponse,
+            # ChoicePromptResponse,
+            # DirPickerPromptResponse,
+            # FilePickerPromptResponse,
+            # ListPromptResponse,
+            # DebugPromptResponse,
+            # ErrorPromptResponse,
+            # FailurePromptResponse,
+            # InfoPromptResponse,
+            # LogPromptResponse,
+            # SuccessPromptResponse,
+            # TaskPromptResponse,
+            # WarningPromptResponse,
+            # MultiplePromptResponse,
+            # ProgressPromptResponse,
+            # PropertiesPromptResponse,
+            # SuggestionsPromptResponse,
+            # TablePromptResponse,
+            # SubtitlePromptResponse,
             TitlePromptResponse,
-            TreePromptResponse
+            # TreePromptResponse
         ]
 
-    def _create_context(self) -> PromptContext:
+    def create_context(self) -> PromptContext:
         """Create a context with current indentation and terminal width."""
         return PromptContext(
             indentation=self.log_indent,

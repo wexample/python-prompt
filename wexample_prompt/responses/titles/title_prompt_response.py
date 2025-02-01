@@ -1,17 +1,24 @@
 """Title response implementation."""
-from typing import Optional, TYPE_CHECKING, ClassVar
+from typing import Optional, TYPE_CHECKING, ClassVar, Type
 
 from wexample_prompt.responses.titles.abstract_title_response import AbstractTitleResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class TitlePromptResponse(AbstractTitleResponse):
     """Response for main titles with arrow prefix."""
 
     TITLE_CHAR: ClassVar[str] = "="
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        from wexample_prompt.example.response.titles.title_example import TitleExample
+
+        return TitleExample
 
     @classmethod
     def create_title(

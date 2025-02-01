@@ -1,10 +1,11 @@
-from typing import List, Dict, Any, TextIO, TYPE_CHECKING
 import sys
+from typing import List, Dict, Any, TextIO, TYPE_CHECKING
+
 from pydantic import Field
 
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:

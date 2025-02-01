@@ -13,7 +13,7 @@ class DebugPromptResponseManagerMixin:
         """Create and display a debug response."""
         response = DebugPromptResponse.create_debug(
             message=message,
-            context=self._create_context(),
+            context=self.create_context(),
         )
 
         if self._logger.handlers:

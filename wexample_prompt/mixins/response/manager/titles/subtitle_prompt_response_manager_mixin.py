@@ -13,7 +13,7 @@ class SubtitlePromptResponseManagerMixin:
         """Create and display a subtitle response."""
         response = SubtitlePromptResponse.create_subtitle(
             text=message,
-            context=self._create_context(),
+            context=self.create_context(),
         )
 
         if self._logger.handlers:
