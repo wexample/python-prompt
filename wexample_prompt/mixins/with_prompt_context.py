@@ -14,8 +14,9 @@ class WithPromptContext(
     IoHandlerProtocol,
     TitlePromptResponsePromptContextMixin,
     SubtitlePromptResponsePromptContextMixin,
-    LogPromptResponsePromptContextMixin
+    LogPromptResponsePromptContextMixin,
     InfoPromptResponsePromptContextMixin,
+    DebugPromptResponsePromptContextMixin
 ):
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
