@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.messages.info_prompt_response_manager_mixin import \
+    InfoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
@@ -28,6 +30,7 @@ class IoManager(
     TitlePromptResponseManagerMixin,
     SubtitlePromptResponseManagerMixin,
     DebugPromptResponseManagerMixin,
+    InfoPromptResponseManagerMixin
 ):
     """Manager for handling I/O operations in the prompt system."""
 

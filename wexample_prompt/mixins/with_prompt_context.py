@@ -1,22 +1,23 @@
 from typing import Optional, Any
 
-from wexample_prompt.mixins.response.context.messages.debug_prompt_response_context_mixin import \
-    DebugPromptResponsePromptContextMixin
-from wexample_prompt.mixins.response.context.titles.subtitle_prompt_response_context_mixin import \
-    SubtitlePromptResponsePromptContextMixin
-from wexample_prompt.mixins.response.context.titles.title_prompt_response_context_mixin import \
-    TitlePromptResponsePromptContextMixin
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class WithPromptContext(
-    WithIoManager,
-    TitlePromptResponsePromptContextMixin,
-    SubtitlePromptResponsePromptContextMixin,
-    DebugPromptResponsePromptContextMixin
+    WithIoManager
 ):
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
+
+    def __getattr__(self, name):
+        def wrapper(*args, **kwargs):
+            method = getattr(self.io, name)
+            if args:
+                formatted_message = self.format_message(args[0])
+                args = (formatted_message,) + args[1:]
+            return method(*args, **kwargs)
+
+        return wrapper
 
     def get_prompt_context_parent(self) -> Optional['WithPromptContext']:
         """Get the parent context for indentation. By default, returns None."""
