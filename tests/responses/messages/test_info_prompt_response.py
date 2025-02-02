@@ -31,10 +31,6 @@ class TestInfoPromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         return 1  # Info messages are single line
 
-    @unittest.skip("Info messages do not support custom fill characters")
-    def test_custom_fill_char(self):
-        pass
-
     def test_message_type(self):
         response = self.create_test_response(self.test_message)
         self.assertEqual(response.get_message_type(), MessageType.INFO)

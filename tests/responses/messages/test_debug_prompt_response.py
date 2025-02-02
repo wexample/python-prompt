@@ -33,11 +33,6 @@ class TestDebugPromptResponse(AbstractPromptResponseTest):
         """Return the expected number of lines in the rendered response."""
         return 1  # Debug messages are single line
 
-    @unittest.skip("Debug messages do not support custom fill characters")
-    def test_custom_fill_char(self):
-        """Test response with custom fill character."""
-        pass
-
     def test_message_type(self):
         """Test debug message type."""
         response = self.create_test_response(self.test_message)
