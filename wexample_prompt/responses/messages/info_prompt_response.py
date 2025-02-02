@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class InfoPromptResponse(BaseMessageResponse):
     """Response for info messages."""
     
-    SYMBOL: ClassVar[str] = "ℹ️"
+    SYMBOL: ClassVar[str] = "ℹ"
     
     @classmethod
     def create_info(

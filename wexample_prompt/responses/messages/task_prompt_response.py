@@ -1,4 +1,4 @@
-from typing import ClassVar, Type, TYPE_CHECKING
+from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 
@@ -19,6 +19,7 @@ class TaskPromptResponse(BaseMessageResponse):
         cls: "TaskPromptResponse",
         message: str,
         context: "PromptContext" = None,
+        color: Optional["TerminalColor"] = None,
         **kwargs
     ) -> "TaskPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -26,7 +27,7 @@ class TaskPromptResponse(BaseMessageResponse):
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=TerminalColor.YELLOW,
+            color=color or TerminalColor.YELLOW,
             **kwargs
         )
 

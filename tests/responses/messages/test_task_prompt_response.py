@@ -1,63 +1,68 @@
 """Tests for TaskPromptResponse."""
-import unittest
+from typing import Type
 
-from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
 from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestTaskPromptResponse(unittest.TestCase):
+class TestTaskPromptResponse(AbstractPromptResponseTest):
     """Test cases for TaskPromptResponse."""
-    
-    def test_create_task(self):
-        """Test task message creation."""
-        message = "Test task message"
-        response = TaskPromptResponse.create_task(message)
-        rendered = response.render()
-        
-        # Check message content
-        self.assertIn(message, rendered)
-        self.assertIn("⚡", rendered)  # Task symbol
-        
+
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return TaskPromptResponse
+
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        context = kwargs.pop('context', self.context)
+        return TaskPromptResponse.create_task(
+            message=text,
+            context=context,
+            **kwargs
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'task'
+
+    def _assert_specific_format(self, rendered: str):
+        # Task messages should have the task symbol
+        self.assert_contains_text(rendered, "⚡")
+
+    def get_expected_lines(self) -> int:
+        return 1  # Task messages are single line
+
     def test_message_type(self):
-        """Test task message type."""
-        response = TaskPromptResponse.create_task("Test")
+        response = self.create_test_response(self.test_message)
         self.assertEqual(response.get_message_type(), MessageType.TASK)
-        
+
     def test_multiline_task(self):
-        """Test multiline task message."""
         message = "Line 1\nLine 2"
-        response = TaskPromptResponse.create_task(message)
+        response = self.create_test_response(message)
         rendered = response.render()
-        
-        # Check both lines are present
-        self.assertIn("Line 1", rendered)
-        self.assertIn("Line 2", rendered)
-        
+
+        self.assert_contains_text(rendered, "Line 1")
+        self.assert_contains_text(rendered, "Line 2")
+
     def test_task_with_status(self):
-        """Test task message with status information."""
         task = "Database backup"
         status = "In Progress"
         message = f"{task} - {status}"
-        
-        response = TaskPromptResponse.create_task(message)
+
+        response = self.create_test_response(message)
         rendered = response.render()
-        
-        self.assertIn(task, rendered)
-        self.assertIn(status, rendered)
-        
+
+        self.assert_contains_text(rendered, task)
+        self.assert_contains_text(rendered, status)
+
     def test_empty_task(self):
-        """Test task message with empty string."""
-        response = TaskPromptResponse.create_task("")
+        response = self.create_test_response("")
         rendered = response.render()
-        self.assertIn("⚡", rendered)
-        
+        self.assert_contains_text(rendered, "⚡")
+
     def test_task_with_context(self):
-        """Test task message with context."""
-        message = "Processing item {item_id} of {total}"
-        context = PromptContext(params={"item_id": "5", "total": "10"})
-        response = TaskPromptResponse.create_task(message, context=context)
+        message = "Files processed: {count} files"
+        self.context.params = {"count": "3"}
+        response = self.create_test_response(message)
         rendered = response.render()
-        self.assertIn("Processing item", rendered)
-        self.assertIn("5", rendered)
-        self.assertIn("10", rendered)
+        self.assert_contains_text(rendered, "Files processed")
+        self.assert_contains_text(rendered, "3")
