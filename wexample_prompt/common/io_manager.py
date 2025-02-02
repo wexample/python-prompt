@@ -130,18 +130,18 @@ class IoManager(
 
         return [
             ChoicePromptResponse,
-            ChoiceDictPromptResponse,
-            DirPickerPromptResponse,
-            TitlePromptResponse,
-            SubtitlePromptResponse,
-            LogPromptResponse,
-            InfoPromptResponse,
-            DebugPromptResponse,
-            SuccessPromptResponse,
-            TaskPromptResponse,
-            WarningPromptResponse,
-            FailurePromptResponse,
-            ErrorPromptResponse,
+            # ChoiceDictPromptResponse,
+            # DirPickerPromptResponse,
+            # TitlePromptResponse,
+            # SubtitlePromptResponse,
+            # LogPromptResponse,
+            # InfoPromptResponse,
+            # DebugPromptResponse,
+            # SuccessPromptResponse,
+            # TaskPromptResponse,
+            # WarningPromptResponse,
+            # FailurePromptResponse,
+            # ErrorPromptResponse,
         ]
 
     def create_context(self, indentation: Optional[int] = 0) -> PromptContext:

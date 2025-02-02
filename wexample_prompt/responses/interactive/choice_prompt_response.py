@@ -5,7 +5,7 @@ from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 from pydantic import Field, ConfigDict
 
-from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import AbstractInteractivePromptResponse
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.color_manager import ColorManager
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
-class ChoicePromptResponse(BasePromptResponse):
+class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Response for displaying a list of choices and getting user selection."""
 
     # Instance variables
