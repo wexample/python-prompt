@@ -130,7 +130,7 @@ class IoManager(
 
         return [
             ChoicePromptResponse,
-            # ChoiceDictPromptResponse,
+            ChoiceDictPromptResponse,
             # DirPickerPromptResponse,
             # TitlePromptResponse,
             # SubtitlePromptResponse,

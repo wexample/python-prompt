@@ -11,24 +11,20 @@ class ChoiceDictPromptResponseManagerMixin:
         self,
         question: str,
         choices: Dict[str, str],
+        default: Optional[str] = None,
         abort: Optional[str] = "> Abort",
-        **kwargs: Any
-    ) -> Optional[str]:
-        """Create and execute a choice dict prompt.
+        **kwargs
+    ) -> str:
+        from wexample_prompt.responses.interactive import ChoiceDictPromptResponse
 
-        Args:
-            question: The question to display
-            choices: Dictionary of choices where keys are values and values are display labels
-            abort: Optional abort choice text
-            **kwargs: Additional arguments for inquirer.select
-
-        Returns:
-            str: Selected key from choices, or None if aborted
-        """
         response = ChoiceDictPromptResponse.create_choice_dict(
             question=question,
             choices=choices,
+            context=self.create_context(),
+            default=default,
             abort=abort,
             **kwargs
         )
-        return response.execute()
+
+        response = self.print_response(response)
+        return response

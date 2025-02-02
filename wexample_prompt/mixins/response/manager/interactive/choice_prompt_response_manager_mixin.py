@@ -29,25 +29,3 @@ class ChoicePromptResponseManagerMixin:
 
         self.print_response(response)
         return response
-
-    def choice_dict(
-        self,
-        question: str,
-        choices: Dict[str, str],
-        default: Optional[str] = None,
-        abort: Optional[str] = "> Abort",
-        **kwargs
-    ) -> str:
-        from wexample_prompt.responses.interactive import ChoiceDictPromptResponse
-
-        response = ChoiceDictPromptResponse.create_choice_dict(
-            question=question,
-            choices=choices,
-            context=self.create_context(),
-            default=default,
-            abort=abort,
-            **kwargs
-        )
-
-        self.print_response(response)
-        return response.execute()
