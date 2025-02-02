@@ -1,0 +1,73 @@
+name: AbstractPromptResponse
+description: Base class for all prompt responses that defines the common structure and behavior
+
+properties:
+  lines:
+    type: List[PromptResponseLine]
+    description: Lines of text that make up the response
+    required: true
+    
+  response_type:
+    type: ResponseType
+    description: Type of response (PLAIN, INTERACTIVE, etc.)
+    default: ResponseType.PLAIN
+    
+  metadata:
+    type: Dict[str, Any]
+    description: Additional metadata for the response
+    default: {}
+    
+  message_type:
+    type: MessageType
+    description: Type of message (LOG, ERROR, etc.)
+    default: MessageType.LOG
+    
+  context:
+    type: PromptContext
+    description: Context for rendering the response
+    required: true
+    
+  verbosity_level:
+    type: VerbosityLevel
+    description: Verbosity level for the response
+    default: VerbosityLevel.DEFAULT
+
+methods:
+  render:
+    description: Render the complete response as a string
+    returns: str
+    implementation: |
+      - Check if message should be shown based on verbosity
+      - For each line:
+        - Render the line with context
+        - Add indentation if line is not empty
+      - Join lines with newlines
+      - Format message with context parameters
+      
+  append:
+    description: Combine this response with another
+    parameters:
+      other: AbstractPromptResponse
+    returns: AbstractPromptResponse
+    implementation: |
+      Create new response with:
+      - Combined lines
+      - Same response type
+      - Merged metadata
+      - Same message type
+      - Same context
+      
+  wrap:
+    description: Apply styles to all segments in all lines
+    parameters:
+      styles: List[TextStyle]
+    returns: AbstractPromptResponse
+    implementation: |
+      Create new response with:
+      - Each segment wrapped with additional styles
+      - Same other properties
+
+required_methods:
+  get_example_class:
+    description: Get the example class for this response type
+    returns: Type[AbstractResponseExample]
