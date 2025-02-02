@@ -1,15 +1,13 @@
 """Response for log messages."""
-from typing import Type, TYPE_CHECKING
+from typing import Type, TYPE_CHECKING, Optional
 
-from wexample_prompt.common.color_manager import ColorManager
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.message_type import MessageType
+    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class LogPromptResponse(BaseMessageResponse):
@@ -17,18 +15,24 @@ class LogPromptResponse(BaseMessageResponse):
 
     @classmethod
     def create_log(
-        cls,
+        cls: "LogPromptResponse",
         message: str,
-        context: PromptContext = None,
+        context: "PromptContext" = None,
+        color: Optional["TerminalColor"] = None,
         **kwargs
     ) -> "LogPromptResponse":
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.common.color_manager import ColorManager
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         """Create a log message."""
         lines = []
         segments = []
 
         # Add message text
         message_segment = PromptResponseSegment(
-            text=ColorManager.colorize(message, TerminalColor.WHITE)
+            text=ColorManager.colorize(message, color or TerminalColor.WHITE)
         )
         segments.append(message_segment)
 
@@ -42,8 +46,8 @@ class LogPromptResponse(BaseMessageResponse):
         return cls(
             lines=lines,
             context=context,
-            message_type=cls.get_message_type(),
-            **kwargs)
+            message_type=cls.get_message_type()
+        )
 
     @classmethod
     def get_message_type(cls) -> "MessageType":

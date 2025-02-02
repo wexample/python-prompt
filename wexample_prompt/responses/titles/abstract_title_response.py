@@ -65,12 +65,22 @@ class AbstractTitleResponse(BasePromptResponse):
             else 80
         )
 
+        # Get indentation level
+        indentation_level = (
+            self.context.indentation
+            if self.context and hasattr(self.context, 'indentation')
+            else 0
+        )
+
+        # Calculate effective width (terminal width minus indentation)
+        effective_width = term_width - (indentation_level * 2)
+
         # Get the prefix and text with padding
         prefix = self.get_prefix()
         text_with_padding = f" {self._title_text} "
 
         # Calculate remaining width for fill characters
-        remaining_width = term_width - len(prefix) - len(text_with_padding)
+        remaining_width = effective_width - len(prefix) - len(text_with_padding)
         fill_text = self._fill_char * max(0, remaining_width)
 
         # Combine all parts

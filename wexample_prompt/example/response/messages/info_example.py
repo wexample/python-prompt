@@ -6,10 +6,10 @@ from wexample_prompt.responses.messages.info_prompt_response import InfoPromptRe
 
 class InfoExample(AbstractResponseExample):
 
-    def example_class(self, indentation: Optional[str] = None):
+    def example_class(self, indentation: Optional[int] = None):
         return InfoPromptResponse.create_info(
             'Test info message',
-            context=self.io_manager.create_context(),
+            context=self.io_manager.create_context(indentation=indentation),
             indentation=indentation
         )
 
