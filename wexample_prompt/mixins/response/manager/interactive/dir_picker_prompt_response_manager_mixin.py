@@ -31,4 +31,5 @@ class DirPickerPromptResponseManagerMixin:
             abort=abort,
             **kwargs
         )
-        return response.execute()
+        self.print_response(response)
+        return response
