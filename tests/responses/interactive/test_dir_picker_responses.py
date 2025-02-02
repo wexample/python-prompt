@@ -1,9 +1,7 @@
 """Tests for directory picker responses."""
 from typing import Type
 from unittest.mock import patch
-import os
 
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
@@ -24,7 +22,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         self.patcher_isdir = patch('os.path.isdir')
         self.mock_listdir = self.patcher_listdir.start()
         self.mock_isdir = self.patcher_isdir.start()
-        
+
         # Set default behavior
         self.mock_listdir.return_value = ["dir1"]
         self.mock_isdir.return_value = False
@@ -65,16 +63,16 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         Overrides the parent method since directory picker responses have a different structure.
         """
         lines = rendered.split('\n')
-        
+
         # First line should contain the question
         self.assert_contains_text(lines[0], self.test_message)
-        
+
         # Should have the correct number of lines
         self.assertEqual(len([l for l in lines if l.strip()]), self.get_expected_lines())
-        
+
         # Should have parent directory option
         self.assert_contains_text(rendered, "..")
-        
+
         # Should have current directory option
         self.assert_contains_text(rendered, "> Select this directory")
 
@@ -98,7 +96,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
 
         response = self.create_test_response(self.test_message)
         result = response.execute()
-        
+
         self.assertEqual(result, self.test_dir)
         mock_select.assert_called_once()
 
@@ -109,7 +107,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
 
         response = self.create_test_response(self.test_message)
         result = response.execute()
-        
+
         self.assertIsNone(result)
         mock_select.assert_called_once()
 
