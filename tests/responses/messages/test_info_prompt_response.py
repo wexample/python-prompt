@@ -25,7 +25,7 @@ class TestInfoPromptResponse(AbstractPromptResponseTest):
         return 'info'
 
     def _assert_specific_format(self, rendered: str):
-        self.assertIn("ℹ️", rendered)  # Info symbol
+        self.assertIn("ℹ", rendered)  # Info symbol
 
     def get_expected_lines(self) -> int:
         return 1  # Info messages are single line

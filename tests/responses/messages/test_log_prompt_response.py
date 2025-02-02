@@ -91,7 +91,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
             )
             lines.append(line)
 
-        response = LogPromptResponse(lines=lines)
+        response = LogPromptResponse(lines=lines, context=self.context)
         rendered = response.render()
         rendered_lines = rendered.split("\n")
 
