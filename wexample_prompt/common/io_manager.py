@@ -7,6 +7,12 @@ from typing import Any, List, Optional, TextIO, Type, TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.mixins.response.manager.interactive.choice_dict_prompt_response_manager_mixin import \
+    ChoiceDictPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_manager_mixin import \
+    ChoicePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.interactive.dir_picker_prompt_response_manager_mixin import \
+    DirPickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.error_prompt_response_manager_mixin import \
@@ -27,9 +33,6 @@ from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_man
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.interactive.choice_dict_prompt_response_manager_mixin import ChoiceDictPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_manager_mixin import ChoicePromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.interactive.dir_picker_prompt_response_manager_mixin import DirPickerPromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
@@ -121,8 +124,14 @@ class IoManager(
         from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
         from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
         from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
+        from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
 
         return [
+            ChoicePromptResponse,
+            ChoiceDictPromptResponse,
+            DirPickerPromptResponse,
             TitlePromptResponse,
             SubtitlePromptResponse,
             LogPromptResponse,
