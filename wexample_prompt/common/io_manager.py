@@ -109,10 +109,10 @@ class IoManager(
             SuccessPromptResponse,
         ]
 
-    def create_context(self) -> PromptContext:
+    def create_context(self, indentation: Optional[int] = 0) -> PromptContext:
         """Create a context with current indentation and terminal width."""
         return PromptContext(
-            indentation=self.log_indent,
+            indentation=indentation or self.log_indent,
             terminal_width=self.terminal_width,
         )
 

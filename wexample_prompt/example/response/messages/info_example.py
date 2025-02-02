@@ -7,7 +7,7 @@ class InfoExample(AbstractResponseExample):
     def example_class(self):
         return InfoPromptResponse.create_info(
             'Test info message',
-            context=self.io_manager.create_context()
+            context=self.io_manager.create_context(indentation=10)
         )
 
     def example_manager(self):
