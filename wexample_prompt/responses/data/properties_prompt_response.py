@@ -1,10 +1,13 @@
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, ClassVar, Type, TYPE_CHECKING
 
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class PropertiesPromptResponse(BasePromptResponse):
@@ -13,12 +16,19 @@ class PropertiesPromptResponse(BasePromptResponse):
     nested_indent: int = 2
 
     @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        from wexample_prompt.example.response.data.properties_example import PropertiesExample
+
+        return PropertiesExample
+
+    @classmethod
     def create_properties(
         cls,
         properties: Dict[str, Any],
         title: Optional[str] = None,
         nested_indent: int = 2,
-        context: Optional[PromptContext] = None
+        context: Optional[PromptContext] = None,
+        **kwargs
     ) -> 'PropertiesPromptResponse':
         return cls(
             lines=[],  # Lines will be generated in render()
@@ -26,7 +36,8 @@ class PropertiesPromptResponse(BasePromptResponse):
             properties=properties,
             title=title,
             nested_indent=nested_indent,
-            context=context
+            context=context,
+            **kwargs
         )
 
     def render(self) -> str:
@@ -44,6 +55,9 @@ class PropertiesPromptResponse(BasePromptResponse):
         content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
 
         lines = []
+
+        # Empty line at start
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         # Add title if provided
         if self.title:
@@ -67,6 +81,9 @@ class PropertiesPromptResponse(BasePromptResponse):
 
         # Bottom border
         lines.append(self._create_border_line(content_width))
+
+        # Empty line at end
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         # Update lines and render using parent class
         self.lines = lines
