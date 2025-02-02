@@ -2,7 +2,6 @@
 import os
 from typing import Any, Dict, Optional, Type
 
-from wexample_prompt.example.response.interactive.dir_picker_example import DirPickerExample
 from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_helpers.helpers.dict import dict_sort_values
 
@@ -17,6 +16,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
         Returns:
             Type: The example class
         """
+        from wexample_prompt.example.response.interactive.dir_picker_example import DirPickerExample
         return DirPickerExample
 
     @classmethod
@@ -56,11 +56,15 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
         # Add option to select current directory
         choices_dirs[base_dir] = "> Select this directory"
         
+        # Get color from kwargs
+        color = kwargs.pop('color', None)
+        
         # Create response
         response = super().create_choice_dict(
             question=question,
             choices=choices_dirs,
             abort=abort,
+            color=color,
             **kwargs
         )
         

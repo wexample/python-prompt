@@ -69,7 +69,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         mock_listdir.return_value = ["dir1", "file1", "dir2"]
         mock_isdir.side_effect = lambda x: x.endswith(("dir1", "dir2"))
 
-        response = self.create_test_response(self.question)
+        response = self.create_test_response(self.test_message)
 
         rendered = response.render()
         self.assert_contains_text(rendered, "dir1")
@@ -85,7 +85,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         mock_isdir.return_value = False
         mock_select.return_value.execute.return_value = self.test_dir
 
-        response = self.create_test_response(self.question)
+        response = self.create_test_response(self.test_message)
         result = response.execute()
         
         self.assertEqual(result, self.test_dir)
@@ -100,7 +100,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         mock_isdir.return_value = False
         mock_select.return_value.execute.return_value = None
 
-        response = self.create_test_response(self.question)
+        response = self.create_test_response(self.test_message)
         result = response.execute()
         
         self.assertIsNone(result)
@@ -117,7 +117,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         mock_select.return_value.execute.return_value = expected_value
 
         method = getattr(self.io_manager, self.get_io_method_name())
-        result = method(self.question, base_dir=self.test_dir)
+        result = method(self.test_message, base_dir=self.test_dir)
 
         # Verify the result
         self.assertEqual(result, expected_value)
@@ -139,8 +139,24 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
             io_manager=self.io_manager
         )
         method = getattr(class_with_context, self.get_io_method_name())
-        result = method(self.question, base_dir=self.test_dir)
+        result = method(self.test_message, base_dir=self.test_dir)
 
         # Verify the result
         self.assertEqual(result, expected_value)
         mock_select.assert_called_once()
+
+    @patch('os.listdir')
+    @patch('os.path.isdir')
+    @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
+    def test_custom_color(self, mock_supports_color, mock_isdir, mock_listdir):
+        """Test response with custom color."""
+        mock_listdir.return_value = ["dir1"]
+        mock_isdir.return_value = False
+
+        context = self.create_colored_test_context(mock_supports_color)
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        response = self.create_test_response(self.test_message, context=context, color=TerminalColor.GREEN)
+
+        rendered = response.render()
+        self.assert_contains_text(rendered, TerminalColor.GREEN.value)
