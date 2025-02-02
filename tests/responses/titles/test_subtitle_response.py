@@ -5,12 +5,12 @@ from unittest.mock import patch
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
-from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.tests.abstract_title_prompt_response_test import AbstractTitlePromptResponseTest
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
-class TestSubtitleResponse(AbstractPromptResponseTest):
+class TestSubtitleResponse(AbstractTitlePromptResponseTest):
     """Test cases for SubtitleResponse."""
 
     def setUp(self):
@@ -21,11 +21,11 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
         return SubtitlePromptResponse
 
     def create_test_response(self, text: str, **kwargs) -> "AbstractPromptResponse":
+        context = kwargs.pop('context', self.context)
         return SubtitlePromptResponse.create_subtitle(
             text=text,
-            context=kwargs.get('context', self.context),
-            color=kwargs.get('color'),
-            fill_char=kwargs.get('fill_char'),
+            context=context,
+            **kwargs
         )
 
     def get_io_method_name(self) -> str:

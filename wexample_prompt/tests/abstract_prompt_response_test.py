@@ -119,15 +119,6 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         self.assert_contains_text(rendered, self.test_message)
         self._assert_specific_format(rendered)
 
-    def test_custom_fill_char(self):
-        """Test response with custom fill character."""
-        fill_char = "."
-        response = self.create_test_response(self.test_message, fill_char=fill_char)
-        rendered = response.render()
-
-        self.assert_common_response_structure(rendered)
-        self.assert_contains_text(rendered, self.test_message)
-
     def test_no_color(self):
         """Test response without color."""
         response = self.create_test_response(self.test_message, color=None)

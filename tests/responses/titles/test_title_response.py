@@ -6,10 +6,10 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.tests.abstract_title_prompt_response_test import AbstractTitlePromptResponseTest
 
 
-class TestTitleResponse(AbstractPromptResponseTest):
+class TestTitleResponse(AbstractTitlePromptResponseTest):
     """Test cases for TitleResponse."""
 
     def setUp(self):
