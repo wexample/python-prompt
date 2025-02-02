@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.messages.failure_prompt_response_manager_mixin import \
+    FailurePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.info_prompt_response_manager_mixin import \
     InfoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manager_mixin import \
@@ -43,6 +45,7 @@ class IoManager(
     SuccessPromptResponseManagerMixin,
     TaskPromptResponseManagerMixin,
     WarningPromptResponseManagerMixin,
+    FailurePromptResponseManagerMixin,
 ):
     """Manager for handling I/O operations in the prompt system."""
 
@@ -107,6 +110,7 @@ class IoManager(
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
         from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
 
         return [
             TitlePromptResponse,
@@ -117,6 +121,7 @@ class IoManager(
             SuccessPromptResponse,
             TaskPromptResponse,
             WarningPromptResponse,
+            FailurePromptResponse,
         ]
 
     def create_context(self, indentation: Optional[int] = 0) -> PromptContext:

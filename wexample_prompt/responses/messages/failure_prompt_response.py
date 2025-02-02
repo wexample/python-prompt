@@ -1,4 +1,4 @@
-from typing import ClassVar, TYPE_CHECKING
+from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
@@ -7,6 +7,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class FailurePromptResponse(BaseMessageResponse):
@@ -19,12 +20,13 @@ class FailurePromptResponse(BaseMessageResponse):
         cls: "FailurePromptResponse",
         message: str,
         context: PromptContext = None,
+        color: Optional[TerminalColor] = None,
         **kwargs
     ) -> "AbstractPromptResponse":
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=TerminalColor.RED,
+            color=color or TerminalColor.RED,
             **kwargs
         )
     
@@ -32,3 +34,9 @@ class FailurePromptResponse(BaseMessageResponse):
     def get_message_type(cls) -> MessageType:
         """Get the message type for failure messages."""
         return MessageType.FAILURE
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for failure messages."""
+        from wexample_prompt.example.response.messages.failure_example import FailureExample
+        return FailureExample
