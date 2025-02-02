@@ -1,5 +1,5 @@
 """Response for displaying and handling choice prompts."""
-from typing import Any, List, Optional, Dict, Union
+from typing import Any, List, Optional, Dict, Union, Type, TYPE_CHECKING
 
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
@@ -14,6 +14,8 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from InquirerPy.utils import InquirerPyDefault, InquirerPySessionResult
 
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class ChoicePromptResponse(BasePromptResponse):
@@ -83,8 +85,14 @@ class ChoicePromptResponse(BasePromptResponse):
     def execute(self) -> "InquirerPySessionResult":
         """Execute the choice prompt and get user selection."""
         return inquirer.select(
-            message=self.lines[0].render(),
+            message=self.lines[0].render(self.context),
             choices=self.choices,
             default=self.default,
             **self.inquirer_kwargs
         ).execute()
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for choice prompts."""
+        from wexample_prompt.example.response.interactive.choice_example import ChoiceExample
+        return ChoiceExample

@@ -27,6 +27,8 @@ from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_man
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_manager_mixin import \
+    ChoicePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
@@ -49,6 +51,7 @@ class IoManager(
     WarningPromptResponseManagerMixin,
     FailurePromptResponseManagerMixin,
     ErrorPromptResponseManagerMixin,
+    ChoicePromptResponseManagerMixin,
 ):
     """Manager for handling I/O operations in the prompt system."""
 

@@ -1,11 +1,14 @@
 """Response for displaying and handling dictionary-based choice prompts."""
-from typing import Any, Dict, Optional, List, Union
+from typing import Any, Dict, Optional, List, Union, Type, TYPE_CHECKING
 
 from InquirerPy.base.control import Choice
 from pydantic import Field, ConfigDict
 
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
+
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class ChoiceDictPromptResponse(ChoicePromptResponse):
@@ -56,3 +59,9 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
         )
         response.original_choices = choices
         return response
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for dictionary choice prompts."""
+        from wexample_prompt.example.response.interactive.choice_dict_example import ChoiceDictExample
+        return ChoiceDictExample
