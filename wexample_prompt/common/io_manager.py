@@ -93,11 +93,15 @@ class IoManager(
         from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
         return [
             TitlePromptResponse,
             SubtitlePromptResponse,
             LogPromptResponse,
+            InfoPromptResponse,
+            DebugPromptResponse,
         ]
 
     def create_context(self) -> PromptContext:
