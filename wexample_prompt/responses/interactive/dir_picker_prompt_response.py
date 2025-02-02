@@ -1,13 +1,23 @@
 """Response for displaying and handling directory picker prompts."""
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type
 
+from wexample_prompt.example.response.interactive.dir_picker_example import DirPickerExample
 from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_helpers.helpers.dict import dict_sort_values
 
 
 class DirPickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a directory picker interface."""
+
+    @classmethod
+    def get_example_class(cls) -> Type:
+        """Get the example class for this response type.
+
+        Returns:
+            Type: The example class
+        """
+        return DirPickerExample
 
     @classmethod
     def create_dir_picker(
@@ -37,7 +47,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
         for element in os.listdir(base_dir):
             full_path = os.path.join(base_dir, element)
             if os.path.isdir(full_path):
-                element_label = f"📁 {element}"
+                element_label = f" {element}"
                 choices_dirs[element] = element_label
                 
         # Sort directories

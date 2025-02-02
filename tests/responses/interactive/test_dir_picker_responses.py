@@ -1,24 +1,65 @@
 """Tests for directory picker responses."""
-import unittest
-import os
+from typing import Type
 from unittest.mock import patch
+import os
 
+from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestDirPickerPromptResponse(unittest.TestCase):
+class TestDirPickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for DirPickerPromptResponse."""
 
     def setUp(self):
         """Set up test cases."""
-        # Mock terminal size to avoid environment variable issues
-        with patch('shutil.get_terminal_size') as mock_term:
-            mock_term.return_value.columns = 80
-            self.context = PromptContext()
-            
+        super().setUp()
         self.test_dir = "/test/path"
         self.question = "Select a directory:"
+
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return DirPickerPromptResponse
+
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        context = kwargs.pop('context', self.context)
+        return DirPickerPromptResponse.create_dir_picker(
+            question=text,
+            base_dir=self.test_dir,
+            context=context,
+            **kwargs
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'dir_picker'
+
+    def _assert_specific_format(self, rendered: str):
+        # Directory picker prompts should have arrow indicators and numbering
+        self.assert_contains_text(rendered, "→")
+        self.assert_contains_text(rendered, "1.")
+        self.assert_contains_text(rendered, "2.")
+
+    def get_expected_lines(self) -> int:
+        return 4  # Question + parent dir + current dir + abort
+
+    def assert_common_response_structure(self, rendered: str):
+        """Assert the common structure for directory picker responses.
+        
+        Overrides the parent method since directory picker responses have a different structure.
+        """
+        lines = rendered.split('\n')
+        
+        # First line should contain the question
+        self.assert_contains_text(lines[0], self.test_message)
+        
+        # Should have the correct number of lines
+        self.assertEqual(len([l for l in lines if l.strip()]), self.get_expected_lines())
+        
+        # Should have parent directory option
+        self.assert_contains_text(rendered, "..")
+        
+        # Should have current directory option
+        self.assert_contains_text(rendered, "> Select this directory")
 
     @patch('os.listdir')
     @patch('os.path.isdir')
@@ -28,52 +69,78 @@ class TestDirPickerPromptResponse(unittest.TestCase):
         mock_listdir.return_value = ["dir1", "file1", "dir2"]
         mock_isdir.side_effect = lambda x: x.endswith(("dir1", "dir2"))
 
-        response = DirPickerPromptResponse.create_dir_picker(
-            base_dir=self.test_dir,
-            question=self.question,
-            context=self.context
-        )
+        response = self.create_test_response(self.question)
 
         rendered = response.render()
-        self.assertIn(self.question, rendered)
-        self.assertIn("📁 dir1", rendered)
-        self.assertIn("📁 dir2", rendered)
+        self.assert_contains_text(rendered, "dir1")
+        self.assert_contains_text(rendered, "dir2")
         self.assertNotIn("file1", rendered)
-        self.assertIn("..", rendered)
-        self.assertIn("> Select this directory", rendered)
 
     @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_select_current(self, mock_isdir, mock_listdir):
+    @patch('InquirerPy.inquirer.select')
+    def test_execute_select_current(self, mock_select, mock_isdir, mock_listdir):
         """Test selecting current directory."""
         mock_listdir.return_value = ["dir1"]
         mock_isdir.return_value = False
+        mock_select.return_value.execute.return_value = self.test_dir
 
-        with patch('InquirerPy.inquirer.select') as mock_select:
-            mock_select.return_value.execute.return_value = self.test_dir
-            
-            response = DirPickerPromptResponse.create_dir_picker(
-                base_dir=self.test_dir,
-                context=self.context
-            )
-            
-            result = response.execute()
-            self.assertEqual(result, self.test_dir)
+        response = self.create_test_response(self.question)
+        result = response.execute()
+        
+        self.assertEqual(result, self.test_dir)
+        mock_select.assert_called_once()
 
     @patch('os.listdir')
     @patch('os.path.isdir')
-    def test_execute_abort(self, mock_isdir, mock_listdir):
+    @patch('InquirerPy.inquirer.select')
+    def test_execute_abort(self, mock_select, mock_isdir, mock_listdir):
         """Test aborting selection."""
         mock_listdir.return_value = ["dir1"]
         mock_isdir.return_value = False
+        mock_select.return_value.execute.return_value = None
 
-        with patch('InquirerPy.inquirer.select') as mock_select:
-            mock_select.return_value.execute.return_value = None
-            
-            response = DirPickerPromptResponse.create_dir_picker(
-                base_dir=self.test_dir,
-                context=self.context
-            )
-            
-            result = response.execute()
-            self.assertIsNone(result)
+        response = self.create_test_response(self.question)
+        result = response.execute()
+        
+        self.assertIsNone(result)
+        mock_select.assert_called_once()
+
+    @patch('os.listdir')
+    @patch('os.path.isdir')
+    @patch('InquirerPy.inquirer.select')
+    def test_io_manager(self, mock_select, mock_isdir, mock_listdir):
+        """Test IoManager integration."""
+        mock_listdir.return_value = ["dir1"]
+        mock_isdir.return_value = False
+        expected_value = self.test_dir
+        mock_select.return_value.execute.return_value = expected_value
+
+        method = getattr(self.io_manager, self.get_io_method_name())
+        result = method(self.question, base_dir=self.test_dir)
+
+        # Verify the result
+        self.assertEqual(result, expected_value)
+        mock_select.assert_called_once()
+
+    @patch('os.listdir')
+    @patch('os.path.isdir')
+    @patch('InquirerPy.inquirer.select')
+    def test_prompt_context(self, mock_select, mock_isdir, mock_listdir):
+        """Test PromptContext implementation."""
+        mock_listdir.return_value = ["dir1"]
+        mock_isdir.return_value = False
+        expected_value = self.test_dir
+        mock_select.return_value.execute.return_value = expected_value
+
+        context = self.context
+        class_with_context = ExampleClassWithContext(
+            context=context,
+            io_manager=self.io_manager
+        )
+        method = getattr(class_with_context, self.get_io_method_name())
+        result = method(self.question, base_dir=self.test_dir)
+
+        # Verify the result
+        self.assertEqual(result, expected_value)
+        mock_select.assert_called_once()
