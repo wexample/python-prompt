@@ -7,7 +7,7 @@ import traceback
 class ErrorContext(PromptContext):
     """Context for error messages."""
 
-    fatal: bool = Field(
+    is_fatal: bool = Field(
         default=False,
         description="Whether this is a fatal error that should exit the program"
     )
