@@ -15,6 +15,8 @@ from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manage
     LogPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.success_prompt_response_manager_mixin import \
     SuccessPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.messages.task_prompt_response_manager_mixin import \
+    TaskPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_manager_mixin import \
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
@@ -36,7 +38,8 @@ class IoManager(
     DebugPromptResponseManagerMixin,
     InfoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
-    SuccessPromptResponseManagerMixin
+    SuccessPromptResponseManagerMixin,
+    TaskPromptResponseManagerMixin
 ):
     """Manager for handling I/O operations in the prompt system."""
 
@@ -99,6 +102,7 @@ class IoManager(
         from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
         from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
 
         return [
             TitlePromptResponse,
@@ -107,6 +111,7 @@ class IoManager(
             InfoPromptResponse,
             DebugPromptResponse,
             SuccessPromptResponse,
+            TaskPromptResponse,
         ]
 
     def create_context(self, indentation: Optional[int] = 0) -> PromptContext:
