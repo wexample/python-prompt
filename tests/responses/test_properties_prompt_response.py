@@ -1,7 +1,7 @@
 """Tests for PropertiesPromptResponse."""
 import unittest
 
-from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
+from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 

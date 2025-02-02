@@ -12,13 +12,13 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
     from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
     from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-    from wexample_prompt.responses.list_prompt_response import ListPromptResponse
-    from wexample_prompt.responses.table_prompt_response import TablePromptResponse
-    from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
-    from wexample_prompt.responses.properties_prompt_response import PropertiesPromptResponse
-    from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
-    from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
-    from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
+    from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+    from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+    from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+    from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+    from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+    from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+    from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
     from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
     from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
     from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse

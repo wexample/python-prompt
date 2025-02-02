@@ -1,7 +1,7 @@
 """Tests for ListPromptResponse."""
 import unittest
 
-from wexample_prompt.responses.list_prompt_response import ListPromptResponse
+from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 

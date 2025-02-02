@@ -1,7 +1,7 @@
 """Tests for SuggestionsPromptResponse."""
 import unittest
 
-from wexample_prompt.responses.suggestions_prompt_response import SuggestionsPromptResponse
+from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 

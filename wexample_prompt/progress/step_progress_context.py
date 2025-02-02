@@ -54,7 +54,7 @@ class StepProgressContext:
         
     def _update_progress(self, description: str) -> None:
         # Avoid circular import
-        from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
         """Update the progress display.
         

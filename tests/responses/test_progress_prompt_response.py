@@ -2,7 +2,7 @@
 import unittest
 import re
 
-from wexample_prompt.responses.progress_prompt_response import ProgressPromptResponse
+from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.progress.step_progress_context import ProgressStep
 

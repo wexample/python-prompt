@@ -6,7 +6,7 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
-from wexample_prompt.responses.multiple_prompt_response import MultiplePromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 
 
 class TestMultiplePromptResponse(unittest.TestCase):

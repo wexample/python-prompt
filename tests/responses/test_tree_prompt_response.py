@@ -1,7 +1,7 @@
 """Tests for TreePromptResponse."""
 import unittest
 
-from wexample_prompt.responses.tree_prompt_response import TreePromptResponse
+from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 

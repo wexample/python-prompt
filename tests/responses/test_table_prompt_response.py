@@ -1,7 +1,7 @@
 """Tests for TablePromptResponse."""
 import unittest
 
-from wexample_prompt.responses.table_prompt_response import TablePromptResponse
+from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
 
 
