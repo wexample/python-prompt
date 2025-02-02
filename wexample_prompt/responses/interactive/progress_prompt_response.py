@@ -1,11 +1,13 @@
 """Progress bar response implementation."""
-from typing import List, Callable, Optional, Any, ClassVar, Dict
+from typing import List, Callable, Optional, Any, ClassVar, Dict, Type
 
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.progress.step_progress_context import (
     ProgressStep,
     StepProgressContext
@@ -30,7 +32,18 @@ class ProgressPromptResponse(BasePromptResponse):
     current: int
     width: int = 50
     label: Optional[str] = None
-    
+    color: Optional[TerminalColor] = None
+
+    @classmethod
+    def get_example_class(cls) -> Type:
+        """Get the example class for this response type.
+
+        Returns:
+            Type: The example class
+        """
+        from wexample_prompt.example.response.interactive.progress_example import ProgressExample
+        return ProgressExample
+
     @classmethod
     def set_style(cls, fill_char: str = "▰", empty_char: str = "▱"):
         """Set the progress bar style characters.
@@ -49,7 +62,9 @@ class ProgressPromptResponse(BasePromptResponse):
         current: int,
         width: int = 50,
         label: Optional[str] = None,
-        context: Optional[PromptContext] = None
+        context: Optional[PromptContext] = None,
+        color: Optional[TerminalColor] = None,
+        **kwargs: Any
     ) -> 'ProgressPromptResponse':
         """Create a simple progress bar response.
         
@@ -59,6 +74,8 @@ class ProgressPromptResponse(BasePromptResponse):
             width: Width of the progress bar in characters
             label: Optional label to show above the progress bar
             context: Optional prompt context for formatting
+            color: Optional color for the progress bar
+            **kwargs: Additional arguments
             
         Raises:
             ValueError: If total or current are negative, or if width is less than 1
@@ -71,6 +88,10 @@ class ProgressPromptResponse(BasePromptResponse):
         if width < 1:
             raise ValueError("Width must be at least 1")
             
+        # If label is provided and color is specified, colorize it
+        if label and color:
+            label = ColorManager.colorize(label, color)
+
         return cls(
             lines=[],  # Lines will be generated in render()
             response_type=ResponseType.PROGRESS,
@@ -78,6 +99,7 @@ class ProgressPromptResponse(BasePromptResponse):
             current=current,
             width=width,
             label=label,
+            color=color,
             context=context
         )
 
@@ -89,13 +111,16 @@ class ProgressPromptResponse(BasePromptResponse):
         percentage = min(100, int(100 * current / self.total))
         filled = int(self.width * current / self.total)
         
-        # Choose color based on progress
-        if percentage < 33:
-            color = self.BLUE
-        elif percentage < 66:
-            color = self.CYAN
+        # Choose color based on progress or use specified color
+        if self.color:
+            color = str(self.color)
         else:
-            color = self.GREEN
+            if percentage < 33:
+                color = self.BLUE
+            elif percentage < 66:
+                color = self.CYAN
+            else:
+                color = self.GREEN
             
         # Build progress bar without brackets
         bar = (

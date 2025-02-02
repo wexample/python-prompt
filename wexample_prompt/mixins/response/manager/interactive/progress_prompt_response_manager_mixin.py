@@ -1,5 +1,5 @@
 """Mixin for managing progress prompt responses."""
-from typing import List, Callable, Optional, Any
+from typing import Any, Optional, List
 
 from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 from wexample_prompt.progress.step_progress_context import ProgressStep
@@ -14,9 +14,9 @@ class ProgressPromptResponseManagerMixin:
         current: int,
         width: int = 50,
         label: Optional[str] = None,
-        **kwargs
+        **kwargs: Any
     ) -> ProgressPromptResponse:
-        """Create a simple progress bar.
+        """Create a progress bar.
 
         Args:
             total: Total number of items
@@ -41,7 +41,7 @@ class ProgressPromptResponseManagerMixin:
         steps: List[ProgressStep],
         width: int = 50,
         title: Optional[str] = None,
-        **kwargs
+        **kwargs: Any
     ) -> ProgressPromptResponse:
         """Create a step-based progress bar.
 
@@ -62,10 +62,10 @@ class ProgressPromptResponseManagerMixin:
 
     def progress_execute(
         self,
-        callbacks: List[Callable[..., Any]],
+        callbacks: List[Any],
         width: int = 50,
         title: Optional[str] = None,
-        **kwargs
+        **kwargs: Any
     ) -> List[Any]:
         """Execute a list of callbacks with progress tracking.
 

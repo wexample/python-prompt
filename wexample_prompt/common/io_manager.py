@@ -13,6 +13,8 @@ from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_
     ChoicePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.interactive.dir_picker_prompt_response_manager_mixin import \
     DirPickerPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.interactive.progress_prompt_response_manager_mixin import \
+    ProgressPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.debug_prompt_response_manager_mixin import \
     DebugPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.messages.error_prompt_response_manager_mixin import \
@@ -45,8 +47,13 @@ if TYPE_CHECKING:
 class IoManager(
     BaseModel,
     WithIndent,
-    TitlePromptResponseManagerMixin,
-    SubtitlePromptResponseManagerMixin,
+    # Data
+    # Interactive
+    ChoicePromptResponseManagerMixin,
+    ChoiceDictPromptResponseManagerMixin,
+    DirPickerPromptResponseManagerMixin,
+    ProgressPromptResponseManagerMixin,
+    # Messages
     DebugPromptResponseManagerMixin,
     InfoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
@@ -55,9 +62,10 @@ class IoManager(
     WarningPromptResponseManagerMixin,
     FailurePromptResponseManagerMixin,
     ErrorPromptResponseManagerMixin,
-    ChoicePromptResponseManagerMixin,
-    ChoiceDictPromptResponseManagerMixin,
-    DirPickerPromptResponseManagerMixin,
+    # Titles
+    TitlePromptResponseManagerMixin,
+    SubtitlePromptResponseManagerMixin,
+
 ):
     """Manager for handling I/O operations in the prompt system."""
 
