@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from InquirerPy.base.control import Choice
 
+from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
@@ -118,9 +119,33 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
             len(self.choices) + 1  # choices + question
         )
 
-    def test_io_manager(self):
+    @patch('InquirerPy.inquirer.select')
+    def test_io_manager(self, mock_select):
         """Test IoManager integration."""
+        expected_value = "Option 1"
+        mock_select.return_value.execute.return_value = expected_value
+
         method = getattr(self.io_manager, self.get_io_method_name())
-        response = method(self.test_message, self.choices)
-        rendered = response.render()
-        self.assert_common_response_structure(rendered)
+        result = method(self.test_message, self.choices)
+
+        # Verify the result
+        self.assertEqual(result, expected_value)
+        mock_select.assert_called_once()
+
+    @patch('InquirerPy.inquirer.select')
+    def test_prompt_context(self, mock_select):
+        """Test PromptContext implementation."""
+        expected_value = "Option 1"
+        mock_select.return_value.execute.return_value = expected_value
+
+        context = self.context
+        class_with_context = ExampleClassWithContext(
+            context=context,
+            io_manager=self.io_manager
+        )
+        method = getattr(class_with_context, self.get_io_method_name())
+        result = method(self.test_message, self.choices)
+
+        # Verify the result
+        self.assertEqual(result, expected_value)
+        mock_select.assert_called_once()
