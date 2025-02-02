@@ -1,6 +1,5 @@
-from typing import TYPE_CHECKING, Optional, List, Dict, Any
+from typing import TYPE_CHECKING, Optional, List, Any
 
-from InquirerPy.base.control import Choice
 from InquirerPy.utils import InquirerPyDefault
 
 if TYPE_CHECKING:
