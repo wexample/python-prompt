@@ -1,11 +1,12 @@
 """Test multiple prompt response."""
+from abc import abstractmethod
 from typing import Type
 from unittest.mock import patch
 
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
-from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
@@ -40,6 +41,14 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             str: The method name
         """
         return 'multiple'
+
+    def _assert_specific_format(self, rendered: str):
+        """Assert format specific to this response type."""
+        pass
+
+    def get_expected_lines(self) -> int:
+        """Get expected number of lines in rendered output."""
+        return 1  # Just the list item for test_message
 
     def assert_common_response_structure(self, rendered: str):
         """Assert that the rendered response has the expected structure.
