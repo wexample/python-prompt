@@ -89,8 +89,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         if os.path.isdir(full_path):
             next_response = self.__class__.create_file_picker(
                 base_dir=full_path,
-                question=self.lines[0].render(self.context),  # Keep same question
-                context=self.context  # Pass the context to the new response
+                question=self.lines[0].render()  # Keep same question
             )
             return next_response.execute()
             

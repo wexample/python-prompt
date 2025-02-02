@@ -52,6 +52,7 @@ class IoManager(
     BaseModel,
     WithIndent,
     # Data
+    ListPromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
     ChoiceDictPromptResponseManagerMixin,
@@ -142,9 +143,11 @@ class IoManager(
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
         return [
             # Data
+            ListPromptResponse,
             # Interactive
             ChoicePromptResponse,
             ChoiceDictPromptResponse,
