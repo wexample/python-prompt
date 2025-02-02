@@ -1,62 +1,60 @@
 """Tests for WarningPromptResponse."""
-import unittest
+from typing import Type
 
-from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 from wexample_prompt.common.error_context import ErrorContext
 
 
-class TestWarningPromptResponse(unittest.TestCase):
+class TestWarningPromptResponse(AbstractPromptResponseTest):
     """Test cases for WarningPromptResponse."""
-    
-    def test_create_warning(self):
-        """Test warning message creation."""
-        message = "Test warning message"
-        response = WarningPromptResponse.create_warning(message)
-        rendered = response.render()
-        
-        # Check message content
-        self.assertIn(message, rendered)
-        self.assertIn("⚠", rendered)  # Warning symbol
-        
+
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return WarningPromptResponse
+
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        context = kwargs.pop('context', self.context)
+        return WarningPromptResponse.create_warning(
+            message=text,
+            context=context,
+            **kwargs
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'warning'
+
+    def _assert_specific_format(self, rendered: str):
+        # Warning messages should have the warning symbol
+        self.assert_contains_text(rendered, "⚠️")
+
+    def get_expected_lines(self) -> int:
+        return 1  # Warning messages are single line
+
     def test_message_type(self):
-        """Test warning message type."""
-        response = WarningPromptResponse.create_warning("Test")
+        response = self.create_test_response(self.test_message)
         self.assertEqual(response.get_message_type(), MessageType.WARNING)
-        
+
     def test_multiline_warning(self):
-        """Test multiline warning message."""
         message = "Line 1\nLine 2"
-        response = WarningPromptResponse.create_warning(message)
+        response = self.create_test_response(message)
         rendered = response.render()
-        
-        # Check both lines are present
-        self.assertIn("Line 1", rendered)
-        self.assertIn("Line 2", rendered)
-        
-    def test_warning_with_context(self):
-        """Test warning message with error context."""
+
+        self.assert_contains_text(rendered, "Line 1")
+        self.assert_contains_text(rendered, "Line 2")
+
+    def test_warning_with_error_context(self):
         message = "Warning in {component}: {issue}"
         context = ErrorContext(
             params={"component": "cache", "issue": "outdated"},
         )
-        
-        response = WarningPromptResponse.create_warning(
-            message,
-            context=context
-        )
+
+        response = self.create_test_response(message, context=context)
         rendered = response.render()
-        self.assertIn("Warning in cache: outdated", rendered)
-        
-    def test_warning_without_context(self):
-        """Test warning message without context."""
-        message = "Simple warning"
-        response = WarningPromptResponse.create_warning(message)
-        rendered = response.render()
-        self.assertIn(message, rendered)
-        
+        self.assert_contains_text(rendered, "Warning in cache: outdated")
+
     def test_empty_warning(self):
-        """Test warning message with empty string."""
-        response = WarningPromptResponse.create_warning("")
+        response = self.create_test_response("")
         rendered = response.render()
-        self.assertIn("⚠", rendered)
+        self.assert_contains_text(rendered, "⚠️")
