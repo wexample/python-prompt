@@ -7,6 +7,8 @@ if TYPE_CHECKING:
 
 class LogPromptResponseManagerMixin:
     def log(self, message: str) -> "AbstractPromptResponse":
+        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+
         return LogPromptResponse.create_log(
             message=message,
             context=self.create_context(),
