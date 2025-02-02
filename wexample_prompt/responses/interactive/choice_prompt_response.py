@@ -37,15 +37,17 @@ class ChoicePromptResponse(BasePromptResponse):
         context: Optional[PromptContext] = None,
         default: Optional["InquirerPyDefault"] = None,
         abort: Optional[str] = "> Abort",
+        color: Optional[TerminalColor] = None,
         **kwargs: Any
     ) -> 'ChoicePromptResponse':
         lines = []
         
-        # Add the question line with blue color and bold style
+        # Add the question line with specified color (or blue as default) and bold style
+        color = color or TerminalColor.BLUE
         lines.append(
             PromptResponseLine(segments=[
                 PromptResponseSegment(
-                    text=ColorManager.colorize(question, TerminalColor.BLUE),
+                    text=ColorManager.colorize(question, color),
                     styles=[TextStyle.BOLD]
                 )
             ])
@@ -73,6 +75,10 @@ class ChoicePromptResponse(BasePromptResponse):
                     )
                 ])
             )
+        
+        # Create default context if none provided
+        if context is None:
+            context = PromptContext()
             
         return cls(
             lines=lines,

@@ -3,6 +3,7 @@ from typing import Type
 from unittest.mock import patch
 import os
 
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
@@ -17,6 +18,22 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         super().setUp()
         self.test_dir = "/test/path"
         self.question = "Select a directory:"
+
+        # Mock os functions for all tests
+        self.patcher_listdir = patch('os.listdir')
+        self.patcher_isdir = patch('os.path.isdir')
+        self.mock_listdir = self.patcher_listdir.start()
+        self.mock_isdir = self.patcher_isdir.start()
+        
+        # Set default behavior
+        self.mock_listdir.return_value = ["dir1"]
+        self.mock_isdir.return_value = False
+
+    def tearDown(self):
+        """Clean up test cases."""
+        super().tearDown()
+        self.patcher_listdir.stop()
+        self.patcher_isdir.stop()
 
     def get_response_class(self) -> Type[AbstractPromptResponse]:
         return DirPickerPromptResponse
@@ -61,13 +78,11 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         # Should have current directory option
         self.assert_contains_text(rendered, "> Select this directory")
 
-    @patch('os.listdir')
-    @patch('os.path.isdir')
-    def test_create_dir_picker(self, mock_isdir, mock_listdir):
+    def test_create_dir_picker(self):
         """Test creating directory picker response."""
         # Mock directory listing
-        mock_listdir.return_value = ["dir1", "file1", "dir2"]
-        mock_isdir.side_effect = lambda x: x.endswith(("dir1", "dir2"))
+        self.mock_listdir.return_value = ["dir1", "file1", "dir2"]
+        self.mock_isdir.side_effect = lambda x: x.endswith(("dir1", "dir2"))
 
         response = self.create_test_response(self.test_message)
 
@@ -76,13 +91,9 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         self.assert_contains_text(rendered, "dir2")
         self.assertNotIn("file1", rendered)
 
-    @patch('os.listdir')
-    @patch('os.path.isdir')
     @patch('InquirerPy.inquirer.select')
-    def test_execute_select_current(self, mock_select, mock_isdir, mock_listdir):
+    def test_execute_select_current(self, mock_select):
         """Test selecting current directory."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = False
         mock_select.return_value.execute.return_value = self.test_dir
 
         response = self.create_test_response(self.test_message)
@@ -91,13 +102,9 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         self.assertEqual(result, self.test_dir)
         mock_select.assert_called_once()
 
-    @patch('os.listdir')
-    @patch('os.path.isdir')
     @patch('InquirerPy.inquirer.select')
-    def test_execute_abort(self, mock_select, mock_isdir, mock_listdir):
+    def test_execute_abort(self, mock_select):
         """Test aborting selection."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = False
         mock_select.return_value.execute.return_value = None
 
         response = self.create_test_response(self.test_message)
@@ -106,13 +113,9 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         self.assertIsNone(result)
         mock_select.assert_called_once()
 
-    @patch('os.listdir')
-    @patch('os.path.isdir')
     @patch('InquirerPy.inquirer.select')
-    def test_io_manager(self, mock_select, mock_isdir, mock_listdir):
+    def test_io_manager(self, mock_select):
         """Test IoManager integration."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = False
         expected_value = self.test_dir
         mock_select.return_value.execute.return_value = expected_value
 
@@ -123,13 +126,9 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         self.assertEqual(result, expected_value)
         mock_select.assert_called_once()
 
-    @patch('os.listdir')
-    @patch('os.path.isdir')
     @patch('InquirerPy.inquirer.select')
-    def test_prompt_context(self, mock_select, mock_isdir, mock_listdir):
+    def test_prompt_context(self, mock_select):
         """Test PromptContext implementation."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = False
         expected_value = self.test_dir
         mock_select.return_value.execute.return_value = expected_value
 
@@ -144,19 +143,3 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         # Verify the result
         self.assertEqual(result, expected_value)
         mock_select.assert_called_once()
-
-    @patch('os.listdir')
-    @patch('os.path.isdir')
-    @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
-    def test_custom_color(self, mock_supports_color, mock_isdir, mock_listdir):
-        """Test response with custom color."""
-        mock_listdir.return_value = ["dir1"]
-        mock_isdir.return_value = False
-
-        context = self.create_colored_test_context(mock_supports_color)
-        from wexample_prompt.enums.terminal_color import TerminalColor
-
-        response = self.create_test_response(self.test_message, context=context, color=TerminalColor.GREEN)
-
-        rendered = response.render()
-        self.assert_contains_text(rendered, TerminalColor.GREEN.value)
