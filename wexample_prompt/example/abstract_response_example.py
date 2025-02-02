@@ -22,7 +22,7 @@ class AbstractResponseExample(WithIoManager, BaseModel):
         self.class_with_context = ExampleClassWithContext(io_manager=self.io_manager)
 
     @abstractmethod
-    def example_class(self):
+    def example_class(self, indentation: Optional[int] = None):
         pass
 
     @abstractmethod
