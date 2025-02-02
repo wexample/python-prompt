@@ -61,8 +61,8 @@ class TestSuccessPromptResponse(AbstractPromptResponseTest):
 
     def test_success_with_context(self):
         message = "Files processed: {count} files"
-        context = self.context(params={"count": "3"})
-        response = self.create_test_response(message, context=context)
+        self.context.params = {"count": "3"}
+        response = self.create_test_response(message)
         rendered = response.render()
         self.assert_contains_text(rendered, "Files processed")
         self.assert_contains_text(rendered, "3")
