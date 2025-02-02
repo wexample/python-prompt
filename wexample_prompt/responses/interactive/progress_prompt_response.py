@@ -114,20 +114,18 @@ class ProgressPromptResponse(BasePromptResponse):
         # Choose color based on progress or use specified color
         if self.color:
             color = str(self.color)
+            reset = self.RESET
         else:
-            if percentage < 33:
-                color = self.BLUE
-            elif percentage < 66:
-                color = self.CYAN
-            else:
-                color = self.GREEN
+            # No color codes if color is explicitly set to None
+            color = ""
+            reset = ""
             
         # Build progress bar without brackets
         bar = (
             color +
             self.FILL_CHAR * filled +
             self.EMPTY_CHAR * (self.width - filled) +
-            self.RESET
+            reset
         )
         
         # If we have a label, include the progress bar on the same line
@@ -167,6 +165,7 @@ class ProgressPromptResponse(BasePromptResponse):
             total_weight=total_weight,
             width=width,
             title=title,
+            context=context
         )
     
     @classmethod

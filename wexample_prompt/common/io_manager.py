@@ -135,6 +135,7 @@ class IoManager(
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
         from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
         return [
             # Data
@@ -142,6 +143,7 @@ class IoManager(
             ChoicePromptResponse,
             ChoiceDictPromptResponse,
             DirPickerPromptResponse,
+            ProgressPromptResponse,
             # Messages
             LogPromptResponse,
             InfoPromptResponse,

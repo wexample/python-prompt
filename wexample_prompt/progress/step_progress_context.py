@@ -3,6 +3,8 @@ from typing import List, Any, Optional, TypeVar, Generic, Callable
 from dataclasses import dataclass
 import time
 
+from wexample_prompt.common.prompt_context import PromptContext
+
 
 # Type variable for step function return type
 T = TypeVar('T')
@@ -24,7 +26,8 @@ class StepProgressContext:
         steps: List[ProgressStep],
         total_weight: float,
         width: int = 50,
-        title: Optional[str] = None
+        title: Optional[str] = None,
+        context: Optional[PromptContext] = None
     ):
         """Initialize the progress context.
         
@@ -33,11 +36,13 @@ class StepProgressContext:
             total_weight: Total weight of all steps
             width: Progress bar width
             title: Optional title
+            context: Optional prompt context for formatting
         """
         self.steps = steps
         self.total_weight = total_weight
         self.width = width
         self.title = title
+        self.context = context
         self.current_weight = 0.0
         self.start_time = 0.0
         
@@ -72,7 +77,8 @@ class StepProgressContext:
             total=100,
             current=percentage,
             width=self.width,
-            label=label
+            label=label,
+            context=self.context
         )
         progress.print(end="\n", flush=True)
         
@@ -99,12 +105,10 @@ class StepProgressContext:
             self.current_weight += step.weight
             
             # Show progress for next step or completion
-            next_step = self.steps[len(results)] if len(results) < len(self.steps) else None
-            if next_step:
+            if step != self.steps[-1]:
+                next_step = self.steps[self.steps.index(step) + 1]
                 self._update_progress(next_step.description)
             else:
-                # Final progress
                 self._update_progress("Complete")
-                print()  # Add newline after completion
-        
+                
         return results
