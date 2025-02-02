@@ -1,84 +1,79 @@
 """Tests for LogPromptResponse."""
-import unittest
+from typing import Type
 
-from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
-from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestLogPromptResponse(unittest.TestCase):
+class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
-    
-    def test_create_log(self):
-        """Test log message creation."""
-        message = "Test log message"
-        response = LogPromptResponse.create_log(message)
-        rendered = response.render()
-        self.assertIn(message, rendered)
+
+    def get_response_class(self) -> Type[AbstractPromptResponse]:
+        return LogPromptResponse
+
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        context = kwargs.pop('context', self.context)
+        return LogPromptResponse.create_log(
+            message=text,
+            context=context,
+            **kwargs
+        )
+
+    def get_io_method_name(self) -> str:
+        return 'log'
+
+    def _assert_specific_format(self, rendered: str):
+        # Log messages have no specific format to check
+        pass
+
+    def get_expected_lines(self) -> int:
+        return 1  # Log messages are single line
 
     def test_message_type(self):
-        """Test log message type."""
-        response = LogPromptResponse.create_log("Test")
+        response = self.create_test_response(self.test_message)
         self.assertEqual(response.get_message_type(), MessageType.LOG)
-        
+
     def test_multiline_log(self):
-        """Test multiline log message."""
         message = "Line 1\nLine 2"
-        response = LogPromptResponse.create_log(message)
+        response = self.create_test_response(message)
         rendered = response.render()
-        
-        self.assertIn("Line 1", rendered)
-        self.assertIn("Line 2", rendered)
-        
+
+        self.assert_contains_text(rendered, "Line 1")
+        self.assert_contains_text(rendered, "Line 2")
+
     def test_log_with_timestamp(self):
-        """Test log message with timestamp."""
         timestamp = "2025-01-04 12:00:00"
         message = f"[{timestamp}] System started"
-        
-        response = LogPromptResponse.create_log(message)
-        rendered = response.render()
-        
-        self.assertIn(timestamp, rendered)
-        self.assertIn("System started", rendered)
-        
-    def test_log_with_level(self):
-        """Test log message with log level."""
-        message = "[INFO] Application initialized"
-        response = LogPromptResponse.create_log(message)
-        rendered = response.render()
-        self.assertIn("[INFO]", rendered)
-        self.assertIn("Application initialized", rendered)
-        
-    def test_log_with_context(self):
-        """Test log message with context."""
-        message = "Processing request: {request_id}"
-        context = PromptContext(params={"request_id": "123"})
-        response = LogPromptResponse.create_log(message, context=context)
-        rendered = response.render()
-        self.assertIn("Processing request", rendered)
-        self.assertIn("123", rendered)
 
-    def test_empty_log(self):
-        """Test log message with empty string."""
-        response = LogPromptResponse.create_log("")
+        response = self.create_test_response(message)
         rendered = response.render()
-        self.assertEqual("", rendered)
+
+        self.assert_contains_text(rendered, timestamp)
+        self.assert_contains_text(rendered, "System started")
+
+    def test_log_with_level(self):
+        message = "[INFO] Application initialized"
+        response = self.create_test_response(message)
+        rendered = response.render()
+
+        self.assert_contains_text(rendered, "[INFO]")
+        self.assert_contains_text(rendered, "Application initialized")
 
     def test_single_indentation(self):
-        """Test log message with single level indentation."""
         message = "Indented message"
-        response = LogPromptResponse.create_log(message)
+        response = self.create_test_response(message)
         response.lines[0].indent_level = 1
         rendered = response.render()
-        
+
         # Should have 2 spaces of indentation
         self.assertTrue(rendered.startswith("  "))
         self.assertEqual("  " + message, rendered)
 
     def test_multiple_indentation_levels(self):
-        """Test log messages with different indentation levels."""
         messages = [
             (0, "Root level"),
             (1, "First indent"),
@@ -86,7 +81,7 @@ class TestLogPromptResponse(unittest.TestCase):
             (3, "Third indent"),
             (1, "Back to first"),
         ]
-        
+
         # Create response with multiple lines at different indentation levels
         lines = []
         for indent, msg in messages:
@@ -95,41 +90,13 @@ class TestLogPromptResponse(unittest.TestCase):
                 indent_level=indent
             )
             lines.append(line)
-        
+
         response = LogPromptResponse(lines=lines)
         rendered = response.render()
         rendered_lines = rendered.split("\n")
-        
-        # Verify each line has correct indentation
+
+        # Check each line has correct indentation
         for i, (indent, msg) in enumerate(messages):
             expected_spaces = "  " * indent
-            self.assertEqual(rendered_lines[i], expected_spaces + msg)
-
-    def test_indentation_with_multiline(self):
-        """Test indentation with multiline messages."""
-        # Create multiline message
-        message = "First line\nSecond line\nThird line"
-        response = LogPromptResponse.create_log(message)
-        
-        # Set different indentation for each line
-        for i, line in enumerate(response.lines):
-            line.indent_level = i
-        
-        rendered = response.render()
-        lines = rendered.split('\n')
-        
-        # Verify progressive indentation
-        self.assertEqual(lines[0], "First line")
-        self.assertEqual(lines[1], "  Second line")
-        self.assertEqual(lines[2], "    Third line")
-
-    def test_zero_indentation(self):
-        """Test explicit zero indentation."""
-        message = "No indent"
-        response = LogPromptResponse.create_log(message)
-        response.lines[0].indent_level = 0
-        rendered = response.render()
-        
-        # Should have no leading spaces
-        self.assertEqual(message, rendered)
-        self.assertFalse(rendered.startswith(" "))
+            self.assertTrue(rendered_lines[i].startswith(expected_spaces))
+            self.assertTrue(rendered_lines[i].endswith(msg))

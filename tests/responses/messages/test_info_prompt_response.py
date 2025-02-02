@@ -1,6 +1,5 @@
 """Tests for InfoPromptResponse."""
 from typing import Type
-import unittest
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
