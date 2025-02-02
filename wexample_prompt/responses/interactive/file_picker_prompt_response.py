@@ -48,7 +48,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         for element in os.listdir(base_dir):
             full_path = os.path.join(base_dir, element)
             if os.path.isdir(full_path):
-                element_label = f"📁 {element}"
+                element_label = f" {element}"
                 choices_dirs[element] = element_label
             else:
                 choices_files[element] = element
@@ -57,11 +57,15 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         choices_dirs = dict_sort_values(choices_dirs)
         choices_files = dict_sort_values(choices_files)
         
+        # Get color from kwargs
+        color = kwargs.pop('color', None)
+        
         # Create response with merged choices
         response = super().create_choice_dict(
             question=question,
             choices=dict_merge(choices_dirs, choices_files),
             abort=abort,
+            color=color,
             **kwargs
         )
         
@@ -85,7 +89,8 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         if os.path.isdir(full_path):
             next_response = self.__class__.create_file_picker(
                 base_dir=full_path,
-                question=self.lines[0].render()  # Keep same question
+                question=self.lines[0].render(self.context),  # Keep same question
+                context=self.context  # Pass the context to the new response
             )
             return next_response.execute()
             
