@@ -3,16 +3,16 @@ from typing import Any, List, Optional, Dict, Union, Type, TYPE_CHECKING
 
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
+from InquirerPy.utils import InquirerPyDefault, InquirerPySessionResult
 from pydantic import Field, ConfigDict
 
-from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import AbstractInteractivePromptResponse
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
-from InquirerPy.utils import InquirerPyDefault, InquirerPySessionResult
+from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import AbstractInteractivePromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -25,6 +25,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     choices: List[Union[str, Choice]] = Field(default_factory=list)
     default: Optional["InquirerPyDefault"] = None
     inquirer_kwargs: Dict[str, Any] = Field(default_factory=dict)
+    question_text: str = Field(default="")  # Stockage du texte original de la question
 
     # Pydantic configuration
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -41,7 +42,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         **kwargs: Any
     ) -> 'ChoicePromptResponse':
         lines = []
-        
+
         # Add the question line with specified color (or blue as default) and bold style
         color = color or TerminalColor.BLUE
         lines.append(
@@ -52,16 +53,16 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 )
             ])
         )
-        
+
         # Add each choice with a modern arrow and styling
         choices_all = choices.copy()
         if abort:
             choices_all.append(Choice(value=None, name=abort))
-            
+
         for i, choice in enumerate(choices_all):
             # Handle both simple values and Choice objects
             choice_text = choice.name if isinstance(choice, Choice) else str(choice)
-            
+
             lines.append(
                 PromptResponseLine(segments=[
                     # Arrow indicator with cyan color
@@ -75,23 +76,24 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     )
                 ])
             )
-        
+
         # Create default context if none provided
         if context is None:
             context = PromptContext()
-            
+
         return cls(
             lines=lines,
             context=context,
             choices=choices_all,
             default=default,
-            inquirer_kwargs=kwargs
+            inquirer_kwargs=kwargs,
+            question_text=question  # Stocker le texte original
         )
-        
+
     def execute(self) -> "InquirerPySessionResult":
         """Execute the choice prompt and get user selection."""
         return inquirer.select(
-            message=self.lines[0].render(self.context),
+            message=self.question_text,
             choices=self.choices,
             default=self.default,
             **self.inquirer_kwargs
