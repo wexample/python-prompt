@@ -29,7 +29,8 @@ class AbstractTitleResponse(BasePromptResponse):
         text: str,
         context: "PromptContext",
         color: Optional[TerminalColor] = TerminalColor.CYAN,
-        fill_char: Optional[str] = None
+        fill_char: Optional[str] = None,
+        **kwargs
     ) -> 'AbstractTitleResponse':
         """Create a title response.
         
@@ -45,7 +46,8 @@ class AbstractTitleResponse(BasePromptResponse):
             lines=[],  # Lines will be generated in render()
             response_type=ResponseType.TITLE,
             message_type=MessageType.LOG,
-            context=context
+            context=context,
+            **kwargs
         )
 
         instance._title_text = text

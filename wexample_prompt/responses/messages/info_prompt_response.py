@@ -11,8 +11,10 @@ if TYPE_CHECKING:
 
 
 class InfoPromptResponse(BaseMessageResponse):
+    """Response for info messages."""
+    
     SYMBOL: ClassVar[str] = "ℹ️"
-
+    
     @classmethod
     def create_info(
         cls: "InfoPromptResponse",
@@ -26,8 +28,7 @@ class InfoPromptResponse(BaseMessageResponse):
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=color or TerminalColor.BLUE,
-            **kwargs
+            color=color or TerminalColor.BLUE
         )
 
     @classmethod
@@ -38,6 +39,6 @@ class InfoPromptResponse(BaseMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for info messages."""
         from wexample_prompt.example.response.messages.info_example import InfoExample
-
         return InfoExample

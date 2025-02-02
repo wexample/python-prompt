@@ -29,12 +29,14 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         context: Optional["PromptContext"] = None,
         color: Optional[TerminalColor] = TerminalColor.BLUE,
         fill_char: Optional[str] = None,
+        **kwargs
     ) -> 'SubtitlePromptResponse':
         return super()._create_title(
             text=text,
             color=color,
             fill_char=fill_char,
-            context=context or PromptContext()
+            context=context or PromptContext(),
+            **kwargs
         )
 
     @classmethod

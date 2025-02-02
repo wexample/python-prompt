@@ -26,8 +26,7 @@ class DebugPromptResponse(BaseMessageResponse):
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=color or TerminalColor.CYAN,
-            **kwargs
+            color=color or TerminalColor.CYAN
         )
 
     @classmethod

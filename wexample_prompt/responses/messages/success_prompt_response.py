@@ -28,8 +28,7 @@ class SuccessPromptResponse(BaseMessageResponse):
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=color or TerminalColor.GREEN,
-            **kwargs
+            color=color or TerminalColor.GREEN
         )
 
     @classmethod

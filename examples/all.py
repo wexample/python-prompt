@@ -13,5 +13,8 @@ if __name__ == "__main__":
         example_response = example.example_class()
         example.io_manager.print_response(example_response)
 
+        example_response = example.example_class(indentation=1)
+        example.io_manager.print_response(example_response)
+
         example.example_manager()
         example.example_context()

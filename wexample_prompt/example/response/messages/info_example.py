@@ -1,13 +1,16 @@
+from typing import Optional
+
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 
 
 class InfoExample(AbstractResponseExample):
 
-    def example_class(self):
+    def example_class(self, indentation: Optional[str] = None):
         return InfoPromptResponse.create_info(
             'Test info message',
-            context=self.io_manager.create_context(indentation=10)
+            context=self.io_manager.create_context(),
+            indentation=indentation
         )
 
     def example_manager(self):

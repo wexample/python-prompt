@@ -26,7 +26,8 @@ class TitlePromptResponse(AbstractTitleResponse):
         text: str,
         context: "PromptContext",
         color: Optional["TerminalColor"] = None,
-        fill_char: Optional[str] = None
+        fill_char: Optional[str] = None,
+        **kwargs
     ) -> 'TitlePromptResponse':
         from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -35,6 +36,7 @@ class TitlePromptResponse(AbstractTitleResponse):
             context=context,
             color=color or TerminalColor.CYAN,
             fill_char=fill_char,
+            **kwargs
         )
 
     @classmethod
