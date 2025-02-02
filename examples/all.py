@@ -12,9 +12,9 @@ if __name__ == "__main__":
         example = (all_response_type.get_example_class())()
         example_response = example.example_class()
         example.io_manager.print_response(example_response)
-        #
-        # example_response = example.example_class(indentation=1)
-        # example.io_manager.print_response(example_response)
-        #
-        # example.example_manager()
-        # example.example_context()
+
+        example_response = example.example_class(indentation=1)
+        example.io_manager.print_response(example_response)
+
+        example.example_manager()
+        example.example_context()

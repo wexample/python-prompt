@@ -28,7 +28,7 @@ class ChoicePromptResponseManagerMixin:
         )
 
         self.print_response(response)
-        return response.execute()
+        return response
 
     def choice_dict(
         self,
