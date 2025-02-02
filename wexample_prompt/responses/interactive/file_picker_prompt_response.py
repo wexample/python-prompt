@@ -1,6 +1,6 @@
 """Response for displaying and handling file picker prompts."""
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type
 
 from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_helpers.helpers.dict import dict_merge, dict_sort_values
@@ -8,6 +8,16 @@ from wexample_helpers.helpers.dict import dict_merge, dict_sort_values
 
 class FilePickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a file picker interface."""
+
+    @classmethod
+    def get_example_class(cls) -> Type:
+        """Get the example class for this response type.
+
+        Returns:
+            Type: The example class
+        """
+        from wexample_prompt.example.response.interactive.file_picker_example import FilePickerExample
+        return FilePickerExample
 
     @classmethod
     def create_file_picker(
