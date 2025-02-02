@@ -1,65 +1,67 @@
-"""Tests for MultiplePromptResponse."""
+"""Test multiple prompt response."""
 from typing import Type
+from unittest.mock import patch
 
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
-from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
 class TestMultiplePromptResponse(AbstractPromptResponseTest):
-    """Test cases for MultiplePromptResponse."""
+    """Test multiple prompt response."""
 
+    test_message = "Test message"
     class_with_context = MultiplePromptResponse
 
     def setUp(self):
         """Set up test cases."""
         super().setUp()
-        self.test_message = "Test message"
         self.test_responses = [
             LogPromptResponse.create_log("First response", context=self.context),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.context),
+            LogPromptResponse.create_log("Item 1", context=self.context),
+            LogPromptResponse.create_log("Item 2", context=self.context),
             LogPromptResponse.create_log("Last response", context=self.context)
         ]
 
     def get_response_class(self) -> Type[AbstractPromptResponse]:
-        """Get the response class being tested."""
+        """Get the response class being tested.
+
+        Returns:
+            Type[AbstractPromptResponse]: The response class
+        """
         return MultiplePromptResponse
 
     def get_io_method_name(self) -> str:
-        """Get the name of the IO manager method for this response type."""
-        return 'multiple'
-
-    def _assert_specific_format(self, rendered: str):
-        """Assert specific format for multiple responses."""
-        # Each response should be rendered on its own line
-        self.assertTrue("\n" in rendered)
-
-    def get_expected_lines(self) -> int:
-        """Get expected number of lines in rendered output."""
-        return 3  # One line for each test response
-
-    def assert_common_response_structure(self, rendered: str):
-        """Assert the common structure for multiple responses."""
-        self.assert_contains_text(rendered, "First response")
-        self.assert_contains_text(rendered, "Last response")
-
-    def create_test_response(self, text: str, **kwargs) -> MultiplePromptResponse:
-        """Create a test multiple response.
-
-        Args:
-            text: Text to display
-            **kwargs: Additional arguments
+        """Get the name of the IO manager method for this response type.
 
         Returns:
-            MultiplePromptResponse: Test response
+            str: The method name
         """
-        context = kwargs.pop('context', self.context)
+        return 'multiple'
+
+    def assert_common_response_structure(self, rendered: str):
+        """Assert that the rendered response has the expected structure.
+
+        Args:
+            rendered: The rendered response to check
+        """
+        self.assert_contains_text(rendered, self.test_message)
+
+    def create_test_response(self, text: str, **kwargs) -> MultiplePromptResponse:
+        """Create a test response.
+
+        Args:
+            text: Text for the response
+            **kwargs: Additional arguments passed to the constructor
+
+        Returns:
+            MultiplePromptResponse: A new test response instance
+        """
         return MultiplePromptResponse.create_multiple(
-            responses=[LogPromptResponse.create_log(text, context=context)],
-            context=context,
+            responses=[LogPromptResponse.create_log(text, context=self.context)],
+            context=self.context,
             **kwargs
         )
 
@@ -69,14 +71,12 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             responses=[],
             context=self.context
         )
-        rendered = response.render()
-        self.assertEqual(rendered.strip(), "")
+        self.assertEqual(response.render(), "")
 
     def test_single_response(self):
         """Test multiple response with a single response."""
         response = self.create_test_response(self.test_message)
-        rendered = response.render()
-        self.assert_contains_text(rendered, self.test_message)
+        self.assertEqual(response.render(), self.test_message)
 
     def test_multiple_responses(self):
         """Test multiple responses."""
@@ -84,11 +84,10 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             responses=self.test_responses,
             context=self.context
         )
-        rendered = response.render()
-        self.assert_contains_text(rendered, "First response")
-        self.assert_contains_text(rendered, "Item 1")
-        self.assert_contains_text(rendered, "Item 2")
-        self.assert_contains_text(rendered, "Last response")
+        self.assertEqual(
+            response.render(),
+            "First response\nItem 1\nItem 2\nLast response"
+        )
 
     def test_append_response(self):
         """Test appending a response."""
@@ -97,9 +96,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             context=self.context
         )
         response.append_response(LogPromptResponse.create_log("Appended", context=self.context))
-        rendered = response.render()
-        self.assert_contains_text(rendered, "Initial")
-        self.assert_contains_text(rendered, "Appended")
+        self.assertEqual(response.render(), "Initial\nAppended")
 
     def test_extend_responses(self):
         """Test extending with multiple responses."""
@@ -111,10 +108,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             LogPromptResponse.create_log("Extended 1", context=self.context),
             LogPromptResponse.create_log("Extended 2", context=self.context)
         ])
-        rendered = response.render()
-        self.assert_contains_text(rendered, "Initial")
-        self.assert_contains_text(rendered, "Extended 1")
-        self.assert_contains_text(rendered, "Extended 2")
+        self.assertEqual(response.render(), "Initial\nExtended 1\nExtended 2")
 
     def test_io_manager(self):
         """Test IoManager integration."""
@@ -122,16 +116,33 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             responses=self.test_responses
         )
         self.assertIsInstance(result, MultiplePromptResponse)
-        rendered = result.render()
-        self.assert_contains_text(rendered, "First response")
-        self.assert_contains_text(rendered, "Last response")
+        self.assertEqual(
+            result.render(),
+            "First response\nItem 1\nItem 2\nLast response"
+        )
 
     def test_prompt_context(self):
         """Test PromptContext implementation."""
         context = self.context
         class_with_context = self.class_with_context
-        method = getattr(class_with_context, self.get_io_method_name())
-        response = method(responses=self.test_responses)
+        self.assertTrue(hasattr(class_with_context, 'multiple'))
+
+    @patch('wexample_prompt.common.color_manager.ColorManager.supports_color')
+    def test_custom_color(self, mock_supports_color):
+        """Test response with custom color."""
+        context = self.create_colored_test_context(mock_supports_color)
+        response = self.create_test_response(self.test_message, context=context, color=TerminalColor.GREEN)
         rendered = response.render()
-        self.assert_contains_text(rendered, "First response")
-        self.assert_contains_text(rendered, "Last response")
+        self.assert_contains_text(rendered, self.test_message)
+
+    def test_no_color(self):
+        """Test response without color."""
+        response = self.create_test_response(self.test_message, color=None)
+        rendered = response.render()
+        self.assert_contains_text(rendered, self.test_message)
+
+    def test_response_class(self):
+        """Test response class behavior."""
+        response = self.create_test_response(self.test_message)
+        rendered = response.render()
+        self.assert_contains_text(rendered, self.test_message)

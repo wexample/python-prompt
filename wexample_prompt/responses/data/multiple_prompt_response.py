@@ -17,6 +17,7 @@ class MultiplePromptResponse(BasePromptResponse):
 
     Attributes:
         responses: List of prompt responses to be rendered together
+        lines: List of lines to be rendered together
         response_type: Type of the response (always MULTIPLE)
         message_type: Type of message (always LOG)
     """
@@ -24,6 +25,10 @@ class MultiplePromptResponse(BasePromptResponse):
     responses: List[AbstractPromptResponse] = Field(
         default_factory=list,
         description="List of prompt responses to be rendered together"
+    )
+    lines: List[str] = Field(
+        default_factory=list,
+        description="List of lines to be rendered together"
     )
     response_type: ResponseType = Field(
         default=ResponseType.MULTIPLE,
@@ -43,6 +48,19 @@ class MultiplePromptResponse(BasePromptResponse):
         """
         from wexample_prompt.example.response.data.multiple_example import MultipleExample
         return MultipleExample
+
+    @classmethod
+    def multiple(cls, responses: List[AbstractPromptResponse], **kwargs) -> 'MultiplePromptResponse':
+        """Create a multiple prompt response.
+
+        Args:
+            responses: List of responses to include
+            **kwargs: Additional arguments passed to the constructor
+
+        Returns:
+            MultiplePromptResponse: A new multiple response instance
+        """
+        return cls.create_multiple(responses=responses, **kwargs)
 
     @classmethod
     def create_multiple(
