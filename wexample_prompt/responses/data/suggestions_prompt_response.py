@@ -1,5 +1,5 @@
 """Response for displaying suggestions with optional descriptions."""
-from typing import List, Optional
+from typing import List, Optional, Type, TYPE_CHECKING
 
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -11,6 +11,9 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.enums.response_type import ResponseType
 
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+
 
 class SuggestionsPromptResponse(BasePromptResponse):
     """Response for displaying a list of suggestions with optional descriptions."""
@@ -21,13 +24,21 @@ class SuggestionsPromptResponse(BasePromptResponse):
     arrow_style: str = "→"
 
     @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for this response type."""
+        from wexample_prompt.example.response.data.suggestions_example import SuggestionsExample
+
+        return SuggestionsExample
+
+    @classmethod
     def create_suggestions(
         cls,
         message: str,
         suggestions: List[str],
         context: Optional[PromptContext] = None,
         verbosity: Optional[VerbosityLevel] = None,
-        arrow_style: str = "→"
+        arrow_style: str = "→",
+        **kwargs
     ) -> 'SuggestionsPromptResponse':
         """Create a suggestions response.
 
@@ -37,6 +48,7 @@ class SuggestionsPromptResponse(BasePromptResponse):
             context: Optional prompt context for formatting
             verbosity: Optional verbosity level for output detail
             arrow_style: Character to use as bullet point (default: →)
+            **kwargs: Additional arguments passed to the constructor
 
         Returns:
             SuggestionsPromptResponse instance
@@ -48,7 +60,8 @@ class SuggestionsPromptResponse(BasePromptResponse):
             suggestions=suggestions,
             arrow_style=arrow_style,
             context=context,
-            verbosity_level=verbosity or VerbosityLevel.DEFAULT
+            verbosity_level=verbosity or VerbosityLevel.DEFAULT,
+            **kwargs
         )
 
     def render(self) -> str:
