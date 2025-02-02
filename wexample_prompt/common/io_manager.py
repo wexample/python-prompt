@@ -39,6 +39,8 @@ from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manage
     TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.data.list_prompt_response_manager_mixin import \
     ListPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.multiple_prompt_response_manager_mixin import \
+    MultiplePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
@@ -53,6 +55,7 @@ class IoManager(
     WithIndent,
     # Data
     ListPromptResponseManagerMixin,
+    MultiplePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
     ChoiceDictPromptResponseManagerMixin,
@@ -144,10 +147,12 @@ class IoManager(
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 
         return [
             # Data
             ListPromptResponse,
+            MultiplePromptResponse,
             # Interactive
             ChoicePromptResponse,
             ChoiceDictPromptResponse,
