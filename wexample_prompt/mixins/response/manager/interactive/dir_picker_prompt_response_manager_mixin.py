@@ -13,7 +13,7 @@ class DirPickerPromptResponseManagerMixin:
         base_dir: Optional[str] = None,
         abort: Optional[str] = "> Abort",
         **kwargs: Any
-    ) -> Optional[str]:
+    ) -> "DirPickerPromptResponse":
         """Create and execute a directory picker prompt.
 
         Args:

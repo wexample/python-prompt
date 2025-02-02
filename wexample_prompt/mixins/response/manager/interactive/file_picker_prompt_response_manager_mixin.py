@@ -9,10 +9,11 @@ class FilePickerPromptResponseManagerMixin:
 
     def file_picker(
         self,
-        base_dir: Optional[str] = None,
         question: str = "Select a file:",
+        base_dir: Optional[str] = None,
+        abort: Optional[str] = "> Abort",
         **kwargs: Any
-    ) -> FilePickerPromptResponse:
+    ) -> "FilePickerPromptResponse":
         """Create a file picker prompt response.
 
         Args:
@@ -24,9 +25,9 @@ class FilePickerPromptResponseManagerMixin:
             FilePickerPromptResponse: A new file picker prompt response
         """
         response = FilePickerPromptResponse.create_file_picker(
-            base_dir=base_dir,
             question=question,
-            context=self.create_context(),
+            base_dir=base_dir,
+            abort=abort,
             **kwargs
         )
         self.print_response(response)
