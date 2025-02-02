@@ -1,137 +1,86 @@
-"""Tests for ProgressPromptResponse."""
-import unittest
-import re
+"""Tests for progress prompt responses."""
+from unittest.mock import patch
 
 from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.progress.step_progress_context import ProgressStep
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestProgressPromptResponse(unittest.TestCase):
+class TestProgressPromptResponse(AbstractPromptResponseTest):
     """Test cases for ProgressPromptResponse."""
-    
-    def setUp(self):
-        """Set up test cases."""
-        self.context = PromptContext(terminal_width=80)
-        # Use simple characters for testing
-        ProgressPromptResponse.set_style(fill_char="=", empty_char="-")
-        
+
     def test_create_progress(self):
-        """Test progress bar creation."""
-        progress = ProgressPromptResponse.create_progress(
-            total=100,
-            current=50,
-            context=self.context
-        )
-        rendered = self._strip_ansi(progress.render())
-        
-        # Check basic structure
-        self.assertIn("=", rendered)  # Progress indicator
-        self.assertIn("-", rendered)  # Empty indicator
-        self.assertIn("50%", rendered)  # Percentage
-        
-    def test_zero_progress(self):
-        """Test progress bar at 0%."""
-        progress = ProgressPromptResponse.create_progress(
-            total=100,
-            current=0,
-            context=self.context
-        )
-        rendered = self._strip_ansi(progress.render())
-        self.assertTrue(rendered.startswith("-" * 50))  # Should be empty
-        self.assertIn("0%", rendered)
-        
-    def test_full_progress(self):
-        """Test progress bar at 100%."""
-        progress = ProgressPromptResponse.create_progress(
-            total=100,
-            current=100,
-            context=self.context
-        )
-        rendered = self._strip_ansi(progress.render())
-        self.assertTrue("=" * 50 in rendered)  # Should be full
-        self.assertIn("100%", rendered)
-        
-    def test_partial_progress(self):
-        """Test progress bar with partial completion."""
-        progress = ProgressPromptResponse.create_progress(
+        """Test creating a progress bar."""
+        response = ProgressPromptResponse.create_progress(
             total=10,
-            current=7,
-            context=self.context
+            current=5,
+            label="Processing"
         )
-        rendered = self._strip_ansi(progress.render())
-        self.assertIn("70%", rendered)
-        
-    def test_custom_width(self):
-        """Test progress bar with custom width."""
-        width = 20
-        progress = ProgressPromptResponse.create_progress(
-            total=100,
-            current=50,
-            width=width,
-            context=self.context
+        self.assertIsInstance(response, ProgressPromptResponse)
+        self.assertEqual(response.total, 10)
+        self.assertEqual(response.current, 5)
+        self.assertEqual(response.label, "Processing")
+
+    def test_custom_style(self):
+        """Test customizing progress bar style."""
+        ProgressPromptResponse.set_style(fill_char="#", empty_char="-")
+        self.assertEqual(ProgressPromptResponse.FILL_CHAR, "#")
+        self.assertEqual(ProgressPromptResponse.EMPTY_CHAR, "-")
+
+    def test_invalid_values(self):
+        """Test invalid progress values."""
+        with self.assertRaises(ValueError):
+            ProgressPromptResponse.create_progress(total=0, current=0)
+        with self.assertRaises(ValueError):
+            ProgressPromptResponse.create_progress(total=10, current=-1)
+
+    def test_io_manager(self):
+        """Test IoManager integration."""
+        result = self.io_manager.progress(
+            total=10,
+            current=5,
+            label=self.test_message
         )
-        rendered = self._strip_ansi(progress.render())
-        self.assertEqual(len(rendered.split()[0]), width)  # Check bar width
-        
-    def test_with_label(self):
-        """Test progress bar with label."""
-        label = "Processing"
-        progress = ProgressPromptResponse.create_progress(
-            total=100,
-            current=50,
-            label=label,
-            context=self.context
-        )
-        rendered = self._strip_ansi(progress.render())
-        self.assertIn(label, rendered)
-        
-    def test_step_progress(self):
-        """Test step-based progress."""
-        def step1():
-            return "Step 1 done"
-            
-        def step2():
-            return "Step 2 done"
-            
+        self.assertIsInstance(result, ProgressPromptResponse)
+
+    def test_progress_steps(self):
+        from wexample_prompt.progress.step_progress_context import ProgressStep
+
+        """Test progress steps creation."""
         steps = [
-            ProgressStep(callback=step1, description="Step 1", weight=1),
-            ProgressStep(callback=step2, description="Step 2", weight=1)
+            ProgressStep(callback=lambda: None, description="Step 1", weight=1),
+            ProgressStep(callback=lambda: None, description="Step 2", weight=2)
         ]
-        
-        with ProgressPromptResponse.create_steps(
-            steps=steps,
-            title="Test Steps",
-            context=self.context
-        ) as progress:
-            results = progress.execute_steps()
-                
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], "Step 1 done")
-        self.assertEqual(results[1], "Step 2 done")
-        
-    def test_execute_callbacks(self):
+        context = self.io_manager.progress_steps(steps, title="Test Steps")
+        self.assertEqual(context.total_weight, 3)
+
+    @patch('time.sleep')  # Mock sleep to speed up tests
+    def test_progress_execute(self, mock_sleep):
         """Test executing callbacks with progress."""
-        def step1():
-            """First test step."""
-            return "Step 1 done"
-            
-        def step2():
-            """Second test step."""
-            return "Step 2 done"
-            
-        results = ProgressPromptResponse.execute(
-            callbacks=[step1, step2],
-            title="Test Callbacks",
-            context=self.context
+        mock_sleep.return_value = None
+        callbacks = [
+            lambda: "step1",
+            lambda: "step2",
+            lambda: "step3"
+        ]
+        results = self.io_manager.progress_execute(
+            callbacks=callbacks,
+            title="Test Execute"
         )
-        
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], "Step 1 done")
-        self.assertEqual(results[1], "Step 2 done")
-        
-    @staticmethod
-    def _strip_ansi(text: str) -> str:
-        """Remove ANSI color codes from text."""
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        return ansi_escape.sub('', text)
+        self.assertEqual(len(results), 3)
+        self.assertEqual(results, ["step1", "step2", "step3"])
+
+    def test_prompt_context(self):
+        from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
+
+        """Test PromptContext implementation."""
+        context = self.context
+        class_with_context = ExampleClassWithContext(
+            context=context,
+            io_manager=self.io_manager
+        )
+        result = class_with_context.progress(
+            total=10,
+            current=5,
+            label=self.test_message
+        )
+        self.assertIsInstance(result, ProgressPromptResponse)

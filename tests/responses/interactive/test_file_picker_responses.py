@@ -1,13 +1,12 @@
 """Tests for file picker responses."""
-import unittest
 import os
 from unittest.mock import patch
 
 from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestFilePickerPromptResponse(unittest.TestCase):
+class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for FilePickerPromptResponse."""
 
     def setUp(self):
@@ -15,8 +14,8 @@ class TestFilePickerPromptResponse(unittest.TestCase):
         # Mock terminal size to avoid environment variable issues
         with patch('shutil.get_terminal_size') as mock_term:
             mock_term.return_value.columns = 80
-            self.context = PromptContext()
-            
+            super().setUp()
+
         self.test_dir = "/test/path"
         self.question = "Select a file:"
 
@@ -51,12 +50,12 @@ class TestFilePickerPromptResponse(unittest.TestCase):
 
         with patch('InquirerPy.inquirer.select') as mock_select:
             mock_select.return_value.execute.return_value = "file1.txt"
-            
+
             response = FilePickerPromptResponse.create_file_picker(
                 base_dir=self.test_dir,
                 context=self.context
             )
-            
+
             result = response.execute()
             self.assertEqual(result, expected_path)
 
@@ -69,11 +68,11 @@ class TestFilePickerPromptResponse(unittest.TestCase):
 
         with patch('InquirerPy.inquirer.select') as mock_select:
             mock_select.return_value.execute.return_value = None
-            
+
             response = FilePickerPromptResponse.create_file_picker(
                 base_dir=self.test_dir,
                 context=self.context
             )
-            
+
             result = response.execute()
             self.assertIsNone(result)
