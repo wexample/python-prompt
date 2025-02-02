@@ -122,22 +122,16 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
     @patch('InquirerPy.inquirer.select')
     def test_io_manager(self, mock_select):
         """Test IoManager integration."""
-        expected_value = "Option 1"
-        mock_select.return_value.execute.return_value = expected_value
-
         method = getattr(self.io_manager, self.get_io_method_name())
         result = method(self.test_message, self.choices)
 
-        # Verify the result
-        self.assertEqual(result, expected_value)
-        mock_select.assert_called_once()
+        # Verify that we get a ChoicePromptResponse object
+        self.assertIsInstance(result, ChoicePromptResponse)
+        mock_select.assert_not_called()  # select ne devrait pas être appelé car on n'appelle pas execute()
 
     @patch('InquirerPy.inquirer.select')
     def test_prompt_context(self, mock_select):
         """Test PromptContext implementation."""
-        expected_value = "Option 1"
-        mock_select.return_value.execute.return_value = expected_value
-
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
@@ -146,6 +140,6 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         method = getattr(class_with_context, self.get_io_method_name())
         result = method(self.test_message, self.choices)
 
-        # Verify the result
-        self.assertEqual(result, expected_value)
-        mock_select.assert_called_once()
+        # Verify that we get a ChoicePromptResponse object
+        self.assertIsInstance(result, ChoicePromptResponse)
+        mock_select.assert_not_called()  # select ne devrait pas être appelé car on n'appelle pas execute()

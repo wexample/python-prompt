@@ -14,7 +14,7 @@ class ChoiceDictPromptResponseManagerMixin:
         default: Optional[str] = None,
         abort: Optional[str] = "> Abort",
         **kwargs
-    ) -> str:
+    ) -> ChoiceDictPromptResponse:
         from wexample_prompt.responses.interactive import ChoiceDictPromptResponse
 
         response = ChoiceDictPromptResponse.create_choice_dict(
@@ -26,5 +26,5 @@ class ChoiceDictPromptResponseManagerMixin:
             **kwargs
         )
 
-        response = self.print_response(response)
+        self.print_response(response)
         return response
