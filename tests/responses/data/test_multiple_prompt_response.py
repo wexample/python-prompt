@@ -68,9 +68,10 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         Returns:
             MultiplePromptResponse: A new test response instance
         """
+        context = kwargs.pop('context', self.context)
         return MultiplePromptResponse.create_multiple(
-            responses=[LogPromptResponse.create_log(text, context=self.context)],
-            context=self.context,
+            responses=[LogPromptResponse.create_log(text, context=context)],
+            context=context,
             **kwargs
         )
 
