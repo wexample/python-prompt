@@ -5,7 +5,7 @@ from wexample_prompt.responses.messages.log_prompt_response import LogPromptResp
 class LogExample(AbstractResponseExample):
 
     def example_class(self):
-        LogPromptResponse.create_log(
+        return LogPromptResponse.create_log(
             'Test log message',
             context=self.io_manager.create_context()
         )

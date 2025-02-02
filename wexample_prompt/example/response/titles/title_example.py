@@ -5,7 +5,7 @@ from wexample_prompt.responses.titles.title_prompt_response import TitlePromptRe
 class TitleExample(AbstractResponseExample):
 
     def example_class(self):
-        TitlePromptResponse.create_title(
+        return TitlePromptResponse.create_title(
             'Test title',
             context=self.io_manager.create_context()
         )

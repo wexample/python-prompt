@@ -1,4 +1,3 @@
-"""Manager for handling I/O operations in the prompt system."""
 import logging
 import shutil
 import sys

@@ -8,7 +8,7 @@ class SuccessExample(AbstractResponseExample):
 
     def example_class(self):
         """Example using direct class method."""
-        SuccessPromptResponse.create_success(
+        return SuccessPromptResponse.create_success(
             'Test success message',
             context=self.io_manager.create_context()
         )

@@ -1,12 +1,16 @@
+from typing import TYPE_CHECKING
+
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 class DebugExample(AbstractResponseExample):
 
-    def example_class(self):
+    def example_class(self) -> "AbstractPromptResponse":
         """Example using the class directly."""
-        DebugPromptResponse.create_debug(
+        return DebugPromptResponse.create_debug(
             'Test debug message',
             context=self.io_manager.create_context()
         )

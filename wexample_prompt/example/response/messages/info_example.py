@@ -5,7 +5,7 @@ from wexample_prompt.responses.messages.info_prompt_response import InfoPromptRe
 class InfoExample(AbstractResponseExample):
 
     def example_class(self):
-        InfoPromptResponse.create_info(
+        return InfoPromptResponse.create_info(
             'Test info message',
             context=self.io_manager.create_context()
         )

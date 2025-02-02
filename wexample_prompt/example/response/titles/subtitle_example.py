@@ -5,7 +5,7 @@ from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePr
 class SubtitleExample(AbstractResponseExample):
 
     def example_class(self):
-        SubtitlePromptResponse.create_subtitle(
+        return SubtitlePromptResponse.create_subtitle(
             'Test subtitle',
             context=self.io_manager.create_context()
         )
