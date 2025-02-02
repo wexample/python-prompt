@@ -129,11 +129,12 @@ class IoManager(
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
 
         return [
+            # Data
+            # Interactive
             ChoicePromptResponse,
             ChoiceDictPromptResponse,
             DirPickerPromptResponse,
-            TitlePromptResponse,
-            SubtitlePromptResponse,
+            # Messages
             LogPromptResponse,
             InfoPromptResponse,
             DebugPromptResponse,
@@ -142,6 +143,9 @@ class IoManager(
             WarningPromptResponse,
             FailurePromptResponse,
             ErrorPromptResponse,
+            # Titles
+            TitlePromptResponse,
+            SubtitlePromptResponse,
         ]
 
     def create_context(self, indentation: Optional[int] = 0) -> PromptContext:
