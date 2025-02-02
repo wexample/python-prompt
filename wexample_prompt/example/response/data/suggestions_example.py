@@ -9,7 +9,7 @@ class SuggestionsExample(AbstractResponseExample):
     """Example for suggestions response."""
 
     def get_example(self) -> str:
-        message = "Here are some useful commands:"
+        message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
             "command2",
@@ -24,7 +24,7 @@ class SuggestionsExample(AbstractResponseExample):
 
     def example_class(self, indentation: Optional[int] = None):
         """Example using class with context."""
-        message = "Here are some useful commands:"
+        message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
             "command2",
@@ -41,7 +41,7 @@ class SuggestionsExample(AbstractResponseExample):
 
     def example_manager(self):
         """Example using IoManager directly."""
-        message = "Here are some useful commands:"
+        message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
             "command2",
@@ -54,7 +54,7 @@ class SuggestionsExample(AbstractResponseExample):
 
     def example_context(self):
         """Example using context."""
-        message = "Here are some useful commands:"
+        message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
             "command2",

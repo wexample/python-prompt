@@ -67,6 +67,9 @@ class SuggestionsPromptResponse(BasePromptResponse):
     def render(self) -> str:
         """Render the suggestions with styling."""
         lines = []
+
+        # Add empty line at the start
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
         
         # Add the message line with blue color and bold style
         lines.append(
@@ -91,6 +94,9 @@ class SuggestionsPromptResponse(BasePromptResponse):
                     PromptResponseSegment(text=suggestion)
                 ])
             )
+
+        # Add empty line at the end
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
             
         # Update lines and render using parent class
         self.lines = lines

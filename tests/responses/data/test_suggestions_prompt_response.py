@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
 from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
@@ -44,7 +45,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     def create_test_response(self, text: str, **kwargs) -> SuggestionsPromptResponse:
         context = kwargs.pop('context', self.context)
         return SuggestionsPromptResponse.create_suggestions(
-            message=self.message,
+            message=text,
             suggestions=self.suggestions,
             context=context,
             **kwargs
@@ -119,11 +120,39 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         context = self.create_colored_test_context(mock_supports_color)
         response = self.create_test_response(self.test_message, context=context, color=TerminalColor.GREEN)
         rendered = response.render()
-        self.assert_contains_text(rendered, self.message)
+        self.assert_contains_text(rendered, self.test_message)
         self._assert_specific_format(rendered)
 
     def test_no_color(self):
-        response = self.create_test_response(self.test_message, color=None)
+        response = self.create_test_response(self.message, color=None)
         rendered = response.render()
+        self.assert_contains_text(rendered, self.message)
+        self._assert_specific_format(rendered)
+
+    def test_io_manager(self):
+        """Test IoManager integration."""
+        response = self.io_manager.suggestions(
+            message=self.message,
+            suggestions=self.suggestions
+        )
+        rendered = response.render()
+        self.assert_common_response_structure(rendered)
+        self.assert_contains_text(rendered, self.message)
+        self._assert_specific_format(rendered)
+
+    def test_prompt_context(self):
+        """Test PromptContext implementation."""
+        context = self.context
+        class_with_context = ExampleClassWithContext(
+            context=context,
+            io_manager=self.io_manager
+        )
+        method = getattr(class_with_context, self.get_io_method_name())
+        response = method(
+            message=self.message,
+            suggestions=self.suggestions
+        )
+        rendered = response.render()
+        self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, self.message)
         self._assert_specific_format(rendered)
