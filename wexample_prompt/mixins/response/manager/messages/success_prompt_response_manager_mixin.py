@@ -12,7 +12,10 @@ class SuccessPromptResponseManagerMixin:
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 
         """Create a success message."""
-        return SuccessPromptResponse.create_success(
+        response = SuccessPromptResponse.create_success(
             message=message,
             context=self.create_context(),
         )
+
+        self.print_response(response)
+        return response
