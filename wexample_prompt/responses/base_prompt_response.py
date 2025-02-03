@@ -44,7 +44,8 @@ class BasePromptResponse(AbstractPromptResponse):
             lines=self.lines + other.lines,
             response_type=self.response_type,
             metadata={**self.metadata, **other.metadata},
-            message_type=self.message_type
+            message_type=self.message_type,
+            context=self.context
         )
 
     @classmethod
