@@ -11,6 +11,7 @@ class WarningPromptResponseManagerMixin:
         response = WarningPromptResponse.create_warning(
             message=message,
             context=self.create_context(),
+            **kwargs
         )
 
         self.print_response(response)

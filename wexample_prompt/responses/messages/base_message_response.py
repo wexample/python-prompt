@@ -27,8 +27,22 @@ class BaseMessageResponse(BasePromptResponse):
         color: TerminalColor,
         symbol: Optional[str] = None,
         bold_symbol: bool = True,
-        context: Optional[PromptContext] = None
+        context: Optional[PromptContext] = None,
+        **kwargs
     ) -> 'BaseMessageResponse':
+        """Create a message with a symbol.
+
+        Args:
+            text: Message text
+            color: Text color
+            symbol: Optional symbol to use instead of class symbol
+            bold_symbol: Whether to make the symbol bold
+            context: Optional prompt context
+            **kwargs: Additional keyword arguments
+
+        Returns:
+            BaseMessageResponse: A new message response
+        """
         segments = []
 
         # Add symbol if present
@@ -55,8 +69,12 @@ class BaseMessageResponse(BasePromptResponse):
             line_type=cls.get_message_type()
         )
 
-        return cls._create(
-            lines=[line],
-            message_type=cls.get_message_type(),
-            **({"context": context} if context is not None else {})
-        )
+        # Create response with context and additional kwargs
+        create_args = {"lines": [line], "message_type": cls.get_message_type()}
+        if context is not None:
+            if "params" in kwargs:
+                context.params = kwargs.pop("params")
+            create_args["context"] = context
+        create_args.update(kwargs)
+
+        return cls._create(**create_args)
