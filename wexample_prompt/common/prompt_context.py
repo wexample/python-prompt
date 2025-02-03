@@ -34,21 +34,25 @@ class PromptContext(BaseModel):
         """Get the current indentation string."""
         return " " * (self.indentation * 2)  # Two spaces per level
 
-    def should_show_message(self, required_verbosity: VerbosityLevel) -> bool:
+    def should_show_message(self, required_verbosity: Optional[VerbosityLevel]) -> bool:
         """Check if a message should be shown based on verbosity level.
         
         Args:
-            required_verbosity: The minimum verbosity level required to show the message
+            required_verbosity: The minimum verbosity level required to show the message.
+                              If None, the message will always be shown.
             
         Returns:
             bool: True if the message should be shown, False otherwise
             
         Example:
+            - None -> True (always show)
             - QUIET message (0) in QUIET context (0) -> True
             - MAXIMUM message (3) in QUIET context (0) -> False
             - QUIET message (0) in MAXIMUM context (3) -> True
             - MAXIMUM message (3) in MAXIMUM context (3) -> True
         """
+        if required_verbosity is None:
+            return True
         return required_verbosity <= self.verbosity
 
     def format_message(self, message: str) -> str:

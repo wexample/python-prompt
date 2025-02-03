@@ -22,7 +22,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
     metadata: Dict[str, Any] = Field(default_factory=dict)
     message_type: MessageType = MessageType.LOG
     context: PromptContext = Field(...)
-    verbosity_level: VerbosityLevel = Field(default=VerbosityLevel.DEFAULT)
+    verbosity_level: Optional[VerbosityLevel] = Field(default=VerbosityLevel.DEFAULT)
 
     def __init__(self, **data):
         super().__init__(**data)
