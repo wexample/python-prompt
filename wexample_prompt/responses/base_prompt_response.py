@@ -23,7 +23,7 @@ class BasePromptResponse(AbstractPromptResponse):
         Returns:
             Type: The example class
         """
-        from wexample_prompt.example.response.messages.base_example import BaseExample
+        from wexample_prompt.example.response.base_example import BaseExample
         return BaseExample
 
     @classmethod
