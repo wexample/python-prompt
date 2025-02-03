@@ -27,4 +27,5 @@ class ErrorPromptResponseManagerMixin:
         )
 
         self.print_response(response)
+        response._on_fatal()
         return response

@@ -94,7 +94,7 @@ class TestIoManager(unittest.TestCase):
 
         """Test fatal error handling."""
         with self.assertRaises(TestFatalError) as context:
-            self.io_manager.error("Fatal error", fatal=True, exception=TestFatalError)
+            self.io_manager.error("Fatal error", fatal=True, exception=TestFatalError())
 
         output = self.stdout.getvalue()
         self.assertIn("Fatal error", output)
