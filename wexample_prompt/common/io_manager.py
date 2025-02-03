@@ -146,6 +146,7 @@ class IoManager(
 
     @classmethod
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
+        from wexample_prompt.responses.base_prompt_response import BasePromptResponse
         from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
@@ -169,6 +170,7 @@ class IoManager(
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
         return [
+            BasePromptResponse,
             # Data
             ListPromptResponse,
             MultiplePromptResponse,
