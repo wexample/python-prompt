@@ -38,5 +38,5 @@ class ErrorPromptResponseManagerMixin:
         # Only call _on_fatal() if fatal is True
         # if fatal:
         response._on_fatal()
-            
+
         return response

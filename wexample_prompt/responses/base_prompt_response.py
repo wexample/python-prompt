@@ -59,7 +59,7 @@ class BasePromptResponse(AbstractPromptResponse):
             response_type=response_type,
             message_type=message_type,
             metadata=metadata or {},
-            verbosity_level=verbosity_level or VerbosityLevel.DEFAULT
+            verbosity_level=verbosity_level
         )
 
     @classmethod
@@ -106,16 +106,14 @@ class BasePromptResponse(AbstractPromptResponse):
         if rendered:
             print(rendered, file=output or sys.stdout, end="\n")
 
-        # Handle fatal errors through _on_fatal
+        # Exit if fatal
         if self.context and self.context.fatal:
-            self._on_fatal()
+            sys.exit(1)
 
     def _on_fatal(self):
-        """Handle fatal errors by exiting with the appropriate code."""
+        """Handle fatal errors."""
         import sys
-        if hasattr(self.context, 'exit_code'):
-            sys.exit(self.context.exit_code)
-        sys.exit(1)
+        sys.exit(self.context.exit_code)
 
     def append(self, other: "BasePromptResponse") -> "BasePromptResponse":
         """Combine this response with another.
