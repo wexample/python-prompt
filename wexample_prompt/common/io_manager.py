@@ -47,6 +47,8 @@ from wexample_prompt.mixins.response.manager.data.suggestions_prompt_response_ma
     SuggestionsPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.data.table_prompt_response_manager_mixin import \
     TablePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.tree_prompt_response_manager_mixin import \
+    TreePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
@@ -65,6 +67,7 @@ class IoManager(
     PropertiesPromptResponseManagerMixin,
     SuggestionsPromptResponseManagerMixin,
     TablePromptResponseManagerMixin,
+    TreePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
     ChoiceDictPromptResponseManagerMixin,
@@ -160,6 +163,7 @@ class IoManager(
         from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
         from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
         return [
             # Data
@@ -168,6 +172,7 @@ class IoManager(
             PropertiesPromptResponse,
             SuggestionsPromptResponse,
             TablePromptResponse,
+            TreePromptResponse,
             # Interactive
             ChoicePromptResponse,
             ChoiceDictPromptResponse,

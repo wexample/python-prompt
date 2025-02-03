@@ -1,11 +1,14 @@
 """Tree response implementation."""
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Type, TYPE_CHECKING
 
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.prompt_context import PromptContext
+
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class TreePromptResponse(BasePromptResponse):
@@ -17,18 +20,37 @@ class TreePromptResponse(BasePromptResponse):
     leaf_style: str = "└"
     pipe_style: str = "│"
     dash_style: str = "──"
-    
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for this response type."""
+        from wexample_prompt.example.response.data.tree_example import TreeExample
+
+        return TreeExample
+
     @classmethod
     def create_tree(
         cls,
         data: Dict[str, Any],
         context: Optional[PromptContext] = None,
+        **kwargs
     ) -> 'TreePromptResponse':
+        """Create a tree response.
+
+        Args:
+            data: Dictionary of hierarchical data to display
+            context: Optional prompt context for formatting
+            **kwargs: Additional arguments passed to the constructor
+
+        Returns:
+            TreePromptResponse instance
+        """
         return cls(
             lines=[],  # Lines will be generated in render()
             response_type=ResponseType.TREE,
             data=data,
-            context=context
+            context=context,
+            **kwargs
         )
 
     def render(self) -> str:
@@ -37,7 +59,15 @@ class TreePromptResponse(BasePromptResponse):
             return ""
             
         lines = []
+
+        # Add empty line at the start
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+
+        # Build tree structure
         self._build_tree(self.data, "", lines)
+
+        # Add empty line at the end
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
         
         # Update lines and render using parent class
         self.lines = lines
