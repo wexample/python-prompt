@@ -66,8 +66,6 @@ class BasePromptResponse(AbstractPromptResponse):
     def create_from_text(
         cls,
         text: str,
-        context: "PromptContext",
-        verbosity_level: Optional[VerbosityLevel] = None,
         **kwargs
     ) -> 'BasePromptResponse':
         """Create a base prompt response from text.
@@ -84,14 +82,12 @@ class BasePromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-        return cls(
+        return cls.create_base(
             lines=[
                 PromptResponseLine(segments=[
                     PromptResponseSegment(text=text)
                 ])
             ],
-            context=context,
-            verbosity_level=verbosity_level,
             **kwargs
         )
 
@@ -110,14 +106,16 @@ class BasePromptResponse(AbstractPromptResponse):
         if rendered:
             print(rendered, file=output or sys.stdout, end="\n")
 
-        # Exit if fatal
+        # Handle fatal errors through _on_fatal
         if self.context and self.context.fatal:
-            sys.exit(1)
+            self._on_fatal()
 
     def _on_fatal(self):
-        """Handle fatal errors."""
+        """Handle fatal errors by exiting with the appropriate code."""
         import sys
-        sys.exit(self.context.exit_code)
+        if hasattr(self.context, 'exit_code'):
+            sys.exit(self.context.exit_code)
+        sys.exit(1)
 
     def append(self, other: "BasePromptResponse") -> "BasePromptResponse":
         """Combine this response with another.

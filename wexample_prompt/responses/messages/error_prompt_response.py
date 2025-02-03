@@ -1,13 +1,11 @@
 from typing import ClassVar, Optional, Any, Type, TYPE_CHECKING
-import traceback
 
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
-from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -26,41 +24,28 @@ class ErrorPromptResponse(BaseMessageResponse):
         color: Optional[TerminalColor] = None,
         **kwargs
     ) -> "ErrorPromptResponse":
+        import traceback
+        from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-        if exception is not None:
-            message += f': {exception}'
+        # Build complete error message
+        error_parts = []
+        if message:
+            error_parts.append(message)
+        if exception:
+            error_parts.append(str(exception))
+            # Add traceback if there's an exception
+            trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+            error_parts.append("\nTraceback:\n" + trace)
 
-        # Create response with context
+        # Create response with full error message
         response = cls._create_symbol_message(
-            text=message or "Undefined error",
+            text="\n".join(error_parts) if error_parts else "Undefined error",
             color=color or TerminalColor.RED,
             context=context,
             **kwargs
         )
 
         response.exception = exception
-
-        # Add exception details if present
-        if exception is not None:
-            # Get full traceback
-            trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
-            
-            # Create detailed response with trace
-            response_details = BasePromptResponse.create_from_text(
-                text=trace,
-                context=context,
-                verbosity_level=VerbosityLevel.DEFAULT
-            )
-            
-            # Combine responses
-            response = MultiplePromptResponse.create_multiple(
-                responses=[
-                    response,
-                    response_details,
-                ],
-                context=context
-            )
-
         return response
 
     def is_fatal(self) -> bool:
@@ -69,9 +54,13 @@ class ErrorPromptResponse(BaseMessageResponse):
             return False
         return self.context.is_fatal
 
-    def _on_fatal(self):
-        """Handle fatal errors by raising the exception if present."""
-        if self.is_fatal() and self.exception:
+    def _on_fatal(self) -> None:
+        """Handle fatal errors by raising the exception if present.
+
+        Overrides BasePromptResponse._on_fatal()
+        """
+        # If we have an exception, raise it
+        if self.context.fatal and self.exception:
             raise self.exception
 
     @classmethod

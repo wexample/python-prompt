@@ -15,7 +15,7 @@ class ErrorPromptResponseManagerMixin:
         fatal: bool = False,
         **kwargs
     ) -> "ErrorPromptResponse":
-        from wexample_prompt.responses.messages import ErrorPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 
         context = ErrorContext(
             fatal=fatal,
@@ -34,5 +34,9 @@ class ErrorPromptResponseManagerMixin:
             self._logger.error(message, extra={"params": params} if params else None)
 
         self.print_response(response)
+
+        # Only call _on_fatal() if fatal is True
+        # if fatal:
         response._on_fatal()
+            
         return response
