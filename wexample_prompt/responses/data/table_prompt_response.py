@@ -1,11 +1,14 @@
 """Table response for displaying data in a formatted table layout."""
-from typing import List, Any, Optional
+from typing import List, Any, Optional, Type, TYPE_CHECKING
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.response_type import ResponseType
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
+
+if TYPE_CHECKING:
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class TablePromptResponse(BasePromptResponse):
@@ -16,20 +19,41 @@ class TablePromptResponse(BasePromptResponse):
     title: Optional[str] = None
 
     @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        """Get the example class for this response type."""
+        from wexample_prompt.example.response.data.table_example import TableExample
+
+        return TableExample
+
+    @classmethod
     def create_table(
         cls,
         data: List[List[Any]],
         headers: Optional[List[str]] = None,
         title: Optional[str] = None,
-        context: Optional[PromptContext] = None
+        context: Optional[PromptContext] = None,
+        **kwargs
     ) -> 'TablePromptResponse':
+        """Create a table response.
+
+        Args:
+            data: List of rows, each row being a list of values
+            headers: Optional list of column headers
+            title: Optional table title
+            context: Optional prompt context for formatting
+            **kwargs: Additional arguments passed to the constructor
+
+        Returns:
+            TablePromptResponse instance
+        """
         return cls(
             lines=[],  # Lines will be generated in render()
             response_type=ResponseType.TABLE,
             data=data,
             headers=headers,
             title=title,
-            context=context
+            context=context,
+            **kwargs
         )
 
     def render(self) -> str:
@@ -50,6 +74,9 @@ class TablePromptResponse(BasePromptResponse):
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
         
         lines = []
+
+        # Add empty line at the start
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
         
         # Add title if provided
         if self.title:
@@ -77,6 +104,9 @@ class TablePromptResponse(BasePromptResponse):
             
         # Bottom border
         lines.append(self._create_border_line(total_width))
+
+        # Add empty line at the end
+        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
         
         # Update lines and render
         self.lines = lines
