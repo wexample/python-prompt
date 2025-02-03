@@ -35,7 +35,20 @@ class PromptContext(BaseModel):
         return " " * (self.indentation * 2)  # Two spaces per level
 
     def should_show_message(self, required_verbosity: VerbosityLevel) -> bool:
-        """Check if a message should be shown based on verbosity level."""
+        """Check if a message should be shown based on verbosity level.
+        
+        Args:
+            required_verbosity: The minimum verbosity level required to show the message
+            
+        Returns:
+            bool: True if the message should be shown, False otherwise
+            
+        Example:
+            - QUIET message (0) in QUIET context (0) -> True
+            - MAXIMUM message (3) in QUIET context (0) -> False
+            - QUIET message (0) in MAXIMUM context (3) -> True
+            - MAXIMUM message (3) in MAXIMUM context (3) -> True
+        """
         return required_verbosity <= self.verbosity
 
     def format_message(self, message: str) -> str:

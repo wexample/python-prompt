@@ -1,11 +1,13 @@
-"""Base class for prompt responses."""
-from typing import List, Dict, Any, TextIO, Type, Optional, TYPE_CHECKING
+"""Base prompt response class."""
+import sys
+from typing import List, Dict, Any, Optional, Type, TextIO, TYPE_CHECKING
 
 from pydantic import Field
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -34,6 +36,7 @@ class BasePromptResponse(AbstractPromptResponse):
         response_type: ResponseType = ResponseType.PLAIN,
         message_type: MessageType = MessageType.LOG,
         metadata: Dict[str, Any] = None,
+        verbosity_level: Optional[VerbosityLevel] = None,
         **kwargs
     ) -> "BasePromptResponse":
         """Create a base prompt response.
@@ -44,6 +47,7 @@ class BasePromptResponse(AbstractPromptResponse):
             response_type: Response type
             message_type: Message type
             metadata: Optional metadata
+            verbosity_level: Optional verbosity level
             **kwargs: Additional keyword arguments
 
         Returns:
@@ -54,29 +58,61 @@ class BasePromptResponse(AbstractPromptResponse):
             context=context,
             response_type=response_type,
             message_type=message_type,
-            metadata=metadata or {}
+            metadata=metadata or {},
+            verbosity_level=verbosity_level or VerbosityLevel.DEFAULT
+        )
+
+    @classmethod
+    def create_from_text(
+        cls,
+        text: str,
+        verbosity_level: VerbosityLevel,
+        context: "PromptContext",
+        **kwargs
+    ) -> 'BasePromptResponse':
+        """Create a base prompt response from text.
+
+        Args:
+            text: Text to create response from
+            verbosity_level: Verbosity level for this response
+            context: Prompt context
+            **kwargs: Additional keyword arguments
+
+        Returns:
+            BasePromptResponse: A new base prompt response
+        """
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        return cls(
+            lines=[
+                PromptResponseLine(segments=[
+                    PromptResponseSegment(text=text)
+                ])
+            ],
+            context=context,
+            verbosity_level=verbosity_level,
+            **kwargs
         )
 
     def print(
         self,
         output: TextIO = None,
-        end: str = "\n",
-        flush: bool = True,
+        **kwargs
     ) -> None:
         """Print the response.
 
         Args:
-            output: Output stream
-            end: End string
-            flush: Whether to flush the output
+            output: Output stream to print to
+            **kwargs: Additional keyword arguments
         """
         rendered = self.render()
         if rendered:
-            print(rendered, file=output, end=end, flush=flush)
+            print(rendered, file=output or sys.stdout, end="\n")
 
         # Exit if fatal
         if self.context and self.context.fatal:
-            self._on_fatal()
+            sys.exit(1)
 
     def _on_fatal(self):
         """Handle fatal errors."""
