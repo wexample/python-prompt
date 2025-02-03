@@ -1,9 +1,13 @@
 from typing import ClassVar, Optional, Any, Type, TYPE_CHECKING
+import traceback
 
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
+from wexample_prompt.responses.base_prompt_response import BasePromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -35,6 +39,27 @@ class ErrorPromptResponse(BaseMessageResponse):
         )
 
         response.exception = exception
+
+        # Add exception details if present
+        if exception is not None:
+            # Get full traceback
+            trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+            
+            # Create detailed response with trace
+            response_details = BasePromptResponse.create_from_text(
+                text=trace,
+                context=context,
+                verbosity_level=VerbosityLevel.DEFAULT
+            )
+            
+            # Combine responses
+            response = MultiplePromptResponse.create_multiple(
+                responses=[
+                    response,
+                    response_details,
+                ],
+                context=context
+            )
 
         return response
 
