@@ -7,6 +7,8 @@ from typing import Any, List, Optional, TextIO, Type, TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.mixins.response.manager.base_prompt_response_manager_mixin import \
+    BasePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.interactive.choice_dict_prompt_response_manager_mixin import \
     ChoiceDictPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_manager_mixin import \
@@ -61,6 +63,8 @@ if TYPE_CHECKING:
 class IoManager(
     BaseModel,
     WithIndent,
+    BasePromptResponseManagerMixin,
+    ChoiceDictPromptResponseManagerMixin,
     # Data
     ListPromptResponseManagerMixin,
     MultiplePromptResponseManagerMixin,
@@ -70,7 +74,6 @@ class IoManager(
     TreePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
-    ChoiceDictPromptResponseManagerMixin,
     DirPickerPromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
