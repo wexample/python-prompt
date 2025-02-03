@@ -22,6 +22,10 @@ class ErrorPromptResponse(BaseMessageResponse):
         color: Optional[TerminalColor] = None,
         **kwargs
     ) -> "ErrorPromptResponse":
+
+        if exception is not None:
+            message += f': {exception}'
+
         # Create response with context
         response = cls._create_symbol_message(
             text=message or "Undefined error",

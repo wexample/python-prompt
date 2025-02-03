@@ -66,8 +66,8 @@ class BasePromptResponse(AbstractPromptResponse):
     def create_from_text(
         cls,
         text: str,
-        verbosity_level: VerbosityLevel,
         context: "PromptContext",
+        verbosity_level: Optional[VerbosityLevel] = None,
         **kwargs
     ) -> 'BasePromptResponse':
         """Create a base prompt response from text.
