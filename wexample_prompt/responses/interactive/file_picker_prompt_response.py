@@ -43,7 +43,6 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
         # Separate directories and files for better organization
         choices_dirs: Dict[str, str] = {"..": ".."}
         choices_files: Dict[str, str] = {}
-        
         # List directory contents
         for element in os.listdir(base_dir):
             full_path = os.path.join(base_dir, element)
