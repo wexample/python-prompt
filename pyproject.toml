@@ -37,6 +37,5 @@ text = "MIT"
 homepage = "https://github.com/wexample/python-prompt"
 
 [tool.setuptools]
-packages = [
-    "wexample_prompt",
-]
+packages = ["wexample_prompt*"]
+package-dir = {"" = "."}
