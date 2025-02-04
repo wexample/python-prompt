@@ -2,7 +2,7 @@
 
 Helper for your tty interactions
 
-Version: 0.0.29
+Version: 0.0.30
 
 ## Requirements
 
