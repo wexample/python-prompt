@@ -114,18 +114,26 @@ class IoManager(
     _logger: Optional[Logger] = PrivateAttr(default=None)
     _log_file_handler: Optional[TextIO] = PrivateAttr(default=None)
     _instance_count: int = PrivateAttr(default=0)
-    _tty_width: int = PrivateAttr(default_factory=lambda: shutil.get_terminal_size().columns)
     _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
     _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
     _last_context: Optional[str] = PrivateAttr(default=None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._tty_width = shutil.get_terminal_size().columns
         self._stdout = sys.stdout
         self._stdin = sys.stdin
         self._last_context = None
         self._setup_logger()
+
+    @property
+    def _tty_width(self) -> int:
+        """Alias for terminal_width to maintain backward compatibility."""
+        return self.terminal_width
+
+    @_tty_width.setter
+    def _tty_width(self, value: int) -> None:
+        """Update terminal width when _tty_width is set."""
+        self.terminal_width = value
 
     def _setup_logger(self):
         """Set up logging configuration."""
@@ -231,4 +239,5 @@ class IoManager(
         self.print_response(response)
 
     def update_terminal_width(self) -> None:
-        self._tty_width = shutil.get_terminal_size().columns
+        """Update terminal width from system."""
+        self.terminal_width = shutil.get_terminal_size().columns
