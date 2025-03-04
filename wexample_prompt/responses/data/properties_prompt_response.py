@@ -80,9 +80,6 @@ class PropertiesPromptResponse(BasePromptResponse):
         # Bottom border
         lines.append(self._create_border_line(content_width))
 
-        # Empty line at end
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
-
         # Update lines and render using parent class
         self.lines = lines
         return super().render()

@@ -11,7 +11,7 @@ class WithPromptContext(
 
     def __getattr__(self, name):
         if not hasattr(self.io, name):
-            raise AttributeError(f"Neither '{self.__class__.__name__}' nor 'io' object has attribute '{name}'")
+            raise AttributeError(f"'{self.__class__.__name__}' has no attribute '{name}'")
 
         def wrapper(*args, **kwargs):
             method = getattr(self.io, name)
