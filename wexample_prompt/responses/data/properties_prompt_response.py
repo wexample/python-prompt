@@ -54,10 +54,8 @@ class PropertiesPromptResponse(BasePromptResponse):
         max_key_width = max(len(str(key)) for key in self.properties.keys())
         content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
 
-        lines = []
-
         # Empty line at start
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+        lines = [PromptResponseLine(segments=[PromptResponseSegment(text="")])]
 
         # Add title if provided
         if self.title:
@@ -65,7 +63,7 @@ class PropertiesPromptResponse(BasePromptResponse):
             title_line = PromptResponseLine(segments=[
                 PromptResponseSegment(text="-" * title_padding),
                 PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title)))
+                PromptResponseSegment(text="-" * (content_width - title_padding - len(self.title) - 2))
             ])
             lines.append(title_line)
         else:
