@@ -19,3 +19,6 @@ class WithIoManager:
     def io(self, manager: IoManager) -> None:
         """Set the IoManager instance."""
         self.io_manager = manager
+
+    def _init_io_manager(self):
+        self.io = IoManager()
