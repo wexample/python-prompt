@@ -10,6 +10,9 @@ class WithPromptContext(
     _context_indent: int = 2  # Number of spaces for each indentation level
 
     def __getattr__(self, name):
+        if not hasattr(self.io, name):
+            raise AttributeError(f"Neither '{self.__class__.__name__}' nor 'io' object has attribute '{name}'")
+
         def wrapper(*args, **kwargs):
             method = getattr(self.io, name)
             if args:
