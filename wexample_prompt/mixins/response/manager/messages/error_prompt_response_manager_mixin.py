@@ -13,6 +13,8 @@ class ErrorPromptResponseManagerMixin:
         params: Optional[Dict[str, Any]] = None,
         exception: Optional[Any] = None,
         fatal: bool = False,
+        format: bool = False,
+        format_paths_map: Optional[dict] = None,
         **kwargs
     ) -> "ErrorPromptResponse":
         from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
@@ -26,6 +28,8 @@ class ErrorPromptResponseManagerMixin:
             message=message,
             context=context,
             exception=exception,
+            format=format,
+            format_paths_map=format_paths_map,
             **kwargs
         )
 

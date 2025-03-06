@@ -3,8 +3,6 @@ from typing import ClassVar, Optional, Any, Type, TYPE_CHECKING
 from wexample_prompt.common.error_context import ErrorContext
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses import BasePromptResponse
-from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 
 if TYPE_CHECKING:
@@ -17,25 +15,34 @@ class ErrorPromptResponse(BaseMessageResponse):
 
     @classmethod
     def create_error(
-        cls: "ErrorPromptResponse",
-        message: Optional[str] = None,
-        context: Optional[ErrorContext] = None,
-        exception: Optional[Any] = None,
-        color: Optional[TerminalColor] = None,
-        **kwargs
+            cls: "ErrorPromptResponse",
+            message: Optional[str] = None,
+            context: Optional[ErrorContext] = None,
+            exception: Optional[Any] = None,
+            color: Optional[TerminalColor] = None,
+            format: bool = False,
+            format_paths_map: Optional[dict] = None,
+            **kwargs
     ) -> "ErrorPromptResponse":
         import traceback
-        from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
         # Build complete error message
         error_parts = []
         if message:
             error_parts.append(message)
         if exception:
-            error_parts.append(str(exception))
-            # Add traceback if there's an exception
-            trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
-            error_parts.append("\nTraceback:\n" + trace)
+            if format:
+                from wexample_helpers.helpers.error import error_format
+
+                error_parts.append(error_format(
+                    error=exception,
+                    paths_map=format_paths_map
+                ))
+            else:
+                error_parts.append(str(exception))
+                # Add traceback if there's an exception
+                trace = ''.join(traceback.format_exception(type(exception), exception, exception.__traceback__))
+                error_parts.append("\nTraceback:\n" + trace)
 
         # Create response with full error message
         response = cls._create_symbol_message(
