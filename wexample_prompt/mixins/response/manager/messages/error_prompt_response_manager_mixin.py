@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class ErrorPromptResponseManagerMixin:
     def error(
         self,
-        message: str,
+        message: Optional[str] = None,
         params: Optional[Dict[str, Any]] = None,
         exception: Optional[Any] = None,
         fatal: bool = False,
