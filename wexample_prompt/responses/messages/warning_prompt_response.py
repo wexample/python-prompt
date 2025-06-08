@@ -1,9 +1,9 @@
 from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
+from wexample_prompt.common.error_context import ErrorContext
+from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
-from wexample_prompt.enums.message_type import MessageType
-from wexample_prompt.common.error_context import ErrorContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -17,11 +17,11 @@ class WarningPromptResponse(BaseMessageResponse):
 
     @classmethod
     def create_warning(
-        cls: "WarningPromptResponse",
-        message: str,
-        context: ErrorContext = None,
-        color: Optional[TerminalColor] = None,
-        **kwargs
+            cls: "WarningPromptResponse",
+            message: str,
+            context: ErrorContext = None,
+            color: Optional[TerminalColor] = None,
+            **kwargs
     ) -> "AbstractPromptResponse":
         return cls._create_symbol_message(
             text=message,

@@ -1,14 +1,13 @@
 from abc import abstractmethod
-from typing import Optional, ClassVar
+from typing import Optional, ClassVar, Tuple
 
 from wexample_prompt.common.color_manager import ColorManager
-from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.enums.message_type import MessageType
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.base_prompt_response import BasePromptResponse
-
-from wexample_prompt.common.prompt_context import PromptContext
 
 
 class BaseMessageResponse(BasePromptResponse):
@@ -22,13 +21,13 @@ class BaseMessageResponse(BasePromptResponse):
 
     @classmethod
     def _create_symbol_message(
-        cls,
-        text: str,
-        color: TerminalColor,
-        symbol: Optional[str] = None,
-        bold_symbol: bool = True,
-        context: Optional[PromptContext] = None,
-        **kwargs
+            cls,
+            text: str,
+            color: TerminalColor,
+            symbol: Optional[Tuple[str, False]] = None,
+            bold_symbol: bool = True,
+            context: Optional[PromptContext] = None,
+            **kwargs
     ) -> 'BaseMessageResponse':
         """Create a message with a symbol.
 
@@ -46,7 +45,7 @@ class BaseMessageResponse(BasePromptResponse):
         segments = []
 
         # Add symbol if present
-        if symbol or cls.SYMBOL:
+        if symbol or (symbol is None and cls.SYMBOL):
             symbol_text = f"{symbol or cls.SYMBOL} "
             symbol_segment = PromptResponseSegment(
                 text=ColorManager.colorize(
