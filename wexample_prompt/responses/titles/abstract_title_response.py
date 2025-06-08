@@ -60,7 +60,7 @@ class AbstractTitleResponse(BasePromptResponse):
         """Render the title with current context dimensions."""
         # Get terminal width from context or default
         term_width = (
-            self.context.terminal_width
+            self.context.get_effective_width()
             if self.context and hasattr(self.context, 'terminal_width')
             else 80
         )

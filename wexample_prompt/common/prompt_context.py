@@ -24,15 +24,20 @@ class PromptContext(BaseModel):
 
     def get_effective_width(self) -> int:
         """Get the effective width considering terminal constraints."""
-        return min(self.terminal_width, 120)  # Cap at reasonable width
+        return (min(self.terminal_width, 120)  # Cap at reasonable width
+                - self.indentation)
 
     def should_use_color(self) -> bool:
         """Determine if color should be used."""
         return self.color_enabled and self.is_tty
 
+    def get_indentation_spaces_count(self) -> int:
+        from wexample_prompt.const.formatting import INDENTATION_SPACES
+        return self.indentation * INDENTATION_SPACES
+
     def get_indentation(self) -> str:
         """Get the current indentation string."""
-        return " " * (self.indentation * 2)  # Two spaces per level
+        return " " * self.get_indentation_spaces_count()
 
     def should_show_message(self, required_verbosity: Optional[VerbosityLevel]) -> bool:
         """Check if a message should be shown based on verbosity level.

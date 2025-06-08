@@ -46,7 +46,7 @@ class PropertiesPromptResponse(BasePromptResponse):
             return ""
 
         # Calculate total width including padding
-        total_width = self.context.terminal_width if self.context else 80
+        total_width = self.context.get_effective_width() if self.context else 80
         # Content width is total minus padding (2)
         content_width = total_width - 2
 
@@ -108,6 +108,8 @@ class PropertiesPromptResponse(BasePromptResponse):
 
     @staticmethod
     def _create_border_line(width: int, left: str = "", right: str = "") -> PromptResponseLine:
+        from wexample_prompt.const.formatting import INDENTATION_SPACES
+
         return PromptResponseLine(segments=[
             PromptResponseSegment(text=f"{left}{'-' * width}{right}")
         ])
