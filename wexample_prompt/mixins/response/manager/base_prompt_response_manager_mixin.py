@@ -44,7 +44,7 @@ class BasePromptResponseManagerMixin:
         else:
             lines = message
 
-        return BasePromptResponse.create_base(
+        response = BasePromptResponse.create_base(
             lines=lines,
             context=self.create_context(),
             response_type=response_type,
@@ -52,3 +52,7 @@ class BasePromptResponseManagerMixin:
             metadata=metadata,
             **kwargs
         )
+
+        self.print_response(response)
+        return response
+
