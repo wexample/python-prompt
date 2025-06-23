@@ -9,18 +9,22 @@ class WithPromptContext(
     prompt_context_parent: Optional[Any] = None
     _context_indent: int = 2  # Number of spaces for each indentation level
 
-    def __getattr__(self, name):
-        if not hasattr(self.io, name):
-            raise AttributeError(f"'{self.__class__.__name__}' has no attribute '{name}'")
+    def __getattr__(self, name: str):
+        if hasattr(self.io, name):
+            attr = getattr(self.io, name)
 
-        def wrapper(*args, **kwargs):
-            method = getattr(self.io, name)
-            if args:
-                formatted_message = self.format_message(args[0])
-                args = (formatted_message,) + args[1:]
-            return method(*args, **kwargs)
+            if callable(attr):
+                def wrapper(*args, **kwargs):
+                    if args:
+                        formatted_msg = self.format_message(args[0])
+                        args = (formatted_msg,) + args[1:]
+                    return attr(*args, **kwargs)
 
-        return wrapper
+                return wrapper
+
+            return attr
+
+        return super().__getattr__(name)
 
     def get_prompt_context_parent(self) -> Optional['WithPromptContext']:
         """Get the parent context for indentation. By default, returns None."""
