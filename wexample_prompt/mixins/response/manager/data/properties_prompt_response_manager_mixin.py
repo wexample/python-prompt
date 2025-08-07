@@ -33,8 +33,5 @@ class PropertiesPromptResponseManagerMixin:
             **kwargs
         )
 
-        if self._logger.handlers:
-            self._logger.debug(str(properties))
-
         self.print_response(response)
         return response

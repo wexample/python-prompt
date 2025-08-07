@@ -1,6 +1,9 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from wexample_prompt.common.io_manager import IoManager
+
+if TYPE_CHECKING:
+    from wexample_prompt.output.abstract_output_handler import AbsractOutputHandler
 
 
 class WithIoManager:
@@ -18,5 +21,5 @@ class WithIoManager:
         """Set the IoManager instance."""
         self._io = manager
 
-    def _init_io_manager(self):
-        self._io = IoManager()
+    def _init_io_manager(self, output: Optional["AbsractOutputHandler"] = None) -> None:
+        self._io = IoManager(output=output)

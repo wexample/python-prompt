@@ -9,6 +9,18 @@ from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.response.manager.base_prompt_response_manager_mixin import \
     BasePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.list_prompt_response_manager_mixin import \
+    ListPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.multiple_prompt_response_manager_mixin import \
+    MultiplePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.properties_prompt_response_manager_mixin import \
+    PropertiesPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.suggestions_prompt_response_manager_mixin import \
+    SuggestionsPromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.table_prompt_response_manager_mixin import \
+    TablePromptResponseManagerMixin
+from wexample_prompt.mixins.response.manager.data.tree_prompt_response_manager_mixin import \
+    TreePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.interactive.choice_dict_prompt_response_manager_mixin import \
     ChoiceDictPromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.interactive.choice_prompt_response_manager_mixin import \
@@ -39,19 +51,9 @@ from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_man
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.list_prompt_response_manager_mixin import \
-    ListPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.multiple_prompt_response_manager_mixin import \
-    MultiplePromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.properties_prompt_response_manager_mixin import \
-    PropertiesPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.suggestions_prompt_response_manager_mixin import \
-    SuggestionsPromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.table_prompt_response_manager_mixin import \
-    TablePromptResponseManagerMixin
-from wexample_prompt.mixins.response.manager.data.tree_prompt_response_manager_mixin import \
-    TreePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
+from wexample_prompt.output.abstract_output_handler import AbsractOutputHandler
+from wexample_prompt.output.strout_output_handler import StdoutOutputHandler
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
 from wexample_prompt.themes.default.default_prompt_theme import DefaultPromptTheme
@@ -114,16 +116,15 @@ class IoManager(
     _logger: Optional[Logger] = PrivateAttr(default=None)
     _log_file_handler: Optional[TextIO] = PrivateAttr(default=None)
     _instance_count: int = PrivateAttr(default=0)
-    _stdout: TextIO = PrivateAttr(default_factory=lambda: sys.stdout)
-    _stdin: TextIO = PrivateAttr(default_factory=lambda: sys.stdin)
     _last_context: Optional[str] = PrivateAttr(default=None)
+    output: Optional[AbsractOutputHandler] = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._stdout = sys.stdout
-        self._stdin = sys.stdin
         self._last_context = None
-        self._setup_logger()
+        self._init_output()
+        self._init_logger()
 
     @property
     def _tty_width(self) -> int:
@@ -135,7 +136,10 @@ class IoManager(
         """Update terminal width when _tty_width is set."""
         self.terminal_width = value
 
-    def _setup_logger(self):
+    def _init_output(self):
+        self.output = self.output if (self.output is not None) else StdoutOutputHandler()
+
+    def _init_logger(self):
         """Set up logging configuration."""
         self._logger = logging.getLogger(__name__)
         self._logger.setLevel(self.log_level)
@@ -223,7 +227,11 @@ class IoManager(
         if response.context.indentation == 0 and self.log_indent > 0:
             response.context.indentation = self.log_indent
 
-        response.print(output=self._stdout)
+        self.output.print(response)
+
+        # Exit if fatal
+        if response.context and response.context.fatal:
+            sys.exit(1)
 
     def get_input(self, prompt: str = "") -> str:
         return input(prompt)

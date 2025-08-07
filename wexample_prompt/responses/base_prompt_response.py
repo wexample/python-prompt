@@ -1,6 +1,5 @@
 """Base prompt response class."""
-import sys
-from typing import List, Dict, Any, Optional, Type, TextIO, TYPE_CHECKING
+from typing import List, Dict, Any, Optional, Type, TYPE_CHECKING
 
 from wexample_prompt.enums.message_type import MessageType
 from wexample_prompt.enums.response_type import ResponseType
@@ -28,14 +27,14 @@ class BasePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_base(
-        cls,
-        lines: List["PromptResponseLine"],
-        context: Optional["PromptContext"] = None,
-        response_type: ResponseType = ResponseType.PLAIN,
-        message_type: MessageType = MessageType.LOG,
-        metadata: Dict[str, Any] = None,
-        verbosity_level: Optional[VerbosityLevel] = None,
-        **kwargs
+            cls,
+            lines: List["PromptResponseLine"],
+            context: Optional["PromptContext"] = None,
+            response_type: ResponseType = ResponseType.PLAIN,
+            message_type: MessageType = MessageType.LOG,
+            metadata: Dict[str, Any] = None,
+            verbosity_level: Optional[VerbosityLevel] = None,
+            **kwargs
     ) -> "BasePromptResponse":
         """Create a base prompt response.
 
@@ -62,9 +61,9 @@ class BasePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_from_text(
-        cls,
-        text: str,
-        **kwargs
+            cls,
+            text: str,
+            **kwargs
     ) -> 'BasePromptResponse':
         """Create a base prompt response from text.
 
@@ -88,25 +87,6 @@ class BasePromptResponse(AbstractPromptResponse):
             ],
             **kwargs
         )
-
-    def print(
-        self,
-        output: TextIO = None,
-        **kwargs
-    ) -> None:
-        """Print the response.
-
-        Args:
-            output: Output stream to print to
-            **kwargs: Additional keyword arguments
-        """
-        rendered = self.render()
-        if rendered:
-            print(rendered, file=output or sys.stdout, end="\n")
-
-        # Exit if fatal
-        if self.context and self.context.fatal:
-            sys.exit(1)
 
     def _on_fatal(self):
         """Handle fatal errors."""

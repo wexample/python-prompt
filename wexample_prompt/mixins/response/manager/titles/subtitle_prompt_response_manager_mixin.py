@@ -16,8 +16,5 @@ class SubtitlePromptResponseManagerMixin:
             context=self.create_context(),
         )
 
-        if self._logger.handlers:
-            self._logger.debug(message)
-
         self.print_response(response)
         return response
