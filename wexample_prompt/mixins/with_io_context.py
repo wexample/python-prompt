@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import Field
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class WithIoContext:
@@ -25,6 +26,7 @@ class WithIoContext:
             parent_context=parent_io_context,
             indentation=self.get_io_context_indentation(),
             indentation_character=self.get_io_context_indentation_character(),
+            indentation_color=self.get_io_context_indentation_color(),
             colorized=self.get_io_context_colorized(),
         )
 
@@ -35,4 +37,7 @@ class WithIoContext:
         return None
 
     def get_io_context_indentation_character(self) -> Optional[str]:
+        return None
+
+    def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
         return None

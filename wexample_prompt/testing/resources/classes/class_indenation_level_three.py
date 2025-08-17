@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_io_context import WithIoContext
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
@@ -19,6 +20,9 @@ class ClassIndentationLevelThree(WithRequiredIoManager, WithIoContext, ExtendedB
 
     def get_io_context_indentation_character(self) -> Optional[str]:
         return "·"
+
+    def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
+        return TerminalColor.BLUE
 
     def print_deep_log_three(self):
         return self.io.log(
