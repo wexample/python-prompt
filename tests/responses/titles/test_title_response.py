@@ -53,7 +53,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         # Test through IoManager
-        title_response = self.io_manager.title(self.test_message)
+        title_response = self.io.title(self.test_message)
         rendered = title_response.render()
 
         # Common structure checks
@@ -64,7 +64,7 @@ class TestTitleResponse(AbstractPromptResponseTest):
         self.assertIsInstance(title_response, TitlePromptResponse)
 
     def test_prompt_context(self):
-        test_context = ExampleClassWithContext(io_manager=self.io_manager)
+        test_context = ExampleClassWithContext(io=self.io)
         response = test_context.title(self.test_message)
         rendered = response.render()
 

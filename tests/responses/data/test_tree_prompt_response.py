@@ -138,7 +138,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        response = self.io_manager.tree(data=self.test_data)
+        response = self.io.tree(data=self.test_data)
         rendered = response.render()
         self.assert_common_response_structure(rendered)
         self.assert_contains_text(rendered, "root")
@@ -149,7 +149,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io=self.io
         )
         response = class_with_context.tree(data=self.test_data)
         rendered = response.render()

@@ -150,7 +150,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        result = self.io_manager.file_picker(
+        result = self.io.file_picker(
             base_dir=self.test_dir,
             question=self.test_message
         )

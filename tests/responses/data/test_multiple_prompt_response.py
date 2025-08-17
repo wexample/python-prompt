@@ -122,7 +122,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        result = self.io_manager.multiple(
+        result = self.io.multiple(
             responses=self.test_responses
         )
         self.assertIsInstance(result, MultiplePromptResponse)

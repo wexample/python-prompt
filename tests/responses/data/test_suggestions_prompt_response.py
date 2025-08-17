@@ -131,7 +131,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        response = self.io_manager.suggestions(
+        response = self.io.suggestions(
             message=self.message,
             suggestions=self.suggestions
         )
@@ -145,7 +145,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io=self.io
         )
         method = getattr(class_with_context, self.get_io_method_name())
         response = method(

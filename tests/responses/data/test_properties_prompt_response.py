@@ -31,7 +31,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.example.example_class_with_context import ExampleClassWithContext
         self.class_with_context = ExampleClassWithContext(
             context=self.context,
-            io_manager=self.io_manager
+            io=self.io
         )
 
     def get_response_class(self) -> Type[AbstractPromptResponse]:
@@ -115,7 +115,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_specific_format(rendered)
 
     def test_io_manager(self):
-        result = self.io_manager.properties(
+        result = self.io.properties(
             properties=self.properties
         )
         self.assertIsInstance(result, PropertiesPromptResponse)

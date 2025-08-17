@@ -83,7 +83,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        result = self.io_manager.progress(
+        result = self.io.progress(
             total=self.total,
             current=self.current,
             width=self.width,
@@ -98,7 +98,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io=self.io
         )
         result = class_with_context.progress(
             total=self.total,
@@ -116,7 +116,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
             ProgressStep(callback=lambda: None, description="Step 1", weight=1),
             ProgressStep(callback=lambda: None, description="Step 2", weight=2)
         ]
-        context = self.io_manager.progress_steps(steps, title="Test Steps")
+        context = self.io.progress_steps(steps, title="Test Steps")
         self.assertEqual(context.total_weight, 3)
 
     @patch('time.sleep')  # Mock sleep to speed up tests
@@ -128,7 +128,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
             lambda: "step2",
             lambda: "step3"
         ]
-        results = self.io_manager.progress_execute(
+        results = self.io.progress_execute(
             callbacks=callbacks,
             title="Test Execute"
         )

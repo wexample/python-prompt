@@ -53,7 +53,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
         self._assert_specific_format(rendered)
 
     def test_io_manager(self):
-        response = self.io_manager.subtitle(self.test_message)
+        response = self.io.subtitle(self.test_message)
         rendered = response.render()
 
         # Common structure checks
@@ -64,7 +64,7 @@ class TestSubtitleResponse(AbstractPromptResponseTest):
         self.assertIsInstance(response, SubtitlePromptResponse)
 
     def test_prompt_context(self):
-        test_context = ExampleClassWithContext(io_manager=self.io_manager)
+        test_context = ExampleClassWithContext(io=self.io)
         response = test_context.subtitle(self.test_message)
         rendered = response.render()
 

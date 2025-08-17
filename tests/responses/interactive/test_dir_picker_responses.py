@@ -114,7 +114,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
     @patch('InquirerPy.inquirer.select')
     def test_io_manager(self, mock_select):
         """Test IoManager integration."""
-        method = getattr(self.io_manager, self.get_io_method_name())
+        method = getattr(self.io, self.get_io_method_name())
         result = method(self.test_message, base_dir=self.test_dir)
 
         # Verify that we get a DirPickerPromptResponse object
@@ -127,7 +127,7 @@ class TestDirPickerPromptResponse(AbstractPromptResponseTest):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io=self.io
         )
         method = getattr(class_with_context, self.get_io_method_name())
         result = method(self.test_message, base_dir=self.test_dir)

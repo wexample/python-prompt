@@ -120,7 +120,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        response = self.io_manager.table(
+        response = self.io.table(
             data=self.data,
             headers=self.headers,
             title=self.test_message
@@ -135,7 +135,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io=self.io
         )
         response = class_with_context.table(
             data=self.data,
