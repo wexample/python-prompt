@@ -1,13 +1,15 @@
 from typing import TYPE_CHECKING, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 
-class PromptResponseSegment(BaseModel):
+class PromptResponseSegment(ExtendedBaseModel):
     """A segment of text with optional styling."""
     text: str = Field(
         description="The content of the segment"

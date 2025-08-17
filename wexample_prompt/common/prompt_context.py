@@ -1,7 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 
 
-class PromptContext(BaseModel):
+class PromptContext(ExtendedBaseModel):
     colorized: bool = Field(
         default=True,
         description="Allow to return avoid coloration special characters"

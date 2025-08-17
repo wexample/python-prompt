@@ -1,17 +1,17 @@
 """Prompt response line implementation."""
 from typing import List, Optional, TYPE_CHECKING
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class PromptResponseLine(BaseModel):
+class PromptResponseLine(ExtendedBaseModel):
     """A line of text composed of one or more segments with optional styling and layout."""
 
     segments: List[PromptResponseSegment] = Field(
