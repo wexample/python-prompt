@@ -1,5 +1,7 @@
 from typing import List, Type, TYPE_CHECKING, Optional
 
+from pydantic import Field
+
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
@@ -14,14 +16,18 @@ class IoManager(
     # Messages
     LogPromptResponseManagerMixin,
 ):
-    output: Optional[AbstractOutputHandler] = None
+    output: Optional[AbstractOutputHandler] = Field(
+        default=None,
+        description="Manages what to do with the generated output (print, or store), "
+                    "by default print to stdout"
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._init_output()
 
     def _init_output(self):
-        from wexample_prompt.output.strout_output_handler import StdoutOutputHandler
+        from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
         self.output = self.output if (self.output is not None) else StdoutOutputHandler()
 
     @classmethod
@@ -35,4 +41,3 @@ class IoManager(
 
     def print_response(self, response: "AbstractPromptResponse") -> None:
         self.output.print(response)
-
