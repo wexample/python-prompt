@@ -4,5 +4,9 @@ from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 class ExtendedBaseModelWithIoManager(WithIoManager, ExtendedBaseModel):
     """
-    The minimal class with an io manager.
+    A Pydantic class with an io manager.
     """
+
+    def __init__(self, **kwargs):
+        ExtendedBaseModel.__init__(self, **kwargs)
+        WithIoManager.__init__(self, **kwargs)
