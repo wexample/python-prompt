@@ -13,10 +13,14 @@ class WithIoManager:
     def __init__(
             self,
             io: Optional[IoManager] = None,
-            parent_io_context: "PromptContext" = None,
+            parent_io_handler: "WithIoManager" = None,
     ) -> None:
-        self._io = io
-        self._init_io_context(parent_io_context=parent_io_context)
+        if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
+            self._io = parent_io_handler.io
+            self._io_context = self._create_io_context(source_context=parent_io_handler.io_context)
+        else:
+            self._io = io
+            self._io_context = self._create_io_context()
 
     @property
     def io(self) -> IoManager:
@@ -27,13 +31,12 @@ class WithIoManager:
         """Set the IoManager instance."""
         self._io = manager
 
+    @property
+    def io_context(self) -> "PromptContext":
+        return self._io_context
+
     def _init_io_manager(self) -> None:
         self._io = IoManager()
-
-    def _init_io_context(self, parent_io_context: "PromptContext"):
-        self._io_context = self._create_io_context(
-            source_context=parent_io_context
-        )
 
     def _create_io_context(self, source_context: "PromptContext" = None):
         return PromptContext(

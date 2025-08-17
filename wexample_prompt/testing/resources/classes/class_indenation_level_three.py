@@ -5,16 +5,16 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_required_io_manager import WithRequiredIoManager
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class ClassIndentationLevelThree(WithRequiredIoManager, ExtendedBaseModel):
-    def __init__(self, io, parent_io_context: "PromptContext", **kwargs):
+    def __init__(self, parent_io_handler: "WithIoManager", **kwargs):
         ExtendedBaseModel.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(
             self,
-            io=io,
-            parent_io_context=parent_io_context
+            io=parent_io_handler.io,
+            parent_io_handler=parent_io_handler
         )
 
     def get_io_context_indentation_character(self) -> Optional[str]:
@@ -23,8 +23,8 @@ class ClassIndentationLevelThree(WithRequiredIoManager, ExtendedBaseModel):
     def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
         return TerminalColor.BLUE
 
-    def print_deep_log_three(self, context: "PromptContext" = None):
+    def print_deep_log_three(self):
         return self.io.log(
             message='test deep log three',
-            context=self._io_context
+            context=self.io_context
         )

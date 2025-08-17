@@ -5,11 +5,10 @@ class ClassIndentationLevelOne(WithIoManager):
     def print_deep_log_one(self):
         from wexample_prompt.testing.resources.classes.class_indenation_level_two import ClassIndentationLevelTwo
 
-        self.io.log('test deep log one', context=self._io_context)
+        self.io.log('test deep log one', context=self.io_context)
 
         level_two = ClassIndentationLevelTwo(
-            io=self.io,
-            parent_io_context=self._io_context
+            parent_io_handler=self
         )
 
         return level_two.print_deep_log_two()
