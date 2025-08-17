@@ -9,18 +9,32 @@ class TestIoManager(AbstractPromptResponseTest):
         """Set up common test fixtures."""
         super().setUp()
 
-    def test_instantiate_io_manager(self):
+    def test_instantiate_class(self):
         from wexample_prompt.testing.resources.classes.class_with_io_manager import ClassWithIoManager
 
         self.assertClassHasNoneManager(ClassWithIoManager)
         self.assertClassInstanceSucceeded(ClassWithIoManager)
 
-    def test_instantiate_required_io_manager(self):
+    def test_instantiate_class_required(self):
         from wexample_prompt.testing.resources.classes.class_with_required_io_manager import ClassWithRequiredIoManager
 
         # Missing required 'io' should raise a TypeError from __init__
         self.assertMissingArgumentError(class_type=ClassWithRequiredIoManager)
         self.assertClassInstanceSucceeded(class_type=ClassWithRequiredIoManager)
+
+    def test_instantiate_extended_base_model(self):
+        from wexample_prompt.testing.resources.classes.extended_base_model_with_io_manager import \
+            ExtendedBaseModelWithIoManager
+
+        self.assertClassHasNoneManager(ExtendedBaseModelWithIoManager)
+        self.assertClassInstanceSucceeded(ExtendedBaseModelWithIoManager)
+
+    def test_instantiate_extended_base_model_required(self):
+        from wexample_prompt.testing.resources.classes.extended_base_model_with_required_io_manager import \
+            ExtendedBaseModelWithRequiredIoManager
+
+        self.assertMissingArgumentError(ExtendedBaseModelWithRequiredIoManager)
+        self.assertClassInstanceSucceeded(ExtendedBaseModelWithRequiredIoManager)
 
     def assertClassHasNoneManager(self, class_type: Type):
         instance = class_type()
