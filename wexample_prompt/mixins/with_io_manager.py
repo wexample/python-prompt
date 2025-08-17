@@ -1,13 +1,22 @@
 from typing import Optional
 
 from wexample_prompt.common.io_manager import IoManager
+from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class WithIoManager:
     _io: Optional[IoManager] = None
+    _io_context_colorized: Optional[bool] = None
+    _io_context: "PromptContext"
 
-    def __init__(self, io: Optional[IoManager] = None) -> None:
+    def __init__(
+            self,
+            io: Optional[IoManager] = None,
+            parent_io_context: "PromptContext" = None,
+    ) -> None:
         self._io = io
+        self._init_io_context(parent_io_context=parent_io_context)
 
     @property
     def io(self) -> IoManager:
@@ -20,3 +29,30 @@ class WithIoManager:
 
     def _init_io_manager(self) -> None:
         self._io = IoManager()
+
+    def _init_io_context(self, parent_io_context: "PromptContext"):
+        self._io_context = self._create_io_context(
+            source_context=parent_io_context
+        )
+
+    def _create_io_context(self, source_context: "PromptContext" = None):
+        return PromptContext(
+            parent_context=source_context,
+            indentation=self.get_io_context_indentation(),
+            indentation_character=self.get_io_context_indentation_character(),
+            indentation_color=self.get_io_context_indentation_color(),
+            colorized=self.get_io_context_colorized() or (
+                source_context.colorized if source_context is not None else True),
+        )
+
+    def get_io_context_colorized(self) -> Optional[bool]:
+        return None
+
+    def get_io_context_indentation(self) -> Optional[int]:
+        return None
+
+    def get_io_context_indentation_character(self) -> Optional[str]:
+        return None
+
+    def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
+        return None

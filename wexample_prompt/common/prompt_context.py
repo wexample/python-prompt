@@ -41,7 +41,7 @@ class PromptContext(ExtendedBaseModel):
         indentation = output + self.render_indentation_part()
 
         indentation_color = self.get_indentation_color()
-        if indentation_color:
+        if self.colorized and indentation_color:
             from wexample_prompt.common.color_manager import ColorManager
             return ColorManager.colorize(indentation, indentation_color)
 
