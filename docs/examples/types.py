@@ -15,14 +15,14 @@ if __name__ == "__main__":
 
         print(f"__________________________ {response_type.get_snake_short_class_name()}")
 
-        example_response.context = PromptContext()
-        example.io.print_response(example_response)
-
-        example_response.context = PromptContext(colorized=False)
-        example.io.print_response(example_response)
-
-        example_response.context = PromptContext(indentation=1)
-        example.io.print_response(example_response)
-
+        # Print from manager
         example.example_manager()
 
+        # Print from response
+        example.io.print_response(example_response, context=PromptContext())
+
+        # Print white
+        example.io.print_response(example_response, context=PromptContext(colorized=False))
+
+        # Print indented
+        example.io.print_response(example_response, context=PromptContext(indentation=1))

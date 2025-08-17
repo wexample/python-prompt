@@ -26,9 +26,9 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         assert response.render() == f"\x1b[37m{self._test_message}\x1b[0m"
 
         response = self.create_test_response(
-            text=self._test_message,
-            context=PromptContext(
-                colorized=False
-            )
+            text=self._test_message
         )
-        assert response.render() == self._test_message
+
+        assert response.render(context=PromptContext(
+            colorized=False
+        )) == self._test_message

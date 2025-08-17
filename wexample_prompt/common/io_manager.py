@@ -9,6 +9,7 @@ from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class IoManager(
@@ -39,5 +40,5 @@ class IoManager(
             LogPromptResponse,
         ]
 
-    def print_response(self, response: "AbstractPromptResponse") -> None:
-        self.output.print(response)
+    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
+        self.output.print(response=response, context=context)

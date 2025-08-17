@@ -12,11 +12,15 @@ class PromptContext(ExtendedBaseModel):
         default=0,
         description="Base indentation level"
     )
-    indentation_spaces_count: int = Field(
+    indentation_character: str = Field(
+        default=" ",
+        description="The character used for indentation"
+    )
+    indentation_length: int = Field(
         default=2,
-        description="Number of spaces for one indentation"
+        description="Number of characters to repeat for one indentation"
     )
 
     def get_indentation(self) -> str:
         """Get the current indentation string."""
-        return " " * (self.indentation * self.indentation_spaces_count)
+        return " " * (self.indentation * self.indentation_length)
