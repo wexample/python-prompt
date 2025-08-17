@@ -11,3 +11,7 @@ if TYPE_CHECKING:
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, BaseModel, ABC):
     pass
+
+    def render(self) -> str:
+        """Render the complete response."""
+        return "TODO"
