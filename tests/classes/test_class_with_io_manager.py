@@ -15,3 +15,15 @@ class TestIoManager(AbstractPromptResponseTest):
 
         instance = ClassWithIoManager(io=self.io)
         assert isinstance(instance.io, IoManager)
+
+    def test_instantiate_required_io_manager(self):
+        from wexample_prompt.testing.resources.classes.class_with_required_io_manager import ClassWithRequiredIoManager
+
+        # Missing required 'io' should raise a TypeError from __init__
+        with self.assertRaises(TypeError):
+            # Missing argument
+            ClassWithRequiredIoManager()
+
+        # Providing io should work
+        instance = ClassWithRequiredIoManager(io=self.io)
+        assert isinstance(instance.io, IoManager)
