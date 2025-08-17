@@ -9,11 +9,11 @@ class TaskExample(AbstractResponseExample):
     def example_class(self, indentation: Optional[int] = None):
         return TaskPromptResponse.create_task(
             'Test task message',
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
-        self.io_manager.task('Test task message')
+        self.io.task('Test task message')
 
     def example_context(self):
         self.class_with_context.task('Test task message')

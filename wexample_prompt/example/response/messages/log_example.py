@@ -9,12 +9,12 @@ class LogExample(AbstractResponseExample):
     def example_class(self, indentation: Optional[int] = None):
         return LogPromptResponse.create_log(
             'Test log message',
-            context=self.io_manager.create_context(indentation=indentation),
+            context=self.io.create_context(indentation=indentation),
             indentation=indentation
         )
 
     def example_manager(self):
-        self.io_manager.log('Test log message')
+        self.io.log('Test log message')
 
     def example_context(self):
         self.class_with_context.log('Test log message')

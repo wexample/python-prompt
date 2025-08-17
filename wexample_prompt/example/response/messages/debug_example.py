@@ -12,11 +12,11 @@ class DebugExample(AbstractResponseExample):
         """Example using the class directly."""
         return DebugPromptResponse.create_debug(
             'Test debug message',
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
-        self.io_manager.debug('Test debug message')
+        self.io.debug('Test debug message')
 
     def example_context(self):
         self.class_with_context.debug('Test debug message')

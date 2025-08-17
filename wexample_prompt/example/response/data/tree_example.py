@@ -24,7 +24,7 @@ class TreeExample(AbstractResponseExample):
         }
         response = TreePromptResponse.create_tree(
             data=data,
-            context=self.io_manager.create_context()
+            context=self.io.create_context()
         )
         return response.render()
 
@@ -43,7 +43,7 @@ class TreeExample(AbstractResponseExample):
                 }
             }
         }
-        context = self.io_manager.create_context()
+        context = self.io.create_context()
         if indentation is not None:
             context.indentation = indentation
         return TreePromptResponse.create_tree(
@@ -66,7 +66,7 @@ class TreeExample(AbstractResponseExample):
                 }
             }
         }
-        self.io_manager.tree(data=data)
+        self.io.tree(data=data)
 
     def example_context(self):
         """Example using context."""

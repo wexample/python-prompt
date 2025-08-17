@@ -23,7 +23,7 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         """Set up common test fixtures."""
         self.terminal_width = 80
         self.context = PromptContext(terminal_width=self.terminal_width)
-        self.io_manager = IoManager(terminal_width=self.terminal_width)
+        self.io = IoManager(terminal_width=self.terminal_width)
         self.test_message = "Test message"
 
     @abstractmethod
@@ -83,7 +83,7 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
 
     def test_io_manager(self):
         """Test IoManager integration."""
-        method = getattr(self.io_manager, self.get_io_method_name())
+        method = getattr(self.io, self.get_io_method_name())
         response = method(self.test_message)
         rendered = response.render()
 
@@ -96,7 +96,7 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
         context = self.context
         class_with_context = ExampleClassWithContext(
             context=context,
-            io_manager=self.io_manager
+            io_manager=self.io
         )
         method = getattr(class_with_context, self.get_io_method_name())
         response = method(self.test_message)

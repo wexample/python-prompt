@@ -9,11 +9,11 @@ class FailureExample(AbstractResponseExample):
     def example_class(self, indentation: Optional[int] = None):
         return FailurePromptResponse.create_failure(
             'Test failure message',
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
-        self.io_manager.failure('Test failure message')
+        self.io.failure('Test failure message')
 
     def example_context(self):
         self.class_with_context.failure('Test failure message')

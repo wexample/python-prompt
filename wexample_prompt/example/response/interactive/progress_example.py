@@ -31,12 +31,12 @@ class ProgressExample(AbstractResponseExample):
             total=5,
             current=3,
             label="Processing",
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
         """Example using the IoManager."""
-        self.io_manager.progress(
+        self.io.progress(
             total=5,
             current=3,
             label="Processing"

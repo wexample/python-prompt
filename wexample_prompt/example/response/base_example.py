@@ -39,6 +39,6 @@ class BaseExample(AbstractResponseExample):
                     PromptResponseSegment(text=self.get_test_message())
                 ])
             ],
-            context=self.io_manager.create_context(indentation=indentation),
+            context=self.io.create_context(indentation=indentation),
             indentation=indentation
         )

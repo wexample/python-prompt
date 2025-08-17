@@ -14,12 +14,12 @@ class FilePickerExample(AbstractResponseExample):
         return FilePickerPromptResponse.create_file_picker(
             question="Select a file:",
             base_dir=None,  # Will use current working directory
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
         """Example using the IoManager."""
-        self.io_manager.file_picker("Select a file:")
+        self.io.file_picker("Select a file:")
 
     def example_context(self):
         """Example using PromptContext."""

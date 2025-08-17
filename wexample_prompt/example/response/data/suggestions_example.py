@@ -18,7 +18,7 @@ class SuggestionsExample(AbstractResponseExample):
         response = SuggestionsPromptResponse.create_suggestions(
             message=message,
             suggestions=suggestions,
-            context=self.io_manager.create_context()
+            context=self.io.create_context()
         )
         return response.render()
 
@@ -30,7 +30,7 @@ class SuggestionsExample(AbstractResponseExample):
             "command2",
             "command3 --flag"
         ]
-        context = self.io_manager.create_context()
+        context = self.io.create_context()
         if indentation is not None:
             context.indentation = indentation
         return SuggestionsPromptResponse.create_suggestions(
@@ -47,7 +47,7 @@ class SuggestionsExample(AbstractResponseExample):
             "command2",
             "command3 --flag"
         ]
-        self.io_manager.suggestions(
+        self.io.suggestions(
             message=message,
             suggestions=suggestions
         )

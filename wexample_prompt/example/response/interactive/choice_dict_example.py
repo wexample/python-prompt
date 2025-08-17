@@ -15,7 +15,7 @@ class ChoiceDictExample(AbstractResponseExample):
         return ChoiceDictPromptResponse.create_choice_dict(
             question="Select an option:",
             choices=choices,
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
@@ -24,7 +24,7 @@ class ChoiceDictExample(AbstractResponseExample):
             "key2": "Option 2",
             "key3": "Option 3"
         }
-        self.io_manager.choice_dict("Select an option:", choices)
+        self.io.choice_dict("Select an option:", choices)
 
     def example_context(self):
         choices = {

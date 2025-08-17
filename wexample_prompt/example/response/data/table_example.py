@@ -19,7 +19,7 @@ class TableExample(AbstractResponseExample):
             data=data,
             headers=headers,
             title="Employee List",
-            context=self.io_manager.create_context()
+            context=self.io.create_context()
         )
         return response.render()
 
@@ -31,7 +31,7 @@ class TableExample(AbstractResponseExample):
             ["Jane", "25", "San Francisco"],
             ["Bob", "35", "Chicago"]
         ]
-        context = self.io_manager.create_context()
+        context = self.io.create_context()
         if indentation is not None:
             context.indentation = indentation
         return TablePromptResponse.create_table(
@@ -49,7 +49,7 @@ class TableExample(AbstractResponseExample):
             ["Jane", "25", "San Francisco"],
             ["Bob", "35", "Chicago"]
         ]
-        self.io_manager.table(
+        self.io.table(
             data=data,
             headers=headers,
             title="Employee List"

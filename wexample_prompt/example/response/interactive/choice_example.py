@@ -17,12 +17,12 @@ class ChoiceExample(AbstractResponseExample):
         return ChoicePromptResponse.create_choice(
             question="Select an option:",
             choices=choices,
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
         choices = ["Option 1", "Option 2", "Option 3"]
-        self.io_manager.choice("Select an option:", choices)
+        self.io.choice("Select an option:", choices)
 
     def example_context(self):
         choices = ["Option 1", "Option 2", "Option 3"]

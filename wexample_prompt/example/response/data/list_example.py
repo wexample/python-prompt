@@ -71,7 +71,7 @@ class ListExample(AbstractResponseExample):
         ]
         return ListPromptResponse.create_list(
             items=items,
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
@@ -81,7 +81,7 @@ class ListExample(AbstractResponseExample):
             "Second item",
             "Third item"
         ]
-        self.io_manager.list(items=items)
+        self.io.list(items=items)
 
     def example_context(self):
         """Example using PromptContext."""
@@ -99,7 +99,7 @@ class ListExample(AbstractResponseExample):
             "Second item",
             "Third item"
         ]
-        return self.io_manager.list(items=items)
+        return self.io.list(items=items)
 
     def nested_list(self) -> Optional[ListPromptResponse]:
         """Show a nested list example."""
@@ -111,7 +111,7 @@ class ListExample(AbstractResponseExample):
             "Root item 2",
             "  Subitem 2.1"
         ]
-        return self.io_manager.list(items=items)
+        return self.io.list(items=items)
 
     def colored_list(self) -> Optional[ListPromptResponse]:
         """Show a colored list example."""
@@ -120,7 +120,7 @@ class ListExample(AbstractResponseExample):
             "Warning item",
             "Error item"
         ]
-        return self.io_manager.list(
+        return self.io.list(
             items=items,
             color=TerminalColor.GREEN
         )
@@ -132,7 +132,7 @@ class ListExample(AbstractResponseExample):
             "Second item",
             "Third item"
         ]
-        return self.io_manager.list(
+        return self.io.list(
             items=items,
             bullet="-"
         )

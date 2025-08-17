@@ -20,7 +20,7 @@ class PropertiesExample(AbstractResponseExample):
         response = PropertiesPromptResponse.create_properties(
             properties=properties,
             title="User Information",
-            context=self.io_manager.create_context()
+            context=self.io.create_context()
         )
         return response.render()
 
@@ -34,7 +34,7 @@ class PropertiesExample(AbstractResponseExample):
                 "phone": "123-456-7890"
             }
         }
-        context = self.io_manager.create_context()
+        context = self.io.create_context()
         if indentation is not None:
             context.indentation = indentation
         return PropertiesPromptResponse.create_properties(
@@ -53,7 +53,7 @@ class PropertiesExample(AbstractResponseExample):
                 "log_level": "INFO"
             }
         }
-        self.io_manager.properties(
+        self.io.properties(
             properties=properties,
             title="Server Configuration"
         )

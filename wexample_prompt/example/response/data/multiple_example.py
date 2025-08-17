@@ -13,30 +13,30 @@ class MultipleExample(AbstractResponseExample):
     def example_class(self, indentation: Optional[int] = None):
         """Example using the class directly."""
         responses = [
-            LogPromptResponse.create_log("First response", context=self.io_manager.create_context()),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io_manager.create_context()),
-            LogPromptResponse.create_log("Last response", context=self.io_manager.create_context())
+            LogPromptResponse.create_log("First response", context=self.io.create_context()),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io.create_context()),
+            LogPromptResponse.create_log("Last response", context=self.io.create_context())
         ]
         return MultiplePromptResponse.create_multiple(
             responses=responses,
-            context=self.io_manager.create_context(indentation=indentation)
+            context=self.io.create_context(indentation=indentation)
         )
 
     def example_manager(self):
         """Example using the IoManager."""
         responses = [
-            LogPromptResponse.create_log("First response", context=self.io_manager.create_context()),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io_manager.create_context()),
-            LogPromptResponse.create_log("Last response", context=self.io_manager.create_context())
+            LogPromptResponse.create_log("First response", context=self.io.create_context()),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io.create_context()),
+            LogPromptResponse.create_log("Last response", context=self.io.create_context())
         ]
-        self.io_manager.multiple(responses=responses)
+        self.io.multiple(responses=responses)
 
     def example_context(self):
         """Example using PromptContext."""
         responses = [
-            LogPromptResponse.create_log("First response", context=self.io_manager.create_context()),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io_manager.create_context()),
-            LogPromptResponse.create_log("Last response", context=self.io_manager.create_context())
+            LogPromptResponse.create_log("First response", context=self.io.create_context()),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"], context=self.io.create_context()),
+            LogPromptResponse.create_log("Last response", context=self.io.create_context())
         ]
         self.class_with_context.multiple(responses=responses)
 
@@ -67,38 +67,38 @@ class MultipleExample(AbstractResponseExample):
     def simple_multiple(self) -> Optional[MultiplePromptResponse]:
         """Show a simple multiple response example."""
         responses = [
-            LogPromptResponse.create_log("First message", context=self.io_manager.create_context()),
-            LogPromptResponse.create_log("Second message", context=self.io_manager.create_context()),
-            LogPromptResponse.create_log("Third message", context=self.io_manager.create_context())
+            LogPromptResponse.create_log("First message", context=self.io.create_context()),
+            LogPromptResponse.create_log("Second message", context=self.io.create_context()),
+            LogPromptResponse.create_log("Third message", context=self.io.create_context())
         ]
-        return self.io_manager.multiple(responses=responses)
+        return self.io.multiple(responses=responses)
 
     def mixed_types(self) -> Optional[MultiplePromptResponse]:
         """Show different response types together."""
         responses = [
-            LogPromptResponse.create_log("Log response", context=self.io_manager.create_context()),
+            LogPromptResponse.create_log("Log response", context=self.io.create_context()),
             ListPromptResponse.create_list(
                 items=["List item 1", "List item 2"],
-                context=self.io_manager.create_context()
+                context=self.io.create_context()
             ),
-            LogPromptResponse.create_log("Another log response", context=self.io_manager.create_context())
+            LogPromptResponse.create_log("Another log response", context=self.io.create_context())
         ]
-        return self.io_manager.multiple(responses=responses)
+        return self.io.multiple(responses=responses)
 
     def dynamic_multiple(self) -> Optional[MultiplePromptResponse]:
         """Show building responses dynamically."""
         response = MultiplePromptResponse.create_multiple(
-            responses=[LogPromptResponse.create_log("Initial response", context=self.io_manager.create_context())],
-            context=self.io_manager.create_context()
+            responses=[LogPromptResponse.create_log("Initial response", context=self.io.create_context())],
+            context=self.io.create_context()
         )
 
         # Add more responses
         response.append_response(
-            ListPromptResponse.create_list(items=["Dynamic item 1"], context=self.io_manager.create_context())
+            ListPromptResponse.create_list(items=["Dynamic item 1"], context=self.io.create_context())
         )
         response.extend_responses([
-            LogPromptResponse.create_log("Added later", context=self.io_manager.create_context()),
-            ListPromptResponse.create_list(items=["Dynamic item 2"], context=self.io_manager.create_context())
+            LogPromptResponse.create_log("Added later", context=self.io.create_context()),
+            ListPromptResponse.create_list(items=["Dynamic item 2"], context=self.io.create_context())
         ])
 
         return response

@@ -12,13 +12,13 @@ class SuccessExample(AbstractResponseExample):
         """Example using direct class method."""
         return SuccessPromptResponse.create_success(
             'Test success message',
-            context=self.io_manager.create_context(indentation=indentation),
+            context=self.io.create_context(indentation=indentation),
             indentation=indentation
         )
 
     def example_manager(self):
         """Example using IoManager."""
-        self.io_manager.success('Test success message')
+        self.io.success('Test success message')
 
     def example_context(self):
         """Example using context."""
