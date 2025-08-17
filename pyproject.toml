@@ -51,4 +51,4 @@ include = [
 testpaths = [
     "tests",
 ]
-addopts = ""
+addopts = "-p wexample_helpers.test.plugin.runtest_makereport"
