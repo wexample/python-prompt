@@ -6,6 +6,6 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class AbsractOutputHandler(BaseModel):
+class AbstractOutputHandler(BaseModel):
     def print(self, response: "AbstractPromptResponse") -> None:
         ...

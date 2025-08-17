@@ -43,11 +43,12 @@ class TestVerbosityLevel(unittest.TestCase):
             for response in [critical_response, normal_response, debug_response]:
                 response.context = context
             
-            output = StringIO()
-            critical_response.print(output=output)
-            normal_response.print(output=output)
-            debug_response.print(output=output)
-            result = output.getvalue()
+            # The new version returns strings via render(), no output stream support
+            result = (
+                critical_response.render()
+                + normal_response.render()
+                + debug_response.render()
+            )
             
             for message, should_appear in expected_messages.items():
                 if should_appear:

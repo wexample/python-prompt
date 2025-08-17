@@ -52,7 +52,7 @@ from wexample_prompt.mixins.response.manager.titles.subtitle_prompt_response_man
 from wexample_prompt.mixins.response.manager.titles.title_prompt_response_manager_mixin import \
     TitlePromptResponseManagerMixin
 from wexample_prompt.mixins.with_indent import WithIndent
-from wexample_prompt.output.abstract_output_handler import AbsractOutputHandler
+from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_prompt.output.strout_output_handler import StdoutOutputHandler
 from wexample_prompt.responses import BasePromptResponse
 from wexample_prompt.themes.default.abstract_prompt_theme import AbstractPromptTheme
@@ -117,7 +117,7 @@ class IoManager(
     _log_file_handler: Optional[TextIO] = PrivateAttr(default=None)
     _instance_count: int = PrivateAttr(default=0)
     _last_context: Optional[str] = PrivateAttr(default=None)
-    output: Optional[AbsractOutputHandler] = None
+    output: Optional[AbstractOutputHandler] = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
