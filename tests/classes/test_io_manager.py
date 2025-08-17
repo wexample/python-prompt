@@ -1,4 +1,4 @@
-from wexample_prompt.tests.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
 class TestIoManager(AbstractPromptResponseTest):
