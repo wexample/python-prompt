@@ -1,6 +1,3 @@
-from typing import Optional
-
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
@@ -23,6 +20,3 @@ class WithIoMethods(
             return attr
 
         return super().__getattr__(name)
-
-    def create_io_context(self) -> Optional["PromptContext"]:
-        return None
