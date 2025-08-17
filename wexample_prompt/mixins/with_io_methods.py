@@ -1,22 +1,28 @@
+from typing import Any
+
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
 class WithIoMethods(
     WithIoManager
 ):
-    def __getattr__(self, name: str):
+    """
+    Allow class to provide Io methods like .log(), .title() etc.
+    """
+
+    def _get_io_methods(self, name: str) -> Any:
         if hasattr(self.io, name):
             attr = getattr(self.io, name)
 
             if callable(attr):
                 def wrapper(*args, **kwargs):
-                    if args:
-                        formatted_msg = self.format_message(args[0])
-                        args = (formatted_msg,) + args[1:]
                     return attr(*args, **kwargs)
 
                 return wrapper
 
             return attr
+        return None
 
-        return super().__getattr__(name)
+    def __getattr__(self, name: str) -> Any:
+        io_response = self._get_io_methods(name)
+        return io_response if io_response is not None else super().__getattr__(name)
