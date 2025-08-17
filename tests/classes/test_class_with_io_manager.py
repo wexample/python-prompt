@@ -1,3 +1,5 @@
+from typing import Type
+
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -10,20 +12,24 @@ class TestIoManager(AbstractPromptResponseTest):
     def test_instantiate_io_manager(self):
         from wexample_prompt.testing.resources.classes.class_with_io_manager import ClassWithIoManager
 
-        instance = ClassWithIoManager()
-        assert instance.io is None
-
-        instance = ClassWithIoManager(io=self.io)
-        assert isinstance(instance.io, IoManager)
+        self.assertClassHasNoneManager(ClassWithIoManager)
+        self.assertClassInstanceSucceeded(ClassWithIoManager)
 
     def test_instantiate_required_io_manager(self):
         from wexample_prompt.testing.resources.classes.class_with_required_io_manager import ClassWithRequiredIoManager
 
         # Missing required 'io' should raise a TypeError from __init__
-        with self.assertRaises(TypeError):
-            # Missing argument
-            ClassWithRequiredIoManager()
+        self.assertMissingArgumentError(class_type=ClassWithRequiredIoManager)
+        self.assertClassInstanceSucceeded(class_type=ClassWithRequiredIoManager)
 
-        # Providing io should work
-        instance = ClassWithRequiredIoManager(io=self.io)
+    def assertClassHasNoneManager(self, class_type: Type):
+        instance = class_type()
+        assert instance.io is None
+
+    def assertMissingArgumentError(self, class_type: Type):
+        with self.assertRaises(TypeError):
+            class_type()
+
+    def assertClassInstanceSucceeded(self, class_type: Type):
+        instance = class_type(io=self.io)
         assert isinstance(instance.io, IoManager)
