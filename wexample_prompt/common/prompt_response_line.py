@@ -40,4 +40,5 @@ class PromptResponseLine(BaseModel):
         # Render all segments
         rendered_segments = [seg.render(context) for seg in self.segments]
         result = "".join(rendered_segments)
-        return result
+
+        return f"{context.get_indentation()}{result}"
