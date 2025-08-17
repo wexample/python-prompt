@@ -46,3 +46,9 @@ include = [
 
 [tool.setuptools.package-dir]
 "" = "."
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+addopts = ""
