@@ -9,4 +9,4 @@ class TestIoManager:
 
     def test_minimal_log(self):
         manager = self._instantiate_io_manager()
-        assert manager.log() is not None
+        assert manager.log(message="tests") is not None
