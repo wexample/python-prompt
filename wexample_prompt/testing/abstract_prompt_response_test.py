@@ -13,8 +13,9 @@ class AbstractPromptResponseTest(unittest.TestCase, ABC):
     2. IoManager integration
     3. PromptContext implementation
     """
-    io: IoManager
+    _test_message: str = "Test message"
+    _io: IoManager
 
     def setUp(self):
         """Set up common test fixtures."""
-        self.io = IoManager()
+        self._io = IoManager()

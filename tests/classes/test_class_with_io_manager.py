@@ -48,5 +48,5 @@ class TestIoManager(AbstractPromptResponseTest):
             class_type()
 
     def assertClassInstanceSucceeded(self, class_type: Type):
-        instance = class_type(io=self.io)
+        instance = class_type(io=self._io)
         assert isinstance(instance.io, IoManager)

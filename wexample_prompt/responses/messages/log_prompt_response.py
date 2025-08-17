@@ -13,11 +13,17 @@ class LogPromptResponse(BaseMessageResponse):
 
     @classmethod
     def create_log(
-        cls: "LogPromptResponse",
-        message: str,
+            cls: "LogPromptResponse",
+            message: str,
     ) -> "LogPromptResponse":
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
+            lines=[
+                PromptResponseLine.create_from_string(
+                    text=message
+                )
+            ]
         )
 
     @classmethod

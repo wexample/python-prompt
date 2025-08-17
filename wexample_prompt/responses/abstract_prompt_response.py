@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import HasSnakeShortClassNameClassMixin
@@ -11,17 +12,28 @@ if TYPE_CHECKING:
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
+    """Abstract base class for all prompt responses."""
+    lines: List[PromptResponseLine] = Field(
+        default_factory=list,
+        description="The list of lines of the response content",
+    )
     context: PromptContext = Field(
         default_factory=PromptContext,
         description="Execution context for prompt rendering",
     )
 
-    def __init__(self, **data):
-        if not "context" in data or not isinstance(data.get("context"), PromptContext):
-            data["context"] = PromptContext()
+    def __init__(self, **kwargs):
+        if not "context" in kwargs or not isinstance(kwargs.get("context"), PromptContext):
+            kwargs["context"] = PromptContext()
 
-        BaseModel.__init__(self, **data)
+        ExtendedBaseModel.__init__(self, **kwargs)
 
     def render(self) -> str:
         """Render the complete response."""
-        return "TODO"
+        rendered_lines = []
+
+        for line in self.lines:
+            rendered = line.render(self.context)
+            rendered_lines.append(rendered)
+
+        return "\n".join(rendered_lines)

@@ -8,5 +8,5 @@ class TestIoManager(AbstractPromptResponseTest):
         super().setUp()
 
     def test_class_indentation_levels(self):
-        level_one = ClassIndentationLevelOne(io=self.io)
+        level_one = ClassIndentationLevelOne(io=self._io)
         return level_one.print_deep_log_one()

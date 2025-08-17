@@ -9,11 +9,11 @@ class TestIoManager(AbstractPromptResponseTest):
     def test_instantiate_class(self):
         from wexample_prompt.testing.resources.classes.class_with_io_methods import ClassWithIoMethods
 
-        instance = ClassWithIoMethods(io=self.io)
+        instance = ClassWithIoMethods(io=self._io)
         assert instance.log(message="test") is not None
 
     def test_instantiate_extended_base_model(self):
         from wexample_prompt.testing.resources.classes.extended_base_model_with_io_methods import ExtendedBaseModelWithIoMethods
 
-        instance = ExtendedBaseModelWithIoMethods(io=self.io)
+        instance = ExtendedBaseModelWithIoMethods(io=self._io)
         assert instance.log(message="test") is not None

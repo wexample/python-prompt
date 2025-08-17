@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.prompt_context import PromptContext
 
 
 class PromptResponseLine(BaseModel):
@@ -13,3 +14,25 @@ class PromptResponseLine(BaseModel):
         default_factory=list,
         description="List of text segments that constitute a line"
     )
+
+    @classmethod
+    def create_from_string(cls, text: str) -> "PromptResponseLine":
+        """
+            Create a line from a single text string.
+        """
+        return cls(
+            segments=[
+                PromptResponseSegment(
+                    text=text
+                )
+            ]
+        )
+
+    def render(self, context: PromptContext) -> str:
+        """Render the line with all its segments.
+        """
+
+        # Render all segments
+        rendered_segments = [seg.render(context) for seg in self.segments]
+        result = "".join(rendered_segments)
+        return result

@@ -7,7 +7,7 @@ class TestIoManager(AbstractPromptResponseTest):
         return IoManager()
 
     def test_instantiate_io_manager(self):
-        assert self.io is not None
+        assert self._io is not None
 
     def test_minimal_log(self):
-        assert self.io.log(message="tests") is not None
+        assert self._io.log(message="tests") is not None
