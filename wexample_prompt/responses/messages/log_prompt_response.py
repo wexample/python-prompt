@@ -1,6 +1,7 @@
 """Response for log messages."""
 from typing import TYPE_CHECKING, Type
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.messages.base_message_response import BaseMessageResponse
 
@@ -15,15 +16,19 @@ class LogPromptResponse(BaseMessageResponse):
     def create_log(
             cls: "LogPromptResponse",
             message: str,
+            context: "PromptContext" = None,
     ) -> "LogPromptResponse":
+        from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
             lines=[
                 PromptResponseLine.create_from_string(
-                    text=message
+                    text=message,
+                    color=TerminalColor.WHITE
                 )
-            ]
+            ],
+            context=context
         )
 
     @classmethod

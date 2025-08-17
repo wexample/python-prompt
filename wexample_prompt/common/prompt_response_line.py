@@ -1,10 +1,13 @@
 """Prompt response line implementation."""
-from typing import List
+from typing import List, Optional, TYPE_CHECKING
 
 from pydantic import BaseModel, Field
 
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+if TYPE_CHECKING:
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class PromptResponseLine(BaseModel):
@@ -16,14 +19,15 @@ class PromptResponseLine(BaseModel):
     )
 
     @classmethod
-    def create_from_string(cls, text: str) -> "PromptResponseLine":
+    def create_from_string(cls, text: str, color: Optional["TerminalColor"] = None) -> "PromptResponseLine":
         """
             Create a line from a single text string.
         """
         return cls(
             segments=[
                 PromptResponseSegment(
-                    text=text
+                    text=text,
+                    color=color
                 )
             ]
         )
