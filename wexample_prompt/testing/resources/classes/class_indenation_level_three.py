@@ -9,16 +9,10 @@ if TYPE_CHECKING:
 
 
 class ClassIndentationLevelThree(WithRequiredIoManager, WithIoContext, ExtendedBaseModel):
-    def __init__(self, io, parent_context: "PromptContext", **kwargs):
-        from wexample_prompt.common.prompt_context import PromptContext
-
+    def __init__(self, io, parent_io_context: "PromptContext", **kwargs):
         ExtendedBaseModel.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, io=io)
-
-        self._io_context = PromptContext(
-            indentation=parent_context.indentation + 1,
-            colorized=parent_context.colorized,
-        )
+        WithIoContext.__init__(self, parent_io_context=parent_io_context)
 
     def print_deep_log_three(self):
         return self.io.log(

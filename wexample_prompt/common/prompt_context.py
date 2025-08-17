@@ -23,4 +23,4 @@ class PromptContext(ExtendedBaseModel):
 
     def get_indentation(self) -> str:
         """Get the current indentation string."""
-        return " " * (self.indentation * self.indentation_length)
+        return self.indentation_character * (self.indentation * self.indentation_length)

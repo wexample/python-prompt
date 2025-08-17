@@ -8,14 +8,9 @@ if TYPE_CHECKING:
 
 
 class ClassIndentationLevelTwo(WithIoManager, WithIoContext):
-    def __init__(self, io, parent_context: "PromptContext", **kwargs):
-        from wexample_prompt.common.prompt_context import PromptContext
+    def __init__(self, io, parent_io_context: "PromptContext"):
         WithIoManager.__init__(self, io=io)
-
-        self._io_context = PromptContext(
-            indentation=parent_context.indentation + 1,
-            colorized=parent_context.colorized,
-        )
+        WithIoContext.__init__(self, parent_io_context=parent_io_context)
 
     def print_deep_log_two(self):
         from wexample_prompt.testing.resources.classes.class_indenation_level_three import ClassIndentationLevelThree
@@ -27,7 +22,7 @@ class ClassIndentationLevelTwo(WithIoManager, WithIoContext):
 
         level_two = ClassIndentationLevelThree(
             io=self.io,
-            parent_context=self._io_context
+            parent_io_context=self._io_context
         )
 
         return level_two.print_deep_log_three()
