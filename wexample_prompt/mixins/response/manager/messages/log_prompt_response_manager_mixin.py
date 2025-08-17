@@ -12,4 +12,5 @@ class LogPromptResponseManagerMixin:
             message=message,
         )
 
+        self.print_response(response)
         return response

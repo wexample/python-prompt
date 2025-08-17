@@ -1,5 +1,4 @@
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
-from wexample_prompt.testing.resources.classes.class_indenation_level_one import ClassIndentationLevelOne
 
 
 class TestIoManager(AbstractPromptResponseTest):
@@ -8,5 +7,6 @@ class TestIoManager(AbstractPromptResponseTest):
         super().setUp()
 
     def test_class_indentation_levels(self):
+        from wexample_prompt.testing.resources.classes.class_indenation_level_one import ClassIndentationLevelOne
         level_one = ClassIndentationLevelOne(io=self._io)
-        return level_one.print_deep_log_one()
+        assert level_one.print_deep_log_one() is not None

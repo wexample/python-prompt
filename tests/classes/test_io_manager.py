@@ -10,4 +10,4 @@ class TestIoManager(AbstractPromptResponseTest):
         assert self._io is not None
 
     def test_minimal_log(self):
-        assert self._io.log(message="tests") is not None
+        assert self._io.log(message="test minimal log") is not None

@@ -8,4 +8,4 @@ class ClassIndentationLevelThree(WithRequiredIoManager, ExtendedBaseModel):
         WithRequiredIoManager.__init__(self, io=io)
 
     def print_deep_log_three(self):
-        return self.io.log('ok')
+        return self.io.log('test deep log three')
