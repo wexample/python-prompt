@@ -11,17 +11,15 @@ if TYPE_CHECKING:
 
 class AbstractResponseExample(WithIoManager, BaseModel):
     def __init__(self, io: Optional["IoManager"] = None, **kwargs):
-
         BaseModel.__init__(self, **kwargs)
         WithIoManager.__init__(self, io=io)
 
         self._init_io_manager()
 
     @abstractmethod
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self):
         pass
 
     @abstractmethod
     def example_manager(self):
         pass
-
