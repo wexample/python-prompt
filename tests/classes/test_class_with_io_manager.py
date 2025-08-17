@@ -12,6 +12,9 @@ class TestIoManager(AbstractPromptResponseTest):
     def test_instantiate_class(self):
         from wexample_prompt.testing.resources.classes.class_with_io_manager import ClassWithIoManager
 
+        instance = ClassWithIoManager()
+        assert instance.io is None
+
         self.assertClassHasNoneManager(ClassWithIoManager)
         self.assertClassInstanceSucceeded(ClassWithIoManager)
 
