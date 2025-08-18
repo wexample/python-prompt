@@ -33,7 +33,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
             cls,
             responses: Optional[List[AbstractPromptResponse]] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-            **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:
@@ -42,7 +41,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
         return cls(
             responses=responses,
             verbosity=verbosity,
-            **kwargs,
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:

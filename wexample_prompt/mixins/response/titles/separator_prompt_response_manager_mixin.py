@@ -5,11 +5,12 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class SeparatorPromptResponseManagerMixin:
     def separator(
-            self,
+            self: "IoManager",
             label: Optional[str] = None,
             width: Optional[int] = None,
             character: Optional[str] = None,

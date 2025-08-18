@@ -1,18 +1,19 @@
 """Response for displaying and handling file picker prompts."""
 import os
-from typing import Any, Dict, Optional, Type, List, Union
+from typing import Dict, Optional, Type, List, Union
 
 from InquirerPy.base.control import Choice
 from pydantic import Field
 
-from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
-
+from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 class FilePickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a file picker interface."""
 
-    base_dir: str = Field(description="Base directory to browse from; defaults to current working directory if not provided")
+    base_dir: str = Field(
+        description="Base directory to browse from; defaults to current working directory if not provided")
 
     @classmethod
     def get_example_class(cls) -> Type:
@@ -21,11 +22,11 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
 
     @classmethod
     def create_file_picker(
-        cls,
-        base_dir: Optional[str] = None,
-        question: str = "Select a file:",
-        abort: Optional[str] = "> Abort",
-        **kwargs: Any,
+            cls,
+            base_dir: Optional[str] = None,
+            question: str = "Select a file:",
+            abort: Optional[str] = "> Abort",
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
 
@@ -61,6 +62,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
             choices=choice_list,
             default=None,
             abort=abort,
+            verbosity=verbosity,
         )
 
         new = cls(
@@ -71,6 +73,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
             question_text=parent_response.question_text,
             original_choices={k: v for k, v in merged.items()},
             base_dir=base,
+            verbosity=verbosity,
         )
         return new
 

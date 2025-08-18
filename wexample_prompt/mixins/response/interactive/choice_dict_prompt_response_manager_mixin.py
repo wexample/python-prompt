@@ -6,13 +6,14 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ChoiceDictPromptResponseManagerMixin:
     """Mixin class for managing choice dict prompt responses."""
 
     def choice_dict(
-            self,
+            self: "IoManager",
             question: str,
             choices: Dict[str, str],
             default: Optional[str] = None,

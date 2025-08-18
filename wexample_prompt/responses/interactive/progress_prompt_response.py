@@ -7,6 +7,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 try:
@@ -53,6 +54,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             width: int = 50,
             label: Optional[str] = None,
             color: Optional[TerminalColor] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ProgressPromptResponse":
         if total <= 0:
             raise ValueError("Total must be greater than 0")
@@ -68,6 +70,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             width=width,
             label=label,
             color=color or TerminalColor.BLUE,
+            verbosity=verbosity
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
@@ -97,7 +100,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             steps: List["ProgressStep"],
             width: int = 50,
             title: Optional[str] = None,
-            context: Optional[PromptContext] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "StepProgressContext":
         total_weight = sum(step.weight for step in steps)
         return StepProgressContext(
@@ -105,7 +108,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             total_weight=total_weight,
             width=width,
             title=title,
-            context=context,
+            verbosity=verbosity,
         )
 
     @classmethod

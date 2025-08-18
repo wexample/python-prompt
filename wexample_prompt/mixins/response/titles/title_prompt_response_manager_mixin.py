@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class TitlePromptResponseManagerMixin:
     def title(
-            self,
+            self: "IoManager",
             message: str,
             color: Optional["TerminalColor"] = None,
             character: Optional[str] = None,

@@ -5,14 +5,15 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class EchoPromptResponseManagerMixin:
     def echo(
-            self,
+            self: "IoManager",
             message: str,
             context: Optional[PromptContext] = None,
-            **kwargs:Kwargs
+            **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 

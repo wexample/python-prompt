@@ -7,13 +7,14 @@ from wexample_prompt.responses.interactive.progress_prompt_response import Progr
 
 if TYPE_CHECKING:
     from wexample_prompt.progress.step_progress_context import ProgressStep
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ProgressPromptResponseManagerMixin:
     """Mixin class for managing progress prompt responses."""
 
     def progress(
-            self,
+            self: "IoManager",
             total: int,
             current: int,
             width: int = 50,

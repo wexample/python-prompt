@@ -5,14 +5,15 @@ from wexample_helpers.const.types import Kwargs
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class SuccessPromptResponseManagerMixin:
     def success(
-            self,
+            self: "IoManager",
             message: str,
             context: Optional["PromptContext"] = None,
-            **kwargs:Kwargs
+            **kwargs: Kwargs
     ) -> "SuccessPromptResponse":
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 

@@ -7,19 +7,20 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class SuggestionsPromptResponseManagerMixin:
     """Mixin for IoManager to handle suggestions responses."""
 
     def suggestions(
-        self,
-        message: str,
-        suggestions: List[str],
-        arrow_style: str = "→",
-        verbosity: Optional[VerbosityLevel] = None,
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            message: str,
+            suggestions: List[str],
+            arrow_style: str = "→",
+            verbosity: Optional[VerbosityLevel] = None,
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "SuggestionsPromptResponse":
         from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
 

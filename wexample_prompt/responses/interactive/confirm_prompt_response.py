@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Type, Union
 from InquirerPy.base.control import Choice
 from pydantic import Field
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 
@@ -32,7 +33,7 @@ class ConfirmPromptResponse(ChoicePromptResponse):
         preset: Optional[str] = None,
         default: Optional[str] = None,
         abort: Optional[str] = "> Abort",
-        **kwargs: Any,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ConfirmPromptResponse":
         """Create a confirmation dialog response.
 
@@ -65,7 +66,7 @@ class ConfirmPromptResponse(ChoicePromptResponse):
             choices=choice_list,
             default=default,
             abort=abort,
-            **kwargs,
+            verbosity=verbosity
         )
 
         # Build final instance with preserved original choices
@@ -76,4 +77,5 @@ class ConfirmPromptResponse(ChoicePromptResponse):
             inquirer_kwargs=parent.inquirer_kwargs,
             question_text=parent.question_text,
             original_choices=choices,
+            verbosity=verbosity
         )

@@ -6,16 +6,17 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class TreePromptResponseManagerMixin:
     """Mixin for IoManager to handle tree responses."""
 
     def tree(
-        self,
-        data: Dict[str, Any],
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            data: Dict[str, Any],
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "TreePromptResponse":
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 

@@ -2,22 +2,24 @@
 from typing import TYPE_CHECKING, Optional, List, Any
 
 from InquirerPy.utils import InquirerPyDefault
+
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ChoicePromptResponseManagerMixin:
     def choice(
-        self,
-        question: str,
-        choices: List[Any],
-        default: Optional[InquirerPyDefault] = None,
-        abort: Optional[str] = "> Abort",
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            question: str,
+            choices: List[Any],
+            default: Optional[InquirerPyDefault] = None,
+            abort: Optional[str] = "> Abort",
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "ChoicePromptResponse":
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 

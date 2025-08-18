@@ -25,7 +25,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default_factory=list,
         description="List of choices (plain strings or InquirerPy Choice objects)",
     )
-    default: Optional[InquirerPyDefault] = Field(
+    default: Optional[Any] = Field(
         default=None,
         description="Default selected value for the prompt"
     )
@@ -43,8 +43,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             cls,
             question: str,
             choices: List[Any],
-            context: Optional[PromptContext] = None,
-            default: Optional[InquirerPyDefault] = None,
+            default: Optional[Any] = None,
             abort: Optional[str] = "> Abort",
             color: Optional[TerminalColor] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT

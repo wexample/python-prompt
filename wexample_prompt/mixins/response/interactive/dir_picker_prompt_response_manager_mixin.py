@@ -1,23 +1,24 @@
 """Mixin for managing directory picker prompt responses."""
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class DirPickerPromptResponseManagerMixin:
     """Mixin class for managing directory picker prompt responses."""
 
     def dir_picker(
-        self,
-        question: str = "Select a directory:",
-        base_dir: Optional[str] = None,
-        abort: Optional[str] = "> Abort",
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            question: str = "Select a directory:",
+            base_dir: Optional[str] = None,
+            abort: Optional[str] = "> Abort",
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "DirPickerPromptResponse":
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
 

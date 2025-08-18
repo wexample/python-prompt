@@ -6,18 +6,19 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class TablePromptResponseManagerMixin:
     """Mixin for IoManager to handle table responses."""
 
     def table(
-        self,
-        data: List[List[Any]],
-        headers: Optional[List[str]] = None,
-        title: Optional[str] = None,
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            data: List[List[Any]],
+            headers: Optional[List[str]] = None,
+            title: Optional[str] = None,
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "TablePromptResponse":
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 

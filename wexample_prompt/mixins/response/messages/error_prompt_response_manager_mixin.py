@@ -5,11 +5,12 @@ from wexample_helpers.const.types import Kwargs
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ErrorPromptResponseManagerMixin:
     def error(
-            self,
+            self: "IoManager",
             message: Optional[str] = None,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs

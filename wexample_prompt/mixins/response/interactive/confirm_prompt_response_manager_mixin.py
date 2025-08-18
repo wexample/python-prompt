@@ -5,20 +5,21 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class ConfirmPromptResponseManagerMixin:
     """Mixin class for managing confirmation dialog prompt responses."""
 
     def confirm(
-        self,
-        question: str = "Please confirm:",
-        choices: Optional[Dict[str, str]] = None,
-        preset: Optional[str] = None,
-        default: Optional[str] = None,
-        abort: Optional[str] = "> Abort",
-        context: Optional[PromptContext] = None,
-        **kwargs: Any,
+            self: "IoManager",
+            question: str = "Please confirm:",
+            choices: Optional[Dict[str, str]] = None,
+            preset: Optional[str] = None,
+            default: Optional[str] = None,
+            abort: Optional[str] = "> Abort",
+            context: Optional[PromptContext] = None,
+            **kwargs: Any,
     ) -> "ConfirmPromptResponse":
         from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
@@ -39,4 +40,3 @@ class ConfirmPromptResponseManagerMixin:
             ),
         )
         return response
-
