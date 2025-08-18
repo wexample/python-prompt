@@ -22,6 +22,12 @@ Version: 0.0.32
 pip install wexample-prompt
 ```
 
+## Demo
+
+```bash
+bash docs/demo.sh
+```
+
 ## Links
 
 - Homepage: https://github.com/wexample/python-prompt
