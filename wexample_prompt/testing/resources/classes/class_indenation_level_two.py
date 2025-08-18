@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:

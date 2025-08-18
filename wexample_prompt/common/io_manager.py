@@ -3,7 +3,7 @@ from typing import List, Type, TYPE_CHECKING, Optional
 from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-from wexample_prompt.mixins.response.manager.messages.log_prompt_response_manager_mixin import \
+from wexample_prompt.mixins.response.messages.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
