@@ -80,9 +80,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         return cls(
             lines=lines,
-            properties=properties,
-            title=title,
-            nested_indent=nested_indent,
             verbosity=verbosity,
             **kwargs,
         )

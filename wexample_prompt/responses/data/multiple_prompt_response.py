@@ -28,15 +28,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
         return MultipleExample
 
     @classmethod
-    def multiple(
-            cls,
-            responses: List[AbstractPromptResponse],
-            **kwargs,
-    ) -> "MultiplePromptResponse":
-        """Create a multiple prompt response."""
-        return cls.create_multiple(responses=responses, **kwargs)
-
-    @classmethod
     def create_multiple(
             cls,
             responses: Optional[List[AbstractPromptResponse]] = None,
@@ -52,11 +43,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
             **kwargs,
         )
-
-    @classmethod
-    def create(cls, *args, **kwargs) -> "MultiplePromptResponse":
-        """Alias for create_multiple to keep API consistency."""
-        return cls.create_multiple(*args, **kwargs)
 
     def render(self, context=None) -> Optional[str]:
         """Render all contained responses in sequence.
