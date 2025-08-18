@@ -8,6 +8,8 @@ from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
 
 from wexample_prompt.mixins.response.messages.info_prompt_response_manager_mixin import \
     InfoPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.debug_prompt_response_manager_mixin import \
+    DebugPromptResponseManagerMixin
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import \
@@ -29,8 +31,8 @@ class IoManager(
     EchoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
     # Messages
-
     InfoPromptResponseManagerMixin,
+    DebugPromptResponseManagerMixin,
     SuccessPromptResponseManagerMixin,
     TaskPromptResponseManagerMixin,
     # Titles
@@ -67,6 +69,7 @@ class IoManager(
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
@@ -77,9 +80,9 @@ class IoManager(
             LogPromptResponse,
             InfoPromptResponse,
             # Messages
+            DebugPromptResponse,
             SuccessPromptResponse,
             TaskPromptResponse,
-
             # Titles
             SeparatorPromptResponse,
         ]
