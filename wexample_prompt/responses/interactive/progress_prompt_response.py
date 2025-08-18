@@ -3,11 +3,10 @@ from typing import List, Callable, Optional, Any, ClassVar, Type
 
 from pydantic import Field
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 try:
@@ -48,12 +47,12 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_progress(
-        cls,
-        total: int,
-        current: int,
-        width: int = 50,
-        label: Optional[str] = None,
-        color: Optional[TerminalColor] = None,
+            cls,
+            total: int,
+            current: int,
+            width: int = 50,
+            label: Optional[str] = None,
+            color: Optional[TerminalColor] = None,
     ) -> "ProgressPromptResponse":
         if total <= 0:
             raise ValueError("Total must be greater than 0")
@@ -61,9 +60,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
             raise ValueError("Current progress cannot be negative")
         if width < 1:
             raise ValueError("Width must be at least 1")
-
-        if label and color:
-            label = ColorManager.colorize(label, color)
 
         return cls(
             lines=[],
@@ -74,7 +70,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             color=color or TerminalColor.BLUE,
         )
 
-    def render(self, context: Optional[PromptContext] = None) -> str:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         current = min(self.current, self.total)
         percentage = min(100, int(100 * current / self.total))
         filled = int(self.width * current / self.total)
@@ -87,7 +83,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             color_suffix = ""
 
         bar = (
-            color_prefix + self.FILL_CHAR * filled + self.EMPTY_CHAR * (self.width - filled) + color_suffix
+                color_prefix + self.FILL_CHAR * filled + self.EMPTY_CHAR * (self.width - filled) + color_suffix
         )
 
         text = f"{self.label} {bar} {percentage}%" if self.label else f"{bar} {percentage}%"
@@ -97,11 +93,11 @@ class ProgressPromptResponse(AbstractPromptResponse):
     # Step helpers below mirror the legacy API. They require ProgressStep/StepProgressContext.
     @classmethod
     def create_steps(
-        cls,
-        steps: List["ProgressStep"],
-        width: int = 50,
-        title: Optional[str] = None,
-        context: Optional[PromptContext] = None,
+            cls,
+            steps: List["ProgressStep"],
+            width: int = 50,
+            title: Optional[str] = None,
+            context: Optional[PromptContext] = None,
     ) -> "StepProgressContext":
         total_weight = sum(step.weight for step in steps)
         return StepProgressContext(
@@ -114,11 +110,11 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def execute(
-        cls,
-        callbacks: List[Callable[..., Any]],
-        width: int = 50,
-        title: Optional[str] = None,
-        context: Optional[PromptContext] = None,
+            cls,
+            callbacks: List[Callable[..., Any]],
+            width: int = 50,
+            title: Optional[str] = None,
+            context: Optional[PromptContext] = None,
     ) -> List[Any]:
         steps: List["ProgressStep"] = []
         for callback in callbacks:

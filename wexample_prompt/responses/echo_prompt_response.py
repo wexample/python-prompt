@@ -33,7 +33,7 @@ class EchoPromptResponse(AbstractPromptResponse):
         from wexample_prompt.example.response.echo_example import EchoExample
         return EchoExample
 
-    def render(self, context: Optional["PromptContext"] = None) -> str:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         # No style on echo.
         context.colorized = False
 

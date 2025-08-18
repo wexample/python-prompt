@@ -1,5 +1,9 @@
 """Tests for LogPromptResponse."""
+from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.prompt_response_line import PromptResponseLine
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
@@ -21,3 +25,40 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         return 1  # Log messages are single line
 
+    def test_multiline_log(self):
+        message = "Line 1\nLine 2"
+        response = self.create_test_response(message)
+        rendered = response.render()
+
+        self.assert_contains_text(rendered, "Line 1")
+        self.assert_contains_text(rendered, "Line 2")
+
+    def test_log_with_timestamp(self):
+        timestamp = "2025-01-04 12:00:00"
+        message = f"[{timestamp}] System started"
+
+        response = self.create_test_response(message)
+        rendered = response.render()
+
+        self.assert_contains_text(rendered, timestamp)
+        self.assert_contains_text(rendered, "System started")
+
+    def test_log_with_level(self):
+        message = "[INFO] Application initialized"
+        response = self.create_test_response(message)
+        rendered = response.render()
+
+        self.assert_contains_text(rendered, "[INFO]")
+        self.assert_contains_text(rendered, "Application initialized")
+
+    def test_single_indentation(self):
+        message = "Indented message"
+        response = self.create_test_response(message)
+        rendered = response.render(
+            context=PromptContext(
+                indentation=2
+            )
+        )
+
+        # Should have 2 spaces of indentation
+        self.assertTrue(rendered.startswith("  "))

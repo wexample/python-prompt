@@ -78,7 +78,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             verbosity=verbosity
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         ctx = context
         # Prefer provided context, else defer to super to resolve any defaulting
         width = self.width or (ctx.width if ctx else None)

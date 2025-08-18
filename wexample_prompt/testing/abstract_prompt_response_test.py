@@ -16,6 +16,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Assert common structure for rendered responses."""
         lines = rendered.split("\n")
         expected_lines = self.get_expected_lines()
+
         self.assertEqual(len(lines), expected_lines)
 
         # If more than one line, first should be empty

@@ -27,9 +27,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def _create(
-        cls: "AbstractPromptResponse",
-        lines: List[PromptResponseLine],
-        **kwargs,
+            cls: "AbstractPromptResponse",
+            lines: List[PromptResponseLine],
+            **kwargs,
     ) -> "AbstractPromptResponse":
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
@@ -41,9 +41,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def rebuild_context_for_kwargs(
-        cls,
-        parent_kwargs: Kwargs,
-        context: Optional["PromptContext"] = None,
+            cls,
+            parent_kwargs: Kwargs,
+            context: Optional["PromptContext"] = None,
     ) -> "PromptContext":
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
@@ -62,11 +62,15 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the complete response."""
 
-        # Creating a context allows to execute render without any extra information,
-        # but manager parameters like terminal width are not available in this case.
-        context = context or PromptContext.create_from_kwargs({})
-
+        context = self._create_context_if_missing(context=context)
         if self.verbosity > context.verbosity:
             return None
 
         return "\n".join(line.render(context) for line in self.lines)
+
+    def _create_context_if_missing(self, context: Optional["PromptContext"] = None) -> "PromptContext":
+        """
+        Creating a context allows to execute render without any extra information,
+        but manager parameters like terminal width are not available in this case.
+        """
+        return context or PromptContext()

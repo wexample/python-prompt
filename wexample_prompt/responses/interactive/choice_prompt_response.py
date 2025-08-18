@@ -1,17 +1,14 @@
 """Response for displaying and handling choice prompts."""
 from typing import Any, List, Optional, Dict, Union, Type, TYPE_CHECKING
 
-from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-from InquirerPy.utils import InquirerPyDefault, InquirerPySessionResult
-from pydantic import Field, ConfigDict
+from InquirerPy.utils import InquirerPyDefault
+from pydantic import Field
 
-from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
@@ -42,32 +39,24 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     )
 
     @classmethod
-    def optional_color(cls, text: str, color: TerminalColor, colorize: bool) -> str:
-        return ColorManager.colorize(text, color) if colorize else text
-
-    @classmethod
     def create_choice(
-        cls,
-        question: str,
-        choices: List[Any],
-        context: Optional[PromptContext] = None,
-        default: Optional[InquirerPyDefault] = None,
-        abort: Optional[str] = "> Abort",
-        color: Optional[TerminalColor] = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+            cls,
+            question: str,
+            choices: List[Any],
+            context: Optional[PromptContext] = None,
+            default: Optional[InquirerPyDefault] = None,
+            abort: Optional[str] = "> Abort",
+            color: Optional[TerminalColor] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
         lines: List[PromptResponseLine] = []
-
-        colorize = False if color is False else True
 
         lines.append(
             PromptResponseLine(
                 segments=[
                     PromptResponseSegment(
-                        text=cls.optional_color(
-                            question, color if color else TerminalColor.BLUE, colorize
-                        ),
-                        styles=[TextStyle.BOLD],
+                        text=question,
+                        color=color or TerminalColor.BLUE,
                     )
                 ]
             )
@@ -83,36 +72,24 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 PromptResponseLine(
                     segments=[
                         PromptResponseSegment(
-                            text=cls.optional_color(f"  {i + 1}. → ", TerminalColor.CYAN, colorize)
+                            text=f"  {i + 1}. → ",
+                            color=TerminalColor.CYAN
                         ),
                         PromptResponseSegment(
-                            text=cls.optional_color(choice_text, TerminalColor.WHITE, colorize),
-                            styles=[TextStyle.DIM],
+                            text=choice_text,
+                            color=TerminalColor.WHITE,
                         ),
                     ]
                 )
             )
 
-        original_context_color_enabled = None
-        if context is not None:
-            original_context_color_enabled = context.colorized
-            context.colorized = colorize
-
-        if context is None:
-            context = PromptContext(colorized=colorize)
-
-        response = cls(
+        return cls(
             lines=lines,
             choices=choices_all,
             default=default,
             question_text=question,
             verbosity=verbosity,
         )
-
-        if original_context_color_enabled is not None:
-            context.colorized = original_context_color_enabled
-
-        return response
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:

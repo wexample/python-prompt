@@ -3,6 +3,7 @@ from typing import List, Any, Optional, Type
 
 from pydantic import Field
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -41,7 +42,7 @@ class TablePromptResponse(AbstractPromptResponse):
             verbosity=verbosity
         )
 
-    def render(self, context=None) -> str:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         if not self.data and not self.headers:
             return ""
 

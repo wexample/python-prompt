@@ -2,6 +2,7 @@ from typing import Dict, Any, Optional, List, Type
 
 from pydantic import Field
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -49,10 +50,12 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context=None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the properties into lines using the provided context width."""
         if not self.properties:
             return ""
+
+        context = self._create_context_if_missing(context=context)
 
         # Determine content width
         total_width = context.width
