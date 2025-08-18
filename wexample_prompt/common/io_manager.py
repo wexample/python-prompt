@@ -43,6 +43,8 @@ from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin imp
     TreePromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import \
     ChoicePromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.choice_dict_prompt_response_manager_mixin import \
+    ChoiceDictPromptResponseManagerMixin
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -75,6 +77,7 @@ class IoManager(
     TreePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
+    ChoiceDictPromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -123,6 +126,7 @@ class IoManager(
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 
         return [
             # Basics
@@ -149,6 +153,7 @@ class IoManager(
             TreePromptResponse,
             # Interactive
             ChoicePromptResponse,
+            ChoiceDictPromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
