@@ -10,4 +10,6 @@ if TYPE_CHECKING:
 
 class StdoutOutputHandler(AbstractOutputHandler):
     def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
-        print(response.render(context=context), file=sys.stdout, end="\n")
+        rendered_response = response.render(context=context)
+        if rendered_response:
+            print(rendered_response, file=sys.stdout, end="\n")

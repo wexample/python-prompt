@@ -3,6 +3,7 @@ from typing import Optional, Any
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class WithIoManager:
@@ -48,6 +49,7 @@ class WithIoManager:
             "indentation_color": self.get_io_context_indentation_color(),
             "colorized": self.get_io_context_colorized()
                          or (self._io_parent_context.colorized if self._io_parent_context is not None else True),
+            "verbosity": (self._io_parent_context.verbosity if self._io_parent_context is not None else VerbosityLevel.DEFAULT),
             "width": self.get_io_context_indentation_width()
                      or (self._io_parent_context.width if self._io_parent_context is not None else None)
                      or (self._io.terminal_width if self._io else None)

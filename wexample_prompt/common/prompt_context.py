@@ -1,11 +1,11 @@
 from typing import Optional
 
 from pydantic import Field
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class PromptContext(ExtendedBaseModel):
@@ -51,15 +51,14 @@ class PromptContext(ExtendedBaseModel):
 
     @classmethod
     def create_kwargs_from_context(cls, context: "PromptContext") -> "Kwargs":
-        kwargs = {}
-
-        kwargs['indentation'] = context.indentation
-        kwargs['indentation_character'] = context.indentation_character
-        kwargs['indentation_color'] = context.indentation_color
-        kwargs['indentation_length'] = context.indentation_length
-        kwargs['width'] = context.width
-
-        return kwargs
+        return {
+            'indentation': context.indentation,
+            'indentation_character': context.indentation_character,
+            'indentation_color': context.indentation_color,
+            'indentation_length': context.indentation_length,
+            'verbosity': context.verbosity,
+            'width': context.width,
+        }
 
     @classmethod
     def create_from_parent_context_and_kwargs(

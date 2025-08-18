@@ -59,7 +59,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
             kwargs=parent_kwargs
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str:
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the complete response."""
         rendered_lines = []
 
@@ -67,12 +67,11 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         # but manager parameters like terminal width are not available in this case.
         context = context or PromptContext.create_from_kwargs({})
 
-        print(self.verbosity)
-        print(context.verbosity)
-
         if self.verbosity <= context.verbosity:
             for line in self.lines:
                 rendered = line.render(context)
                 rendered_lines.append(rendered)
 
-        return "\n".join(rendered_lines)
+            return "\n".join(rendered_lines)
+
+        return None

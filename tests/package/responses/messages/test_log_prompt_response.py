@@ -42,4 +42,4 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
         assert response.render(context=PromptContext(
             verbosity=VerbosityLevel.QUIET
-        )) == ""
+        )) is None

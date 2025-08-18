@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class SeparatorPromptResponse(AbstractMessageResponse):
     """Response for log messages."""
     character: Optional[str] = Field(
-        default="-",
+        default="~",
         description="The character to repeat"
     )
     label: Optional[str] = Field(
