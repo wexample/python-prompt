@@ -41,6 +41,8 @@ from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin im
     TablePromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import \
     TreePromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import \
+    ChoicePromptResponseManagerMixin
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -71,6 +73,8 @@ class IoManager(
     SuggestionsPromptResponseManagerMixin,
     TablePromptResponseManagerMixin,
     TreePromptResponseManagerMixin,
+    # Interactive
+    ChoicePromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -118,6 +122,7 @@ class IoManager(
         from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
         return [
             # Basics
@@ -142,6 +147,8 @@ class IoManager(
             SuggestionsPromptResponse,
             TablePromptResponse,
             TreePromptResponse,
+            # Interactive
+            ChoicePromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:

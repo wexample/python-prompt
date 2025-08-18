@@ -13,16 +13,12 @@ class TablePromptResponse(AbstractPromptResponse):
     """Response for displaying data in a table layout with borders and formatting."""
 
     data: List[List[Any]] = Field(
-        description="The data to display"
+        description="Table body rows: list of rows, each row a list of cell values"
     )
     headers: Optional[List[str]] = Field(
-        default=None,
-        description="The table header"
+        default=None, description="Optional list of column headers"
     )
-    title: Optional[str] = Field(
-        default=None,
-        description="The table title"
-    )
+    title: Optional[str] = Field(default=None, description="Optional table title")
 
     @classmethod
     def get_example_class(cls) -> Type:
