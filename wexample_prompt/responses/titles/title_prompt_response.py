@@ -22,7 +22,7 @@ class TitlePromptResponse(AbstractTitleResponse):
 
         return super()._create_title(
             text=text,
-            color=color or TerminalColor.BLUE,
+            color=color or TerminalColor.CYAN,
             character=character,
             width=width,
         )
