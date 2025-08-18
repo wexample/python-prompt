@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional, List, Type
 
-from wexample_prompt.common.prompt_context import PromptContext
+from pydantic import Field
+
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -14,6 +15,19 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     render, so the response remains context-agnostic until displayed.
     """
 
+    properties: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="The list of properties to display"
+    )
+    title: Optional[str] = Field(
+        default=None,
+        description="The title of the properties list"
+    )
+    nested_indent: int = Field(
+        default=2,
+        description="TODO Remove ?"
+    )
+
     @classmethod
     def get_example_class(cls) -> Type:
         from wexample_prompt.example.response.data.properties_example import PropertiesExample
@@ -26,13 +40,24 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             title: Optional[str] = None,
             nested_indent: int = 2,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-            **kwargs,
     ) -> "PropertiesPromptResponse":
-        # Use a fixed default content width. Context-based sizing will be handled at render stage later.
-        total_width = 80
-        content_width = 78  # total minus padding
+        return cls(
+            lines=[],  # Lines will be built in render() because we neet context with to create them.
+            properties=properties,
+            title=title,
+            nested_indent=nested_indent,
+            verbosity=verbosity,
+        )
 
-        # Compute max key width by scanning nested dicts
+    def render(self, context=None) -> Optional[str]:
+        """Render the properties into lines using the provided context width."""
+        if not self.properties:
+            return ""
+
+        # Determine content width
+        total_width = context.width
+        content_width = max(10, total_width - 2)
+
         max_key_width = 0
 
         def scan_keys(obj: Dict[str, Any]):
@@ -42,47 +67,41 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                 if isinstance(v, dict):
                     scan_keys(v)
 
-        scan_keys(properties)
+        scan_keys(self.properties)
 
-        content_lines = cls._format_properties(properties, max_key_width, nested_indent)
+        content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
 
         lines: List[PromptResponseLine] = []
         # Empty top spacer
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
-        if title:
-            title_len = len(title)
+        if self.title:
+            title_len = len(self.title)
             left_pad = max(0, (content_width - title_len) // 2)
             right_pad = max(0, content_width - title_len - left_pad)
             lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text="-" * left_pad),
-                        PromptResponseSegment(text=f" {title} "),
-                        PromptResponseSegment(text="-" * max(0, right_pad - 2)),
-                    ]
-                )
+                PromptResponseLine(segments=[
+                    PromptResponseSegment(text="-" * left_pad),
+                    PromptResponseSegment(text=f" {self.title} "),
+                    PromptResponseSegment(text="-" * max(0, right_pad - 2)),
+                ])
             )
         else:
-            lines.append(cls._create_border_line(content_width))
+            lines.append(self._create_border_line(content_width))
 
         for content in content_lines:
             lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text=" "),
-                        PromptResponseSegment(text=content),
-                    ]
-                )
+                PromptResponseLine(segments=[
+                    PromptResponseSegment(text=" "),
+                    PromptResponseSegment(text=content),
+                ])
             )
 
-        lines.append(cls._create_border_line(content_width))
+        lines.append(self._create_border_line(content_width))
 
-        return cls(
-            lines=lines,
-            verbosity=verbosity,
-            **kwargs,
-        )
+        # Replace and delegate to base to apply verbosity and segment rendering
+        self.lines = lines
+        return super().render(context=context)
 
     @staticmethod
     def _format_properties(
