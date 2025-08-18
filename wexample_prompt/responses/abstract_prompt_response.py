@@ -8,6 +8,7 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -18,6 +19,10 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     lines: List[PromptResponseLine] = Field(
         default_factory=list,
         description="The list of lines of the response content",
+    )
+    verbosity: Optional[VerbosityLevel] = Field(
+        default=VerbosityLevel.DEFAULT,
+        description="The context verbosity, saying which response to render or not"
     )
 
     def __init__(self, **kwargs):
@@ -62,8 +67,12 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         # but manager parameters like terminal width are not available in this case.
         context = context or PromptContext.create_from_kwargs({})
 
-        for line in self.lines:
-            rendered = line.render(context)
-            rendered_lines.append(rendered)
+        print(self.verbosity)
+        print(context.verbosity)
+
+        if self.verbosity <= context.verbosity:
+            for line in self.lines:
+                rendered = line.render(context)
+                rendered_lines.append(rendered)
 
         return "\n".join(rendered_lines)

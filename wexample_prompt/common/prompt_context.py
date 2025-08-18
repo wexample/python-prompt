@@ -34,7 +34,7 @@ class PromptContext(ExtendedBaseModel):
         default=2,
         description="Number of characters to repeat for one indentation"
     )
-    verbosity: Optional[str] = Field(
+    verbosity: Optional[VerbosityLevel] = Field(
         default=VerbosityLevel.DEFAULT,
         description="The context verbosity, saying which response to render or not"
     )

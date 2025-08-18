@@ -1,5 +1,6 @@
-from typing import Type, TYPE_CHECKING
+from typing import Type, TYPE_CHECKING, Optional
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
@@ -14,7 +15,8 @@ class LogPromptResponse(AbstractMessageResponse):
     def create_log(
             cls: "LogPromptResponse",
             message: str,
-            color: "TerminalColor" = None
+            color: "TerminalColor" = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "LogPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -26,6 +28,7 @@ class LogPromptResponse(AbstractMessageResponse):
                     color=color or TerminalColor.WHITE
                 )
             ],
+            verbosity=verbosity
         )
 
     @classmethod
