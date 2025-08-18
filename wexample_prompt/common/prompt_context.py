@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import Field
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.const.types import Kwargs
@@ -8,6 +9,7 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class PromptContext(ExtendedBaseModel):
+    """Context for rendering responses, including terminal information."""
     colorized: Optional[bool] = Field(
         default=True,
         description="Allow to return avoid coloration special characters"
@@ -31,6 +33,10 @@ class PromptContext(ExtendedBaseModel):
     indentation_length: Optional[int] = Field(
         default=2,
         description="Number of characters to repeat for one indentation"
+    )
+    verbosity: Optional[str] = Field(
+        default=VerbosityLevel.DEFAULT,
+        description="The context verbosity, saying which response to render or not"
     )
     width: Optional[int] = Field(
         default=80,
