@@ -3,7 +3,6 @@ from typing import ClassVar, Type, TYPE_CHECKING, Optional
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
     from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -15,7 +14,6 @@ class InfoPromptResponse(AbstractMessageResponse):
     def create_info(
             cls: "InfoPromptResponse",
             message: str,
-            context: "PromptContext" = None,
             color: Optional["TerminalColor"] = None,
             **kwargs
     ) -> "InfoPromptResponse":
@@ -23,7 +21,6 @@ class InfoPromptResponse(AbstractMessageResponse):
 
         return cls._create_symbol_message(
             text=message,
-            context=context,
             color=color or TerminalColor.BLUE
         )
 

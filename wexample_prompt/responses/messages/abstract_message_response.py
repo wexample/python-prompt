@@ -1,7 +1,5 @@
 from typing import Optional, ClassVar
 
-from wexample_prompt.common.color_manager import ColorManager
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
@@ -18,8 +16,6 @@ class AbstractMessageResponse(AbstractPromptResponse):
             text: str,
             color: TerminalColor,
             symbol: Optional[str] = None,
-            bold_symbol: bool = True,
-            context: Optional[PromptContext] = None,
             **kwargs
     ) -> 'AbstractMessageResponse':
         """Create a message with a symbol"""
@@ -33,17 +29,17 @@ class AbstractMessageResponse(AbstractPromptResponse):
             symbol_text = f"{effective_symbol} "
             segments.append(
                 PromptResponseSegment(
-                    text=ColorManager.colorize(
-                        symbol_text,
-                        color,
-                        TerminalColor.BOLD if bold_symbol else None,
-                    )
+                    text=symbol_text,
+                    color=color
                 )
             )
 
         # Add message text
         segments.append(
-            PromptResponseSegment(text=ColorManager.colorize(text, color))
+            PromptResponseSegment(
+                text=text,
+                color=color
+            )
         )
 
         # Create response with context and additional kwargs

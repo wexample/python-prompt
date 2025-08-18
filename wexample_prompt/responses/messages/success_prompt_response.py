@@ -3,27 +3,24 @@ from typing import ClassVar, Type, TYPE_CHECKING, Optional
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class SuccessPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "✅"
-    
+
     @classmethod
     def create_success(
-        cls: "SuccessPromptResponse",
-        message: str,
-        context: "PromptContext" = None,
-        color: Optional["TerminalColor"] = None,
-        **kwargs
+            cls: "SuccessPromptResponse",
+            message: str,
+            color: Optional["TerminalColor"] = None,
+            **kwargs
     ) -> "SuccessPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
             text=message,
-            context=context,
             color=color or TerminalColor.GREEN
         )
 
