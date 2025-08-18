@@ -12,6 +12,7 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
@@ -28,14 +29,17 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         description="List of choices (plain strings or InquirerPy Choice objects)",
     )
     default: Optional[InquirerPyDefault] = Field(
-        default=None, description="Default selected value for the prompt"
+        default=None,
+        description="Default selected value for the prompt"
     )
     inquirer_kwargs: Dict[str, Any] = Field(
-        default_factory=dict, description="Additional kwargs forwarded to inquirer.select"
+        default_factory=dict,
+        description="Additional kwargs forwarded to inquirer.select"
     )
-    question_text: str = Field(default="", description="Question text shown to the user")
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    question_text: str = Field(
+        default="",
+        description="Question text shown to the user"
+    )
 
     @classmethod
     def optional_color(cls, text: str, color: TerminalColor, colorize: bool) -> str:
@@ -50,7 +54,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default: Optional[InquirerPyDefault] = None,
         abort: Optional[str] = "> Abort",
         color: Optional[TerminalColor] = None,
-        **kwargs: Any,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
         lines: List[PromptResponseLine] = []
 
@@ -99,26 +103,16 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         response = cls(
             lines=lines,
-            context=context,
             choices=choices_all,
             default=default,
-            inquirer_kwargs=kwargs,
             question_text=question,
+            verbosity=verbosity,
         )
 
         if original_context_color_enabled is not None:
             context.colorized = original_context_color_enabled
 
         return response
-
-    def execute(self) -> InquirerPySessionResult:
-        """Execute the choice prompt and return the selection."""
-        return inquirer.select(
-            message=self.question_text,
-            choices=self.choices,
-            default=self.default,
-            **self.inquirer_kwargs,
-        ).execute()
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:

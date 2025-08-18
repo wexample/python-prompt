@@ -5,7 +5,7 @@ from InquirerPy.base.control import Choice
 from pydantic import Field, ConfigDict
 
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -19,8 +19,6 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
         description="Original mapping of keys to display labels",
     )
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
     @classmethod
     def create_choice_dict(
         cls,
@@ -28,7 +26,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
         choices: Dict[str, str],
         default: Optional[str] = None,
         abort: Optional[str] = "> Abort",
-        **kwargs: Any,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoiceDictPromptResponse":
         """Create a dictionary-based choice prompt response."""
         choice_list: List[Union[str, Choice]] = []
@@ -40,7 +38,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
             choices=choice_list,
             default=default,
             abort=abort,
-            **kwargs,
+            verbosity=verbosity,
         )
 
         assert isinstance(response, ChoicePromptResponse)

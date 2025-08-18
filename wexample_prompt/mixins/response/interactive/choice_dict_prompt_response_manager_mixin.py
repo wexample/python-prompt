@@ -27,7 +27,6 @@ class ChoiceDictPromptResponseManagerMixin:
             choices=choices,
             default=default,
             abort=abort,
-            context=context,
         )
 
         self.print_response(
