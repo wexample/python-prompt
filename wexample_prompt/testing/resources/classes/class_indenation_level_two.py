@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
@@ -24,8 +25,13 @@ class ClassIndentationLevelTwo(WithIoMethods):
             context=self.io_context
         )
 
+        self.log(
+            message='test deep log two',
+            context=self._create_io_context(colorized=False)
+        )
+
         level_two = ClassIndentationLevelThree(
             parent_io_handler=self
         )
 
-        return level_two.print_deep_log_three()
+        level_two.print_deep_log_three()

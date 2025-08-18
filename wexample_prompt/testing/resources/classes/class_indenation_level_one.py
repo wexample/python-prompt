@@ -11,4 +11,4 @@ class ClassIndentationLevelOne(WithIoManager):
             parent_io_handler=self
         )
 
-        return level_two.print_deep_log_two()
+        level_two.print_deep_log_two()

@@ -24,7 +24,7 @@ class ClassIndentationLevelThree(WithRequiredIoManager, ExtendedBaseModel):
         return TerminalColor.BLUE
 
     def print_deep_log_three(self):
-        return self.io.log(
+        self.io.log(
             message='test deep log three',
             context=self.io_context
         )

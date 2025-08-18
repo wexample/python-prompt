@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_context import PromptContext
@@ -9,6 +9,7 @@ class WithIoManager:
     _io: Optional[IoManager] = None
     _io_context_colorized: Optional[bool] = None
     _io_context: "PromptContext"
+    _io_parent_context: "Any" = None
 
     def __init__(
             self,
@@ -16,11 +17,11 @@ class WithIoManager:
             parent_io_handler: "WithIoManager" = None,
     ) -> None:
         if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
+            self._io_parent_context = parent_io_handler.io_context
             self._io = parent_io_handler.io
-            self._io_context = self._create_io_context(source_context=parent_io_handler.io_context)
         else:
             self._io = io
-            self._io_context = self._create_io_context()
+        self._io_context = self._create_io_context()
 
     @property
     def io(self) -> IoManager:
@@ -38,14 +39,20 @@ class WithIoManager:
     def _init_io_manager(self) -> None:
         self._io = IoManager()
 
-    def _create_io_context(self, source_context: "PromptContext" = None):
+    def _create_io_context(self, **kwargs):
+        defaults = {
+            "parent_context": self._io_parent_context,
+            "indentation": self.get_io_context_indentation(),
+            "indentation_character": self.get_io_context_indentation_character(),
+            "indentation_color": self.get_io_context_indentation_color(),
+            "colorized": self.get_io_context_colorized()
+                         or (self._io_parent_context.colorized if self._io_parent_context is not None else True),
+        }
+
+        defaults.update(kwargs)
+
         return PromptContext(
-            parent_context=source_context,
-            indentation=self.get_io_context_indentation(),
-            indentation_character=self.get_io_context_indentation_character(),
-            indentation_color=self.get_io_context_indentation_color(),
-            colorized=self.get_io_context_colorized() or (
-                source_context.colorized if source_context is not None else True),
+            **defaults,
         )
 
     def get_io_context_colorized(self) -> Optional[bool]:

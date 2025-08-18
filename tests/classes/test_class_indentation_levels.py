@@ -9,4 +9,6 @@ class TestIoManager(AbstractPromptResponseTest):
     def test_class_indentation_levels(self):
         from wexample_prompt.testing.resources.classes.class_indenation_level_one import ClassIndentationLevelOne
         level_one = ClassIndentationLevelOne(io=self._io)
-        assert level_one.print_deep_log_one() is not None
+        level_one.print_deep_log_one()
+
+        assert level_one is not None
