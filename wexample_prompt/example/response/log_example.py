@@ -13,3 +13,8 @@ class LogExample(AbstractResponseExample):
         return LogPromptResponse.create_log(
             message=self.get_test_message(),
         )
+
+    def example_extended(self) -> None:
+        self._class_with_methods.log(
+            message=self.get_test_message()
+        )

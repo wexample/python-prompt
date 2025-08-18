@@ -23,8 +23,12 @@ if __name__ == "__main__":
         # Print from manager
         example.example_manager()
 
+        # Print from extended class
+        example.example_extended()
+
         # Print from response
         example.io.print_response(example_response, context=PromptContext())
+        example.example_manager()
 
         # Print white
         example.io.print_response(example_response, context=PromptContext(colorized=False))
