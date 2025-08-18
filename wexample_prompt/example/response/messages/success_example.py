@@ -15,5 +15,4 @@ class SuccessExample(AbstractResponseExample):
         )
 
     def example_extended(self):
-        """Example using context."""
         self._class_with_methods.success(message=self.get_test_message())

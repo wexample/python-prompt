@@ -5,6 +5,9 @@ from pydantic import Field, PrivateAttr
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
+
+from wexample_prompt.mixins.response.messages.info_prompt_response_manager_mixin import \
+    InfoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import \
@@ -24,6 +27,7 @@ class IoManager(
     EchoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
     # Messages
+    InfoPromptResponseManagerMixin,
     SuccessPromptResponseManagerMixin,
     # Titles
     SeparatorPromptResponseManagerMixin,
@@ -58,6 +62,7 @@ class IoManager(
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
@@ -65,9 +70,10 @@ class IoManager(
             # Basics
             EchoPromptResponse,
             LogPromptResponse,
-
+            InfoPromptResponse,
             # Messages
             SuccessPromptResponse,
+
             # Titles
             SeparatorPromptResponse,
         ]

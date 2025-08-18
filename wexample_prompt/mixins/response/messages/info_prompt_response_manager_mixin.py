@@ -4,25 +4,25 @@ from wexample_helpers.const.types import Kwargs
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 
 
-class SuccessPromptResponseManagerMixin:
-    def success(
+class InfoPromptResponseManagerMixin:
+    def info(
             self,
             message: str,
             context: Optional["PromptContext"] = None,
-            **kwargs:Kwargs
-    ) -> "SuccessPromptResponse":
-        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+            **kwargs: Kwargs
+    ) -> "InfoPromptResponse":
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
 
-        response = SuccessPromptResponse.create_success(
+        response = InfoPromptResponse.create_info(
             message=message,
         )
 
         self.print_response(
             response=response,
-            context=SuccessPromptResponse.rebuild_context_for_kwargs(
+            context=InfoPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs
             )

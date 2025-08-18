@@ -8,27 +8,27 @@ if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class SuccessPromptResponse(AbstractMessageResponse):
-    SYMBOL: ClassVar[str] = "✅"
-    
+class InfoPromptResponse(AbstractMessageResponse):
+    SYMBOL: ClassVar[str] = "ℹ"
+
     @classmethod
-    def create_success(
-        cls: "SuccessPromptResponse",
-        message: str,
-        context: "PromptContext" = None,
-        color: Optional["TerminalColor"] = None,
-        **kwargs
-    ) -> "SuccessPromptResponse":
+    def create_info(
+            cls: "InfoPromptResponse",
+            message: str,
+            context: "PromptContext" = None,
+            color: Optional["TerminalColor"] = None,
+            **kwargs
+    ) -> "InfoPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
             text=message,
             context=context,
-            color=color or TerminalColor.GREEN
+            color=color or TerminalColor.BLUE
         )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        """Get the example class for success messages."""
-        from wexample_prompt.example.response.messages.success_example import SuccessExample
-        return SuccessExample
+        """Get the example class for info messages."""
+        from wexample_prompt.example.response.messages.info_example import InfoExample
+        return InfoExample
