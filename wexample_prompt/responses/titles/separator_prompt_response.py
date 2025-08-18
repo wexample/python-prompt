@@ -26,8 +26,11 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         description="A fixed width, use context width if not provided"
     )
     separator_response_segment: PromptResponseSegment = Field(
-        default=None,
         description="The line segment used by render process"
+    )
+    separator_response_label: Optional[PromptResponseSegment] = Field(
+        default=None,
+        description="The label displayed at the right"
     )
 
     @classmethod
@@ -40,20 +43,31 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
+        segments = []
+
         separator_response_segment = PromptResponseSegment(
             text="-",
             color=color
         )
+        segments.append(separator_response_segment)
+
+        separator_response_label = None
+        if label:
+            separator_response_label = PromptResponseSegment(
+                text=f" {label}",
+                color=color
+            )
+
+            segments.append(separator_response_label)
 
         return cls(
             separator_response_segment=separator_response_segment,
+            separator_response_label=separator_response_label,
             label=label,
             width=width,
             lines=[
                 PromptResponseLine(
-                    segments=[
-                        separator_response_segment
-                    ]
+                    segments=segments
                 )
             ],
         )
@@ -64,7 +78,12 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         return SeparatorExample
 
     def render(self, context: Optional["PromptContext"] = None) -> str:
-        self.separator_response_segment.text = (context.width - len(context.render_indentation_text())) * self.character
+        width = self.width or context.width
+        length = width - len(context.render_indentation_text())
+        if self.separator_response_label:
+            length -= len(self.separator_response_label.text)
+
+        self.separator_response_segment.text = length * self.character
 
         return super().render(
             context=context,

@@ -42,10 +42,12 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
                 return PromptContext.create_from_kwargs({})
 
         if context:
-            parent_kwargs['indentation'] = context.indentation
-            parent_kwargs['indentation_character'] = context.indentation_character
-            parent_kwargs['indentation_color'] = context.indentation_color
-            parent_kwargs['indentation_length'] = context.indentation_length
+            kwargs = PromptContext.create_kwargs_from_context(
+                context=context,
+            )
+
+            kwargs.update(parent_kwargs)
+            parent_kwargs = kwargs
 
         return PromptContext.create_from_parent_context_and_kwargs(
             parent_context=context.parent_context if context else None,

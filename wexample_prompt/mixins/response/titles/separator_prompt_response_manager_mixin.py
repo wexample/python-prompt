@@ -22,6 +22,11 @@ class SeparatorPromptResponseManagerMixin:
             width=width,
         )
 
+        context = SeparatorPromptResponse.rebuild_context_for_kwargs(
+            context=context,
+            parent_kwargs=kwargs
+        )
+
         self.print_response(
             response=response,
             context=SeparatorPromptResponse.rebuild_context_for_kwargs(

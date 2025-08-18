@@ -41,9 +41,18 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
             colorized=False
         )
 
-        self.separator()
+        self.io_context.width = 100
 
-        self.io.log(string_generate_lorem_ipsum(1000), context=self.io_context)
+        self.separator(
+            label="Text width management",
+            color=TerminalColor.MAGENTA,
+            context=self.io_context
+        )
+
+        self.io.log(
+            string_generate_lorem_ipsum(1000),
+            context=self.io_context
+        )
 
         self.log(
             string_generate_lorem_ipsum(200),
@@ -51,7 +60,9 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
             width=60
         )
 
-        self.separator()
+        self.separator(
+            width=60
+        )
 
         self.echo(
             message='test deep three ECHO',

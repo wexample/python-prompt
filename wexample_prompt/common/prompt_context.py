@@ -44,6 +44,18 @@ class PromptContext(ExtendedBaseModel):
         )
 
     @classmethod
+    def create_kwargs_from_context(cls, context: "PromptContext") -> "Kwargs":
+        kwargs = {}
+
+        kwargs['indentation'] = context.indentation
+        kwargs['indentation_character'] = context.indentation_character
+        kwargs['indentation_color'] = context.indentation_color
+        kwargs['indentation_length'] = context.indentation_length
+        kwargs['width'] = context.width
+
+        return kwargs
+
+    @classmethod
     def create_from_parent_context_and_kwargs(
             cls,
             kwargs: Kwargs,
