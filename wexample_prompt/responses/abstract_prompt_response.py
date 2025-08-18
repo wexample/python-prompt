@@ -25,14 +25,11 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         description="The context verbosity, saying which response to render or not"
     )
 
-    def __init__(self, **kwargs):
-        ExtendedBaseModel.__init__(self, **kwargs)
-
     @classmethod
     def _create(
-            cls: "AbstractPromptResponse",
-            lines: List[PromptResponseLine],
-            **kwargs
+        cls: "AbstractPromptResponse",
+        lines: List[PromptResponseLine],
+        **kwargs,
     ) -> "AbstractPromptResponse":
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
@@ -44,43 +41,32 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def rebuild_context_for_kwargs(
-            cls,
-            parent_kwargs: Kwargs,
-            context: Optional["PromptContext"] = None
+        cls,
+        parent_kwargs: Kwargs,
+        context: Optional["PromptContext"] = None,
     ) -> "PromptContext":
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
-            if context:
-                return context
-            else:
-                return PromptContext.create_from_kwargs({})
+            return context or PromptContext.create_from_kwargs({})
 
         if context:
-            kwargs = PromptContext.create_kwargs_from_context(
-                context=context,
-            )
-
+            kwargs = PromptContext.create_kwargs_from_context(context=context)
             kwargs.update(parent_kwargs)
             parent_kwargs = kwargs
 
         return PromptContext.create_from_parent_context_and_kwargs(
             parent_context=context.parent_context if context else None,
-            kwargs=parent_kwargs
+            kwargs=parent_kwargs,
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the complete response."""
-        rendered_lines = []
 
         # Creating a context allows to execute render without any extra information,
         # but manager parameters like terminal width are not available in this case.
         context = context or PromptContext.create_from_kwargs({})
 
-        if self.verbosity <= context.verbosity:
-            for line in self.lines:
-                rendered = line.render(context)
-                rendered_lines.append(rendered)
+        if self.verbosity > context.verbosity:
+            return None
 
-            return "\n".join(rendered_lines)
-
-        return None
+        return "\n".join(line.render(context) for line in self.lines)

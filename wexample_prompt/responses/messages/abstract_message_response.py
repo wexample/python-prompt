@@ -1,4 +1,4 @@
-from typing import Optional, ClassVar, Tuple
+from typing import Optional, ClassVar
 
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.prompt_context import PromptContext
@@ -17,39 +17,36 @@ class AbstractMessageResponse(AbstractPromptResponse):
             cls,
             text: str,
             color: TerminalColor,
-            symbol: Optional[Tuple[str, False]] = None,
+            symbol: Optional[str] = None,
             bold_symbol: bool = True,
             context: Optional[PromptContext] = None,
             **kwargs
     ) -> 'AbstractMessageResponse':
         """Create a message with a symbol"""
-        segments = []
+        # Determine effective symbol (explicit > class default)
+        effective_symbol = symbol if symbol is not None else cls.SYMBOL
 
-        # Add symbol if present
-        if symbol or (symbol is None and cls.SYMBOL):
-            symbol_text = f"{symbol or cls.SYMBOL} "
-            symbol_segment = PromptResponseSegment(
-                text=ColorManager.colorize(
-                    symbol_text,
-                    color,
-                    TerminalColor.BOLD if bold_symbol else None
+        segments: list[PromptResponseSegment] = []
+
+        # Add symbol if non-empty
+        if effective_symbol:
+            symbol_text = f"{effective_symbol} "
+            segments.append(
+                PromptResponseSegment(
+                    text=ColorManager.colorize(
+                        symbol_text,
+                        color,
+                        TerminalColor.BOLD if bold_symbol else None,
+                    )
                 )
             )
-            segments.append(symbol_segment)
 
         # Add message text
-        message = PromptResponseSegment(
-            text=ColorManager.colorize(text, color)
-        )
-        segments.append(message)
-
-        # Create line with segments
-        line = PromptResponseLine(
-            segments=segments,
+        segments.append(
+            PromptResponseSegment(text=ColorManager.colorize(text, color))
         )
 
         # Create response with context and additional kwargs
-        create_args = {"lines": [line]}
-        create_args.update(kwargs)
-
-        return cls._create(**create_args)
+        return cls._create(lines=[
+            PromptResponseLine(segments=segments)
+        ], **kwargs)
