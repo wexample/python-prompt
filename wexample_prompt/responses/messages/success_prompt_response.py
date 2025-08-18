@@ -1,5 +1,6 @@
 from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
 if TYPE_CHECKING:
@@ -15,12 +16,14 @@ class SuccessPromptResponse(AbstractMessageResponse):
             cls: "SuccessPromptResponse",
             message: str,
             color: Optional["TerminalColor"] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "SuccessPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
             text=message,
-            color=color or TerminalColor.GREEN
+            color=color or TerminalColor.GREEN,
+            verbosity=verbosity
         )
 
     @classmethod

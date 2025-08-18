@@ -1,5 +1,6 @@
 from typing import ClassVar, Type, TYPE_CHECKING, Optional
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
 if TYPE_CHECKING:
@@ -12,15 +13,17 @@ class TaskPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_task(
-        cls: "TaskPromptResponse",
-        message: str,
-        color: Optional["TerminalColor"] = None,
+            cls: "TaskPromptResponse",
+            message: str,
+            color: Optional["TerminalColor"] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "TaskPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
             text=message,
-            color=color or TerminalColor.YELLOW
+            color=color or TerminalColor.YELLOW,
+            verbosity=verbosity
         )
 
     @classmethod

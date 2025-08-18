@@ -4,6 +4,7 @@ from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
+    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
@@ -12,6 +13,8 @@ class TitlePromptResponseManagerMixin:
             self,
             message: str,
             color: Optional["TerminalColor"] = None,
+            character: Optional[str] = None,
+            width: Optional[int] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
@@ -19,6 +22,9 @@ class TitlePromptResponseManagerMixin:
 
         response = TitlePromptResponse.create_title(
             text=message,
+            color=color,
+            character=character,
+            width=width,
         )
 
         self.print_response(

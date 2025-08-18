@@ -4,6 +4,7 @@ from pydantic import Field
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
 
 if TYPE_CHECKING:
@@ -44,6 +45,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             color: Optional["TerminalColor"] = None,
             character: Optional[str] = None,
             width: Optional[int] = None,
+            verbosity:"VerbosityLevel" = None
     ) -> "AbstractTitleResponse":
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",
@@ -73,6 +75,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
                     ]
                 )
             ],
+            verbosity=verbosity
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> str:

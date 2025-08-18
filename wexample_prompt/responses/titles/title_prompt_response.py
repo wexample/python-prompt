@@ -1,5 +1,6 @@
 from typing import Type, Optional, TYPE_CHECKING
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.titles.abstract_title_response import AbstractTitleResponse
 
@@ -16,6 +17,7 @@ class TitlePromptResponse(AbstractTitleResponse):
             color: Optional["TerminalColor"] = None,
             character: Optional[str] = None,
             width: Optional[int] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "TitlePromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -24,6 +26,7 @@ class TitlePromptResponse(AbstractTitleResponse):
             color=color or TerminalColor.CYAN,
             character=character,
             width=width,
+            verbosity=verbosity
         )
 
     @classmethod

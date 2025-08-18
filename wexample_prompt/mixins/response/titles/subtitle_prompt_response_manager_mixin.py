@@ -4,6 +4,7 @@ from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
+    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
