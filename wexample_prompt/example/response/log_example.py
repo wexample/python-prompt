@@ -9,7 +9,7 @@ class LogExample(AbstractResponseExample):
         self.io.log(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         return LogPromptResponse.create_log(
             message=self.get_test_message(),
         )

@@ -1,14 +1,14 @@
-from typing import Type, TYPE_CHECKING, Optional
+from typing import Type, TYPE_CHECKING
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class LogPromptResponse(AbstractMessageResponse):
+class LogPromptResponse(AbstractPromptResponse):
     """Response for log messages."""
 
     @classmethod
@@ -33,5 +33,5 @@ class LogPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.messages.log_example import LogExample
+        from wexample_prompt.example.response.log_example import LogExample
         return LogExample

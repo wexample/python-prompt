@@ -5,7 +5,7 @@ from pydantic import Field, PrivateAttr
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.log_prompt_response_manager_mixin import \
+from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
     SeparatorPromptResponseManagerMixin
@@ -20,10 +20,10 @@ class IoManager(
     ExtendedBaseModel,
     # Basics
     EchoPromptResponseManagerMixin,
+    LogPromptResponseManagerMixin,
     # Formatting
     SeparatorPromptResponseManagerMixin,
     # Messages
-    LogPromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -54,16 +54,16 @@ class IoManager(
     @classmethod
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
-        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
         return [
             # Basics
             EchoPromptResponse,
+            LogPromptResponse,
             # Formatting
             SeparatorPromptResponse,
             # Messages
-            LogPromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:

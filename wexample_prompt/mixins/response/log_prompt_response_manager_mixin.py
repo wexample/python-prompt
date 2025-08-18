@@ -14,7 +14,7 @@ class LogPromptResponseManagerMixin:
             context: Optional[PromptContext] = None,
             **kwargs:Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         response = LogPromptResponse.create_log(
             message=message,
