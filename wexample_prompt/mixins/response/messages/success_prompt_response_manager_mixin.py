@@ -7,22 +7,22 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class LogPromptResponseManagerMixin:
-    def log(
+class SuccessPromptResponseManagerMixin:
+    def success(
             self,
             message: str,
             context: Optional["PromptContext"] = None,
             **kwargs:Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 
-        response = LogPromptResponse.create_log(
+        response = SuccessPromptResponse.create_success(
             message=message,
         )
 
         self.print_response(
             response=response,
-            context=LogPromptResponse.rebuild_context_for_kwargs(
+            context=SuccessPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs
             )

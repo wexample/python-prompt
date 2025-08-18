@@ -7,6 +7,8 @@ from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import \
+    SuccessPromptResponseManagerMixin
 from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
     SeparatorPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
@@ -21,9 +23,10 @@ class IoManager(
     # Basics
     EchoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
-    # Formatting
-    SeparatorPromptResponseManagerMixin,
     # Messages
+    SuccessPromptResponseManagerMixin,
+    # Titles
+    SeparatorPromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -55,15 +58,18 @@ class IoManager(
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
         return [
             # Basics
             EchoPromptResponse,
             LogPromptResponse,
-            # Formatting
-            SeparatorPromptResponse,
+
             # Messages
+            SuccessPromptResponse,
+            # Titles
+            SeparatorPromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:

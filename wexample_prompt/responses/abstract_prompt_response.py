@@ -29,6 +29,15 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         ExtendedBaseModel.__init__(self, **kwargs)
 
     @classmethod
+    def _create(
+            cls: "AbstractPromptResponse",
+            lines: List[PromptResponseLine],
+            **kwargs
+    ) -> "AbstractPromptResponse":
+        """Create a new response with the given lines."""
+        return cls(lines=lines, **kwargs)
+
+    @classmethod
     @abstractmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         cls._raise_not_implemented_error()
