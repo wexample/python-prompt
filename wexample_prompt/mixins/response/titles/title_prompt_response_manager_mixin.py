@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -6,6 +6,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.common.io_manager import IoManager
 
 
 class TitlePromptResponseManagerMixin:
@@ -27,7 +28,7 @@ class TitlePromptResponseManagerMixin:
             width=width,
         )
 
-        self.print_response(
+        cast("IoManager", self).print_response(
             response=response,
             context=TitlePromptResponse.rebuild_context_for_kwargs(
                 context=context,

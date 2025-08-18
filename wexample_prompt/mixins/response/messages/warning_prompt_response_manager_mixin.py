@@ -4,7 +4,7 @@ from wexample_helpers.const.types import Kwargs
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages import WarningPromptResponse
+    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 
 
 class WarningPromptResponseManagerMixin:

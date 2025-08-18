@@ -34,13 +34,10 @@ class PropertiesExample(AbstractResponseExample):
                 "phone": "123-456-7890",
             },
         }
-        context = self.io.create_context()
-        if indentation is not None:
-            context.indentation = indentation
+
         return PropertiesPromptResponse.create_properties(
             properties=properties,
             title="User Information",
-            context=context,
         )
 
     def example_manager(self):
@@ -68,7 +65,7 @@ class PropertiesExample(AbstractResponseExample):
                 "failed": 0,
             },
         }
-        self.class_with_context.properties(
+        self._class_with_methods.properties(
             properties=properties,
             title="Operation Results",
         )

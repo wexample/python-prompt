@@ -1,10 +1,8 @@
 from typing import Dict, Any, Optional, List, Type
 
-from pydantic import Field
-
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -23,17 +21,16 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_properties(
-        cls,
-        properties: Dict[str, Any],
-        title: Optional[str] = None,
-        nested_indent: int = 2,
-        context: Optional[PromptContext] = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-        **kwargs,
+            cls,
+            properties: Dict[str, Any],
+            title: Optional[str] = None,
+            nested_indent: int = 2,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+            **kwargs,
     ) -> "PropertiesPromptResponse":
-        # Determine content width from context (fallback to 80)
-        total_width = (context.get_effective_width() if context else 80)
-        content_width = max(10, total_width - 2)
+        # Use a fixed default content width. Context-based sizing will be handled at render stage later.
+        total_width = 80
+        content_width = 78  # total minus padding
 
         # Compute max key width by scanning nested dicts
         max_key_width = 0
@@ -82,16 +79,20 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         lines.append(cls._create_border_line(content_width))
 
         return cls(
+            lines=lines,
+            properties=properties,
+            title=title,
+            nested_indent=nested_indent,
+            verbosity=verbosity,
             **kwargs,
-            verbosity=verbosity
         )
 
     @staticmethod
     def _format_properties(
-        properties: Dict[str, Any],
-        key_width: int,
-        indent: int,
-        current_indent: int = 0,
+            properties: Dict[str, Any],
+            key_width: int,
+            indent: int,
+            current_indent: int = 0,
     ) -> List[str]:
         lines: List[str] = []
         indent_str = " " * current_indent
