@@ -35,6 +35,12 @@ from wexample_prompt.mixins.response.data.multiple_prompt_response_manager_mixin
 from wexample_prompt.mixins.response.data.properties_prompt_response_manager_mixin import \
     PropertiesPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+from wexample_prompt.mixins.response.data.suggestions_prompt_response_manager_mixin import \
+    SuggestionsPromptResponseManagerMixin
+from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin import \
+    TablePromptResponseManagerMixin
+from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import \
+    TreePromptResponseManagerMixin
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -62,6 +68,9 @@ class IoManager(
     ListPromptResponseManagerMixin,
     MultiplePromptResponseManagerMixin,
     PropertiesPromptResponseManagerMixin,
+    SuggestionsPromptResponseManagerMixin,
+    TablePromptResponseManagerMixin,
+    TreePromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -106,6 +115,9 @@ class IoManager(
         from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
         from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
         from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
         return [
             # Basics
@@ -127,6 +139,9 @@ class IoManager(
             ListPromptResponse,
             MultiplePromptResponse,
             PropertiesPromptResponse,
+            SuggestionsPromptResponse,
+            TablePromptResponse,
+            TreePromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
