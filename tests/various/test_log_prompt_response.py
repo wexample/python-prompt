@@ -1,4 +1,3 @@
-"""Tests for LogPromptResponse."""
 from typing import Type
 
 from wexample_prompt.common.prompt_context import PromptContext
@@ -8,8 +7,10 @@ from wexample_prompt.responses.messages.log_prompt_response import LogPromptResp
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
-class TestLogPromptResponse(AbstractPromptResponseTest):
-    """Test cases for LogPromptResponse."""
+class TestSimplePromptResponse(AbstractPromptResponseTest):
+    """
+    A simple suite of test with basic features.
+    """
 
     def get_response_class(self) -> Type[AbstractPromptResponse]:
         return LogPromptResponse
