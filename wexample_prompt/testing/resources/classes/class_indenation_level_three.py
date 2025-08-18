@@ -30,6 +30,10 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
         )
 
         self.log(
+            message='test deep three LOG (shortcut)',
+        )
+
+        self.log(
             message='test deep three LOG (no color)',
             context=self._create_io_context(),
             colorized=False
