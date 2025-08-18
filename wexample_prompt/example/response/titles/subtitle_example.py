@@ -11,8 +11,10 @@ class SubtitleExample(AbstractResponseExample):
 
     def example_class(self):
         return SubtitlePromptResponse.create_subtitle(
-            text=self.get_test_message(),
+            text=self.get_test_message() + ' (from response)'
         )
 
     def example_extended(self):
-        self._class_with_methods.subtitle(message=self.get_test_message())
+        self._class_with_methods.title(
+            message=self.get_test_message() + ' (class method)'
+        )
