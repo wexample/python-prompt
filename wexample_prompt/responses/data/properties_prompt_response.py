@@ -25,7 +25,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     )
     nested_indent: int = Field(
         default=2,
-        description="TODO Remove ?"
+        description="Indentation inside the properties list, when rendering sub list of items"
     )
 
     @classmethod
