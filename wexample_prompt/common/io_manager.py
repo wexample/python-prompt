@@ -5,6 +5,8 @@ from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
+from wexample_prompt.mixins.response.formatting.separator_prompt_response_manager_mixin import \
+    SeparatorPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
@@ -16,8 +18,10 @@ if TYPE_CHECKING:
 
 class IoManager(
     ExtendedBaseModel,
-	# Basic
+    # Basics
     EchoPromptResponseManagerMixin,
+    # Formatting
+    SeparatorPromptResponseManagerMixin,
     # Messages
     LogPromptResponseManagerMixin,
 ):
@@ -39,9 +43,13 @@ class IoManager(
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.formatting.separator_prompt_response import SeparatorPromptResponse
 
         return [
+            # Basics
             EchoPromptResponse,
+            # Formatting
+            SeparatorPromptResponse,
             # Messages
             LogPromptResponse,
         ]
