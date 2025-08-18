@@ -51,6 +51,8 @@ from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_man
     FilePickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import \
     ProgressPromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import \
+    ConfirmPromptResponseManagerMixin
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -87,6 +89,7 @@ class IoManager(
     DirPickerPromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
+    ConfirmPromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -139,6 +142,7 @@ class IoManager(
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
         return [
             # Basics
@@ -169,6 +173,7 @@ class IoManager(
             DirPickerPromptResponse,
             FilePickerPromptResponse,
             ProgressPromptResponse,
+            ConfirmPromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
