@@ -24,6 +24,8 @@ from wexample_prompt.mixins.response.messages.task_prompt_response_manager_mixin
     TaskPromptResponseManagerMixin
 from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
     SeparatorPromptResponseManagerMixin
+from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin import \
+    TitlePromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
@@ -46,6 +48,7 @@ class IoManager(
     TaskPromptResponseManagerMixin,
     # Titles
     SeparatorPromptResponseManagerMixin,
+    TitlePromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -85,6 +88,7 @@ class IoManager(
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
+        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
         return [
             # Basics
@@ -100,6 +104,7 @@ class IoManager(
             TaskPromptResponse,
             # Titles
             SeparatorPromptResponse,
+            TitlePromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
