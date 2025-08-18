@@ -7,26 +7,27 @@ if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class TitlePromptResponse(AbstractTitleResponse):
+class SubtitlePromptResponse(AbstractTitleResponse):
+    DEFAULT_PREFIX = "  ❯"
 
     @classmethod
-    def create_title(
-            cls: "TitlePromptResponse",
+    def create_subtitle(
+            cls: "SubtitlePromptResponse",
             text: str,
             color: Optional["TerminalColor"] = None,
             character: Optional[str] = None,
             width: Optional[int] = None,
-    ) -> "TitlePromptResponse":
+    ) -> "SubtitlePromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return super()._create_title(
             text=text,
-            color=color or TerminalColor.CYAN,
+            color=color or TerminalColor.BLUE,
             character=character,
             width=width,
         )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.titles.title_example import TitleExample
-        return TitleExample
+        from wexample_prompt.example.response.titles.subtitle_example import SubtitleExample
+        return SubtitleExample
