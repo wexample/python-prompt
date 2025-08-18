@@ -56,13 +56,16 @@ class PromptContext(ExtendedBaseModel):
             kwargs,
         )
 
-    def render_indentation(self) -> str:
+    def render_indentation_text(self) -> str:
         output = ''
         if self.parent_context:
             output = self.parent_context.render_indentation()
 
         """Get the current indentation string."""
-        indentation = output + self.render_indentation_part()
+        return output + self.render_indentation_part()
+
+    def render_indentation(self) -> str:
+        indentation = self.render_indentation_text()
 
         indentation_color = self.get_indentation_color()
         if self.colorized and indentation_color:

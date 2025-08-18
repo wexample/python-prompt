@@ -15,14 +15,12 @@ class EchoPromptResponse(AbstractPromptResponse):
             cls: "EchoPromptResponse",
             message: str,
     ) -> "EchoPromptResponse":
-        from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
             lines=[
                 PromptResponseLine.create_from_string(
                     text=message,
-                    color=TerminalColor.WHITE
                 )
             ]
         )
