@@ -28,6 +28,13 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
             message='test deep three LOG',
             context=self.io_context
         )
+
+        self.log(
+            message='test deep three LOG (no color)',
+            context=self._create_io_context(),
+            colorized=False
+        )
+
         self.echo(
             message='test deep three ECHO',
             context=self._create_io_context()

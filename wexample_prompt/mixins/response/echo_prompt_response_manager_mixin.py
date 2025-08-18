@@ -1,6 +1,6 @@
-"""Mixin for base prompt response."""
 from typing import TYPE_CHECKING, Optional
 
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
@@ -8,15 +8,12 @@ if TYPE_CHECKING:
 
 
 class EchoPromptResponseManagerMixin:
-    """Mixin for base prompt response."""
-
     def echo(
             self,
             message: str,
-            context: Optional[PromptContext] = None
+            context: Optional[PromptContext] = None,
+            **kwargs:Kwargs
     ) -> "AbstractPromptResponse":
-        """Create a base prompt response with no style"""
-
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
         response = EchoPromptResponse.create_echo(
@@ -25,7 +22,10 @@ class EchoPromptResponseManagerMixin:
 
         self.print_response(
             response=response,
-            context=context
+            context=EchoPromptResponse.rebuild_context_for_kwargs(
+                context=context,
+                parent_kwargs=kwargs
+            )
         )
 
         return response

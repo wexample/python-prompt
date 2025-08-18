@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.terminal_color import TerminalColor
 
 
@@ -31,6 +32,25 @@ class PromptContext(ExtendedBaseModel):
         default=2,
         description="Number of characters to repeat for one indentation"
     )
+
+    @classmethod
+    def create_from_kwargs(cls, kwargs: Kwargs) -> "PromptContext":
+        return PromptContext(
+            **kwargs,
+        )
+
+    @classmethod
+    def create_from_parent_context_and_kwargs(
+            cls,
+            kwargs: Kwargs,
+            parent_context: Optional["PromptContext"] = None
+    ) -> "PromptContext":
+        if parent_context:
+            kwargs['parent_context'] = parent_context
+
+        return cls.create_from_kwargs(
+            kwargs,
+        )
 
     def render_indentation(self) -> str:
         output = ''

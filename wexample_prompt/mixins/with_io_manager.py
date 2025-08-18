@@ -39,7 +39,7 @@ class WithIoManager:
     def _init_io_manager(self) -> None:
         self._io = IoManager()
 
-    def _create_io_context(self, **kwargs):
+    def _create_io_context(self, **kwargs) -> "PromptContext":
         defaults = {
             "parent_context": self._io_parent_context,
             "indentation": self.get_io_context_indentation(),
@@ -51,8 +51,8 @@ class WithIoManager:
 
         defaults.update(kwargs)
 
-        return PromptContext(
-            **defaults,
+        return PromptContext.create_from_kwargs(
+            kwargs=defaults,
         )
 
     def get_io_context_colorized(self) -> Optional[bool]:

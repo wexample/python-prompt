@@ -5,6 +5,7 @@ from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import HasSnakeShortClassNameClassMixin
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -26,6 +27,22 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     @abstractmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         cls._raise_not_implemented_error()
+
+    @classmethod
+    def rebuild_context_for_kwargs(cls, parent_kwargs: Kwargs, context: Optional["PromptContext"] = None) -> "PromptContext":
+        if not parent_kwargs:
+            return context
+
+        if context:
+            parent_kwargs['indentation'] = context.indentation
+            parent_kwargs['indentation_character'] = context.indentation_character
+            parent_kwargs['indentation_color'] = context.indentation_color
+            parent_kwargs['indentation_length'] = context.indentation_length
+
+        return PromptContext.create_from_parent_context_and_kwargs(
+            parent_context=context.parent_context if context else None,
+            kwargs=parent_kwargs
+        )
 
     def render(self, context: Optional["PromptContext"] = None) -> str:
         """Render the complete response."""
