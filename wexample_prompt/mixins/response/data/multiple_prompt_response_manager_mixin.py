@@ -1,8 +1,8 @@
 """Mixin for managing multiple prompt responses."""
 from typing import List, TYPE_CHECKING, Optional
 
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
@@ -19,6 +19,8 @@ class MultiplePromptResponseManagerMixin:
             **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a multiple prompt response."""
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+
         response = MultiplePromptResponse.create_multiple(
             responses=responses,
         )
