@@ -1,14 +1,10 @@
 from typing import Type
 
 from wexample_prompt.common.io_manager import IoManager
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
-class TestIoManager(AbstractPromptResponseTest):
-    def setUp(self):
-        """Set up common test fixtures."""
-        super().setUp()
-
+class TestIoManager(AbstractPromptTest):
     def test_instantiate_class(self):
         from wexample_prompt.testing.resources.classes.class_with_io_manager import ClassWithIoManager
 

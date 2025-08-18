@@ -1,11 +1,7 @@
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
-class TestIoManager(AbstractPromptResponseTest):
-    def setUp(self):
-        """Set up common test fixtures."""
-        super().setUp()
-
+class TestIoManager(AbstractPromptTest):
     def test_class_indentation_levels(self):
         from wexample_prompt.testing.resources.classes.class_indenation_level_one import ClassIndentationLevelOne
         level_one = ClassIndentationLevelOne(io=self._io)

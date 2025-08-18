@@ -1,7 +1,7 @@
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
-class TestIoManager(AbstractPromptResponseTest):
+class TestIoManager(AbstractPromptTest):
     def _instantiate_io_manager(self):
         from wexample_prompt.common.io_manager import IoManager
         return IoManager()
