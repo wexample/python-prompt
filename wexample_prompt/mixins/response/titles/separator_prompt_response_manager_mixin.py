@@ -12,6 +12,7 @@ class SeparatorPromptResponseManagerMixin:
             self,
             label: Optional[str] = None,
             width: Optional[int] = None,
+            character: Optional[str] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
@@ -20,6 +21,7 @@ class SeparatorPromptResponseManagerMixin:
         response = SeparatorPromptResponse.create_separator(
             label=label,
             width=width,
+            character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
         )
 
         context = SeparatorPromptResponse.rebuild_context_for_kwargs(

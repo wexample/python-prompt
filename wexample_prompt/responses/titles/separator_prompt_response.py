@@ -1,4 +1,4 @@
-from typing import Type, Optional, TYPE_CHECKING
+from typing import Type, Optional, TYPE_CHECKING, ClassVar
 
 from pydantic import Field
 
@@ -12,9 +12,11 @@ if TYPE_CHECKING:
 
 
 class SeparatorPromptResponse(AbstractMessageResponse):
+    DEFAULT_CHARACTER: ClassVar[str] = "~"
+
     """Response for log messages."""
     character: Optional[str] = Field(
-        default="~",
+        default=DEFAULT_CHARACTER,
         description="The character to repeat"
     )
     label: Optional[str] = Field(
@@ -38,7 +40,8 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             cls: "SeparatorPromptResponse",
             label: Optional[str] = None,
             width: Optional[int] = None,
-            color: "TerminalColor" = None
+            color: "TerminalColor" = None,
+            character: Optional[str] = None,
     ) -> "SeparatorPromptResponse":
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -65,6 +68,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             separator_response_label=separator_response_label,
             label=label,
             width=width,
+            character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
             lines=[
                 PromptResponseLine(
                     segments=segments

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import Field
 
@@ -9,6 +9,10 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class PromptContext(ExtendedBaseModel):
+    DEFAULT_COLORIZED: ClassVar[bool] = True
+    DEFAULT_VERBOSITY: ClassVar[VerbosityLevel] = VerbosityLevel.DEFAULT
+    DEFAULT_WIDTH: ClassVar[int] = 80
+
     """Context for rendering responses, including terminal information."""
     colorized: Optional[bool] = Field(
         default=True,
@@ -35,11 +39,11 @@ class PromptContext(ExtendedBaseModel):
         description="Number of characters to repeat for one indentation"
     )
     verbosity: Optional[VerbosityLevel] = Field(
-        default=VerbosityLevel.DEFAULT,
+        default=DEFAULT_VERBOSITY,
         description="The context verbosity, saying which response to render or not"
     )
     width: Optional[int] = Field(
-        default=80,
+        default=DEFAULT_WIDTH,
         description="Context with, basically the terminal with including indentation"
     )
 
