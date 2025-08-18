@@ -3,6 +3,8 @@ from typing import List, Type, TYPE_CHECKING, Optional
 from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
+    EchoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
@@ -14,6 +16,8 @@ if TYPE_CHECKING:
 
 class IoManager(
     ExtendedBaseModel,
+	# Basic
+    EchoPromptResponseManagerMixin,
     # Messages
     LogPromptResponseManagerMixin,
 ):
@@ -33,9 +37,11 @@ class IoManager(
 
     @classmethod
     def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
+        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
         from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
 
         return [
+            EchoPromptResponse,
             # Messages
             LogPromptResponse,
         ]

@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, List, Optional
+from abc import abstractmethod
+from typing import TYPE_CHECKING, List, Optional, Type
 
 from pydantic import Field
 
@@ -8,7 +9,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
 if TYPE_CHECKING:
-    pass
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
@@ -20,6 +21,11 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     def __init__(self, **kwargs):
         ExtendedBaseModel.__init__(self, **kwargs)
+
+    @classmethod
+    @abstractmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        cls._raise_not_implemented_error()
 
     def render(self, context: Optional["PromptContext"] = None) -> str:
         """Render the complete response."""

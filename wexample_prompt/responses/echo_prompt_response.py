@@ -1,21 +1,21 @@
 from typing import TYPE_CHECKING, Type
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 
-class LogPromptResponse(AbstractMessageResponse):
-    """Response for log messages."""
+class EchoPromptResponse(AbstractPromptResponse):
+    """A basic response with no style"""
 
     @classmethod
-    def create_log(
-            cls: "LogPromptResponse",
+    def create_echo(
+            cls: "EchoPromptResponse",
             message: str,
             context: "PromptContext" = None,
-    ) -> "LogPromptResponse":
+    ) -> "EchoPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -31,5 +31,5 @@ class LogPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.messages.log_example import LogExample
-        return LogExample
+        from wexample_prompt.example.response.echo_example import EchoExample
+        return EchoExample

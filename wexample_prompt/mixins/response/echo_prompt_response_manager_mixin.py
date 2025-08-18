@@ -1,3 +1,4 @@
+"""Mixin for base prompt response."""
 from typing import TYPE_CHECKING, Optional
 
 from wexample_prompt.common.prompt_context import PromptContext
@@ -6,15 +7,19 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class LogPromptResponseManagerMixin:
-    def log(
+class EchoPromptResponseManagerMixin:
+    """Mixin for base prompt response."""
+
+    def echo(
             self,
             message: str,
             context: Optional[PromptContext] = None
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.messages.log_prompt_response import LogPromptResponse
+        """Create a base prompt response with no style"""
 
-        response = LogPromptResponse.create_log(
+        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+
+        response = EchoPromptResponse.create_echo(
             message=message,
         )
 
