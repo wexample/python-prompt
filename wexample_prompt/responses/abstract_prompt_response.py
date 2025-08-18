@@ -31,7 +31,11 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     @classmethod
     def rebuild_context_for_kwargs(cls, parent_kwargs: Kwargs, context: Optional["PromptContext"] = None) -> "PromptContext":
         if not parent_kwargs:
-            return context
+            # Keep same context as we don't see a reason to recreate one.
+            if context:
+                return context
+            else:
+                return PromptContext()
 
         if context:
             parent_kwargs['indentation'] = context.indentation
