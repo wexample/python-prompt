@@ -24,6 +24,8 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
         return TerminalColor.BLUE
 
     def print_deep_log_three(self):
+        from wexample_helpers.helpers.string import string_generate_lorem_ipsum
+
         self.io.log(
             message='test deep three LOG',
             context=self.io_context
@@ -39,7 +41,25 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
             colorized=False
         )
 
+        self.separator()
+
+        self.io.log(string_generate_lorem_ipsum(1000), context=self.io_context)
+
+        self.log(
+            string_generate_lorem_ipsum(200),
+            context=self.io_context,
+            width=60
+        )
+
+        self.separator()
+
         self.echo(
             message='test deep three ECHO',
             context=self._create_io_context()
+        )
+
+        self.echo(
+            string_generate_lorem_ipsum(200),
+            context=self.io_context,
+            width=60
         )

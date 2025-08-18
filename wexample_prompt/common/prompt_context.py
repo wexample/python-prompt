@@ -32,6 +32,10 @@ class PromptContext(ExtendedBaseModel):
         default=2,
         description="Number of characters to repeat for one indentation"
     )
+    width: Optional[int] = Field(
+        default=80,
+        description="Context with, basically the terminal with including indentation"
+    )
 
     @classmethod
     def create_from_kwargs(cls, kwargs: Kwargs) -> "PromptContext":

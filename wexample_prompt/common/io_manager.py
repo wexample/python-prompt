@@ -1,14 +1,14 @@
 from typing import List, Type, TYPE_CHECKING, Optional
 
-from pydantic import Field
+from pydantic import Field, PrivateAttr
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
-from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
-    SeparatorPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
+from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
+    SeparatorPromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
@@ -31,9 +31,21 @@ class IoManager(
                     "by default print to stdout"
     )
 
+    _terminal_width: int = PrivateAttr(
+        default=None
+    )
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._init_output()
+
+    @property
+    def terminal_width(self, reload: bool = False) -> int:
+        if reload or self._terminal_width is None:
+            import shutil
+            self._terminal_width = shutil.get_terminal_size().columns
+
+        return self._terminal_width
 
     def _init_output(self):
         from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler

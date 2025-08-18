@@ -18,10 +18,9 @@ class WithIoManager:
     ) -> None:
         if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
             self._io_parent_context = parent_io_handler.io_context
-            self._io = parent_io_handler.io
+            self.io = parent_io_handler.io
         else:
-            self._io = io
-        self._io_context = self._create_io_context()
+            self.io = io
 
     @property
     def io(self) -> IoManager:
@@ -31,13 +30,15 @@ class WithIoManager:
     def io(self, manager: IoManager) -> None:
         """Set the IoManager instance."""
         self._io = manager
+        # Rebuild context as we have new contextual information.
+        self._io_context = self._create_io_context()
 
     @property
     def io_context(self) -> "PromptContext":
         return self._io_context
 
     def _init_io_manager(self) -> None:
-        self._io = IoManager()
+        self.io = IoManager()
 
     def _create_io_context(self, **kwargs) -> "PromptContext":
         defaults = {
@@ -47,6 +48,9 @@ class WithIoManager:
             "indentation_color": self.get_io_context_indentation_color(),
             "colorized": self.get_io_context_colorized()
                          or (self._io_parent_context.colorized if self._io_parent_context is not None else True),
+            "width": self.get_io_context_indentation_width()
+                     or (self._io_parent_context.width if self._io_parent_context is not None else None)
+                     or (self._io.terminal_width if self._io else None)
         }
 
         defaults.update(kwargs)
@@ -65,4 +69,7 @@ class WithIoManager:
         return None
 
     def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
+        return None
+
+    def get_io_context_indentation_width(self) -> Optional[int]:
         return None

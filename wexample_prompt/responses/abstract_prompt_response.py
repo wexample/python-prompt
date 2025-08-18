@@ -29,13 +29,17 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         cls._raise_not_implemented_error()
 
     @classmethod
-    def rebuild_context_for_kwargs(cls, parent_kwargs: Kwargs, context: Optional["PromptContext"] = None) -> "PromptContext":
+    def rebuild_context_for_kwargs(
+            cls,
+            parent_kwargs: Kwargs,
+            context: Optional["PromptContext"] = None
+    ) -> "PromptContext":
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
             if context:
                 return context
             else:
-                return PromptContext()
+                return PromptContext.create_from_kwargs({})
 
         if context:
             parent_kwargs['indentation'] = context.indentation
@@ -52,7 +56,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         """Render the complete response."""
         rendered_lines = []
 
-        context = context or PromptContext()
+        # Creating a context allows to execute render without any extra information,
+        # but manager parameters like terminal width are not available in this case.
+        context = context or PromptContext.create_from_kwargs({})
 
         for line in self.lines:
             rendered = line.render(context)

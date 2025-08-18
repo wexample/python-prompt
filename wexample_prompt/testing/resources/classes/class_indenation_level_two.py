@@ -29,8 +29,8 @@ class ClassIndentationLevelTwo(WithIoMethods):
             context=self._create_io_context(colorized=False)
         )
 
-        level_two = ClassIndentationLevelThree(
+        level_three = ClassIndentationLevelThree(
             parent_io_handler=self
         )
 
-        level_two.print_deep_log_three()
+        level_three.print_deep_log_three()
