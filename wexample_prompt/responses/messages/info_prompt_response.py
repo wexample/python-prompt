@@ -15,7 +15,6 @@ class InfoPromptResponse(AbstractMessageResponse):
             cls: "InfoPromptResponse",
             message: str,
             color: Optional["TerminalColor"] = None,
-            **kwargs
     ) -> "InfoPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
