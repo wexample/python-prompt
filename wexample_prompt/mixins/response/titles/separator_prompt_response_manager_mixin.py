@@ -13,7 +13,7 @@ class SeparatorPromptResponseManagerMixin:
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.formatting.separator_prompt_response import SeparatorPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
         response = SeparatorPromptResponse.create_separator()
 

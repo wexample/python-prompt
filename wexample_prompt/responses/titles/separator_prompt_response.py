@@ -25,5 +25,5 @@ class SeparatorPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.formatting.separator_example import SeparatorExample
+        from wexample_prompt.example.response.titles.separator_example import SeparatorExample
         return SeparatorExample
