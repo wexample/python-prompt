@@ -2,6 +2,7 @@ from typing import List, Optional, Type
 
 from pydantic import Field
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
@@ -28,18 +29,19 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def multiple(
-        cls,
-        responses: List[AbstractPromptResponse],
-        **kwargs,
+            cls,
+            responses: List[AbstractPromptResponse],
+            **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a multiple prompt response."""
         return cls.create_multiple(responses=responses, **kwargs)
 
     @classmethod
     def create_multiple(
-        cls,
-        responses: Optional[List[AbstractPromptResponse]] = None,
-        **kwargs,
+            cls,
+            responses: Optional[List[AbstractPromptResponse]] = None,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+            **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:
@@ -47,6 +49,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
         return cls(
             responses=responses,
+            verbosity=verbosity,
             **kwargs,
         )
 
@@ -68,12 +71,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
                 rendered_parts.append(part)
 
         return "\n".join(rendered_parts) if rendered_parts else None
-
-    def print(self, *args, **kwargs) -> None:
-        """Print all contained responses in sequence."""
-        for response in self.responses:
-            # Delegate to each response's print implementation
-            response.print(*args, **kwargs)
 
     def append_response(self, response: AbstractPromptResponse) -> "MultiplePromptResponse":
         """Append a single response and return self for chaining."""

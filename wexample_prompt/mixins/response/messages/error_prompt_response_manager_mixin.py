@@ -20,6 +20,8 @@ class ErrorPromptResponseManagerMixin:
             message=message,
         )
 
+        # TODO should support exceptions
+
         self.print_response(
             response=response,
             context=ErrorPromptResponse.rebuild_context_for_kwargs(
