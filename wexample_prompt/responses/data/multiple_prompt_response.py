@@ -1,0 +1,86 @@
+from typing import List, Optional, Type
+
+from pydantic import Field
+
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+
+
+class MultiplePromptResponse(AbstractPromptResponse):
+    """A response that groups multiple responses and renders them in sequence.
+
+    This class allows grouping multiple prompt responses of different types into a
+    single response object. When rendered or printed, each contained response is
+    processed in order.
+
+    Attributes:
+        responses: List of prompt responses to be rendered together.
+    """
+
+    responses: List[AbstractPromptResponse] = Field(
+        default_factory=list,
+        description="List of prompt responses to be rendered together",
+    )
+
+    @classmethod
+    def get_example_class(cls) -> Type:
+        from wexample_prompt.example.response.data.multiple_example import MultipleExample
+        return MultipleExample
+
+    @classmethod
+    def multiple(
+        cls,
+        responses: List[AbstractPromptResponse],
+        **kwargs,
+    ) -> "MultiplePromptResponse":
+        """Create a multiple prompt response."""
+        return cls.create_multiple(responses=responses, **kwargs)
+
+    @classmethod
+    def create_multiple(
+        cls,
+        responses: Optional[List[AbstractPromptResponse]] = None,
+        **kwargs,
+    ) -> "MultiplePromptResponse":
+        """Create a new MultiplePromptResponse from a list of responses."""
+        if responses is None:
+            responses = []
+
+        return cls(
+            responses=responses,
+            **kwargs,
+        )
+
+    @classmethod
+    def create(cls, *args, **kwargs) -> "MultiplePromptResponse":
+        """Alias for create_multiple to keep API consistency."""
+        return cls.create_multiple(*args, **kwargs)
+
+    def render(self, context=None) -> Optional[str]:
+        """Render all contained responses in sequence.
+
+        Returns:
+            The concatenated rendered string, skipping None parts.
+        """
+        rendered_parts: List[str] = []
+        for response in self.responses:
+            part = response.render(context=context)
+            if part is not None:
+                rendered_parts.append(part)
+
+        return "\n".join(rendered_parts) if rendered_parts else None
+
+    def print(self, *args, **kwargs) -> None:
+        """Print all contained responses in sequence."""
+        for response in self.responses:
+            # Delegate to each response's print implementation
+            response.print(*args, **kwargs)
+
+    def append_response(self, response: AbstractPromptResponse) -> "MultiplePromptResponse":
+        """Append a single response and return self for chaining."""
+        self.responses.append(response)
+        return self
+
+    def extend_responses(self, responses: List[AbstractPromptResponse]) -> "MultiplePromptResponse":
+        """Extend responses with a list and return self for chaining."""
+        self.responses.extend(responses)
+        return self

@@ -30,6 +30,8 @@ from wexample_prompt.mixins.response.titles.subtitle_prompt_response_manager_mix
     SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import \
     ListPromptResponseManagerMixin
+from wexample_prompt.mixins.response.data.multiple_prompt_response_manager_mixin import \
+    MultiplePromptResponseManagerMixin
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
@@ -56,6 +58,7 @@ class IoManager(
     SubtitlePromptResponseManagerMixin,
     # Data
     ListPromptResponseManagerMixin,
+    MultiplePromptResponseManagerMixin,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -98,6 +101,7 @@ class IoManager(
         from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
         from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 
         return [
             # Basics
@@ -117,6 +121,7 @@ class IoManager(
             SubtitlePromptResponse,
             # Data
             ListPromptResponse,
+            MultiplePromptResponse,
         ]
 
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
