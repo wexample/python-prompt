@@ -13,4 +13,7 @@ if __name__ == "__main__":
 
     choice = response.ask()
 
-    demo_io.success(choice)
+    if choice is None:
+        demo_io.log("Aborted")
+    else:
+        demo_io.success(choice)
