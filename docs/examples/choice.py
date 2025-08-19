@@ -37,3 +37,12 @@ if __name__ == "__main__":
             "yes": "Yes",
         }
     ).ask(answer="Yes")
+
+    file = demo_io.file_picker(
+        question="Select a file",
+    ).ask()
+
+    if file is None:
+        demo_io.log("Aborted")
+    else:
+        demo_io.success(file)

@@ -1,8 +1,7 @@
 """Response for displaying and handling file picker prompts."""
 import os
-from typing import Dict, Optional, Type, List, Union
+from typing import Dict, Optional, Type, Mapping
 
-from InquirerPy.base.control import Choice
 from pydantic import Field
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -54,30 +53,29 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             choices_files = dict(sorted(choices_files.items(), key=lambda kv: kv[1]))
             merged = {**choices_dirs, **choices_files}
 
-        # Convert to InquirerPy choices
-        choice_list: List[Union[str, Choice]] = [Choice(value=k, name=v) for k, v in merged.items()]
-
+        # Build parent Choice response using mapping (key=value, value=title)
         parent_response = ChoicePromptResponse.create_choice(
             question=question,
-            choices=choice_list,
+            choices=merged,
             default=None,
             abort=abort,
             verbosity=verbosity,
         )
 
         new = cls(
-            lines=parent_response.lines,
+            # Do not copy lines; ChoicePromptResponse.ask rebuilds lines each frame
             choices=parent_response.choices,
             default=parent_response.default,
             inquirer_kwargs=parent_response.inquirer_kwargs,
-            question=parent_response.question_text,
+            question=parent_response.question,
+            question_line=parent_response.question_line,
             base_dir=base,
             verbosity=verbosity,
         )
         return new
 
     def execute(self) -> Optional[str]:
-        selected = super().execute()
+        selected = self.ask()
         if not selected:
             return None
 
@@ -86,7 +84,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         if os.path.isdir(full_path):
             next_response = self.__class__.create_file_picker(
                 base_dir=full_path,
-                question=self.question_text or "Select a file:",
+                question=self.question or "Select a file:",
             )
             return next_response.execute()
 
