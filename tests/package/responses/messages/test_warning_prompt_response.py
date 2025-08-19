@@ -19,7 +19,7 @@ class TestWarningPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Warning messages should include the warning symbol
-        self.assert_contains_text(rendered, "⚠")
+        self._assert_contains_text(rendered, "⚠")
 
     def get_expected_lines(self) -> int:
         return 1  # Warning messages are single line

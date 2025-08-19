@@ -19,7 +19,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # List should show bullet points
-        self.assert_contains_text(rendered, "•")
+        self._assert_contains_text(rendered, "•")
 
     def get_expected_lines(self) -> int:
         return 1  # Single list item

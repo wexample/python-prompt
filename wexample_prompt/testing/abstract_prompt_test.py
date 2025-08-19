@@ -1,8 +1,12 @@
 """Base class for testing prompt responses."""
 import unittest
 from abc import ABC
+from typing import TYPE_CHECKING
 
 from wexample_prompt.common.io_manager import IoManager
+
+if TYPE_CHECKING:
+    from wexample_app.response.abstract_response import AbstractResponse
 
 
 class AbstractPromptTest(unittest.TestCase, ABC):
@@ -14,8 +18,19 @@ class AbstractPromptTest(unittest.TestCase, ABC):
     3. PromptContext implementation
     """
     _test_message: str = "Test message"
+    _test_message_multiline: str = "\n".join(["Line 1", "Line 2", "Line 3"])
     _io: IoManager
 
     def setUp(self):
         """Set up common test fixtures."""
         self._io = IoManager()
+
+    def _asset_response_render_is_multiline(self, response: "AbstractResponse"):
+        rendered = response.render()
+        self._assert_contains_text(rendered, "Line 1")
+        self._assert_contains_text(rendered, "Line 2")
+        self._assert_contains_text(rendered, "Line 3")
+
+    def _assert_contains_text(self, rendered: str, text: str):
+        """Assert that rendered output contains specific text."""
+        self.assertIn(text, rendered)

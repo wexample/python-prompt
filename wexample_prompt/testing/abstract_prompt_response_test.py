@@ -12,7 +12,12 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Return the expected number of lines in the rendered response."""
         pass
 
-    def assert_common_response_structure(self, rendered: str):
+    @abstractmethod
+    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+        """Create a response instance."""
+        pass
+
+    def _assert_common_response_structure(self, rendered: str):
         """Assert common structure for rendered responses."""
         lines = rendered.split("\n")
         expected_lines = self.get_expected_lines()
@@ -22,15 +27,6 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         # If more than one line, first should be empty
         if expected_lines > 1:
             self.assertEqual(lines[0].strip(), "")
-
-    def assert_contains_text(self, rendered: str, text: str):
-        """Assert that rendered output contains specific text."""
-        self.assertIn(text, rendered)
-
-    @abstractmethod
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
-        """Create a response instance."""
-        pass
 
     @abstractmethod
     def _assert_specific_format(self, rendered: str):
@@ -42,7 +38,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         response = self.create_test_response(self._test_message)
         rendered = response.render()
 
-        self.assert_common_response_structure(rendered)
-        self.assert_contains_text(rendered, self._test_message)
+        self._assert_common_response_structure(rendered)
+        self._assert_contains_text(rendered, self._test_message)
         self._assert_specific_format(rendered)
 

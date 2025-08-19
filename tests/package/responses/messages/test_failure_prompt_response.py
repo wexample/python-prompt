@@ -19,7 +19,7 @@ class TestFailurePromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Failure messages should include the failure symbol
-        self.assert_contains_text(rendered, "❌")
+        self._assert_contains_text(rendered, "❌")
 
     def get_expected_lines(self) -> int:
         return 1  # Failure messages are single line

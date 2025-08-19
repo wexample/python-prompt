@@ -19,7 +19,7 @@ class TestInfoPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Info messages should include the info symbol
-        self.assert_contains_text(rendered, "ℹ")
+        self._assert_contains_text(rendered, "ℹ")
 
     def get_expected_lines(self) -> int:
         return 1  # Info messages are single line

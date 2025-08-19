@@ -20,7 +20,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Should include arrow indicators
-        self.assert_contains_text(rendered, "→")
+        self._assert_contains_text(rendered, "→")
 
     def get_expected_lines(self) -> int:
         # Empty lines (2) + message (1) + 3 suggestions

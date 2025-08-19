@@ -19,7 +19,17 @@ class TestDebugPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Debug messages should include the debug symbol
-        self.assert_contains_text(rendered, "🔍")
+        self._assert_contains_text(rendered, "🔍")
 
     def get_expected_lines(self) -> int:
         return 1  # Debug messages are single line
+
+    def test_multiline_debug(self):
+        """Test multiline debug message."""
+        message = "Line 1\nLine 2"
+        response = self.create_test_response(message)
+        rendered = response.render()
+
+        # Check both lines are present
+        self._assert_contains_text(rendered, "Line 1")
+        self._assert_contains_text(rendered, "Line 2")

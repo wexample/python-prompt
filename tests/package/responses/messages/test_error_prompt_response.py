@@ -19,7 +19,7 @@ class TestErrorPromptResponse(AbstractPromptResponseTest):
 
     def _assert_specific_format(self, rendered: str):
         # Error messages should include the error symbol
-        self.assert_contains_text(rendered, "❌")
+        self._assert_contains_text(rendered, "❌")
 
     def get_expected_lines(self) -> int:
         return 1  # Error messages are single line

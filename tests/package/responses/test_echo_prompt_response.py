@@ -35,7 +35,7 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
             styles=[TextStyle.BOLD]
         )
         rendered = response.render()
-        self.assert_contains_text(rendered, "Styled Text")
+        self._assert_contains_text(rendered, "Styled Text")
 
     def test_empty_response(self):
         """Test empty response."""
@@ -49,7 +49,5 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
         response = EchoPromptResponse.create_echo(
             message="\n".join(["Line 1", "Line 2", "Line 3"]),
         )
-        rendered = response.render()
-        self.assert_contains_text(rendered, "Line 1")
-        self.assert_contains_text(rendered, "Line 2")
-        self.assert_contains_text(rendered, "Line 3")
+        self._asset_response_render_is_multiline(response=response)
+
