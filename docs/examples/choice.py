@@ -5,10 +5,10 @@ if __name__ == "__main__":
 
     response = demo_io.choice(
         question="Which vegetable do you prefer?",
-        choices={
+        choices=[
             "Onions",
             "Bananas",
-        }
+        ]
     )
 
     choice = response.ask()

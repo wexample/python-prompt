@@ -1,8 +1,6 @@
 """Mixin for handling interactive choice prompts in IoManager."""
 from typing import TYPE_CHECKING, Optional, List, Any
 
-from InquirerPy.utils import InquirerPyDefault
-
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
@@ -16,7 +14,7 @@ class ChoicePromptResponseManagerMixin:
             self: "IoManager",
             question: str,
             choices: List[Any],
-            default: Optional[InquirerPyDefault] = None,
+            default: Optional[str] = None,
             abort: Optional[str] = "> Abort",
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
