@@ -117,23 +117,22 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             # Nothing to choose from
             return None
 
-        # Resolve default index (match by value, title, or integer index)
-        def _resolve_default_index() -> int:
-            if self.default is None:
+        # Resolve index for a target (match by value, title, or integer index)
+        def _resolve_index_for(target: Any) -> int:
+            if target is None:
                 return 0
             try:
-                # If an index is provided
-                if isinstance(self.default, int):
-                    return max(0, min(self.default, len(self.choices) - 1))
-                # Match by value or title
+                if isinstance(target, int):
+                    return max(0, min(target, len(self.choices) - 1))
                 for i, c in enumerate(self.choices):
-                    if c.value == self.default or str(c.title) == str(self.default):
+                    if c.value == target or str(c.title) == str(target):
                         return i
             except Exception:
                 pass
             return 0
 
-        idx = _resolve_default_index()
+        # Preselect default or injected answer for the first render
+        idx = _resolve_index_for(answer if answer is not None else self.default)
         printed_lines = 0  # how many lines we printed last frame
 
         while True:
