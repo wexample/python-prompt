@@ -17,8 +17,6 @@ from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin imp
     TreePromptResponseManagerMixin
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
     EchoPromptResponseManagerMixin
-from wexample_prompt.mixins.response.interactive.choice_dict_prompt_response_manager_mixin import \
-    ChoiceDictPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import \
     ChoicePromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import \
@@ -84,7 +82,6 @@ class IoManager(
     TreePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
-    ChoiceDictPromptResponseManagerMixin,
     DirPickerPromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
@@ -140,7 +137,6 @@ class IoManager(
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-        from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
@@ -171,7 +167,6 @@ class IoManager(
             TreePromptResponse,
             # Interactive
             ChoicePromptResponse,
-            ChoiceDictPromptResponse,
             DirPickerPromptResponse,
             FilePickerPromptResponse,
             ProgressPromptResponse,

@@ -3,15 +3,26 @@ from wexample_prompt.common.io_manager import IoManager
 if __name__ == "__main__":
     demo_io = IoManager()
 
-    response = demo_io.choice(
+    choice = demo_io.choice(
         question="Which vegetable do you prefer?",
         choices=[
             "Onions",
-            "Bananas",
+            "Carrot",
         ]
-    )
+    ).ask()
 
-    choice = response.ask()
+    if choice is None:
+        demo_io.log("Aborted")
+    else:
+        demo_io.success(choice)
+
+    choice = demo_io.choice(
+        question="Which fruit do you prefer?",
+        choices={
+            "apples": "Apples",
+            "bananas": "Bananas",
+        }
+    ).ask()
 
     if choice is None:
         demo_io.log("Aborted")

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Dict, Type, TYPE_CHECKING
+from typing import Any, List, Optional, Dict, Type, TYPE_CHECKING, Union, Mapping
 
 from pydantic import Field
 
@@ -46,7 +46,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     def create_choice(
             cls,
             question: str,
-            choices: List[Any],
+            choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,
             color: Optional[TerminalColor] = None,
@@ -66,15 +66,25 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         choices_list: List[Choice] = []
 
-        # Each choice value is the original item; title is its string form.
-        for _, item in enumerate(choices):
-            choices_list.append(
-                Choice(
-                    value=item,
-                    title=str(item),
-                    line=PromptResponseLine(segments=[]),
+        # Build choices from list or mapping
+        if isinstance(choices, Mapping):
+            for key, title in choices.items():
+                choices_list.append(
+                    Choice(
+                        value=key,
+                        title=str(title),
+                        line=PromptResponseLine(segments=[]),
+                    )
                 )
-            )
+        else:
+            for item in choices:
+                choices_list.append(
+                    Choice(
+                        value=item,
+                        title=str(item),
+                        line=PromptResponseLine(segments=[]),
+                    )
+                )
 
         # Add abort option if requested.
         if abort is not False:

@@ -1,5 +1,5 @@
 """Mixin for handling interactive choice prompts in IoManager."""
-from typing import TYPE_CHECKING, Optional, List, Any
+from typing import TYPE_CHECKING, Optional, List, Any, Union, Mapping
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -13,8 +13,8 @@ class ChoicePromptResponseManagerMixin:
     def choice(
             self: "IoManager",
             question: str,
-            choices: List[Any],
-            default: Optional[str] = None,
+            choices: Union[List[Any], Mapping[Any, Any]],
+            default: Optional[Any] = None,
             abort: Optional[bool | str]  = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,

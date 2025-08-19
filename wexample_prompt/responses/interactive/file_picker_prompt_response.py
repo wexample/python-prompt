@@ -6,11 +6,10 @@ from InquirerPy.base.control import Choice
 from pydantic import Field
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 
-class FilePickerPromptResponse(ChoiceDictPromptResponse):
+class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""
 
     base_dir: str = Field(
@@ -71,8 +70,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
             choices=parent_response.choices,
             default=parent_response.default,
             inquirer_kwargs=parent_response.inquirer_kwargs,
-            question_text=parent_response.question_text,
-            original_choices={k: v for k, v in merged.items()},
+            question=parent_response.question_text,
             base_dir=base,
             verbosity=verbosity,
         )
