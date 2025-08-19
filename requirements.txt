@@ -14,20 +14,14 @@ colorama==0.4.6
     # via -r requirements.in
 iniconfig==2.0.0
     # via pytest
-inquirerpy==0.3.4
-    # via -r requirements.in
 packaging==24.2
     # via
     #   build
     #   pytest
-pfzy==0.3.4
-    # via inquirerpy
 pip-tools==7.4.1
     # via -r requirements.in
 pluggy==1.5.0
     # via pytest
-prompt-toolkit==3.0.50
-    # via inquirerpy
 pydantic==2.10.4
     # via -r requirements.in
 pydantic-core==2.27.2
@@ -38,12 +32,12 @@ pyproject-hooks==1.2.0
     #   pip-tools
 pytest==8.3.4
     # via -r requirements.in
+readchar==4.2.1
+    # via -r requirements.in
 typing-extensions==4.12.2
     # via
     #   pydantic
     #   pydantic-core
-wcwidth==0.2.13
-    # via prompt-toolkit
 wheel==0.45.1
     # via pip-tools
 

@@ -1,7 +1,6 @@
 """Response for displaying and handling choice prompts."""
 from typing import Any, List, Optional, Dict, Union, Type, TYPE_CHECKING
 
-from InquirerPy.base.control import Choice
 from pydantic import Field
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -20,9 +19,9 @@ if TYPE_CHECKING:
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Display a list of choices and get a user selection."""
 
-    choices: List[Union[str, Choice]] = Field(
+    choices: List[Union[str]] = Field(
         default_factory=list,
-        description="List of choices (plain strings or InquirerPy Choice objects)",
+        description="List of choices",
     )
     default: Optional[Any] = Field(
         default=None,
@@ -32,8 +31,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default_factory=dict,
         description="Additional kwargs forwarded to inquirer.select"
     )
-    question_text: str = Field(
-        default="",
+    question: str = Field(
+        default=None,
         description="Question text shown to the user"
     )
 
@@ -61,12 +60,11 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             )
         )
 
-        choices_all: List[Union[str, Choice]] = list(choices)
+        choices_all: List[Union[str]] = list(choices)
         if abort:
-            choices_all.append(Choice(value=None, name=abort))
+            choices_all.append(abort)
 
         for i, choice in enumerate(choices_all):
-            choice_text = choice.name if isinstance(choice, Choice) else str(choice)
             lines.append(
                 PromptResponseLine(
                     segments=[
@@ -76,7 +74,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                             styles=[TextStyle.DIM]
                         ),
                         PromptResponseSegment(
-                            text=choice_text,
+                            text=choice,
                             color=TerminalColor.WHITE,
                         ),
                     ]
@@ -87,9 +85,32 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             lines=lines,
             choices=choices_all,
             default=default,
-            question_text=question,
+            question=question,
             verbosity=verbosity,
         )
+
+    def ask(self):
+        import readchar
+        idx = 0
+
+        while True:
+            print("\033c", end="")
+            if self.question is not None:
+                print(f"{self.question}:\n")
+
+            for i, opt in enumerate(self.choices):
+                if i == idx:
+                    print(f"> {TerminalColor.BLUE}{opt}{TerminalColor.RESET}")
+                else:
+                    print(f"  {opt}")
+
+            key = readchar.readkey()
+            if key == readchar.key.UP:
+                idx = (idx - 1) % len(self.choices)
+            elif key == readchar.key.DOWN:
+                idx = (idx + 1) % len(self.choices)
+            elif key in (readchar.key.ENTER, "\r", "\n"):
+                return self.choices[idx]
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:

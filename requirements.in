@@ -1,5 +1,5 @@
-inquirerpy
 colorama
 pip-tools
 pydantic
 pytest
+readchar
