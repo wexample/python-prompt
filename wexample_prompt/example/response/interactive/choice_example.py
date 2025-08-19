@@ -1,7 +1,5 @@
 from typing import Optional
 
-from InquirerPy.base.control import Choice
-
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
@@ -9,14 +7,13 @@ from wexample_prompt.responses.interactive.choice_prompt_response import ChoiceP
 class ChoiceExample(AbstractResponseExample):
 
     def example_class(self, indentation: Optional[int] = None):
-        choices = [
-            Choice(value="value1", name="Choice 1"),
-            Choice(value="value2", name="Choice 2"),
-            Choice(value="value3", name="Choice 3"),
-        ]
         return ChoicePromptResponse.create_choice(
             question="Select an option:",
-            choices=choices,
+            choices={
+                "value1": "Choice 1",
+                "value2": "Choice 2",
+                "value3": "Choice 3",
+            },
         )
 
     def example_manager(self):

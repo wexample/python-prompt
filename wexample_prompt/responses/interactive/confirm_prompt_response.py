@@ -180,6 +180,32 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 return
 
             key = self._read_key()
+            # Support left/right arrows to cycle the current default selection among options
+            # Arrow sequences typically are: left='\x1b[D', right='\x1b[C'
+            if key in ("\x1b[C", "\x1b[D"):
+                items = list(self.options.items())  # [(k, (value, label)), ...] preserving insertion order
+                if items:
+                    # Determine current index from default_value
+                    current_idx = None
+                    if self.default_value is not None:
+                        for i, (_k, (v, _label)) in enumerate(items):
+                            if v == self.default_value:
+                                current_idx = i
+                                break
+                    if key == "\x1b[C":  # right
+                        if current_idx is None:
+                            new_idx = 0
+                        else:
+                            new_idx = (current_idx + 1) % len(items)
+                    else:  # left
+                        if current_idx is None:
+                            new_idx = len(items) - 1
+                        else:
+                            new_idx = (current_idx - 1) % len(items)
+                    # Update the default_value to new selection, will re-render highlighted next iteration
+                    self.default_value = items[new_idx][1][0]
+                # Continue to next loop to re-render with updated highlight
+                continue
             # normalize single-char keys for mapping
             if key in self.options:
                 value, _ = self.options[key]

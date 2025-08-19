@@ -134,7 +134,6 @@ class IoManager(
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-        from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
@@ -164,7 +163,6 @@ class IoManager(
             TreePromptResponse,
             # Interactive
             ChoicePromptResponse,
-            DirPickerPromptResponse,
             FilePickerPromptResponse,
             ProgressPromptResponse,
             ConfirmPromptResponse,
