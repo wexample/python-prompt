@@ -26,6 +26,10 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     )
 
     @classmethod
+    def get_class_name_suffix(cls) -> Optional[str]:
+        return "PromptResponse"
+
+    @classmethod
     def _create(
             cls: "AbstractPromptResponse",
             lines: List[PromptResponseLine],
