@@ -6,6 +6,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
 
 class ListPromptResponseManagerMixin:
@@ -15,7 +16,7 @@ class ListPromptResponseManagerMixin:
             bullet: str = "•",
             color: Optional["TerminalColor"] = None,
             context: Optional[PromptContext] = None,
-            **kwargs: Kwargs) -> Any:
+            **kwargs: Kwargs) -> "ListPromptResponse":
         from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
         response = ListPromptResponse.create_list(

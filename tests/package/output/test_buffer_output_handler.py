@@ -9,11 +9,11 @@ class TestBufferOutputHandler(AbstractPromptTest):
         self._io.output = BufferOutputHandler()
 
         # Call a simple echo to produce a response
-        rendered = self._io.echo("Buffered output")
+        response = self._io.echo("Buffered output")
 
         # Should return a string (rendered output)
-        assert isinstance(rendered, str)
-        assert "Buffered output" in rendered
+        assert isinstance(response.last_rendered_content, str)
+        assert "Buffered output" in response.last_rendered_content
 
         # Buffer should contain exactly one response object
         assert isinstance(self._io.output, BufferOutputHandler)
@@ -21,4 +21,4 @@ class TestBufferOutputHandler(AbstractPromptTest):
 
         # The buffered item should be a response with matching render
         buffered_response = self._io.output.buffer[0]
-        assert buffered_response.render() == rendered
+        assert buffered_response.render() == response.last_rendered_content

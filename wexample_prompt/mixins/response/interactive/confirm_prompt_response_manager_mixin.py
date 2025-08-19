@@ -20,7 +20,7 @@ class ConfirmPromptResponseManagerMixin:
             abort: Optional[str] = "> Abort",
             context: Optional[PromptContext] = None,
             **kwargs: Any,
-    ) -> Any:
+    ) -> "ConfirmPromptResponse":
         from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
         response = ConfirmPromptResponse.create_confirm(
@@ -39,4 +39,3 @@ class ConfirmPromptResponseManagerMixin:
                 parent_kwargs=kwargs,
             ),
         )
-        

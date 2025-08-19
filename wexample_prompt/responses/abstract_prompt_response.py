@@ -24,6 +24,11 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         default=VerbosityLevel.DEFAULT,
         description="The context verbosity, saying which response to render or not"
     )
+    _last_rendered_content: Optional[str] = None
+
+    @property
+    def last_rendered_content(self) -> Optional[str]:
+        return self._last_rendered_content
 
     @classmethod
     def get_class_name_suffix(cls) -> Optional[str]:
@@ -71,4 +76,5 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         if self.verbosity > context.verbosity:
             return None
 
-        return "\n".join(line.render(context) for line in self.lines)
+        self._last_rendered_content = "\n".join(line.render(context) for line in self.lines)
+        return self._last_rendered_content

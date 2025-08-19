@@ -1,5 +1,5 @@
 """Mixin for handling suggestions responses in IoManager."""
-from typing import List, Optional, TYPE_CHECKING, Any
+from typing import List, Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -21,7 +21,7 @@ class SuggestionsPromptResponseManagerMixin:
             verbosity: Optional[VerbosityLevel] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> Any:
+    ) -> "SuggestionsPromptResponse":
         from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
 
         response = SuggestionsPromptResponse.create_suggestions(

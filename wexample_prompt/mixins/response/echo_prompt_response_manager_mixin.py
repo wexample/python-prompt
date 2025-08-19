@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Optional, Any
+from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
+    from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -13,7 +14,7 @@ class EchoPromptResponseManagerMixin:
             message: str,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
-    ) -> Any:
+    ) -> "EchoPromptResponse":
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
         response = EchoPromptResponse.create_echo(

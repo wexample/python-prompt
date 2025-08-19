@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Optional, Any
+from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -13,7 +14,7 @@ class SuccessPromptResponseManagerMixin:
             message: str,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs
-    ) -> Any:
+    ) -> "SuccessPromptResponse":
         from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
 
         response = SuccessPromptResponse.create_success(

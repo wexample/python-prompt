@@ -1,10 +1,11 @@
-from typing import TYPE_CHECKING, Optional, Any
+from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -17,7 +18,7 @@ class SubtitlePromptResponseManagerMixin:
             width: Optional[int] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
-    ) -> Any:
+    ) -> "AbstractPromptResponse":
         from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
 
         response = SubtitlePromptResponse.create_subtitle(

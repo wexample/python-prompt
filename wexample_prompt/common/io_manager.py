@@ -185,7 +185,9 @@ class IoManager(
         context.indentation = context.indentation or self.indentation
         context.width = context.width or self.terminal_width
 
-        return self.output.print(
+        self.output.print(
             response=response,
             context=context
         )
+
+        return response

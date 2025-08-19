@@ -1,11 +1,11 @@
 """Mixin for managing progress prompt responses."""
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
 if TYPE_CHECKING:
+    from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -20,7 +20,9 @@ class ProgressPromptResponseManagerMixin:
             label: Optional[str] = None,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs,
-    ) -> Any:
+    ) -> "ProgressPromptResponse":
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+
         response = ProgressPromptResponse.create_progress(
             total=total,
             current=current,

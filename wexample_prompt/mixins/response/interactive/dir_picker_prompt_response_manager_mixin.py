@@ -1,5 +1,5 @@
 """Mixin for managing directory picker prompt responses."""
-from typing import Optional, TYPE_CHECKING, Any
+from typing import Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -19,7 +19,7 @@ class DirPickerPromptResponseManagerMixin:
             abort: Optional[str] = "> Abort",
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> Any:
+    ) -> "DirPickerPromptResponse":
         from wexample_prompt.responses.interactive.dir_picker_prompt_response import DirPickerPromptResponse
 
         response = DirPickerPromptResponse.create_dir_picker(
@@ -36,4 +36,3 @@ class DirPickerPromptResponseManagerMixin:
                 parent_kwargs=kwargs,
             ),
         )
-        

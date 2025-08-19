@@ -19,7 +19,7 @@ class TablePromptResponseManagerMixin:
             title: Optional[str] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> Any:
+    ) -> "TablePromptResponse":
         from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 
         response = TablePromptResponse.create_table(
