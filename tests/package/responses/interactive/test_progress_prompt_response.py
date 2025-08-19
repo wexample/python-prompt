@@ -82,3 +82,55 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "100%")
         # When full, there should be no EMPTY_CHAR present inside the bar segment
         assert ProgressPromptResponse.EMPTY_CHAR not in rendered.split("%")[0]
+
+    def test_progress_width(self):
+        # Echo a string using the terminal with length
+        response = self._io.progress(
+            total=20,
+            current=10
+        )
+        self._assert_rendered_lines_count(response=response, lines_count=1)
+
+        response = self._io.progress(
+            label="With a label",
+            total=20,
+            current=10
+        )
+        self._assert_rendered_lines_count(response=response, lines_count=1)
+
+    def test_handle_updates_with_manager(self):
+        """Using IoManager: render once, then update via handle and check output string."""
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        response = self._io.progress(
+            label="Progress via IoManager",
+            total=100,
+            current=0,
+        )
+        handle = response.get_handle()
+        # Update to 25%
+        out = handle.update(current=25, label="Io progress 25%", color=TerminalColor.YELLOW)
+        assert isinstance(out, str)
+        self._assert_contains_text(out, "25%")
+        self._assert_contains_text(out, "Io progress 25%")
+
+    def test_handle_updates_standalone_and_finish(self):
+        """Standalone usage: create, render, then update via handle and finish."""
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        # Create standalone response
+        resp = ProgressPromptResponse.create_progress(
+            label="Standalone",
+            total=80,
+            current=0,
+            color=TerminalColor.CYAN,
+        )
+        first = resp.render()
+        assert isinstance(first, str)
+        handle = resp.get_handle()
+        # Move to 50%
+        out = handle.update(current=40, label="Standalone 40/80")
+        self._assert_contains_text(out, "50%")
+        self._assert_contains_text(out, "Standalone 40/80")
+        # Finish
+        out2 = handle.finish()
+        self._assert_contains_text(out2, "100%")

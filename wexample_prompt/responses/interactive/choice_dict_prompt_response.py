@@ -1,11 +1,11 @@
 """Response for displaying and handling dictionary-based choice prompts."""
-from typing import Any, Dict, Optional, List, Union, Type, TYPE_CHECKING
+from typing import Dict, Optional, List, Union, Type, TYPE_CHECKING
 
 from InquirerPy.base.control import Choice
-from pydantic import Field, ConfigDict
+from pydantic import Field
 
-from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -21,12 +21,12 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
 
     @classmethod
     def create_choice_dict(
-        cls,
-        question: str,
-        choices: Dict[str, str],
-        default: Optional[str] = None,
-        abort: Optional[str] = "> Abort",
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+            cls,
+            question: str,
+            choices: Dict[str, str],
+            default: Optional[str] = None,
+            abort: Optional[str] = "> Abort",
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoiceDictPromptResponse":
         """Create a dictionary-based choice prompt response."""
         choice_list: List[Union[str, Choice]] = []

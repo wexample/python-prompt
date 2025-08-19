@@ -34,3 +34,6 @@ class AbstractPromptTest(unittest.TestCase, ABC):
     def _assert_contains_text(self, rendered: str, text: str):
         """Assert that rendered output contains specific text."""
         self.assertIn(text, rendered)
+
+    def _assert_rendered_lines_count(self, response: "AbstractResponse", lines_count: int):
+        assert len(response.last_rendered_content.split("\n")) == lines_count
