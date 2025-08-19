@@ -1,10 +1,10 @@
 """Tests for FailurePromptResponse."""
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
 
 
-class TestFailurePromptResponse(AbstractPromptResponseTest):
+class TestFailurePromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for FailurePromptResponse."""
 
     def create_test_response(self, **kwargs) -> AbstractPromptResponse:

@@ -1,10 +1,10 @@
 """Tests for InfoPromptResponse."""
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
 
 
-class TestInfoPromptResponse(AbstractPromptResponseTest):
+class TestInfoPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for InfoPromptResponse."""
 
     def create_test_response(self, **kwargs) -> AbstractPromptResponse:
