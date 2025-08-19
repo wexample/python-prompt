@@ -64,23 +64,45 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        width = self.width or context.get_width()
+        # Normalize context
+        context = PromptContext.create_if_none(context=context)
+
+        # Progress values
         current = min(self.current, self.total)
         percentage = min(100, int(100 * current / self.total))
-        filled = int(width * current / self.total)
 
-        context = PromptContext.create_if_none(context=context)
-        if context.colorized and self.color:
-            color_prefix = str(self.color)
-            color_suffix = "\x1b[0m"
+        # Compute available content width (context width minus indentation)
+        indent_text = context.render_indentation()
+        from wexample_helpers.helpers.ansi import ansi_strip
+        visible_indent = len(ansi_strip(indent_text))
+        total_width = self.width or context.get_width()
+        max_content_width = max(0, total_width - visible_indent)
+
+        # Compose left label and right percentage parts
+        left_label = f"{self.label} " if self.label else ""
+        right_percent = f" {percentage}%"
+
+        # Determine bar width to perfectly fit the line
+        bar_width = max(0, max_content_width - len(ansi_strip(left_label)) - len(ansi_strip(right_percent)))
+
+        # Build colored bar of exact computed width
+        if bar_width > 0:
+            filled = int(bar_width * current / self.total)
+            empty = max(0, bar_width - filled)
         else:
-            color_prefix = ""
-            color_suffix = ""
+            filled = 0
+            empty = 0
 
-        bar = (
-                color_prefix + self.FILL_CHAR * filled + self.EMPTY_CHAR * (width - filled) + color_suffix
-        )
+        # Build plain bar text (ANSI will be applied by segment color handling, after splitting)
+        bar_text = f"{self.FILL_CHAR * filled}{self.EMPTY_CHAR * empty}" if bar_width > 0 else ""
 
-        text = f"{self.label} {bar} {percentage}%" if self.label else f"{bar} {percentage}%"
-        self.lines = [PromptResponseLine(segments=[PromptResponseSegment(text=text)])]
+        segments = []
+        if left_label:
+            segments.append(PromptResponseSegment(text=left_label))
+        if bar_text:
+            segments.append(PromptResponseSegment(text=bar_text, color=self.color))
+        # percentage (always shown)
+        segments.append(PromptResponseSegment(text=right_percent))
+
+        self.lines = [PromptResponseLine(segments=segments)]
         return super().render(context=context)

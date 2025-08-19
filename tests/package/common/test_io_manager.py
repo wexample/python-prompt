@@ -8,7 +8,7 @@ class TestIoManager(AbstractPromptTest):
         # Echo a string using the terminal with length
         rendered = self._io.echo(message=(self._io.terminal_width * "!"))
         # It should print only one line.
-        assert self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
+        self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
 
     def test_progress_width(self):
         # Echo a string using the terminal with length
@@ -16,14 +16,14 @@ class TestIoManager(AbstractPromptTest):
             total=20,
             current=10
         )
-        assert self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
+        self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
 
         rendered = self._io.progress(
             label="With a label",
             total=20,
             current=10
         )
-        assert self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
+        self._assert_rendered_lines_count(rendered=rendered, lines_count=1)
 
-    def _assert_rendered_lines_count(self, rendered: str, lines_count: int) -> None:
-        assert len(rendered.split("\n")) == 1
+    def _assert_rendered_lines_count(self, rendered: str, lines_count: int):
+        assert len(rendered.split("\n")) == lines_count
