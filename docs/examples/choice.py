@@ -12,7 +12,7 @@ if __name__ == "__main__":
             "Onions",
             "Carrot",
         ]
-    ).rendered_content
+    ).get_answer()
 
     if choice is None:
         demo_io.log("Aborted")
@@ -25,7 +25,7 @@ if __name__ == "__main__":
             "apples": "Apples",
             "bananas": "Bananas",
         }
-    ).rendered_content
+    ).get_answer()
 
     if choice is None:
         demo_io.log("Aborted")
@@ -38,15 +38,16 @@ if __name__ == "__main__":
             "no": "No",
             "maybe": "Maybe",
             "yes": "Yes",
-        }
-    ).ask(answer="Yes")
+        },
+        answer="Yes"
+    ).get_answer()
 
     demo_io.separator("Files selection")
 
     file = demo_io.file_picker(
         question="Select a file",
         mode=FilePickerMode.FILES
-    ).rendered_content
+    ).get_answer()
 
     if file is None:
         demo_io.log("Aborted")
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     file = demo_io.file_picker(
         question="Select a directory",
         mode=FilePickerMode.DIRS
-    ).rendered_content
+    ).get_answer()
 
     if file is None:
         demo_io.log("Aborted")
@@ -72,7 +73,7 @@ if __name__ == "__main__":
             mode=FilePickerMode.BOTH,
             reset_on_finish=True,
             allow_parent_selection=True
-        ).rendered_content
+        ).get_answer()
 
         if file:
             absolute_path = os.path.join(base_dir, file)

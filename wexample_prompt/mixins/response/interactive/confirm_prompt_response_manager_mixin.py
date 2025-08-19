@@ -19,7 +19,7 @@ class ConfirmPromptResponseManagerMixin:
             width: Optional[int] = None,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
-            answer: Any = None,
+            predefined_answer: Any = None,
             **kwargs: Any,
     ) -> "ConfirmPromptResponse":
         from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
@@ -30,14 +30,13 @@ class ConfirmPromptResponseManagerMixin:
             default=default,
             width=width,
             reset_on_finish=reset_on_finish,
+            predefined_answer=predefined_answer
         )
 
-        response.ask(
+        return self.print_response(
+            response=response,
             context=ConfirmPromptResponse.rebuild_context_for_kwargs(
                 context=context,
-                parent_kwargs=kwargs,
+                parent_kwargs=kwargs
             ),
-            answer=answer
         )
-
-        return response

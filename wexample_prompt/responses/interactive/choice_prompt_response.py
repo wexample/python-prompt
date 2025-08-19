@@ -41,6 +41,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The line that displays the question"
     )
+    predefined_answer: Any = Field(
+        default=None,
+        description="The answer of the question, in order to make the response non interactive"
+    )
 
     @classmethod
     def create_choice(
@@ -51,6 +55,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             abort: Optional[bool | str] = None,
             color: Optional[TerminalColor] = None,
             reset_on_finish: bool = False,
+            predefined_answer: Any = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
         """Factory to create a ChoicePromptResponse."""
@@ -104,9 +109,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             question=question,
             verbosity=verbosity,
             reset_on_finish=reset_on_finish,
+            predefined_answer=predefined_answer,
         )
 
-    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> None:
+    def render(self, context: Optional["PromptContext"] = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
 
@@ -117,7 +123,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         if not self.choices:
             # Nothing to choose from
-            self._rendered_content = None
+            self._answer = None
             return
 
         # Resolve index for a target (match by value, title, or integer index)
@@ -135,7 +141,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             return 0
 
         # Preselect default or injected answer for the first render
-        idx = _resolve_index_for(answer if answer is not None else self.default)
+        idx = _resolve_index_for(self.predefined_answer if self.predefined_answer is not None else self.default)
         printed_lines = 0  # how many lines we printed last frame
 
         while True:
@@ -196,10 +202,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             printed_lines = self._print_render(context=context)
 
             # If an answer is injected (non-interactive mode), return it as-is
-            if answer is not None:
+            if self.predefined_answer is not None:
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                self._rendered_content = answer
+                self._answer = self.predefined_answer
                 return
 
             key = self._read_key()
@@ -212,17 +218,17 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 if selected.value == ChoiceValue.ABORT:
                     if self.reset_on_finish and printed_lines > 0:
                         self._partial_clear(printed_lines)
-                    self._rendered_content = None
+                    self._answer = None
                     return
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                self._rendered_content = selected.value
+                self._answer = selected.value
                 return
             elif key in (readchar.key.ESC, "q", "Q"):
                 # Quick abort with ESC or q/Q
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                self._rendered_content = None
+                self._answer = None
                 return
 
     @classmethod

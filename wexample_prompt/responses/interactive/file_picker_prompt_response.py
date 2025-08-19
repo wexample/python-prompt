@@ -1,6 +1,6 @@
 """Response for displaying and handling file picker prompts."""
 import os
-from typing import Dict, Optional, Type, Mapping
+from typing import Dict, Optional, Type, Any
 
 from pydantic import Field
 
@@ -41,6 +41,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             mode: FilePickerMode = FilePickerMode.BOTH,
             allow_parent_selection: bool = False,
             reset_on_finish: bool = False,
+            predefined_answer: Any = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
@@ -76,9 +77,10 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             abort=abort,
             verbosity=verbosity,
             reset_on_finish=reset_on_finish,
+            predefined_answer=predefined_answer,
         )
 
-        new = cls(
+        return cls(
             # Do not copy lines; ChoicePromptResponse.ask rebuilds lines each frame
             choices=parent_response.choices,
             default=parent_response.default,
@@ -90,5 +92,6 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             abort_option=abort,
             verbosity=verbosity,
             reset_on_finish=reset_on_finish,
+            predefined_answer=predefined_answer,
         )
-        return new
+

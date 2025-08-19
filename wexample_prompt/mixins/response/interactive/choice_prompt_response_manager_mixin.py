@@ -15,10 +15,10 @@ class ChoicePromptResponseManagerMixin:
             question: str,
             choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
-            abort: Optional[bool | str]  = None,
+            abort: Optional[bool | str] = None,
             context: Optional[PromptContext] = None,
             reset_on_finish: bool = False,
-            answer: Any = None,
+            predefined_answer: Any = None,
             **kwargs: Kwargs,
     ) -> "ChoicePromptResponse":
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
@@ -29,14 +29,13 @@ class ChoicePromptResponseManagerMixin:
             default=default,
             abort=abort,
             reset_on_finish=reset_on_finish,
+            predefined_answer=predefined_answer
         )
 
-        response.ask(
+        return self.print_response(
+            response=response,
             context=ChoicePromptResponse.rebuild_context_for_kwargs(
                 context=context,
-                parent_kwargs=kwargs,
+                parent_kwargs=kwargs
             ),
-            answer=answer
         )
-
-        return response

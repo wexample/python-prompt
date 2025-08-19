@@ -22,7 +22,7 @@ class FilePickerPromptResponseManagerMixin:
             allow_parent_selection: bool = False,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
-            answer: Any = None,
+            predefined_answer: Any = None,
             **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
@@ -34,15 +34,13 @@ class FilePickerPromptResponseManagerMixin:
             mode=mode,
             allow_parent_selection=allow_parent_selection,
             reset_on_finish=reset_on_finish,
-            **kwargs,
+            predefined_answer=predefined_answer
         )
 
-        response.ask(
+        return self.print_response(
+            response=response,
             context=FilePickerPromptResponse.rebuild_context_for_kwargs(
                 context=context,
-                parent_kwargs=kwargs,
-            ),
-            answer=answer
+                parent_kwargs=kwargs
+            )
         )
-
-        return response

@@ -53,7 +53,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The value to return when quitting"
     )
-    allow_abort: bool = Field(default=True, description="ESC/q aborts and returns None when allowed.")
+    allow_abort: bool = Field(
+        default=True,
+        description="ESC/q aborts and returns None when allowed."
+    )
+    predefined_answer: Any = Field(
+        default=None,
+        description="The answer of the question, in order to make the response non interactive"
+    )
 
     @classmethod
     def get_example_class(cls) -> Type:
@@ -67,8 +74,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             choices: Optional[Dict[str, Tuple[str, str]]] = None,
             default: Optional[str] = None,
             width: Optional[int] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+            predefined_answer: Any = None,
             reset_on_finish: bool = False,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ConfirmPromptResponse":
         """Create a confirmation dialog with explicit key mappings.
 
@@ -84,6 +92,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             width=width,
             reset_on_finish=reset_on_finish,
             verbosity=verbosity,
+            predefined_answer=predefined_answer,
             # allow_abort is True by default; ESC/q return None
         )
 
@@ -152,7 +161,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # bottom border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
 
-    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> None:
+    def render(self, context: Optional["PromptContext"] = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         context = PromptContext.create_if_none(context=context)
         context.formatting = False
@@ -164,10 +173,10 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             self._build_lines(context=context)
             printed = self._print_render(context=context)
 
-            if answer is not None:
+            if self.predefined_answer is not None:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                self._rendered_content = str(answer)
+                self._answer = str(self.predefined_answer)
                 return
 
             key = self._read_key()
@@ -176,15 +185,15 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 value, _ = self.options[key]
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                self._rendered_content = value
+                self._answer = value
                 return
             elif key in ("\r", "\n") and self.default_value is not None:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                self._rendered_content = self.default_value
+                self._answer = self.default_value
                 return
             elif key in ("\x1b", "q", "Q") and self.allow_abort:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                self._rendered_content = None
+                self._answer = None
                 return

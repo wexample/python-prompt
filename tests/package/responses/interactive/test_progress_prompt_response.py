@@ -9,6 +9,10 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestProgressPromptResponse(AbstractPromptResponseTest):
     """Focused tests for ProgressPromptResponse core rendering and validation."""
 
+    def test_manager_indentation(self):
+        # No indentation for interactive prints.
+        pass
+
     def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
@@ -34,8 +38,8 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         return 1
 
     # Override: progress does not have leading empty line.
-    def _assert_common_response_structure(self, rendered: str):
-        lines = rendered.split("\n")
+    def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
+        lines = response.rendered_content.split("\n")
         assert len(lines) == 1
         # Label should be present at start
         self._assert_contains_text(lines[0], self._test_message)

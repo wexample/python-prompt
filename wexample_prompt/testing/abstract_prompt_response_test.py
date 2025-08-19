@@ -13,13 +13,13 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         pass
 
     @abstractmethod
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> "AbstractPromptResponse":
         """Create a response instance."""
         pass
 
-    def _assert_common_response_structure(self, rendered: str):
+    def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
         """Assert common structure for rendered responses."""
-        lines = rendered.split("\n")
+        lines = response.rendered_content.split("\n")
         expected_lines = self.get_expected_lines()
 
         self.assertEqual(len(lines), expected_lines)
@@ -45,18 +45,19 @@ class AbstractPromptResponseTest(AbstractPromptTest):
     def test_response_class(self):
         """Test response class behavior."""
         response = self.create_test_response()
-        rendered = response.render()
+        response.render()
 
-        self._assert_common_response_structure(rendered)
-        self._assert_contains_text(rendered, self._test_message)
-        self._assert_specific_format(rendered)
+        self._assert_common_response_structure(response)
+        self._assert_contains_text(response.rendered_content, self._test_message)
+        self._assert_specific_format(response.rendered_content)
 
 
     def test_no_color(self):
         from wexample_prompt.common.prompt_context import PromptContext
         response = self.create_test_response()
-        rendered = response.render(context=PromptContext(colorized=False))
-        self._assert_no_color_codes(rendered)
+        response.render(context=PromptContext(colorized=False))
+
+        self._assert_no_color_codes(response.rendered_content)
 
     def test_verbosity(self):
         from wexample_prompt.common.prompt_context import PromptContext
@@ -76,12 +77,12 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         def assert_visibility(context, expectations):
             # expectations: list of tuples (response, should_be_visible)
             for response, should_be_visible in expectations:
-                rendered = response.render(context=context)
+                response.render(context=context)
                 if should_be_visible:
-                    assert rendered is not None
-                    self._assert_contains_text(rendered, self._test_message)
+                    assert response.rendered_content is not None
+                    self._assert_contains_text(response.rendered_content, self._test_message)
                 else:
-                    assert rendered is None
+                    assert response.rendered_content is None
 
         # Quiet context: only QUIET-level responses should appear
         assert_visibility(quiet_context, [

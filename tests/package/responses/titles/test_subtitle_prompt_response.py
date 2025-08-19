@@ -28,10 +28,10 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
 
     def test_renders_message_and_format(self):
         response = self.create_test_response()
-        rendered = response.render()
-        self._assert_common_response_structure(rendered)
-        self._assert_contains_text(rendered, self._test_message)
-        self._assert_specific_format(rendered)
+        response.render()
+        self._assert_common_response_structure(response)
+        self._assert_contains_text(response.rendered_content, self._test_message)
+        self._assert_specific_format(response.rendered_content)
 
     def test_custom_character(self):
         response = self.create_test_response(character=".")

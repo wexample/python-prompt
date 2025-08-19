@@ -11,7 +11,7 @@ if __name__ == "__main__":
         default="yes",
         reset_on_finish=True,
     )
-    print(f"Answer: {response.rendered_content}")
+    print(f"Answer: {response.get_answer()}")
 
     # Yes / Yes for all / No (using class constant)
     response = io.confirm(
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         default="ok",
         reset_on_finish=True,
     )
-    print(f"Answer 2: {response.rendered_content}")
+    print(f"Answer 2: {response.get_answer()}")
 
     # Yes / Yes for all / No (using class constant)
     response = io.confirm(
@@ -28,6 +28,6 @@ if __name__ == "__main__":
         choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
         default="yes",
         reset_on_finish=True,
-        answer="no"
+        predefined_answer="no"
     )
-    print(f"Answer 3: {response.rendered_content}")
+    print(f"Answer 3: {response.get_answer()}")
