@@ -29,29 +29,24 @@ class FilePickerPromptResponse(ChoicePromptResponse):
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
 
-        # Separate directories and files for better organization
-        choices_dirs: Dict[str, str] = {"..": ".."}
-        choices_files: Dict[str, str] = {}
+        # Build mapping with ".." first, then folders (with icon), then files
+        dirs: Dict[str, str] = {}
+        files: Dict[str, str] = {}
         try:
             for element in os.listdir(base):
                 full_path = os.path.join(base, element)
                 if os.path.isdir(full_path):
-                    choices_dirs[element] = f" {element}"
+                    dirs[element] = f"📁 {element}"
                 else:
-                    choices_files[element] = element
+                    files[element] = element
         except Exception:
             pass
 
-        # Sort
-        try:
-            from wexample_helpers.helpers.dict import dict_merge, dict_sort_values
-            choices_dirs = dict_sort_values(choices_dirs)
-            choices_files = dict_sort_values(choices_files)
-            merged = dict_merge(choices_dirs, choices_files)
-        except Exception:
-            choices_dirs = dict(sorted(choices_dirs.items(), key=lambda kv: kv[1]))
-            choices_files = dict(sorted(choices_files.items(), key=lambda kv: kv[1]))
-            merged = {**choices_dirs, **choices_files}
+        merged: Dict[str, str] = {"..": ".."}
+        for name in sorted(dirs.keys(), key=str.casefold):
+            merged[name] = dirs[name]
+        for name in sorted(files.keys(), key=str.casefold):
+            merged[name] = files[name]
 
         # Build parent Choice response using mapping (key=value, value=title)
         parent_response = ChoicePromptResponse.create_choice(
