@@ -37,13 +37,8 @@ class PromptResponseSegment(ExtendedBaseModel):
         # Apply styles and color if allowed by context (single reset at the end)
         rendered_fit = fit_raw
         if context.colorized and fit_raw:
-            prefix = ""
-            # Color code first (colorama Fore/Style strings)
-            if self.color:
-                prefix += str(self.color)
-            # Additional ANSI style codes (italic, underline, etc.)
-            if self.styles:
-                prefix += "".join(self._get_ansi_code(style) for style in self.styles)
+            from wexample_prompt.common.color_manager import ColorManager
+            prefix = ColorManager.build_prefix(color=self.color, styles=self.styles)
             if prefix:
                 rendered_fit = f"{prefix}{fit_raw}\033[0m"
 
@@ -64,16 +59,4 @@ class PromptResponseSegment(ExtendedBaseModel):
             return text, ""
         return text[:width], text[width:]
 
-    @staticmethod
-    def _get_ansi_code(style: TextStyle) -> str:
-        """Map TextStyle to ANSI code without reset."""
-        style_codes = {
-            TextStyle.BOLD: "\033[1m",
-            TextStyle.ITALIC: "\033[3m",
-            TextStyle.UNDERLINE: "\033[4m",
-            TextStyle.STRIKETHROUGH: "\033[9m",
-            TextStyle.DIM: "\033[2m",
-            TextStyle.REVERSE: "\033[7m",
-            TextStyle.HIDDEN: "\033[8m",
-        }
-        return style_codes.get(style, "")
+    
