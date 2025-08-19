@@ -47,14 +47,53 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-        response = self.create_test_response(
-            verbosity=VerbosityLevel.MAXIMUM
-        )
+        # Contexts with different verbosity levels
+        quiet_context = PromptContext(verbosity=VerbosityLevel.QUIET)
+        default_context = PromptContext(verbosity=VerbosityLevel.DEFAULT)
+        medium_context = PromptContext(verbosity=VerbosityLevel.MEDIUM)
+        max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
 
-        rendered = response.render(
-            context=PromptContext(
-                verbosity=VerbosityLevel.QUIET
-            )
-        )
+        # Responses requiring different verbosity thresholds
+        quiet_required = self.create_test_response(verbosity=VerbosityLevel.QUIET)
+        default_required = self.create_test_response(verbosity=VerbosityLevel.DEFAULT)
+        maximum_required = self.create_test_response(verbosity=VerbosityLevel.MAXIMUM)
 
-        assert rendered is None
+        def assert_visibility(context, expectations):
+            # expectations: list of tuples (response, should_be_visible)
+            for response, should_be_visible in expectations:
+                rendered = response.render(context=context)
+                if should_be_visible:
+                    assert rendered is not None
+                    self._assert_contains_text(rendered, self._test_message)
+                else:
+                    assert rendered is None
+
+        # Quiet context: only QUIET-level responses should appear
+        assert_visibility(quiet_context, [
+            (quiet_required, True),
+            (default_required, False),
+            (maximum_required, False),
+        ])
+
+        # Default context: QUIET and DEFAULT appear; MAXIMUM hidden
+        assert_visibility(default_context, [
+            (quiet_required, True),
+            (default_required, True),
+            (maximum_required, False),
+        ])
+
+        # Medium context: QUIET, DEFAULT, MEDIUM appear; MAXIMUM hidden
+        medium_required = self.create_test_response(verbosity=VerbosityLevel.MEDIUM)
+        assert_visibility(medium_context, [
+            (quiet_required, True),
+            (default_required, True),
+            (medium_required, True),
+            (maximum_required, False),
+        ])
+
+        # Maximum context: all appear
+        assert_visibility(max_context, [
+            (quiet_required, True),
+            (default_required, True),
+            (maximum_required, True),
+        ])

@@ -1,5 +1,5 @@
 """Test multiple prompt response."""
-
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -17,7 +17,10 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
 
         message = kwargs.pop("message", self._test_message)
         responses = kwargs.pop("responses", [
-            LogPromptResponse.create_log(message=message)
+            LogPromptResponse.create_log(
+                message=message,
+                verbosity=kwargs.pop("verbosity", VerbosityLevel.DEFAULT)
+            )
         ])
         return MultiplePromptResponse.create_multiple(
             responses=responses,
