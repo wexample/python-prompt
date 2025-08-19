@@ -35,8 +35,18 @@ class PromptResponseLine(ExtendedBaseModel):
 
     def render(self, context: PromptContext) -> str:
         """Render the line within the context width, wrapping segments as needed.
+        Respect context.formatting: when False, do not reflow/wrap lines.
         """
         indentation = context.render_indentation()
+        # If formatting is disabled, bypass wrapping logic entirely.
+        if context.formatting is False:
+            rendered_segments = []
+            for seg in self.segments:
+                # Provide a very large remaining width to avoid splitting segments
+                rendered, _ = seg.render(context, line_remaining_width=10 ** 9)
+                rendered_segments.append(rendered)
+            return f"{indentation}{''.join(rendered_segments)}"
+
         max_content_width = max(0, (context.width or 0) - self._visible_len(indentation)) if context.width else None
 
         if not max_content_width:

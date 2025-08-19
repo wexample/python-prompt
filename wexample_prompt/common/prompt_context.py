@@ -46,6 +46,10 @@ class PromptContext(ExtendedBaseModel):
         default=DEFAULT_WIDTH,
         description="Context with, basically the terminal with including indentation"
     )
+    formatting: Optional[bool] = Field(
+        default=True,
+        description="Format lines on rendering, should be disabled when passing raw text"
+    )
 
     @classmethod
     def create_from_kwargs(cls, kwargs: Kwargs) -> "PromptContext":
