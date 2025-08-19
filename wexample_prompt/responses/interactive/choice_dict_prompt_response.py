@@ -25,7 +25,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
             question: str,
             choices: Dict[str, str],
             default: Optional[str] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoiceDictPromptResponse":
         """Create a dictionary-based choice prompt response."""

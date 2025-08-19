@@ -48,7 +48,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             question: str,
             choices: List[Any],
             default: Optional[Any] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str] = None,
             color: Optional[TerminalColor] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
@@ -77,11 +77,11 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             )
 
         # Add abort option if requested.
-        if abort:
+        if abort is not False:
             choices_list.append(
                 Choice(
                     value=ChoiceValue.ABORT,
-                    title=str(abort),
+                    title=str(abort if abort is not None else "Abort"),
                     line=PromptResponseLine(segments=[]),
                 )
             )
@@ -127,31 +127,52 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
             for i, choice in enumerate(self.choices):
                 line = choice.line
-                if i == idx:
-                    line.segments = [
-                        PromptResponseSegment(
-                            text=f"  {i + 1}. → ",
-                            color=TerminalColor.BLUE,
-                            styles=[TextStyle.BOLD],
-                        ),
-                        PromptResponseSegment(
-                            text=str(choice.title),
-                            color=TerminalColor.LIGHT_BLUE,
-                        ),
-                    ]
+
+                is_selected = (i == idx)
+                is_abort = (choice.value == ChoiceValue.ABORT)
+
+                # Prefix: no numbering, use chevron only for non-abort selected.
+                if is_abort:
+                    prefix = "  ⨯ "
+                    prefix_color = TerminalColor.WHITE
+                    prefix_styles = []
                 else:
-                    line.segments = [
-                        PromptResponseSegment(
-                            text=f"  {i + 1}. → ",
-                            color=TerminalColor.BLUE,
-                        ),
-                        PromptResponseSegment(
-                            text=str(choice.title),
-                            color=TerminalColor.WHITE,
-                        ),
-                    ]
+                    prefix = "  › " if is_selected else "    "
+                    prefix_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.WHITE
+                    prefix_styles = [TextStyle.BOLD] if is_selected else []
+
+                # Title styling
+                # - normal: WHITE
+                # - selected: LIGHT_WHITE + BOLD for better readability/contrast
+                title_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.WHITE
+                title_styles = [TextStyle.BOLD] if is_selected else []
+
+                line.segments = [
+                    PromptResponseSegment(
+                        text=prefix,
+                        color=prefix_color,
+                        styles=prefix_styles,
+                    ),
+                    PromptResponseSegment(
+                        text=str(choice.title),
+                        color=title_color,
+                        styles=title_styles,
+                    ),
+                ]
 
                 self.lines.append(line)
+
+            # Controls helper footer (in white)
+            controls_line = PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(
+                        text="\nUse ↑/↓ to navigate • Enter to select • Esc or q to abort",
+                        color=TerminalColor.WHITE,
+                        styles=[],
+                    )
+                ]
+            )
+            self.lines.append(controls_line)
 
             print(self.render(context=context))
 

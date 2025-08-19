@@ -17,7 +17,7 @@ class ConfirmPromptResponseManagerMixin:
             choices: Optional[Dict[str, str]] = None,
             preset: Optional[str] = None,
             default: Optional[str] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             context: Optional[PromptContext] = None,
             **kwargs: Any,
     ) -> "ConfirmPromptResponse":

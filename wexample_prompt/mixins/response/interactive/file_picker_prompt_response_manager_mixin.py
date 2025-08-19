@@ -16,7 +16,7 @@ class FilePickerPromptResponseManagerMixin:
             self: "IoManager",
             question: str = "Select a file:",
             base_dir: Optional[str] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":

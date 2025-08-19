@@ -15,7 +15,7 @@ class ChoicePromptResponseManagerMixin:
             question: str,
             choices: List[Any],
             default: Optional[str] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "ChoicePromptResponse":

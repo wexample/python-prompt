@@ -27,7 +27,7 @@ class DirPickerPromptResponse(ChoiceDictPromptResponse):
             cls,
             base_dir: Optional[str] = None,
             question: str = "Select a directory:",
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "DirPickerPromptResponse":
         base = base_dir or os.getcwd()

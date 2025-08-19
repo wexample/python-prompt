@@ -32,7 +32,7 @@ class ConfirmPromptResponse(ChoicePromptResponse):
         choices: Optional[Dict[str, str]] = None,
         preset: Optional[str] = None,
         default: Optional[str] = None,
-        abort: Optional[str] = "> Abort",
+        abort: Optional[bool | str]  = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ConfirmPromptResponse":
         """Create a confirmation dialog response.

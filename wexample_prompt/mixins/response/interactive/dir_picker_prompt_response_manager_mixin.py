@@ -16,7 +16,7 @@ class DirPickerPromptResponseManagerMixin:
             self: "IoManager",
             question: str = "Select a directory:",
             base_dir: Optional[str] = None,
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str]  = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "DirPickerPromptResponse":

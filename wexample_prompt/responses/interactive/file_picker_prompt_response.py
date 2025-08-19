@@ -5,9 +5,10 @@ from typing import Dict, Optional, Type, List, Union
 from InquirerPy.base.control import Choice
 from pydantic import Field
 
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
 
 class FilePickerPromptResponse(ChoiceDictPromptResponse):
     """Response for displaying a file picker interface."""
@@ -25,7 +26,7 @@ class FilePickerPromptResponse(ChoiceDictPromptResponse):
             cls,
             base_dir: Optional[str] = None,
             question: str = "Select a file:",
-            abort: Optional[str] = "> Abort",
+            abort: Optional[bool | str] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()

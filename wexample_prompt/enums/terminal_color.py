@@ -23,6 +23,7 @@ class TerminalColor(Enum):
     LIGHT_BLUE = Fore.LIGHTBLUE_EX
     LIGHT_MAGENTA = Fore.LIGHTMAGENTA_EX
     LIGHT_CYAN = Fore.LIGHTCYAN_EX
+    LIGHT_WHITE = Fore.LIGHTWHITE_EX
     
     # Special
     DEFAULT = Fore.RESET
