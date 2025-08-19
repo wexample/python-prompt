@@ -21,7 +21,7 @@ class ProgressPromptResponseManagerMixin:
             label: Optional[str] = None,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs,
-    ) -> ProgressPromptResponse:
+    ) -> Any:
         response = ProgressPromptResponse.create_progress(
             total=total,
             current=current,
@@ -29,7 +29,7 @@ class ProgressPromptResponseManagerMixin:
             label=label,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=ProgressPromptResponse.rebuild_context_for_kwargs(
                 context=context,
@@ -37,15 +37,13 @@ class ProgressPromptResponseManagerMixin:
             )
         )
 
-        return response
-
     def progress_steps(
             self,
             steps: List["ProgressStep"],
             width: int = 50,
             title: Optional[str] = None,
             **kwargs: Any,
-    ) -> "ProgressPromptResponse":
+    ) -> Any:
         return ProgressPromptResponse.create_steps(
             steps=steps,
             width=width,

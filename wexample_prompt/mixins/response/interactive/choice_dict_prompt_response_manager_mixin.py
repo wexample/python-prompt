@@ -1,5 +1,5 @@
 """Mixin for managing choice dict prompt responses."""
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -20,7 +20,7 @@ class ChoiceDictPromptResponseManagerMixin:
             abort: Optional[str] = "> Abort",
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> "ChoiceDictPromptResponse":
+    ) -> Any:
         from wexample_prompt.responses.interactive.choice_dict_prompt_response import ChoiceDictPromptResponse
 
         response = ChoiceDictPromptResponse.create_choice_dict(
@@ -30,12 +30,10 @@ class ChoiceDictPromptResponseManagerMixin:
             abort=abort,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=ChoiceDictPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             )
         )
-
-        return response

@@ -10,5 +10,4 @@ class TestLogPromptResponse(AbstractPromptTest):
         # This is the default output handler
         assert isinstance(self._io.output, StdoutOutputHandler)
 
-        response = self._io.echo("Test output handler")
-        assert isinstance(self._io.print_response(response), str)
+        assert isinstance(self._io.echo("Test output handler"), str)

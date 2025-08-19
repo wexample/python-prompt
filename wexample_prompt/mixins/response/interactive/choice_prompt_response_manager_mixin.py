@@ -20,7 +20,7 @@ class ChoicePromptResponseManagerMixin:
             abort: Optional[str] = "> Abort",
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> "ChoicePromptResponse":
+    ) -> Any:
         from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
         response = ChoicePromptResponse.create_choice(
@@ -30,12 +30,10 @@ class ChoicePromptResponseManagerMixin:
             abort=abort,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=ChoicePromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             ),
         )
-
-        return response

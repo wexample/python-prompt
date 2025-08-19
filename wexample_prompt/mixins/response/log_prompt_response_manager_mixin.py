@@ -1,10 +1,9 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Any
 
 from wexample_helpers.const.types import Kwargs
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -14,19 +13,17 @@ class LogPromptResponseManagerMixin:
             message: str,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> Any:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         response = LogPromptResponse.create_log(
             message=message,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=LogPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs
             )
         )
-
-        return response

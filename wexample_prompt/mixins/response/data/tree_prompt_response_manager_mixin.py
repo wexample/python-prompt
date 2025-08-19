@@ -1,5 +1,5 @@
 """Mixin for handling tree responses in IoManager."""
-from typing import Dict, Any, Optional, TYPE_CHECKING
+from typing import Dict, Any, Optional, TYPE_CHECKING, Any as _Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -17,19 +17,17 @@ class TreePromptResponseManagerMixin:
             data: Dict[str, Any],
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> "TreePromptResponse":
+    ) -> _Any:
         from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
         response = TreePromptResponse.create_tree(
             data=data,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=TreePromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             ),
         )
-
-        return response

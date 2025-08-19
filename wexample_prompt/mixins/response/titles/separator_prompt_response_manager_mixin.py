@@ -1,10 +1,9 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
     from wexample_prompt.common.io_manager import IoManager
 
 
@@ -16,7 +15,7 @@ class SeparatorPromptResponseManagerMixin:
             character: Optional[str] = None,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> Any:
         from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
         response = SeparatorPromptResponse.create_separator(
@@ -25,17 +24,10 @@ class SeparatorPromptResponseManagerMixin:
             character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
         )
 
-        context = SeparatorPromptResponse.rebuild_context_for_kwargs(
-            context=context,
-            parent_kwargs=kwargs
-        )
-
-        self.print_response(
+        return self.print_response(
             response=response,
             context=SeparatorPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs
             )
         )
-
-        return response

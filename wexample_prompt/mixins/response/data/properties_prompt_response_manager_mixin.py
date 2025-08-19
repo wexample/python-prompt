@@ -1,5 +1,5 @@
 """Properties response manager mixin."""
-from typing import Dict, Any, Optional, TYPE_CHECKING
+from typing import Dict, Any, Optional, TYPE_CHECKING, Any as _Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -19,7 +19,7 @@ class PropertiesPromptResponseManagerMixin:
             nested_indent: int = 2,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
-    ) -> "PropertiesPromptResponse":
+    ) -> _Any:
         from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(
@@ -28,12 +28,10 @@ class PropertiesPromptResponseManagerMixin:
             nested_indent=nested_indent,
         )
 
-        self.print_response(
+        return self.print_response(
             response=response,
             context=PropertiesPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             ),
         )
-
-        return response
