@@ -14,8 +14,8 @@ class ProgressPromptResponseManagerMixin:
 
     def progress(
             self: "IoManager",
-            total: int,
-            current: int,
+            total: int = 100,
+            current: int = 0,
             width: Optional[int] = None,
             label: Optional[str] = None,
             context: Optional["PromptContext"] = None,

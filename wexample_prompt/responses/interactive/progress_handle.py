@@ -61,9 +61,8 @@ class ProgressHandle(ExtendedBaseModel):
             **kwargs
         )
 
-    def finish(self, auto_render: bool = True) -> "ProgressHandle":
-        """Mark progress as complete (current == total)."""
-        self.response.current = self.response.total
-        if auto_render:
-            self.render()
-        return self
+    def finish(self, **kwargs) -> Optional[str]:
+        return self.update(
+            current=self.response.total,
+            **kwargs
+        )

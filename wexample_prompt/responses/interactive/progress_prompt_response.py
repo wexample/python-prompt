@@ -43,8 +43,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
     @classmethod
     def create_progress(
             cls,
-            total: int,
-            current: int,
+            total: int = 100,
+            current: int = 0,
             width: Optional[int] = None,
             label: Optional[str] = None,
             color: Optional[TerminalColor] = None,
