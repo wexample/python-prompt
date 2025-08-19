@@ -15,13 +15,28 @@ class ErrorPromptResponse(AbstractMessageResponse):
     def create_error(
             cls: "ErrorPromptResponse",
             message: Optional[str] = None,
+            exception: Optional[BaseException] = None,
             color: Optional["TerminalColor"] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ErrorPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
+        # Build a simple text from message and/or exception.
+        # Priority: explicit message > exception message > generic fallback.
+        if message is not None and message != "":
+            text = message
+        elif exception is not None:
+            # Keep it simple for now: just str(exception)
+            # (later we can add type and traceback formatting)
+            try:
+                text = str(exception) if str(exception) else exception.__class__.__name__
+            except Exception:
+                text = exception.__class__.__name__
+        else:
+            text = "An error occurred"
+
         return cls._create_symbol_message(
-            text=message,
+            text=text,
             color=color or TerminalColor.RED,
             verbosity=verbosity
         )

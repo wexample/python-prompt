@@ -12,6 +12,7 @@ class ErrorPromptResponseManagerMixin:
     def error(
             self: "IoManager",
             message: Optional[str] = None,
+            exception: Optional[BaseException] = None,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs
     ) -> "ErrorPromptResponse":
@@ -19,9 +20,11 @@ class ErrorPromptResponseManagerMixin:
 
         response = ErrorPromptResponse.create_error(
             message=message,
+            exception=exception,
         )
 
-        # TODO should support exceptions
+        # Note: exception support is basic for now; detailed rendering (type/traceback)
+        # will be added later.
 
         self.print_response(
             response=response,
