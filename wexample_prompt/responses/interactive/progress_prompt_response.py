@@ -8,17 +8,11 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.progress.step_progress_context import (
+    ProgressStep,
+    StepProgressContext,
+)
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-
-try:
-    # Optional import, only needed for step-based execution helpers
-    from wexample_prompt.progress.step_progress_context import (
-        ProgressStep,
-        StepProgressContext,
-    )
-except Exception:  # pragma: no cover - module may not be present in minimal envs
-    ProgressStep = Any  # type: ignore
-    StepProgressContext = Any  # type: ignore
 
 
 class ProgressPromptResponse(AbstractPromptResponse):
