@@ -18,6 +18,7 @@ class ConfirmPromptResponseManagerMixin:
             preset: Optional[str] = None,
             default: Optional[str] = None,
             abort: Optional[bool | str]  = None,
+            reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             **kwargs: Any,
     ) -> "ConfirmPromptResponse":
@@ -25,11 +26,11 @@ class ConfirmPromptResponseManagerMixin:
 
         response = ConfirmPromptResponse.create_confirm(
             question=question,
-            choices=choices,
             preset=preset,
+            choices=choices,
             default=default,
             abort=abort,
-            **kwargs,
+            reset_on_finish=reset_on_finish,
         )
 
         return self.print_response(

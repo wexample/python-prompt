@@ -41,10 +41,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The line that displays the question"
     )
-    reset_on_finish: bool = Field(
-        default=False,
-        description="If True, clears the prompt block from the terminal after a selection or abort."
-    )
 
     @classmethod
     def create_choice(
@@ -143,11 +139,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         while True:
             # Clear only our previous render block (not the whole screen)
-            if printed_lines > 0:
-                # Move cursor up 'printed_lines' and clear to end of screen
-                # \033[{n}F moves to the beginning of the n-th previous line
-                # \033[J clears from cursor to end of screen
-                print(f"\033[{printed_lines}F\033[J", end="")
+            self._partial_clear(printed_lines)
 
             # Rebuild lines for this frame
             self.lines = [self.question_line]
@@ -199,18 +191,16 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             )
             self.lines.append(controls_line)
 
-            rendered = self.render(context=context)
-            print(rendered)
-            # Count how many lines we just printed to clear them next frame
-            printed_lines = rendered.count("\n") + 1
+            # Render and print this frame
+            printed_lines = self._print_render(context=context)
 
             # If an answer is injected (non-interactive mode), return it as-is
             if answer is not None:
                 if self.reset_on_finish and printed_lines > 0:
-                    print(f"\033[{printed_lines}F\033[J", end="")
+                    self._partial_clear(printed_lines)
                 return answer
 
-            key = readchar.readkey()
+            key = self._read_key()
             if key == readchar.key.UP:
                 idx = (idx - 1) % len(self.choices)
             elif key == readchar.key.DOWN:
@@ -219,15 +209,15 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 selected = self.choices[idx]
                 if selected.value == ChoiceValue.ABORT:
                     if self.reset_on_finish and printed_lines > 0:
-                        print(f"\033[{printed_lines}F\033[J", end="")
+                        self._partial_clear(printed_lines)
                     return None
                 if self.reset_on_finish and printed_lines > 0:
-                    print(f"\033[{printed_lines}F\033[J", end="")
+                    self._partial_clear(printed_lines)
                 return selected.value
             elif key in (readchar.key.ESC, "q", "Q"):
                 # Quick abort with ESC or q/Q
                 if self.reset_on_finish and printed_lines > 0:
-                    print(f"\033[{printed_lines}F\033[J", end="")
+                    self._partial_clear(printed_lines)
                 return None
 
     @classmethod

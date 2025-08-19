@@ -1,9 +1,34 @@
 """Abstract base class for interactive prompt responses."""
 from abc import ABC
+from typing import Optional
+
+from pydantic import Field
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
 class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
-    """Base for interactive responses (those that may call execute())."""
-    pass
+    """Base for interactive responses with common terminal helpers."""
+
+    reset_on_finish: bool = Field(
+        default=False,
+        description="If True, clears the prompt block from the terminal after a selection or abort."
+    )
+
+    # ---- Terminal helpers shared by interactive prompts ----
+    @staticmethod
+    def _partial_clear(printed_lines: int) -> None:
+        if printed_lines > 0:
+            print(f"\033[{printed_lines}F\033[J", end="")
+
+    def _print_render(self, context) -> int:
+        rendered = self.render(context=context)
+        if rendered is None:
+            return 0
+        print(rendered)
+        return rendered.count("\n") + 1
+
+    @staticmethod
+    def _read_key() -> str:
+        import readchar
+        return readchar.readkey()

@@ -12,13 +12,14 @@ class ConfirmExample(AbstractResponseExample):
         """Use the response class directly."""
         return ConfirmPromptResponse.create_confirm(
             question="Proceed?",
-            preset="yes_no",
+            preset="yes_no_all",
+            reset_on_finish=True,
         )
 
     def example_manager(self):
         """Use IoManager mixin method."""
-        self.io.confirm(question="Proceed?", preset="ok_cancel")
+        self.io.confirm(question="Proceed?", preset="ok_cancel", reset_on_finish=True)
 
     def example_extended(self):
         """Use extended context with _class_with_methods."""
-        self._class_with_methods.confirm(question="Proceed?", preset="yes_no_all")
+        self._class_with_methods.confirm(question="Proceed?", preset="yes_no_all", reset_on_finish=True)
