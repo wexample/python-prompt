@@ -27,29 +27,47 @@ class ErrorPromptResponse(AbstractMessageResponse):
     ) -> "ErrorPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
-        # Build text using helpers when we have an exception; otherwise use the plain message or a fallback.
+        # Build content: if there's an exception, create a red header line (symbol + message)
+        # and append the formatted trace as raw lines (no added color) so its own formatting stays intact.
         if exception is not None:
-            # Use existing debug/trace helpers to format the exception directly.
-            # We keep the response color neutral so helper formatting (incl. ANSI) can pass through untouched.
             from wexample_helpers.helpers.error import error_format
+            from wexample_prompt.common.prompt_response_line import PromptResponseLine
+            from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-            formatted = error_format(error=exception)
-            if message is not None and message != "":
-                text = f"{message}\n{formatted}"
-            else:
-                text = formatted
+            header_text = message if (message is not None and message != "") else "An error occurred"
+
+            # First line: symbol + header in red
+            effective_symbol = cls.SYMBOL
+            header_segments: list[PromptResponseSegment] = []
+            if effective_symbol:
+                header_segments.append(
+                    PromptResponseSegment(text=f"{effective_symbol} ", color=(color or TerminalColor.RED))
+                )
+            header_segments.append(
+                PromptResponseSegment(text=header_text, color=(color or TerminalColor.RED))
+            )
+
+            lines: list[PromptResponseLine] = [
+                PromptResponseLine(segments=header_segments)
+            ]
+
+            # Trace lines: preserve helper formatting (may include ANSI), no extra color
+            formatted = error_format(exception)
+            for trace_line in formatted.splitlines():
+                lines.append(PromptResponseLine.create_from_string(trace_line))
+
+            return cls._create(lines=lines, verbosity=verbosity)
         else:
             text = message if (message is not None and message != "") else "An error occurred"
-
-        return cls._create_symbol_message(
-            text=text,
-            color=(color or TerminalColor.RED) if exception is None else TerminalColor.RESET,
-            verbosity=verbosity
-        )
+            return cls._create_symbol_message(
+                text=text,
+                color=(color or TerminalColor.RED),
+                verbosity=verbosity
+            )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        # No style on echo.
         context = self._create_context_if_missing(context=context)
+        # Disable line truncation.
         context.formatting = False
 
         return super().render(

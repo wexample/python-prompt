@@ -18,4 +18,4 @@ if __name__ == "__main__":
     try:
         make_boom()
     except Exception as e:
-        demo_io.error(exception=e)
+        demo_io.error(message="Error message with exception", exception=e)

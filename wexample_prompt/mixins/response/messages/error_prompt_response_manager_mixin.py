@@ -23,9 +23,6 @@ class ErrorPromptResponseManagerMixin:
             exception=exception,
         )
 
-        # Note: exception support is basic for now; detailed rendering (type/traceback)
-        # will be added later.
-
         self.print_response(
             response=response,
             context=ErrorPromptResponse.rebuild_context_for_kwargs(
