@@ -23,3 +23,31 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         # Empty lines (2) + message (1) + 3 suggestions
         return 6
+
+    def test_render_with_single_suggestion(self):
+        response = self.create_test_response(
+            message=self._test_message,
+            suggestions=["command1 --arg value"],
+        )
+        rendered = response.render()
+        self._assert_contains_text(rendered, self._test_message)
+        self._assert_contains_text(rendered, "command1 --arg value")
+
+    def test_render_with_empty_suggestions(self):
+        response = self.create_test_response(
+            message=self._test_message,
+            suggestions=[],
+        )
+        rendered = response.render()
+        self._assert_contains_text(rendered, self._test_message)
+        assert "→" not in rendered
+
+    def test_custom_arrow_style(self):
+        custom_arrow = ">"
+        response = self.create_test_response(
+            message=self._test_message,
+            arrow_style=custom_arrow,
+        )
+        rendered = response.render()
+        self._assert_contains_text(rendered, custom_arrow)
+        assert "→" not in rendered
