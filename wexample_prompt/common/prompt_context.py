@@ -81,6 +81,14 @@ class PromptContext(ExtendedBaseModel):
             kwargs,
         )
 
+    @classmethod
+    def create_if_none(cls, context: Optional["PromptContext"] = None) -> "PromptContext":
+        """
+        Creating a context allows to execute render without any extra information,
+        but manager parameters like terminal width are not available in this case.
+        """
+        return context or PromptContext()
+
     def render_indentation_text(self) -> str:
         output = ''
         if self.parent_context:

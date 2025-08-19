@@ -66,15 +66,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the complete response."""
 
-        context = self._create_context_if_missing(context=context)
+        context = PromptContext.create_if_none(context=context)
+
         if self.verbosity > context.verbosity:
             return None
 
         return "\n".join(line.render(context) for line in self.lines)
-
-    def _create_context_if_missing(self, context: Optional["PromptContext"] = None) -> "PromptContext":
-        """
-        Creating a context allows to execute render without any extra information,
-        but manager parameters like terminal width are not available in this case.
-        """
-        return context or PromptContext()

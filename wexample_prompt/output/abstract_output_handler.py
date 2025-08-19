@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Optional
+from abc import abstractmethod
+from typing import TYPE_CHECKING, Optional, Any
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 
@@ -8,5 +9,6 @@ if TYPE_CHECKING:
 
 
 class AbstractOutputHandler(ExtendedBaseModel):
-    def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
-        ...
+    @abstractmethod
+    def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
+        self._raise_not_implemented_error()

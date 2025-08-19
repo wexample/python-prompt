@@ -112,3 +112,42 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             (default_required, True),
             (maximum_required, True),
         ])
+
+    def test_manager_indentation(self):
+        response = self.create_test_response()
+
+        rendered = self._io.print_response(
+            response=response
+        )
+
+        assert isinstance(rendered, str)
+        assert not rendered.startswith("  ")
+
+        self._io.indentation_up()
+
+        rendered = self._io.print_response(
+            response=response
+        )
+
+        assert isinstance(rendered, str)
+        assert rendered.startswith("  ")
+
+        self._io.indentation_up()
+
+        rendered = self._io.print_response(
+            response=response
+        )
+
+        assert isinstance(rendered, str)
+        assert rendered.startswith("    ")
+
+        self._io.indentation_down()
+        self._io.indentation_down()
+
+        rendered = self._io.print_response(
+            response=response
+        )
+
+        assert isinstance(rendered, str)
+        assert not rendered.startswith("  ")
+

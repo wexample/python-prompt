@@ -1,58 +1,58 @@
-from typing import List, Type, TYPE_CHECKING, Optional
+from typing import List, Type, TYPE_CHECKING, Optional, Any
 
 from pydantic import Field, PrivateAttr
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
-    EchoPromptResponseManagerMixin
-
-from wexample_prompt.mixins.response.messages.info_prompt_response_manager_mixin import \
-    InfoPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.debug_prompt_response_manager_mixin import \
-    DebugPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.warning_prompt_response_manager_mixin import \
-    WarningPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.error_prompt_response_manager_mixin import \
-    ErrorPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.failure_prompt_response_manager_mixin import \
-    FailurePromptResponseManagerMixin
-from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
-    LogPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import \
-    SuccessPromptResponseManagerMixin
-from wexample_prompt.mixins.response.messages.task_prompt_response_manager_mixin import \
-    TaskPromptResponseManagerMixin
-from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
-    SeparatorPromptResponseManagerMixin
-from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin import \
-    TitlePromptResponseManagerMixin
-from wexample_prompt.mixins.response.titles.subtitle_prompt_response_manager_mixin import \
-    SubtitlePromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import \
     ListPromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.multiple_prompt_response_manager_mixin import \
     MultiplePromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.properties_prompt_response_manager_mixin import \
     PropertiesPromptResponseManagerMixin
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_prompt.mixins.response.data.suggestions_prompt_response_manager_mixin import \
     SuggestionsPromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin import \
     TablePromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import \
     TreePromptResponseManagerMixin
-from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import \
-    ChoicePromptResponseManagerMixin
+from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import \
+    EchoPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.choice_dict_prompt_response_manager_mixin import \
     ChoiceDictPromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import \
+    ChoicePromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import \
+    ConfirmPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.dir_picker_prompt_response_manager_mixin import \
     DirPickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_manager_mixin import \
     FilePickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import \
     ProgressPromptResponseManagerMixin
-from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import \
-    ConfirmPromptResponseManagerMixin
+from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
+    LogPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.debug_prompt_response_manager_mixin import \
+    DebugPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.error_prompt_response_manager_mixin import \
+    ErrorPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.failure_prompt_response_manager_mixin import \
+    FailurePromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.info_prompt_response_manager_mixin import \
+    InfoPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import \
+    SuccessPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.task_prompt_response_manager_mixin import \
+    TaskPromptResponseManagerMixin
+from wexample_prompt.mixins.response.messages.warning_prompt_response_manager_mixin import \
+    WarningPromptResponseManagerMixin
+from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import \
+    SeparatorPromptResponseManagerMixin
+from wexample_prompt.mixins.response.titles.subtitle_prompt_response_manager_mixin import \
+    SubtitlePromptResponseManagerMixin
+from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin import \
+    TitlePromptResponseManagerMixin
+from wexample_prompt.mixins.with_indentation import WithIndentation
+from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -60,7 +60,6 @@ if TYPE_CHECKING:
 
 
 class IoManager(
-    ExtendedBaseModel,
     # Basics
     EchoPromptResponseManagerMixin,
     LogPromptResponseManagerMixin,
@@ -90,6 +89,9 @@ class IoManager(
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
     ConfirmPromptResponseManagerMixin,
+    # Parent classes
+    WithIndentation,
+    ExtendedBaseModel,
 ):
     output: Optional[AbstractOutputHandler] = Field(
         default=None,
@@ -176,5 +178,12 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
-    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
-        self.output.print(response=response, context=context)
+    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
+        from wexample_prompt.common.prompt_context import PromptContext
+        context = context or PromptContext()
+        context.indentation = self.indentation
+
+        return self.output.print(
+            response=response,
+            context=context
+        )

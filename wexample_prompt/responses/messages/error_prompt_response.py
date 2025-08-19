@@ -66,7 +66,8 @@ class ErrorPromptResponse(AbstractMessageResponse):
             )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        context = self._create_context_if_missing(context=context)
+        from wexample_prompt.common.prompt_context import PromptContext
+        context = PromptContext.create_if_none(context=context)
         # Disable line truncation.
         context.formatting = False
 

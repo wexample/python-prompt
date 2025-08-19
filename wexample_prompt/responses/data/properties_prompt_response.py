@@ -55,7 +55,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         if not self.properties:
             return ""
 
-        context = self._create_context_if_missing(context=context)
+        context = PromptContext.create_if_none(context=context)
 
         # Determine content width
         total_width = context.width

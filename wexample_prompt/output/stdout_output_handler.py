@@ -1,5 +1,5 @@
 import sys
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Any
 
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 
 class StdoutOutputHandler(AbstractOutputHandler):
-    def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> None:
+    def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
         rendered_response = response.render(context=context)
         if rendered_response:
             print(rendered_response, file=sys.stdout, end="\n")
+
+        return rendered_response
