@@ -5,19 +5,29 @@ if __name__ == "__main__":
     io = IoManager()
 
     # Simple yes/no box (using preset mapping constant)
-    res = io.confirm(
+    response = io.confirm(
         question="Do you want to continue?",
         choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
         default="yes",
         reset_on_finish=True,
-    ).ask()
-    print(f"Answer: {res}")
+    )
+    print(f"Answer: {response.rendered_content}")
 
     # Yes / Yes for all / No (using class constant)
-    res2 = io.confirm(
+    response = io.confirm(
         question="Proceed with all operations?",
         choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
         default="ok",
         reset_on_finish=True,
-    ).ask()
-    print(f"Answer 2: {res2}")
+    )
+    print(f"Answer 2: {response.rendered_content}")
+
+    # Yes / Yes for all / No (using class constant)
+    response = io.confirm(
+        question="Do you prefer not to be asked?",
+        choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
+        default="yes",
+        reset_on_finish=True,
+        answer="no"
+    )
+    print(f"Answer 3: {response.rendered_content}")

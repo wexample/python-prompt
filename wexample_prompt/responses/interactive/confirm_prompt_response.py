@@ -152,7 +152,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # bottom border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
 
-    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> Optional[str]:
+    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         context = PromptContext.create_if_none(context=context)
         context.formatting = False
@@ -167,7 +167,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             if answer is not None:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                return str(answer)
+                self._rendered_content = str(answer)
+                return
 
             key = self._read_key()
             # normalize single-char keys for mapping
@@ -175,12 +176,15 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 value, _ = self.options[key]
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                return value
+                self._rendered_content = value
+                return
             elif key in ("\r", "\n") and self.default_value is not None:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                return self.default_value
+                self._rendered_content = self.default_value
+                return
             elif key in ("\x1b", "q", "Q") and self.allow_abort:
                 if self.reset_on_finish and printed > 0:
                     self._partial_clear(printed)
-                return None
+                self._rendered_content = None
+                return

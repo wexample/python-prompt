@@ -120,8 +120,8 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             response=response
         )
 
-        assert isinstance(response.last_rendered_content, str)
-        assert not response.last_rendered_content.startswith("  ")
+        assert isinstance(response.rendered_content, str)
+        assert not response.rendered_content.startswith("  ")
 
         self._io.indentation_up()
 
@@ -129,8 +129,8 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             response=response
         )
 
-        assert isinstance(response.last_rendered_content, str)
-        assert response.last_rendered_content.startswith("  ")
+        assert isinstance(response.rendered_content, str)
+        assert response.rendered_content.startswith("  ")
 
         self._io.indentation_up()
 
@@ -138,8 +138,8 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             response=response
         )
 
-        assert isinstance(response.last_rendered_content, str)
-        assert response.last_rendered_content.startswith("    ")
+        assert isinstance(response.rendered_content, str)
+        assert response.rendered_content.startswith("    ")
 
         self._io.indentation_down()
         self._io.indentation_down()
@@ -148,6 +148,6 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             response=response
         )
 
-        assert isinstance(response.last_rendered_content, str)
-        assert not response.last_rendered_content.startswith("  ")
+        assert isinstance(response.rendered_content, str)
+        assert not response.rendered_content.startswith("  ")
 

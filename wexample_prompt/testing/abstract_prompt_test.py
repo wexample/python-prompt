@@ -36,4 +36,4 @@ class AbstractPromptTest(unittest.TestCase, ABC):
         self.assertIn(text, rendered)
 
     def _assert_rendered_lines_count(self, response: "AbstractResponse", lines_count: int):
-        assert len(response.last_rendered_content.split("\n")) == lines_count
+        assert len(response.rendered_content.split("\n")) == lines_count
