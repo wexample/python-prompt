@@ -5,6 +5,7 @@ from typing import Dict, Optional, Type, Mapping
 from pydantic import Field
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 
@@ -13,6 +14,14 @@ class FilePickerPromptResponse(ChoicePromptResponse):
 
     base_dir: str = Field(
         description="Base directory to browse from; defaults to current working directory if not provided")
+    mode: FilePickerMode = Field(
+        default=FilePickerMode.BOTH,
+        description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection."
+    )
+    abort_option: Optional[bool | str] = Field(
+        default=None,
+        description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label)."
+    )
 
     @classmethod
     def get_example_class(cls) -> Type:
@@ -25,6 +34,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             base_dir: Optional[str] = None,
             question: str = "Select a file:",
             abort: Optional[bool | str] = None,
+            mode: FilePickerMode = FilePickerMode.BOTH,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
@@ -36,9 +46,11 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             for element in os.listdir(base):
                 full_path = os.path.join(base, element)
                 if os.path.isdir(full_path):
-                    dirs[element] = f"📁 {element}"
+                    if mode in (FilePickerMode.BOTH, FilePickerMode.DIRS):
+                        dirs[element] = f"📁 {element}"
                 else:
-                    files[element] = element
+                    if mode in (FilePickerMode.BOTH, FilePickerMode.FILES):
+                        files[element] = element
         except Exception:
             pass
 
@@ -65,6 +77,8 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             question=parent_response.question,
             question_line=parent_response.question_line,
             base_dir=base,
+            mode=mode,
+            abort_option=abort,
             verbosity=verbosity,
         )
         return new
@@ -77,9 +91,15 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         full_path = os.path.join(self.base_dir, selected)
 
         if os.path.isdir(full_path):
+            # If selecting directories only, selecting a dir returns it.
+            if self.mode == FilePickerMode.DIRS:
+                return full_path
+            # Otherwise, navigate into the directory.
             next_response = self.__class__.create_file_picker(
                 base_dir=full_path,
                 question=self.question or "Select a file:",
+                abort=self.abort_option,
+                mode=self.mode,
             )
             return next_response.execute()
 

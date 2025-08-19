@@ -3,6 +3,7 @@ from typing import Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.choice import FilePickerMode
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
@@ -17,6 +18,7 @@ class FilePickerPromptResponseManagerMixin:
             question: str = "Select a file:",
             base_dir: Optional[str] = None,
             abort: Optional[bool | str]  = None,
+            mode: FilePickerMode = FilePickerMode.BOTH,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":
@@ -26,6 +28,7 @@ class FilePickerPromptResponseManagerMixin:
             question=question,
             base_dir=base_dir,
             abort=abort,
+            mode=mode,
             **kwargs,
         )
 
