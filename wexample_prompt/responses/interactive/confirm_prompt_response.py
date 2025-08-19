@@ -21,6 +21,10 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         default="Please confirm:",
         description="The question to ask to the user"
     )
+    width: Optional[int] = Field(
+        default=None,
+        description="Total width of the box (in characters). If None, uses context width or content width."
+    )
     # Map pressed key -> (value, label)
     options: Dict[str, Tuple[str, str]] = Field(
         default_factory=dict,
@@ -44,6 +48,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             preset: Optional[str] = None,
             choices: Optional[Dict[str, str]] = None,
             default: Optional[str] = None,
+            width: Optional[int] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
     ) -> "ConfirmPromptResponse":
@@ -76,50 +81,62 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             question=question,
             options=mapping,
             default_value=default,
+            width=width,
             reset_on_finish=reset_on_finish,
             verbosity=verbosity,
             # allow_abort is True by default; ESC/q return None
         )
 
-    def _build_lines(self) -> None:
-        # Compose a boxed layout using lines and segments
-        self.lines = []
-        horiz = "-" * max(45, len(self.question) + 8)
-        # top border
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
-        # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]))
-        # question line (indented and bold)
-        self.lines.append(
-            PromptResponseLine(
-                segments=[
-                    PromptResponseSegment(text="        ", color=TerminalColor.RESET),
-                    PromptResponseSegment(text=self.question, color=TerminalColor.LIGHT_WHITE, styles=[TextStyle.BOLD]),
-                ]
-            )
-        )
-        # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]))
+    def _build_lines(self, context: "PromptContext") -> None:
+        # Compute box width: prefer explicit width, else context width, else content-based with a floor
+        width = context.get_width()
 
-        # options line
         parts = []
-        # Stable order: y, Y, n, then others
         order = [k for k in ["y", "Y", "n"] if k in self.options]
         order += [k for k in self.options.keys() if k not in order]
         for k in order:
-            val, label = self.options[k]
+            _, label = self.options[k]
             parts.append(f"[{k}: {label}]")
         options_text = " / ".join(parts)
+
+        content_width = max(len(self.question), len(options_text))
+        min_width = max(45, content_width + 4)
+        box_width = max(self.width or 0, width or 0, min_width)
+
+        def center(s: str) -> str:
+            return s.center(box_width)
+
+        # Compose a boxed layout using lines and segments
+        self.lines = []
+        horiz = "-" * box_width
+        # top border
+        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
+        # empty line
+        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+        # question line centered
         self.lines.append(
             PromptResponseLine(
                 segments=[
-                    PromptResponseSegment(text="  ", color=TerminalColor.RESET),
-                    PromptResponseSegment(text=options_text, color=TerminalColor.WHITE),
+                    PromptResponseSegment(
+                        text=center(self.question),
+                        color=TerminalColor.LIGHT_WHITE,
+                        styles=[TextStyle.BOLD],
+                    ),
                 ]
             )
         )
         # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]))
+        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+        # options line centered
+        self.lines.append(
+            PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(text=center(options_text), color=TerminalColor.WHITE),
+                ]
+            )
+        )
+        # empty line
+        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
         # bottom border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
 
@@ -132,7 +149,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # render once per frame until a valid key or injected answer
         while True:
             self._partial_clear(printed)
-            self._build_lines()
+            self._build_lines(context=context)
             printed = self._print_render(context=context)
 
             if answer is not None:
