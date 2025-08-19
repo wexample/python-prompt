@@ -98,6 +98,11 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         """Render the prompt and return the selected value."""
         import readchar
 
+        from wexample_prompt.common.prompt_context import PromptContext
+        context = PromptContext.create_if_none(context=context)
+        # Disable formatting to avoid creating new lines
+        context.formatting = False
+
         if not self.choices:
             # Nothing to choose from
             return None
@@ -138,13 +143,13 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     prefix_styles = []
                 else:
                     prefix = "  › " if is_selected else "    "
-                    prefix_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.WHITE
+                    prefix_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                     prefix_styles = [TextStyle.BOLD] if is_selected else []
 
                 # Title styling
                 # - normal: WHITE
                 # - selected: LIGHT_WHITE + BOLD for better readability/contrast
-                title_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.WHITE
+                title_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                 title_styles = [TextStyle.BOLD] if is_selected else []
 
                 line.segments = [
