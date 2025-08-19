@@ -58,7 +58,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         )
 
         # Should have 2 spaces of indentation
-        self.assertTrue(rendered.startswith("  "))
+        assert rendered.startswith("  ")
 
     def test_multiple_indentation_levels(self):
         messages = [
@@ -77,4 +77,4 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
                     indentation=indent
                 )
             )
-            self.assertTrue(rendered.startswith("  " * indent))
+            assert rendered.startswith("  " * indent)
