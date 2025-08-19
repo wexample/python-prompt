@@ -178,7 +178,7 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
-    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
+    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> "AbstractPromptResponse":
         from wexample_prompt.common.prompt_context import PromptContext
         context = context or PromptContext()
 
