@@ -1,9 +1,6 @@
 """Tests for LogPromptResponse."""
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
@@ -62,3 +59,22 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
         # Should have 2 spaces of indentation
         self.assertTrue(rendered.startswith("  "))
+
+    def test_multiple_indentation_levels(self):
+        messages = [
+            (0, "Root level"),
+            (1, "First indent"),
+            (2, "Second indent"),
+            (3, "Third indent"),
+            (1, "Back to first"),
+        ]
+
+        # Create response with multiple lines at different indentation levels
+        for indent, message in messages:
+            response = self.create_test_response(message)
+            rendered = response.render(
+                context=PromptContext(
+                    indentation=indent
+                )
+            )
+            self.assertTrue(rendered.startswith("  " * indent))
