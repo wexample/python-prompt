@@ -44,18 +44,10 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             preset: Optional[str] = None,
             choices: Optional[Dict[str, str]] = None,
             default: Optional[str] = None,
-            abort: Optional[bool | str] = None,  # backward-compat; ESC abort supported regardless of label
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
     ) -> "ConfirmPromptResponse":
-        """Create a confirmation dialog configured either by preset or explicit choices.
-
-        Presets:
-          - yes_no:        [y: Yes] / [n: No]
-          - ok_cancel:     [y: Ok]  / [n: Cancel]
-          - yes_no_all:    [y: Yes] / [Y: Yes for all] / [n: No]
-          - continue_cancel:[y: Continue] / [n: Cancel]
-        """
+        """Create a confirmation dialog configured either by preset or explicit choices."""
         mapping: Dict[str, Tuple[str, str]]
         if choices is not None:
             # Heuristic: map y to first key, n to second, Y to third if present

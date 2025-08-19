@@ -17,7 +17,6 @@ class ConfirmPromptResponseManagerMixin:
             choices: Optional[Dict[str, str]] = None,
             preset: Optional[str] = None,
             default: Optional[str] = None,
-            abort: Optional[bool | str]  = None,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             **kwargs: Any,
@@ -29,7 +28,6 @@ class ConfirmPromptResponseManagerMixin:
             preset=preset,
             choices=choices,
             default=default,
-            abort=abort,
             reset_on_finish=reset_on_finish,
         )
 
