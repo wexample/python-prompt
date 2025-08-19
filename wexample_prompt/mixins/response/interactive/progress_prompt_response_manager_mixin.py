@@ -30,10 +30,15 @@ class ProgressPromptResponseManagerMixin:
             label=label,
         )
 
-        return self.print_response(
+        # The first print is done without progress handle.
+        response = self.print_response(
             response=response,
             context=ProgressPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             )
         )
+
+        # The first print is done without progress handle.
+        response.get_handle().output = self.output
+        return response

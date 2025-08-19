@@ -1,5 +1,5 @@
 """Progress bar response implementation."""
-from typing import Optional, ClassVar, Type
+from typing import Optional, ClassVar, Type, TYPE_CHECKING
 
 from pydantic import Field
 
@@ -9,6 +9,9 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+
+if TYPE_CHECKING:
+    from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
 
 
 class ProgressPromptResponse(AbstractPromptResponse):
@@ -24,6 +27,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
     width: Optional[int] = Field(default=None, description="Width of the progress bar in characters")
     label: Optional[str] = Field(default=None, description="Optional label displayed before the bar")
     color: Optional[TerminalColor] = Field(default=None, description="Optional color applied to the bar")
+    _handle: Optional["ProgressHandle"] = None
 
     @classmethod
     def get_example_class(cls) -> Type:
@@ -63,9 +67,28 @@ class ProgressPromptResponse(AbstractPromptResponse):
             verbosity=verbosity
         )
 
+    def get_handle(self) -> "ProgressHandle":
+        from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
+        assert isinstance(self._handle, ProgressHandle)
+        return self._handle
+
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+        from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
+
         # Normalize context
         context = PromptContext.create_if_none(context=context)
+
+        # Create once.
+        if not self._handle:
+            # Create/update the handle bound to this response and the effective context
+            self._handle = ProgressHandle(
+                response=self,
+                context=context,
+            )
+
+        # Should happen rarely, context should not change for the same progress bar.
+        if context != self._handle.context:
+            raise ValueError("Context should not change across same progress renderings")
 
         # Progress values
         current = min(self.current, self.total)
