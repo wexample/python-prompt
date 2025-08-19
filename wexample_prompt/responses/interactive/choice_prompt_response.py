@@ -104,7 +104,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             verbosity=verbosity,
         )
 
-    def ask(self, context: Optional["PromptContext"] = None) -> Optional[str | int]:
+    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> Optional[str | int]:
         """Render the prompt and return the selected value."""
         import readchar
 
@@ -198,6 +198,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             print(rendered)
             # Count how many lines we just printed to clear them next frame
             printed_lines = rendered.count("\n") + 1
+
+            # If an answer is injected (non-interactive mode), return it as-is
+            if answer is not None:
+                return answer
 
             key = readchar.readkey()
             if key == readchar.key.UP:

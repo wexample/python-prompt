@@ -28,3 +28,12 @@ if __name__ == "__main__":
         demo_io.log("Aborted")
     else:
         demo_io.success(choice)
+
+    choice = demo_io.choice(
+        question="This question already have an answer, so the choice is not interactive:",
+        choices={
+            "no": "No",
+            "maybe": "Maybe",
+            "yes": "Yes",
+        }
+    ).ask(answer="Yes")
