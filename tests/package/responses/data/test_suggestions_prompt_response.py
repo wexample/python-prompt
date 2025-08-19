@@ -7,16 +7,14 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     """Test cases for SuggestionsPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.suggestions_prompt_response import (
             SuggestionsPromptResponse,
         )
 
-        return SuggestionsPromptResponse.create_suggestions(
-            message=text,
-            suggestions=["command1 --arg value", "command2", "command3 --flag"],
-            **kwargs
-        )
+        kwargs.setdefault("message", self._test_message)
+        kwargs.setdefault("suggestions", ["command1 --arg value", "command2", "command3 --flag"])
+        return SuggestionsPromptResponse.create_suggestions(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Should include arrow indicators

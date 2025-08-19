@@ -7,17 +7,14 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestPropertiesPromptResponse(AbstractPromptResponseTest):
     """Test cases for PropertiesPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
 
-        # Minimal properties; include title to ensure test message is present
-        return PropertiesPromptResponse.create_properties(
-            properties={"name": "John Doe", "age": 30},
-            title=text,
-            **kwargs
-        )
+        kwargs.setdefault("properties", {"name": "John Doe", "age": 30})
+        kwargs.setdefault("title", self._test_message)
+        return PropertiesPromptResponse.create_properties(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Should contain key-value formatting

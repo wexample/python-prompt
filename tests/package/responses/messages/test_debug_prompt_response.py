@@ -7,7 +7,7 @@ class TestDebugPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
         kwargs.setdefault("message", self._test_message)
-        return DebugPromptResponse.create_echo(**kwargs)
+        return DebugPromptResponse.create_debug(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Debug messages should include the debug symbol

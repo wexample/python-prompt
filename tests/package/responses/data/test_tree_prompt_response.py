@@ -7,21 +7,20 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestTreePromptResponse(AbstractPromptResponseTest):
     """Test cases for TreePromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
-        
-        data = {
+
+        data = kwargs.setdefault("data", {
             "root": {
                 "folder1": {"file1": "content1", "file2": "content2"},
                 "folder2": {"file3": "content3"},
             }
-        }
-        # Tree response has no title; include the test text as an extra leaf to satisfy base assertion
-        data["root"][text] = ""
+        })
+        # Ensure test message is present in the tree to satisfy base assertion
+        data["root"][kwargs.pop("message", self._test_message)] = ""
         return TreePromptResponse.create_tree(
-            data=data,
             **kwargs
         )
 

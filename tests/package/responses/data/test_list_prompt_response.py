@@ -7,15 +7,13 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestListPromptResponse(AbstractPromptResponseTest):
     """Test cases for ListPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
 
-        return ListPromptResponse.create_list(
-            items=[text],
-            **kwargs
-        )
+        kwargs.setdefault("items", [self._test_message])
+        return ListPromptResponse.create_list(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # List should show bullet points

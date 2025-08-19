@@ -7,23 +7,19 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestTablePromptResponse(AbstractPromptResponseTest):
     """Test cases for TablePromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
 
-        headers = ["Name", "Age", "City"]
-        data = [
+        kwargs.setdefault("headers", ["Name", "Age", "City"])
+        kwargs.setdefault("data", [
             ["John", "30", "New York"],
             ["Jane", "25", "San Francisco"],
             ["Bob", "35", "Chicago"],
-        ]
-        return TablePromptResponse.create_table(
-            data=data,
-            headers=headers,
-            title=text,
-            **kwargs
-        )
+        ])
+        kwargs.setdefault("title", self._test_message)
+        return TablePromptResponse.create_table(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Should include table borders/separators

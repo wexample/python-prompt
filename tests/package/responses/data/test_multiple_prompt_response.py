@@ -7,7 +7,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestMultiplePromptResponse(AbstractPromptResponseTest):
     """Test multiple prompt response."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.data.multiple_prompt_response import (
             MultiplePromptResponse,
         )
@@ -15,8 +15,12 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
             LogPromptResponse,
         )
 
+        message = kwargs.pop("message", self._test_message)
+        responses = kwargs.pop("responses", [
+            LogPromptResponse.create_log(message=message)
+        ])
         return MultiplePromptResponse.create_multiple(
-            responses=[LogPromptResponse.create_log(text, **{k: v for k, v in kwargs.items() if k != 'context'})],
+            responses=responses,
             **kwargs
         )
 
