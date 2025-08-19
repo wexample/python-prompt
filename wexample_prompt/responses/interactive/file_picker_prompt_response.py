@@ -82,25 +82,3 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             verbosity=verbosity,
         )
         return new
-
-    def execute(self) -> Optional[str]:
-        selected = self.ask()
-        if not selected:
-            return None
-
-        full_path = os.path.join(self.base_dir, selected)
-
-        if os.path.isdir(full_path):
-            # If selecting directories only, selecting a dir returns it.
-            if self.mode == FilePickerMode.DIRS:
-                return full_path
-            # Otherwise, navigate into the directory.
-            next_response = self.__class__.create_file_picker(
-                base_dir=full_path,
-                question=self.question or "Select a file:",
-                abort=self.abort_option,
-                mode=self.mode,
-            )
-            return next_response.execute()
-
-        return full_path
