@@ -91,13 +91,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # Compute box width: prefer explicit width, else context width, else content-based with a floor
         width = context.get_width()
 
-        parts = []
-        order = [k for k in ["y", "Y", "n"] if k in self.options]
-        order += [k for k in self.options.keys() if k not in order]
-        for k in order:
-            _, label = self.options[k]
-            parts.append(f"[{k}: {label}]")
-        options_text = " / ".join(parts)
+        # Build options text in the order provided by the mapping (insertion order)
+        parts: list[tuple[str, str, str]] = []  # (key, value, label)
+        for k, (v, label) in self.options.items():
+            parts.append((k, v, label))
+        options_text = " / ".join([f"[{k}: {label}]" for k, _, label in parts])
 
         content_width = max(len(self.question), len(options_text))
         min_width = max(45, content_width + 4)
@@ -129,14 +127,25 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # empty line
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
-        # options line centered
-        self.lines.append(
-            PromptResponseLine(
-                segments=[
-                    PromptResponseSegment(text=center(options_text), color=TerminalColor.WHITE),
-                ]
-            )
-        )
+        # options line centered; highlight default_value if set
+        left_pad = max((box_width - len(options_text)) // 2, 0)
+        option_segments: list[PromptResponseSegment] = []
+        if left_pad:
+            option_segments.append(PromptResponseSegment(text=(" " * left_pad), color=TerminalColor.RESET))
+        for idx, (k, v, label) in enumerate(parts):
+            text = f"[{k}: {label}]"
+            if self.default_value is not None and v == self.default_value:
+                option_segments.append(
+                    PromptResponseSegment(text=text, color=TerminalColor.LIGHT_WHITE, styles=[TextStyle.BOLD])
+                )
+            else:
+                option_segments.append(
+                    PromptResponseSegment(text=text, color=TerminalColor.WHITE)
+                )
+            if idx < len(parts) - 1:
+                option_segments.append(PromptResponseSegment(text=" / ", color=TerminalColor.WHITE))
+
+        self.lines.append(PromptResponseLine(segments=option_segments))
         # empty line
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))

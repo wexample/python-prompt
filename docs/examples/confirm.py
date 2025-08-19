@@ -8,7 +8,7 @@ if __name__ == "__main__":
     res = io.confirm(
         question="Do you want to continue?",
         choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
-        default_value="y",
+        default="yes",
         reset_on_finish=True,
     ).ask()
     print(f"Answer: {res}")
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     res2 = io.confirm(
         question="Proceed with all operations?",
         choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
-        default_value="y",
+        default="ok",
         reset_on_finish=True,
     ).ask()
     print(f"Answer 2: {res2}")
