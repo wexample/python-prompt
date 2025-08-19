@@ -34,3 +34,49 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         # Empty lines (1) + root (1) + folder1 (5 files) + folder2 (3 file) + test text (1) + empty (2)
         return 13
+
+    def test_empty_tree(self):
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
+        response = TreePromptResponse.create_tree(data={})
+        rendered = response.render()
+        assert rendered.strip() == ""
+
+    def test_single_node(self):
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
+        data = {"root": "value"}
+        response = TreePromptResponse.create_tree(data=data)
+        rendered = response.render()
+        self._assert_contains_text(rendered, "root")
+        self._assert_contains_text(rendered, "value")
+
+    def test_deep_nesting(self):
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
+        data = {"level1": {"level2": {"level3": {"level4": "value"}}}}
+        response = TreePromptResponse.create_tree(data=data)
+        rendered = response.render()
+        for key in ("level1", "level2", "level3", "level4"):
+            self._assert_contains_text(rendered, key)
+        self._assert_contains_text(rendered, "value")
+        # Indentation should increase with depth
+        lines = [l for l in rendered.split("\n") if l.strip()]
+        indents = [len(line) - len(line.lstrip()) for line in lines]
+        assert sorted(indents) == indents
+
+    def test_none_values(self):
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
+        data = {"root": {"valid": "value", "none": None}}
+        response = TreePromptResponse.create_tree(data=data)
+        rendered = response.render()
+        self._assert_contains_text(rendered, "root")
+        self._assert_contains_text(rendered, "valid")
+        self._assert_contains_text(rendered, "value")
+        self._assert_contains_text(rendered, "none")
+        assert "None" not in rendered
