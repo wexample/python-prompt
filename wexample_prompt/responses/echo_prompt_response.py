@@ -35,6 +35,7 @@ class EchoPromptResponse(AbstractPromptResponse):
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         # No style on echo.
+        context = self._create_context_if_missing(context=context)
         context.colorized = False
 
         return super().render(
