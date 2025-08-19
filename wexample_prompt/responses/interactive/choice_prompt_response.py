@@ -154,8 +154,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     prefix_styles = [TextStyle.BOLD] if is_selected else []
 
                 # Title styling
-                # - normal: WHITE
-                # - selected: LIGHT_WHITE + BOLD for better readability/contrast
                 title_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                 title_styles = [TextStyle.BOLD] if is_selected else []
 
