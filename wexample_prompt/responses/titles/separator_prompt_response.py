@@ -85,7 +85,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         return SeparatorExample
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        width = self.width or context.width
+        width = self.width or context.get_width()
         length = width - len(context.render_indentation_text())
         if self.separator_response_label:
             length -= len(self.separator_response_label.text)

@@ -181,7 +181,9 @@ class IoManager(
     def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
         from wexample_prompt.common.prompt_context import PromptContext
         context = context or PromptContext()
-        context.indentation = self.indentation
+
+        context.indentation = context.indentation or self.indentation
+        context.width = context.width or self.terminal_width
 
         return self.output.print(
             response=response,

@@ -58,7 +58,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         context = PromptContext.create_if_none(context=context)
 
         # Determine content width
-        total_width = context.width
+        total_width = context.get_width()
         content_width = max(10, total_width - 2)
 
         max_key_width = 0

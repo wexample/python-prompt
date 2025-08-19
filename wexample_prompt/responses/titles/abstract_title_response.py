@@ -79,19 +79,14 @@ class AbstractTitleResponse(AbstractMessageResponse):
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        ctx = context
+        from wexample_prompt.common.prompt_context import PromptContext
+        context = PromptContext.create_if_none(context=context)
+
         # Prefer provided context, else defer to super to resolve any defaulting
-        width = self.width or (ctx.width if ctx else None)
-        if width is None and ctx is None:
-            # Ask parent to get a default context/width by rendering once without modification
-            # but we still need a width; fallback to 80
-            width = 80
+        width = self.width or context.get_width()
 
         # Compute remaining space after prefix + text and indentation
-        if ctx is not None:
-            remaining = width - len(ctx.render_indentation_text())
-        else:
-            remaining = width
+        remaining = width - len(context.render_indentation_text())
 
         remaining -= len(self.prefix_segment.text)
         remaining -= len(self.text_segment.text)

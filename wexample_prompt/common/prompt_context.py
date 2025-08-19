@@ -43,7 +43,7 @@ class PromptContext(ExtendedBaseModel):
         description="The context verbosity, saying which response to render or not"
     )
     width: Optional[int] = Field(
-        default=DEFAULT_WIDTH,
+        default=None,
         description="Context with, basically the terminal with including indentation"
     )
     formatting: Optional[bool] = Field(
@@ -109,6 +109,10 @@ class PromptContext(ExtendedBaseModel):
 
     def render_indentation_part(self) -> str:
         return self.get_indentation_character() * (self.get_indentation() * self.indentation_length)
+
+    def get_width(self) -> int:
+        # None width allowed to let know that no fixed width has been specified before using it.
+        return self.width or PromptContext.DEFAULT_WIDTH
 
     def get_indentation(self) -> int:
         if self.indentation is None:

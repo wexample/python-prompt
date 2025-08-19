@@ -1,5 +1,5 @@
 """Progress bar response implementation."""
-from typing import List, Callable, Optional, Any, ClassVar, Type
+from typing import Optional, ClassVar, Type
 
 from pydantic import Field
 
@@ -8,10 +8,6 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.progress.step_progress_context import (
-    ProgressStep,
-    StepProgressContext,
-)
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
@@ -25,7 +21,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
     # Instance fields
     total: int = Field(description="Total number of items (must be > 0)")
     current: int = Field(description="Current progress (must be >= 0)")
-    width: int = Field(default=50, description="Width of the progress bar in characters")
+    width: Optional[int] = Field(default=None, description="Width of the progress bar in characters")
     label: Optional[str] = Field(default=None, description="Optional label displayed before the bar")
     color: Optional[TerminalColor] = Field(default=None, description="Optional color applied to the bar")
 
@@ -45,7 +41,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             cls,
             total: int,
             current: int,
-            width: int = 50,
+            width: Optional[int] = None,
             label: Optional[str] = None,
             color: Optional[TerminalColor] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
@@ -54,7 +50,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             raise ValueError("Total must be greater than 0")
         if current < 0:
             raise ValueError("Current progress cannot be negative")
-        if width < 1:
+        if width is not None and width < 1:
             raise ValueError("Width must be at least 1")
 
         return cls(
@@ -68,9 +64,10 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+        width = self.width or context.get_width()
         current = min(self.current, self.total)
         percentage = min(100, int(100 * current / self.total))
-        filled = int(self.width * current / self.total)
+        filled = int(width * current / self.total)
 
         context = PromptContext.create_if_none(context=context)
         if context.colorized and self.color:
@@ -81,46 +78,9 @@ class ProgressPromptResponse(AbstractPromptResponse):
             color_suffix = ""
 
         bar = (
-                color_prefix + self.FILL_CHAR * filled + self.EMPTY_CHAR * (self.width - filled) + color_suffix
+                color_prefix + self.FILL_CHAR * filled + self.EMPTY_CHAR * (width - filled) + color_suffix
         )
 
         text = f"{self.label} {bar} {percentage}%" if self.label else f"{bar} {percentage}%"
         self.lines = [PromptResponseLine(segments=[PromptResponseSegment(text=text)])]
         return super().render(context=context)
-
-    # Step helpers below mirror the legacy API. They require ProgressStep/StepProgressContext.
-    @classmethod
-    def create_steps(
-            cls,
-            steps: List["ProgressStep"],
-            width: int = 50,
-            title: Optional[str] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
-    ) -> "StepProgressContext":
-        total_weight = sum(step.weight for step in steps)
-        return StepProgressContext(
-            steps=steps,
-            total_weight=total_weight,
-            width=width,
-            title=title,
-            verbosity=verbosity,
-        )
-
-    @classmethod
-    def execute(
-            cls,
-            callbacks: List[Callable[..., Any]],
-            width: int = 50,
-            title: Optional[str] = None,
-            context: Optional[PromptContext] = None,
-    ) -> List[Any]:
-        steps: List["ProgressStep"] = []
-        for callback in callbacks:
-            import inspect
-
-            doc = inspect.getdoc(callback)
-            description = doc.split("\n")[0] if doc else callback.__name__
-            steps.append(ProgressStep(callback=callback, description=description, weight=1))
-
-        with cls.create_steps(steps, width, title, context) as progress:
-            return progress.execute_steps()

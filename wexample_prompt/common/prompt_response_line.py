@@ -60,7 +60,7 @@ class PromptResponseLine(ExtendedBaseModel):
 
     def _compute_max_content_width(self, context: PromptContext, indentation: str) -> Optional[int]:
         """Compute the maximum visible width available for content on a line, or None if unbounded."""
-        return max(0, (context.width or 0) - self._visible_len(indentation)) if context.width else None
+        return max(0, (context.get_width()) - self._visible_len(indentation)) if context.width else None
 
     def _render_unbounded(self, context: PromptContext, indentation: str) -> str:
         """Render without width restriction (no wrapping)."""

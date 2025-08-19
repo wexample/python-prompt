@@ -53,7 +53,7 @@ class WithIoManager:
                 self._io_parent_context.verbosity if self._io_parent_context is not None else PromptContext.DEFAULT_VERBOSITY),
             "width": self.get_io_context_indentation_width()
                      or (self._io_parent_context.width if self._io_parent_context is not None else None)
-                     or (self._io.terminal_width if self._io else PromptContext.DEFAULT_WIDTH)
+                     or (self._io.terminal_width if self._io else None)
         }
 
         defaults.update(kwargs)
