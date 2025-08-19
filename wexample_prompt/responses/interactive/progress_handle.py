@@ -29,8 +29,7 @@ class ProgressHandle(ExtendedBaseModel):
             color: Optional["TerminalColor"] = None,
             auto_render: bool = True,
     ) -> "ProgressHandle":
-        """Update progress fields and optionally re-render.
-        """
+        """Update progress fields and optionally re-render."""
         if current is not None:
             self.response.current = max(0, current)
         if label is not None:
