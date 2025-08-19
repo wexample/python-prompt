@@ -21,8 +21,6 @@ from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_
     ChoicePromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import \
     ConfirmPromptResponseManagerMixin
-from wexample_prompt.mixins.response.interactive.dir_picker_prompt_response_manager_mixin import \
-    DirPickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_manager_mixin import \
     FilePickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import \
@@ -82,7 +80,6 @@ class IoManager(
     TreePromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
-    DirPickerPromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
     ConfirmPromptResponseManagerMixin,
