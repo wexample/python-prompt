@@ -106,7 +106,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             reset_on_finish=reset_on_finish,
         )
 
-    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> Optional[str | int]:
+    def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
 
@@ -117,7 +117,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         if not self.choices:
             # Nothing to choose from
-            return None
+            self._rendered_content = None
+            return
 
         # Resolve index for a target (match by value, title, or integer index)
         def _resolve_index_for(target: Any) -> int:
@@ -198,7 +199,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             if answer is not None:
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                return answer
+                self._rendered_content = answer
+                return
 
             key = self._read_key()
             if key == readchar.key.UP:
@@ -210,15 +212,18 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 if selected.value == ChoiceValue.ABORT:
                     if self.reset_on_finish and printed_lines > 0:
                         self._partial_clear(printed_lines)
-                    return None
+                    self._rendered_content = None
+                    return
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                return selected.value
+                self._rendered_content = selected.value
+                return
             elif key in (readchar.key.ESC, "q", "Q"):
                 # Quick abort with ESC or q/Q
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)
-                return None
+                self._rendered_content = None
+                return
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:

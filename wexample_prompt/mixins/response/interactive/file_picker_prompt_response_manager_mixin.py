@@ -1,5 +1,5 @@
 """Mixin for managing file picker prompt responses."""
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -22,6 +22,7 @@ class FilePickerPromptResponseManagerMixin:
             allow_parent_selection: bool = False,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
+            answer: Any = None,
             **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
@@ -36,10 +37,12 @@ class FilePickerPromptResponseManagerMixin:
             **kwargs,
         )
 
-        return self.print_response(
-            response=response,
+        response.ask(
             context=FilePickerPromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            answer=answer
         )
+
+        return response
