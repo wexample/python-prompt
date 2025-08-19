@@ -1,9 +1,10 @@
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple, List
 
 from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.text_style import TextStyle
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -18,6 +19,10 @@ class PromptResponseSegment(ExtendedBaseModel):
         default=None,
         description="The color to apply to segment on rendering, if allowed by context"
     )
+    styles: List[TextStyle] = Field(
+        default_factory=list,
+        description="Optional text styles (bold, italic, underline, etc.) to apply when rendering"
+    )
 
     def render(self, context: "PromptContext", line_remaining_width: int) -> Tuple[str, Optional["PromptResponseSegment"]]:
         """Render the segment respecting the remaining width for the current line.
@@ -29,15 +34,22 @@ class PromptResponseSegment(ExtendedBaseModel):
         # Split the RAW text by visible width first (no ANSI involved yet)
         fit_raw, remainder_raw = self._split_by_visible_width(self.text, line_remaining_width)
 
-        # Colorize the part that fits (and the remainder will be colorized later when rendered on next line)
+        # Apply styles and color if allowed by context (single reset at the end)
         rendered_fit = fit_raw
-        if self.color and context.colorized and fit_raw:
-            from wexample_prompt.common.color_manager import ColorManager
-            rendered_fit = ColorManager.colorize(fit_raw, self.color)
+        if context.colorized and fit_raw:
+            prefix = ""
+            # Color code first (colorama Fore/Style strings)
+            if self.color:
+                prefix += str(self.color)
+            # Additional ANSI style codes (italic, underline, etc.)
+            if self.styles:
+                prefix += "".join(self._get_ansi_code(style) for style in self.styles)
+            if prefix:
+                rendered_fit = f"{prefix}{fit_raw}\033[0m"
 
         remainder_seg = None
         if remainder_raw:
-            remainder_seg = PromptResponseSegment(text=remainder_raw, color=self.color)
+            remainder_seg = PromptResponseSegment(text=remainder_raw, color=self.color, styles=list(self.styles))
         return rendered_fit, remainder_seg
 
     def _split_by_visible_width(self, text: str, width: int) -> Tuple[str, str]:
@@ -51,3 +63,17 @@ class PromptResponseSegment(ExtendedBaseModel):
         if len(text) <= width:
             return text, ""
         return text[:width], text[width:]
+
+    @staticmethod
+    def _get_ansi_code(style: TextStyle) -> str:
+        """Map TextStyle to ANSI code without reset."""
+        style_codes = {
+            TextStyle.BOLD: "\033[1m",
+            TextStyle.ITALIC: "\033[3m",
+            TextStyle.UNDERLINE: "\033[4m",
+            TextStyle.STRIKETHROUGH: "\033[9m",
+            TextStyle.DIM: "\033[2m",
+            TextStyle.REVERSE: "\033[7m",
+            TextStyle.HIDDEN: "\033[8m",
+        }
+        return style_codes.get(style, "")
