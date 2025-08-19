@@ -86,9 +86,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
                 context=context,
             )
 
-        # Should happen rarely, context should not change for the same progress bar.
-        if context != self._handle.context:
-            raise ValueError("Context should not change across same progress renderings")
+        # In case of context change.
+        self._handle.context = context
 
         # Progress values
         current = min(self.current, self.total)

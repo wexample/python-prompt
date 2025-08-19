@@ -30,3 +30,11 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
                 message=self._test_message_multiline
             )
         )
+
+    def test_echo_width(self):
+        assert self._io.terminal_width is not None
+
+        # Echo a string using the terminal with length
+        response = self._io.echo(message=(self._io.terminal_width * "!"))
+        # It should print only one line.
+        self._assert_rendered_lines_count(response=response, lines_count=1)
