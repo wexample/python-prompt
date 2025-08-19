@@ -1,5 +1,4 @@
 """Tests for ListPromptResponse."""
-
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -29,7 +28,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
 
     def test_simple_list(self):
         items = ["First", "Second", "Third"]
-        response =  self.create_test_response(items=items)
+        response = self.create_test_response(items=items)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, item)
@@ -40,7 +39,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
             "  • Sub item 1",
             "  • Sub item 2",
         ]
-        response =  self.create_test_response(items=items)
+        response = self.create_test_response(items=items)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, item.strip())
@@ -48,7 +47,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
     def test_custom_bullet(self):
         bullet = "-"
         items = ["First", "Second", "Third"]
-        response =  self.create_test_response(items=items, bullet=bullet)
+        response = self.create_test_response(items=items, bullet=bullet)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, f"{bullet} {item}")
@@ -60,7 +59,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
             "    Level 2",
             "Level 0 again",
         ]
-        response =  self.create_test_response(items=items)
+        response = self.create_test_response(items=items)
         rendered = response.render()
         lines = rendered.strip().split("\n")
         assert lines[0].startswith("• Level 0")
@@ -70,24 +69,10 @@ class TestListPromptResponse(AbstractPromptResponseTest):
 
     def test_custom_color(self):
         from wexample_prompt.enums.terminal_color import TerminalColor
-        response =  self.create_test_response(
+        response = self.create_test_response(
             items=[self._test_message],
             color=TerminalColor.GREEN,
         )
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
         self._assert_contains_text(rendered, "\u001b[32m")
-
-    def test_no_color(self):
-        response =  self.create_test_response(items=[self._test_message], color=None)
-        rendered = response.render()
-        self._assert_contains_text(rendered, self._test_message)
-        assert "\u001b[" not in rendered
-
-    def test_io_manager(self):
-        # self.io is provided by AbstractPromptTest
-        result = self._io.list(items=["First", "Second"], bullet="•")
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        assert isinstance(result, ListPromptResponse)

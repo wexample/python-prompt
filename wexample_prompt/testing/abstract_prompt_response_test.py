@@ -33,6 +33,15 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Assert format specific to this response type."""
         pass
 
+    def _assert_no_color_codes(self, text: str):
+        """Assert that a string contains no ANSI escape sequences (colors/styles)."""
+        import re
+        # Generic ANSI escape sequence regex (covers CSI, OSC, and single-char escapes)
+        ansi_pattern = re.compile(
+            r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])"
+        )
+        assert not ansi_pattern.search(text), f"Unexpected ANSI escape sequences found in: {text!r}"
+
     def test_response_class(self):
         """Test response class behavior."""
         response = self.create_test_response()
@@ -42,6 +51,12 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         self._assert_contains_text(rendered, self._test_message)
         self._assert_specific_format(rendered)
 
+
+    def test_no_color(self):
+        from wexample_prompt.common.prompt_context import PromptContext
+        response = self.create_test_response()
+        rendered = response.render(context=PromptContext(colorized=False))
+        self._assert_no_color_codes(rendered)
 
     def test_verbosity(self):
         from wexample_prompt.common.prompt_context import PromptContext
