@@ -28,3 +28,56 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         # Empty lines (2) + title (1) + header (1) + 2 separators + 3 data rows
         return 9
+
+    def test_create_table_without_headers(self):
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
+        response = TablePromptResponse.create_table(
+            data=[
+                ["John", "30", "New York"],
+                ["Jane", "25", "San Francisco"],
+            ]
+        )
+        rendered = response.render()
+        self._assert_contains_text(rendered, "John")
+        self._assert_contains_text(rendered, "30")
+        self._assert_contains_text(rendered, "New York")
+
+    def test_empty_table(self):
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
+        response = TablePromptResponse.create_table(data=[])
+        rendered = response.render()
+        assert rendered.strip() == ""
+
+    def test_single_column(self):
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
+        data = [["Row 1"], ["Row 2"]]
+        headers = ["Header"]
+        response = TablePromptResponse.create_table(data=data, headers=headers)
+        rendered = response.render()
+        self._assert_contains_text(rendered, "Header")
+        self._assert_contains_text(rendered, "Row 1")
+        self._assert_contains_text(rendered, "Row 2")
+
+    def test_column_alignment(self):
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
+        response = TablePromptResponse.create_table(
+            data=[
+                ["John", "30", "New York"],
+                ["Jane", "25", "San Francisco"],
+            ],
+            headers=["Name", "Age", "City"],
+        )
+        rendered = response.render()
+        lines = [l for l in rendered.split("\n") if l.strip()]
+        for line in lines:
+            if not line.startswith("+"):
+                assert line.startswith("|")
+                assert line.endswith("|")
