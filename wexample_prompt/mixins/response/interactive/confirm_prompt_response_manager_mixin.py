@@ -14,9 +14,9 @@ class ConfirmPromptResponseManagerMixin:
     def confirm(
             self: "IoManager",
             question: str = "Please confirm:",
-            choices: Optional[Dict[str, str]] = None,
-            preset: Optional[str] = None,
+            choices: Optional[Dict[str, tuple]] = None,
             default: Optional[str] = None,
+            width: Optional[int] = None,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             **kwargs: Any,
@@ -25,9 +25,9 @@ class ConfirmPromptResponseManagerMixin:
 
         response = ConfirmPromptResponse.create_confirm(
             question=question,
-            preset=preset,
             choices=choices,
             default=default,
+            width=width,
             reset_on_finish=reset_on_finish,
         )
 

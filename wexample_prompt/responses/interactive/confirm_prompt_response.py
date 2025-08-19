@@ -1,5 +1,5 @@
 """Confirmation dialog interactive response (box style)."""
-from typing import Any, Dict, Optional, Tuple, Type
+from typing import Any, Dict, Optional, Tuple, Type, ClassVar
 
 from pydantic import Field
 
@@ -16,6 +16,25 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     """Confirmation dialog with a boxed layout and keyboard shortcuts."""
+
+    # Preset mappings (key -> (value, label))
+    MAPPING_PRESET_YES_NO: ClassVar[Dict[str, Tuple[str, str]]] = {
+        "y": ("yes", "Yes"),
+        "n": ("no", "No"),
+    }
+    MAPPING_PRESET_OK_CANCEL: ClassVar[Dict[str, Tuple[str, str]]] = {
+        "y": ("ok", "Ok"),
+        "n": ("cancel", "Cancel"),
+    }
+    MAPPING_PRESET_YES_NO_ALL: ClassVar[Dict[str, Tuple[str, str]]] = {
+        "y": ("yes", "Yes"),
+        "Y": ("yes_all", "Yes for all"),
+        "n": ("no", "No"),
+    }
+    MAPPING_PRESET_CONTINUE_CANCEL: ClassVar[Dict[str, Tuple[str, str]]] = {
+        "y": ("continue", "Continue"),
+        "n": ("cancel", "Cancel"),
+    }
 
     question: str = Field(
         default="Please confirm:",
@@ -45,37 +64,18 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def create_confirm(
             cls,
             question: str = "Please confirm:",
-            preset: Optional[str] = None,
-            choices: Optional[Dict[str, str]] = None,
+            choices: Optional[Dict[str, Tuple[str, str]]] = None,
             default: Optional[str] = None,
             width: Optional[int] = None,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
     ) -> "ConfirmPromptResponse":
-        """Create a confirmation dialog configured either by preset or explicit choices."""
-        mapping: Dict[str, Tuple[str, str]]
-        if choices is not None:
-            # Heuristic: map y to first key, n to second, Y to third if present
-            items = list(choices.items())
-            mapping = {}
-            if len(items) >= 1:
-                mapping["y"] = (items[0][0], items[0][1])
-            if len(items) >= 2:
-                mapping["n"] = (items[1][0], items[1][1])
-            if len(items) >= 3:
-                mapping["Y"] = (items[2][0], items[2][1])
-        else:
-            preset = preset or "yes_no"
-            if preset == "yes_no":
-                mapping = {"y": ("yes", "Yes"), "n": ("no", "No")}
-            elif preset == "ok_cancel":
-                mapping = {"y": ("ok", "Ok"), "n": ("cancel", "Cancel")}
-            elif preset == "yes_no_all":
-                mapping = {"y": ("yes", "Yes"), "Y": ("yes_all", "Yes for all"), "n": ("no", "No")}
-            elif preset == "continue_cancel":
-                mapping = {"y": ("continue", "Continue"), "n": ("cancel", "Cancel")}
-            else:
-                raise ValueError(f"Unknown confirm preset: {preset}")
+        """Create a confirmation dialog with explicit key mappings.
+
+        choices expects a mapping of key -> (value, label).
+        If not provided, defaults to MAPPING_PRESET_YES_NO for convenience.
+        """
+        mapping: Dict[str, Tuple[str, str]] = choices or cls.MAPPING_PRESET_YES_NO
 
         return cls(
             question=question,
@@ -112,7 +112,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # top border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
         # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+        self.lines.append(
+            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
         # question line centered
         self.lines.append(
             PromptResponseLine(
@@ -126,7 +127,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
         # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+        self.lines.append(
+            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
         # options line centered
         self.lines.append(
             PromptResponseLine(
@@ -136,7 +138,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
         # empty line
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+        self.lines.append(
+            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
         # bottom border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
 
