@@ -26,19 +26,19 @@ class ErrorPromptResponse(AbstractMessageResponse):
     ) -> "ErrorPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
-        # Build a simple text from message and/or exception.
-        # Priority: explicit message > exception message > generic fallback.
-        if message is not None and message != "":
-            text = message
-        elif exception is not None:
-            # Keep it simple for now: just str(exception)
-            # (later we can add type and traceback formatting)
-            try:
-                text = str(exception) if str(exception) else exception.__class__.__name__
-            except Exception:
-                text = exception.__class__.__name__
+        # Build text using helpers when we have an exception; otherwise use the plain message or a fallback.
+        if exception is not None:
+            # Use existing debug/trace helpers to format the exception directly.
+            # We keep the response color neutral so helper formatting (incl. ANSI) can pass through untouched.
+            from wexample_helpers.helpers.error import error_format
+
+            formatted = error_format(error=exception)
+            if message is not None and message != "":
+                text = f"{message}\n{formatted}"
+            else:
+                text = formatted
         else:
-            text = "An error occurred"
+            text = message if (message is not None and message != "") else "An error occurred"
 
         return cls._create_symbol_message(
             text=text,
