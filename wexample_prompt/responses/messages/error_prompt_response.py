@@ -6,10 +6,16 @@ from wexample_prompt.responses.messages.abstract_message_response import Abstrac
 if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class ErrorPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "❌"
+
+    @classmethod
+    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+        from wexample_prompt.example.response.messages.error_example import ErrorExample
+        return ErrorExample
 
     @classmethod
     def create_error(
@@ -41,7 +47,11 @@ class ErrorPromptResponse(AbstractMessageResponse):
             verbosity=verbosity
         )
 
-    @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.messages.error_example import ErrorExample
-        return ErrorExample
+    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+        # No style on echo.
+        context = self._create_context_if_missing(context=context)
+        context.colorized = False
+
+        return super().render(
+            context=context,
+        )
