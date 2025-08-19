@@ -124,10 +124,17 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             return 0
 
         idx = _resolve_default_index()
+        printed_lines = 0  # how many lines we printed last frame
 
         while True:
-            # Clear screen and rebuild lines
-            print("\033c", end="")
+            # Clear only our previous render block (not the whole screen)
+            if printed_lines > 0:
+                # Move cursor up 'printed_lines' and clear to end of screen
+                # \033[{n}F moves to the beginning of the n-th previous line
+                # \033[J clears from cursor to end of screen
+                print(f"\033[{printed_lines}F\033[J", end="")
+
+            # Rebuild lines for this frame
             self.lines = [self.question_line]
 
             for i, choice in enumerate(self.choices):
@@ -179,7 +186,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             )
             self.lines.append(controls_line)
 
-            print(self.render(context=context))
+            rendered = self.render(context=context)
+            print(rendered)
+            # Count how many lines we just printed to clear them next frame
+            printed_lines = rendered.count("\n") + 1
 
             key = readchar.readkey()
             if key == readchar.key.UP:
