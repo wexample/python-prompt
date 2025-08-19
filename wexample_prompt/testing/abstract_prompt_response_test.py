@@ -42,3 +42,19 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         self._assert_contains_text(rendered, self._test_message)
         self._assert_specific_format(rendered)
 
+
+    def test_verbosity(self):
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
+        response = self.create_test_response(
+            verbosity=VerbosityLevel.MAXIMUM
+        )
+
+        rendered = response.render(
+            context=PromptContext(
+                verbosity=VerbosityLevel.QUIET
+            )
+        )
+
+        assert rendered is None
