@@ -7,6 +7,7 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -51,6 +52,7 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
                     PromptResponseSegment(
                         text=self.message,
                         color=TerminalColor.BLUE,
+                        styles=[TextStyle.BOLD],
                     )
                 ]
             )
@@ -65,7 +67,10 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
                             text=f"  {self.arrow_style} ",
                             color=TerminalColor.CYAN,
                         ),
-                        PromptResponseSegment(text=suggestion),
+                        PromptResponseSegment(
+                            text=suggestion,
+                            styles=[TextStyle.BOLD],
+                        ),
                     ]
                 )
             )

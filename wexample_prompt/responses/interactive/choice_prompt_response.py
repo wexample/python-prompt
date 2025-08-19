@@ -2,13 +2,12 @@
 from typing import Any, List, Optional, Dict, Union, Type, TYPE_CHECKING
 
 from InquirerPy.base.control import Choice
-from InquirerPy.utils import InquirerPyDefault
 from pydantic import Field
 
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
@@ -56,6 +55,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     PromptResponseSegment(
                         text=question,
                         color=color or TerminalColor.BLUE,
+                        styles=[TextStyle.BOLD],
                     )
                 ]
             )
@@ -72,7 +72,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     segments=[
                         PromptResponseSegment(
                             text=f"  {i + 1}. → ",
-                            color=TerminalColor.CYAN
+                            color=TerminalColor.CYAN,
+                            styles=[TextStyle.DIM]
                         ),
                         PromptResponseSegment(
                             text=choice_text,
