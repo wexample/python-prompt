@@ -22,6 +22,10 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         default=None,
         description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label)."
     )
+    allow_parent_selection: bool = Field(
+        default=False,
+        description="If True, include '..' as a selectable entry at the top; otherwise hide it."
+    )
 
     @classmethod
     def get_example_class(cls) -> Type:
@@ -35,6 +39,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             question: str = "Select a file:",
             abort: Optional[bool | str] = None,
             mode: FilePickerMode = FilePickerMode.BOTH,
+            allow_parent_selection: bool = False,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
@@ -54,7 +59,9 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         except Exception:
             pass
 
-        merged: Dict[str, str] = {"..": ".."}
+        merged: Dict[str, str] = {}
+        if allow_parent_selection:
+            merged[".."] = ".."
         for name in sorted(dirs.keys(), key=str.casefold):
             merged[name] = dirs[name]
         for name in sorted(files.keys(), key=str.casefold):

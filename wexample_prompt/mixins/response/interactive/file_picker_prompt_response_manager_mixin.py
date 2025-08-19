@@ -19,6 +19,7 @@ class FilePickerPromptResponseManagerMixin:
             base_dir: Optional[str] = None,
             abort: Optional[bool | str]  = None,
             mode: FilePickerMode = FilePickerMode.BOTH,
+            allow_parent_selection: bool = False,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":
@@ -29,6 +30,7 @@ class FilePickerPromptResponseManagerMixin:
             base_dir=base_dir,
             abort=abort,
             mode=mode,
+            allow_parent_selection=allow_parent_selection,
             **kwargs,
         )
 
