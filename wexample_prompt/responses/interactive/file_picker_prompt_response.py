@@ -40,6 +40,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             abort: Optional[bool | str] = None,
             mode: FilePickerMode = FilePickerMode.BOTH,
             allow_parent_selection: bool = False,
+            reset_on_finish: bool = False,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
@@ -74,6 +75,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             default=None,
             abort=abort,
             verbosity=verbosity,
+            reset_on_finish=reset_on_finish,
         )
 
         new = cls(
@@ -87,5 +89,6 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             mode=mode,
             abort_option=abort,
             verbosity=verbosity,
+            reset_on_finish=reset_on_finish,
         )
         return new

@@ -41,6 +41,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The line that displays the question"
     )
+    reset_on_finish: bool = Field(
+        default=False,
+        description="If True, clears the prompt block from the terminal after a selection or abort."
+    )
 
     @classmethod
     def create_choice(
@@ -50,6 +54,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,
             color: Optional[TerminalColor] = None,
+            reset_on_finish: bool = False,
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
         """Factory to create a ChoicePromptResponse."""
@@ -102,6 +107,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             default=default,
             question=question,
             verbosity=verbosity,
+            reset_on_finish=reset_on_finish,
         )
 
     def ask(self, context: Optional["PromptContext"] = None, answer: Any = None) -> Optional[str | int]:
@@ -200,6 +206,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
             # If an answer is injected (non-interactive mode), return it as-is
             if answer is not None:
+                if self.reset_on_finish and printed_lines > 0:
+                    print(f"\033[{printed_lines}F\033[J", end="")
                 return answer
 
             key = readchar.readkey()
@@ -210,10 +218,16 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             elif key in (readchar.key.ENTER, "\r", "\n"):
                 selected = self.choices[idx]
                 if selected.value == ChoiceValue.ABORT:
+                    if self.reset_on_finish and printed_lines > 0:
+                        print(f"\033[{printed_lines}F\033[J", end="")
                     return None
+                if self.reset_on_finish and printed_lines > 0:
+                    print(f"\033[{printed_lines}F\033[J", end="")
                 return selected.value
             elif key in (readchar.key.ESC, "q", "Q"):
                 # Quick abort with ESC or q/Q
+                if self.reset_on_finish and printed_lines > 0:
+                    print(f"\033[{printed_lines}F\033[J", end="")
                 return None
 
     @classmethod
