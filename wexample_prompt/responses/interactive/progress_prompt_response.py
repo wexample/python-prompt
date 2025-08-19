@@ -78,7 +78,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
         percentage = min(100, int(100 * current / self.total))
         filled = int(self.width * current / self.total)
 
-        if self.color:
+        context = self._create_context_if_missing(context=context)
+        if context.colorized and self.color:
             color_prefix = str(self.color)
             color_suffix = "\x1b[0m"
         else:
