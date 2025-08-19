@@ -50,6 +50,7 @@ class ChoiceDictPromptResponse(ChoicePromptResponse):
             inquirer_kwargs=response.inquirer_kwargs,
             question_text=response.question_text,
             original_choices=choices,
+            verbosity=verbosity,
         )
         return new
 
