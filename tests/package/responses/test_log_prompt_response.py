@@ -7,13 +7,11 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
-        return LogPromptResponse.create_log(
-            message=text,
-            **kwargs
-        )
+        kwargs.setdefault("message", self._test_message)
+        return LogPromptResponse.create_log(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Log messages have no specific format to check
@@ -24,7 +22,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
     def test_multiline_log(self):
         message = "Line 1\nLine 2"
-        response = self.create_test_response(message)
+        response = self.create_test_response(message=message)
         rendered = response.render()
 
         self._assert_contains_text(rendered, "Line 1")
@@ -34,7 +32,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         timestamp = "2025-01-04 12:00:00"
         message = f"[{timestamp}] System started"
 
-        response = self.create_test_response(message)
+        response = self.create_test_response(message=message)
         rendered = response.render()
 
         self._assert_contains_text(rendered, timestamp)
@@ -42,7 +40,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
     def test_log_with_level(self):
         message = "[INFO] Application initialized"
-        response = self.create_test_response(message)
+        response = self.create_test_response(message=message)
         rendered = response.render()
 
         self._assert_contains_text(rendered, "[INFO]")
@@ -50,7 +48,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
     def test_single_indentation(self):
         message = "Indented message"
-        response = self.create_test_response(message)
+        response = self.create_test_response(message=message)
         rendered = response.render(
             context=PromptContext(
                 indentation=2
@@ -71,7 +69,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
         # Create response with multiple lines at different indentation levels
         for indent, message in messages:
-            response = self.create_test_response(message)
+            response = self.create_test_response(message=message)
             rendered = response.render(
                 context=PromptContext(
                     indentation=indent

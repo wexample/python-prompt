@@ -7,15 +7,13 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestSuccessPromptResponse(AbstractPromptResponseTest):
     """Test cases for SuccessPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.messages.success_prompt_response import (
             SuccessPromptResponse,
         )
 
-        return SuccessPromptResponse.create_success(
-            message=text,
-            **kwargs
-        )
+        kwargs.setdefault("message", self._test_message)
+        return SuccessPromptResponse.create_success(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Success messages should include the success symbol

@@ -7,15 +7,13 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestFailurePromptResponse(AbstractPromptResponseTest):
     """Test cases for FailurePromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.messages.failure_prompt_response import (
             FailurePromptResponse,
         )
 
-        return FailurePromptResponse.create_failure(
-            message=text,
-            **kwargs
-        )
+        kwargs.setdefault("message", self._test_message)
+        return FailurePromptResponse.create_failure(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Failure messages should include the failure symbol

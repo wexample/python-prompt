@@ -13,7 +13,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         pass
 
     @abstractmethod
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         """Create a response instance."""
         pass
 
@@ -35,7 +35,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def test_response_class(self):
         """Test response class behavior."""
-        response = self.create_test_response(self._test_message)
+        response = self.create_test_response()
         rendered = response.render()
 
         self._assert_common_response_structure(rendered)

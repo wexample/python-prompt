@@ -7,15 +7,13 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestTaskPromptResponse(AbstractPromptResponseTest):
     """Test cases for TaskPromptResponse."""
 
-    def create_test_response(self, text: str, **kwargs) -> AbstractPromptResponse:
+    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
         from wexample_prompt.responses.messages.task_prompt_response import (
             TaskPromptResponse,
         )
 
-        return TaskPromptResponse.create_task(
-            message=text,
-            **kwargs
-        )
+        kwargs.setdefault("message", self._test_message)
+        return TaskPromptResponse.create_task(**kwargs)
 
     def _assert_specific_format(self, rendered: str):
         # Task messages should include the task symbol
