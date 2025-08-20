@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Type, Optional
+from typing import TYPE_CHECKING, Type, Optional, Union, List
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
@@ -14,17 +14,15 @@ class EchoPromptResponse(AbstractPromptResponse):
     @classmethod
     def create_echo(
             cls: "EchoPromptResponse",
-            message: str,
+            message: Union[str, List[str]],
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "EchoPromptResponse":
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
-            lines=[
-                PromptResponseLine.create_from_string(
-                    text=message,
-                )
-            ],
+            lines=PromptResponseLine.create_from_string(
+                text=message,
+            ),
             verbosity=verbosity
         )
 

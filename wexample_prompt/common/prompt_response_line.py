@@ -1,5 +1,5 @@
 """Prompt response line implementation."""
-from typing import List, Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING, Union
 
 from pydantic import Field
 
@@ -20,18 +20,26 @@ class PromptResponseLine(ExtendedBaseModel):
     )
 
     @classmethod
-    def create_from_string(cls, text: str, color: Optional["TerminalColor"] = None) -> "PromptResponseLine":
+    def create_from_string(cls, text: Union[str, List[str]], color: Optional["TerminalColor"] = None) \
+            -> List["PromptResponseLine"]:
         """
             Create a line from a single text string.
         """
-        return cls(
-            segments=[
-                PromptResponseSegment(
-                    text=text,
-                    color=color
-                )
-            ]
-        )
+        if isinstance(text, str):
+            text = [text]
+
+        lines = []
+        for text_line in text:
+            lines.append(cls(
+                segments=[
+                    PromptResponseSegment(
+                        text=text_line,
+                        color=color
+                    )
+                ]
+            ))
+
+        return lines
 
     def render(self, context: PromptContext) -> str:
         """Render the line within the context width, wrapping segments as needed.

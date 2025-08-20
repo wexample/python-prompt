@@ -22,12 +22,10 @@ class LogPromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
-            lines=[
-                PromptResponseLine.create_from_string(
-                    text=message,
-                    color=color or TerminalColor.WHITE
-                )
-            ],
+            lines=PromptResponseLine.create_from_string(
+                text=message,
+                color=color or TerminalColor.WHITE
+            ),
             verbosity=verbosity
         )
 

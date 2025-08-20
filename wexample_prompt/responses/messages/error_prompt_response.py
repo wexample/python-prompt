@@ -53,8 +53,9 @@ class ErrorPromptResponse(AbstractMessageResponse):
 
             # Trace lines: preserve helper formatting (may include ANSI), no extra color
             formatted = error_format(exception)
-            for trace_line in formatted.splitlines():
-                lines.append(PromptResponseLine.create_from_string(trace_line))
+            lines.extend(
+                PromptResponseLine.create_from_string(formatted.splitlines())
+            )
 
             return cls._create(lines=lines, verbosity=verbosity)
         else:
