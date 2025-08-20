@@ -2,10 +2,11 @@ from typing import Any, Callable, Optional, Type, TYPE_CHECKING
 
 from pydantic import Field
 
+from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
@@ -13,9 +14,10 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
 
-class ScreenPromptResponse(AbstractInteractivePromptResponse):
+class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided
     callback, allowing the callback to draw text lines, sleep, and request reload/close."""
 
@@ -33,6 +35,16 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
 
     _closed: bool = False
     _reload_requested: bool = False
+    _io_buffer: "BufferOutputHandler" = False
+
+    def __init__(self, **kwargs):
+        AbstractInteractivePromptResponse.__init__(self, **kwargs)
+        WithIoMethods.__init__(self)
+
+        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+
+        self._io_buffer = BufferOutputHandler()
+        self.io = IoManager(output=self._io_buffer)
 
     @classmethod
     def create_screen(
@@ -54,18 +66,8 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
     def clear(self) -> None:
         self.lines = []
 
-    def print(self, text: str, *, color: Optional[TerminalColor] = None) -> None:
-        self.lines.append(
-            PromptResponseLine(
-                segments=[
-                    PromptResponseSegment(
-                        text=text,
-                        color=color or TerminalColor.RESET,
-                        styles=[],
-                    )
-                ]
-            )
-        )
+    def print(self, text: str) -> None:
+        self._io_buffer.append_rendered(text)
 
     def reload(self) -> None:
         self._reload_requested = True
@@ -87,6 +89,7 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
         try:
             self._reload_requested = False
             self.callback(self)
+            self._render_buffer()
         except Exception as e:
             # If callback errors, close gracefully
             self._closed = True
@@ -95,6 +98,7 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
         while True:
             # Clear previous frame area
             self._partial_clear(printed_lines)
+            self._io_buffer.clear()
 
             # Render and print current lines
             printed_lines = self._print_render(context=context)
@@ -115,6 +119,25 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
             # If callback didn't request reload and not closed, avoid busy loop
             if not self._reload_requested and not self._closed:
                 sleep(0.05)
+
+            self._render_buffer()
+
+    def partial_render(self):
+        self._current_render_partial_render()
+
+    def _render_buffer(self):
+        rendered = self._io_buffer.rendered
+        for text in rendered:
+            if text is not None:
+                self.lines.append(
+                    PromptResponseLine(
+                        segments=[
+                            PromptResponseSegment(
+                                text=text,
+                            )
+                        ]
+                    )
+                )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:

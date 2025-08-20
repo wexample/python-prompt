@@ -22,8 +22,15 @@ class BufferOutputHandler(AbstractOutputHandler):
         return self._buffer_responses
 
     @property
-    def rendered(self) -> str:
+    def rendered(self) -> List[Union[str, None]]:
+        return self._buffer_rendered
+
+    @property
+    def rendered_str(self) -> str:
         return "".join(self._buffer_rendered)
+
+    def append_rendered(self, text: str) -> None:
+        self._buffer_rendered.append(text)
 
     def clear(self) -> None:
         self._buffer_responses = []
@@ -42,6 +49,6 @@ class BufferOutputHandler(AbstractOutputHandler):
 
         # Align with new API: return the rendered output
         rendered_response = response.render(context=context)
-        self._buffer_rendered.append(rendered_response)
+        self.append_rendered(rendered_response)
 
         return rendered_response
