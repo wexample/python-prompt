@@ -30,7 +30,7 @@ if __name__ == "__main__":
                 response.close()
                 return
 
-        sleep(.1)
+        sleep(.01)
         counter["n"] += 1
         if counter["n"] > total:
             response.close()
@@ -39,3 +39,34 @@ if __name__ == "__main__":
 
 
     io.screen(callback=_callback, height=10)
+
+    # --- Minimal shell-based demo: show moving process data for ~10 seconds ---
+    import time
+    import subprocess
+
+    start = time.time()
+
+    def _proc_callback(response: ScreenPromptResponse):
+        response.clear()
+        response.print("Top CPU processes (refresh 1s, ~10s total)")
+
+        try:
+            # Get processes sorted by CPU descending; keep header + 10 rows
+            cmd = [
+                "ps", "-eo", "pid,comm,pcpu,pmem,etime", "--sort=-pcpu"
+            ]
+            res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            lines = [ln for ln in res.stdout.strip().splitlines() if ln.strip()]
+            for ln in lines[:11]:
+                response.print(ln)
+        except Exception as e:
+            response.print(f"Error running ps: {e}")
+
+        if time.time() - start >= 10:
+            response.close()
+            return
+
+        sleep(1.0)
+        response.reload()
+
+    io.screen(callback=_proc_callback, height=14)
