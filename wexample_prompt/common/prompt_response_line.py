@@ -25,19 +25,27 @@ class PromptResponseLine(ExtendedBaseModel):
         """
             Create a line from a single text string.
         """
+        # Normalize input to a list of raw lines without newline characters
+        raw_lines: List[str] = []
         if isinstance(text, str):
-            text = [text]
+            # splitlines() handles \r\n, \r, \n and does not keep separators
+            raw_lines = text.splitlines()
+        else:
+            for item in text:
+                raw_lines.extend(item.splitlines())
 
-        lines = []
-        for text_line in text:
-            lines.append(cls(
-                segments=[
-                    PromptResponseSegment(
-                        text=text_line,
-                        color=color
-                    )
-                ]
-            ))
+        lines: List[PromptResponseLine] = []
+        for raw in raw_lines:
+            lines.append(
+                cls(
+                    segments=[
+                        PromptResponseSegment(
+                            text=raw,
+                            color=color,
+                        )
+                    ]
+                )
+            )
 
         return lines
 
