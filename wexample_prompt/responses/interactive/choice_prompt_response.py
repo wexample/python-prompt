@@ -110,8 +110,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
         from wexample_prompt.common.prompt_context import PromptContext
         context = PromptContext.create_if_none(context=context)
-        # Disable formatting to avoid creating new lines
-        context.formatting = False
 
         if not self.choices:
             # Nothing to choose from

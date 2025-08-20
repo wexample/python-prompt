@@ -179,7 +179,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def render(self, context: Optional["PromptContext"] = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         context = PromptContext.create_if_none(context=context)
-        context.formatting = False
 
         printed = 0
         # render once per frame until a valid key or injected answer

@@ -83,8 +83,6 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             self.io = IoManager(output=self._io_buffer)
 
         context = PromptContext.create_if_none(context=context)
-        # Disable extra formatting to avoid extra lines
-        context.formatting = False
 
         printed_lines = 0
         # First frame: let the callback populate content

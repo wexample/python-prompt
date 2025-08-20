@@ -47,7 +47,7 @@ class PromptContext(ExtendedBaseModel):
         description="Context with, basically the terminal with including indentation"
     )
     formatting: Optional[bool] = Field(
-        default=True,
+        default=False,
         description="Format lines on rendering, should be disabled when passing raw text"
     )
 

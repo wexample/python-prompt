@@ -65,13 +65,3 @@ class ErrorPromptResponse(AbstractMessageResponse):
                 color=(color or TerminalColor.RED),
                 verbosity=verbosity
             )
-
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        from wexample_prompt.common.prompt_context import PromptContext
-        context = PromptContext.create_if_none(context=context)
-        # Disable line truncation.
-        context.formatting = False
-
-        return super().render(
-            context=context,
-        )
