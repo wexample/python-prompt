@@ -2,6 +2,7 @@
 from typing import TYPE_CHECKING, Optional, List, Any, Union, Mapping
 
 from wexample_helpers.const.types import Kwargs
+from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 class ChoicePromptResponseManagerMixin:
     def choice(
             self: "IoManager",
-            question: str,
+            question: LineMessage,
             choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,

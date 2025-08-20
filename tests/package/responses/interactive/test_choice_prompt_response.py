@@ -78,3 +78,22 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         # question + 2 choices
         non_empty = [l for l in response.rendered_content.split("\n") if l.strip()]
         assert len(non_empty) == self.get_expected_lines()
+
+    def test_multiline_question_does_not_crash_and_renders_both_lines(self):
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
+
+        question = "What to do?\nPick wisely"
+        response = ChoicePromptResponse.create_choice(
+            question=question,
+            choices=["One", "Two"],
+            predefined_answer="Two",
+        )
+
+        # Should not raise
+        response.render()
+
+        content = response.rendered_content
+        assert "What to do?" in content
+        assert "Pick wisely" in content

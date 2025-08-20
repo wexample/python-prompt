@@ -5,6 +5,7 @@ from pydantic import Field
 from wexample_prompt.common.choice.choice import Choice
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import ChoiceValue
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
@@ -33,13 +34,12 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default_factory=dict,
         description="Additional kwargs forwarded to inquirer.select"
     )
-    question: str = Field(
+    question: LineMessage = Field(
         default=None,
         description="Question text shown to the user"
     )
-    question_line: Optional["PromptResponseLine"] = Field(
-        default=None,
-        description="The line that displays the question"
+    question_lines: List["PromptResponseLine"] = Field(
+        description="Rendered question lines"
     )
     predefined_answer: Any = Field(
         default=None,
@@ -49,7 +49,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     @classmethod
     def create_choice(
             cls,
-            question: str,
+            question: LineMessage,
             choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,
@@ -59,16 +59,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
     ) -> "ChoicePromptResponse":
         """Factory to create a ChoicePromptResponse."""
-
-        question_line = PromptResponseLine(
-            segments=[
-                PromptResponseSegment(
-                    text=question,
-                    color=color or TerminalColor.BLUE,
-                    styles=[TextStyle.BOLD],
-                )
-            ]
-        )
+        # Build question lines from LineMessage, apply styles/colors on segments
+        question_lines = PromptResponseLine.create_from_string(question, color=color)
 
         choices_list: List[Choice] = []
 
@@ -103,7 +95,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             )
 
         return cls(
-            question_line=question_line,
+            question_lines=question_lines,
             choices=choices_list,
             default=default,
             question=question,
@@ -148,8 +140,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             # Clear only our previous render block (not the whole screen)
             self._partial_clear(printed_lines)
 
-            # Rebuild lines for this frame
-            self.lines = [self.question_line]
+            # Rebuild lines for this frame (all question lines first)
+            self.lines = self.question_lines
 
             for i, choice in enumerate(self.choices):
                 line = choice.line
