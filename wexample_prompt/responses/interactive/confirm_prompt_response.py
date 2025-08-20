@@ -109,6 +109,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: "PromptContext") -> None:
+        from wexample_helpers.helpers.ansi import ansi_center
+
         # Compute box width: prefer explicit width, else context width, else content-based with a floor
         width = context.get_width()
 
@@ -125,9 +127,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         min_width = max(45, content_width + 4)
         box_width = max(self.width or 0, width or 0, min_width)
 
-        def center(s: str) -> str:
-            return s.center(box_width)
-
         # Compose a boxed layout using lines and segments
         self.lines = []
         horiz = "-" * box_width
@@ -135,14 +134,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
         # question lines centered (support multi-line)
         for t in question_texts:
             self.lines.append(
                 PromptResponseLine(
                     segments=[
                         PromptResponseSegment(
-                            text=center(t),
+                            text=ansi_center(t, box_width),
                             color=TerminalColor.LIGHT_WHITE,
                             styles=[TextStyle.BOLD],
                         ),
@@ -151,7 +150,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
         # options line centered; highlight default_value if set
         left_pad = max((box_width - len(options_text)) // 2, 0)
         option_segments: list[PromptResponseSegment] = []
@@ -168,12 +167,12 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                     PromptResponseSegment(text=text, color=TerminalColor.WHITE)
                 )
             if idx < len(parts) - 1:
-                option_segments.append(PromptResponseSegment(text=" / ", color=TerminalColor.WHITE))
+                option_segments.append(PromptResponseSegment(text=" ", color=TerminalColor.WHITE))
 
         self.lines.append(PromptResponseLine(segments=option_segments))
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
+            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
         # bottom border
         self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
 
