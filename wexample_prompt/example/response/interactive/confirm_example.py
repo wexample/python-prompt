@@ -14,12 +14,23 @@ class ConfirmExample(AbstractResponseExample):
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
             reset_on_finish=True,
+            predefined_answer="yes"
         )
 
     def example_manager(self):
         """Use IoManager mixin method."""
-        self.io.confirm(question="Proceed?", choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL, reset_on_finish=True)
+        self.io.confirm(
+            question="Proceed?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
+            reset_on_finish=True,
+            predefined_answer="cancel"
+        )
 
     def example_extended(self):
         """Use extended context with _class_with_methods."""
-        self._class_with_methods.confirm(question="Proceed?", choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL, reset_on_finish=True)
+        self._class_with_methods.confirm(
+            question="Proceed?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
+            reset_on_finish=True,
+            predefined_answer="no"
+        )

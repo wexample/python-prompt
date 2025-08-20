@@ -14,12 +14,22 @@ class ChoiceExample(AbstractResponseExample):
                 "value2": "Choice 2",
                 "value3": "Choice 3",
             },
+            default="value2",
+            predefined_answer="value3"
         )
 
     def example_manager(self):
         choices = ["Option 1", "Option 2", "Option 3"]
-        self.io.choice("Select an option:", choices)
+        self.io.choice(
+            question="Select an option:",
+            choices=choices,
+            predefined_answer="Option 2"
+        )
 
     def example_extended(self):
         choices = ["Option 1", "Option 2", "Option 3"]
-        self._class_with_methods.choice("Select an option:", choices)
+        self._class_with_methods.choice(
+            question="Select an option:",
+            choices=choices,
+            predefined_answer="Option 2"
+        )
