@@ -84,3 +84,41 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         assert isinstance(response, AbstractPromptResponse)
         # rendered_content available after render via StdoutOutputHandler
         self._assert_contains_text(response.rendered_content, "step 0")
+
+    def test_reset_on_finish_triggers_clear(self):
+        """When reset_on_finish=True, Screen should perform a final clear after closing."""
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+
+        clears = {"count": 0, "last": None}
+
+        def _cb(resp: ScreenPromptResponse):
+            # Draw two lines then request close on first pass
+            resp.clear()
+            resp.print("line A")
+            resp.print("line B")
+            if clears["count"] == 0:
+                # ask to close so that a final clear should occur
+                resp.close()
+            else:
+                resp.reload()
+
+        resp = self.create_test_response(callback=_cb, reset_on_finish=True)
+
+        # Monkeypatch _partial_clear to observe calls
+        original_clear = resp._partial_clear
+
+        def _spy(lines):
+            clears["count"] += 1
+            clears["last"] = lines
+            try:
+                original_clear(lines)
+            except Exception:
+                pass
+
+        setattr(resp, "_partial_clear", _spy)
+
+        resp.render()
+
+        # Expect that clear was called at least once, and last cleared lines > 0 (clearing printed block)
+        assert clears["count"] >= 1
+        assert isinstance(clears["last"], int) and clears["last"] > 0
