@@ -17,8 +17,8 @@ class TestBufferOutputHandler(AbstractPromptTest):
 
         # Buffer should contain exactly one response object
         assert isinstance(self._io.output, BufferOutputHandler)
-        assert len(self._io.output.buffer) == 1
+        assert len(self._io.output.responses) == 1
 
         # The buffered item should be a response with matching render
-        buffered_response = self._io.output.buffer[0]
+        buffered_response = self._io.output.responses[0]
         assert buffered_response.render() == response.rendered_content

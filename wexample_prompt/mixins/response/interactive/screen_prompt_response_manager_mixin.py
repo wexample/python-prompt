@@ -11,13 +11,13 @@ if TYPE_CHECKING:
 
 class ScreenPromptResponseManagerMixin:
     def screen(
-        self: "IoManager",
-        *,
-        callback: Callable[["ScreenPromptResponse"], Any],
-        height: int = 30,
-        reset_on_finish: bool = False,
-        context: Optional[PromptContext] = None,
-        **kwargs: Kwargs,
+            self: "IoManager",
+            *,
+            callback: Callable[["ScreenPromptResponse"], Any],
+            height: int = 30,
+            reset_on_finish: bool = False,
+            context: Optional[PromptContext] = None,
+            **kwargs: Kwargs,
     ) -> "ScreenPromptResponse":
         from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
 

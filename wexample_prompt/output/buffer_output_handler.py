@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Any, List
+from typing import TYPE_CHECKING, Optional, Any, List, Union
 
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
@@ -14,15 +14,34 @@ class BufferOutputHandler(AbstractOutputHandler):
     - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
     """
 
-    _buffer: List["AbstractPromptResponse"] = []
+    _buffer_responses: List["AbstractPromptResponse"] = []
+    _buffer_rendered: List[Union[str, None]] = []
 
     @property
-    def buffer(self) -> List["AbstractPromptResponse"]:
-        return self._buffer
+    def responses(self) -> List["AbstractPromptResponse"]:
+        return self._buffer_responses
+
+    @property
+    def rendered(self) -> str:
+        return "".join(self._buffer_rendered)
+
+    def clear(self) -> None:
+        self._buffer_responses = []
+        self._buffer_rendered = []
+
+    def flush(self) -> str:
+        rendered = self.rendered
+
+        self.clear()
+
+        return rendered
 
     def print(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> Any:
         # Preserve legacy: store the response object
-        self._buffer.append(response)
+        self._buffer_responses.append(response)
 
         # Align with new API: return the rendered output
-        return response.render(context=context)
+        rendered_response = response.render(context=context)
+        self._buffer_rendered.append(rendered_response)
+
+        return rendered_response

@@ -36,12 +36,12 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def create_screen(
-        cls,
-        callback: Callable[["ScreenPromptResponse"], Any],
-        *,
-        height: int = 30,
-        reset_on_finish: bool = False,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+            cls,
+            callback: Callable[["ScreenPromptResponse"], Any],
+            *,
+            height: int = 30,
+            reset_on_finish: bool = False,
+            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ScreenPromptResponse":
         return cls(
             callback=callback,
@@ -87,9 +87,10 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
         try:
             self._reload_requested = False
             self.callback(self)
-        except Exception:
+        except Exception as e:
             # If callback errors, close gracefully
             self._closed = True
+            raise e
 
         while True:
             # Clear previous frame area
@@ -107,9 +108,9 @@ class ScreenPromptResponse(AbstractInteractivePromptResponse):
             self._reload_requested = False
             try:
                 self.callback(self)
-            except Exception:
+            except Exception as e:
                 self._closed = True
-                continue
+                raise e
 
             # If callback didn't request reload and not closed, avoid busy loop
             if not self._reload_requested and not self._closed:
