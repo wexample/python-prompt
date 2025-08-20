@@ -1,5 +1,5 @@
 """Mixin for managing progress prompt responses."""
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Union
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -15,7 +15,7 @@ class ProgressPromptResponseManagerMixin:
     def progress(
             self: "IoManager",
             total: int = 100,
-            current: int = 0,
+            current: Union[float, int, str] = 0,
             width: Optional[int] = None,
             label: Optional[str] = None,
             context: Optional["PromptContext"] = None,

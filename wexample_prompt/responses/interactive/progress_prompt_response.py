@@ -1,5 +1,5 @@
 """Progress bar response implementation."""
-from typing import Optional, ClassVar, Type, TYPE_CHECKING
+from typing import Optional, ClassVar, Type, TYPE_CHECKING, Union
 
 from pydantic import Field
 
@@ -11,7 +11,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
+    from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
 
 class ProgressPromptResponse(AbstractPromptResponse):
@@ -40,11 +40,36 @@ class ProgressPromptResponse(AbstractPromptResponse):
         cls.FILL_CHAR = fill_char
         cls.EMPTY_CHAR = empty_char
 
+    @staticmethod
+    def _normalize_value(total: int, current: Union[float, int, str]) -> int:
+        """Accept int or percentage string like '54%' and return an int current.
+
+        Clamps the result to [0, total].
+        """
+        if isinstance(current, str):
+            s = current.strip()
+            if s.endswith('%'):
+                try:
+                    pct = float(s[:-1].strip())
+                except ValueError:
+                    raise ValueError(f"Invalid percentage value: {current}")
+                pct = max(0.0, min(100.0, pct))
+                return int(round(total * (pct / 100.0)))
+            else:
+                # Try parse as int fallback
+                try:
+                    val = int(s)
+                except ValueError:
+                    raise ValueError(f"Invalid current value: {current}")
+                return max(0, min(total, val))
+        # int path
+        return max(0, min(total, int(current)))
+
     @classmethod
     def create_progress(
             cls,
             total: int = 100,
-            current: int = 0,
+            current: Union[float, int, str] = 0,
             width: Optional[int] = None,
             label: Optional[str] = None,
             color: Optional[TerminalColor] = None,
@@ -52,15 +77,15 @@ class ProgressPromptResponse(AbstractPromptResponse):
     ) -> "ProgressPromptResponse":
         if total <= 0:
             raise ValueError("Total must be greater than 0")
-        if current < 0:
-            raise ValueError("Current progress cannot be negative")
         if width is not None and width < 1:
             raise ValueError("Width must be at least 1")
+
+        norm_current = cls._normalize_value(total, current)
 
         return cls(
             lines=[],
             total=total,
-            current=current,
+            current=norm_current,
             width=width,
             label=label,
             color=color or TerminalColor.BLUE,
@@ -68,12 +93,12 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
     def get_handle(self) -> "ProgressHandle":
-        from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
+        from wexample_prompt.common.progress.progress_handle import ProgressHandle
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        from wexample_prompt.responses.interactive.progress_handle import ProgressHandle
+        from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         # Normalize context
         context = PromptContext.create_if_none(context=context)

@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Union
 
 from pydantic import Field
 
@@ -33,14 +33,15 @@ class ProgressHandle(ExtendedBaseModel):
 
     def update(
             self,
-            current: Optional[int] = None,
+            current: Optional[Union[float, int, str]] = None,
             label: Optional[str] = None,
             color: Optional["TerminalColor"] = None,
             auto_render: bool = True,
     ) -> Optional[str]:
         """Update progress fields and optionally re-render."""
         if current is not None:
-            self.response.current = max(0, current)
+            # Accept percentage strings like '54%'
+            self.response.current = ProgressPromptResponse._normalize_value(self.response.total, current)
         if label is not None:
             self.response.label = label
         if color is not None:
@@ -52,9 +53,11 @@ class ProgressHandle(ExtendedBaseModel):
 
     def advance(
             self,
-            step: int = 1,
+            step: Optional[Union[float, int, str]] = None,
             **kwargs
     ) -> Optional[str]:
+        step = ProgressPromptResponse._normalize_value(self.response.total, step)
+
         """Increment progress by a number of steps and optionally render."""
         return self.update(
             current=max(0, self.response.current + step),

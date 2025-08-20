@@ -40,6 +40,10 @@ if __name__ == "__main__":
             color=(None if cur <= 50 else TerminalColor.MAGENTA)
         ))
 
-    demo_io.separator('Test dirct finishing')
+    demo_io.separator('Test Various')
     response = demo_io.progress(label='Progress via IoManager', total=100)
+    response.get_handle().update(current="10%", color=TerminalColor.CYAN)
+    response.get_handle().advance(step="1%")
+    response.get_handle().update(current="15.325%", color=TerminalColor.YELLOW)
+    response.get_handle().advance(step=21.51)
     response.get_handle().finish(color=TerminalColor.RED)
