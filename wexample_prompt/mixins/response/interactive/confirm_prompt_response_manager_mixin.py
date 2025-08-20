@@ -2,6 +2,7 @@
 from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
@@ -13,7 +14,7 @@ class ConfirmPromptResponseManagerMixin:
 
     def confirm(
             self: "IoManager",
-            question: str = "Please confirm:",
+            question: LineMessage = "Please confirm:",
             choices: Optional[Dict[str, tuple]] = None,
             default: Optional[str] = None,
             width: Optional[int] = None,
