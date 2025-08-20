@@ -4,8 +4,9 @@ from typing import Dict, Optional, Type, Any
 
 from pydantic import Field
 
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
 
 
@@ -36,7 +37,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
     def create_file_picker(
             cls,
             base_dir: Optional[str] = None,
-            question: str = "Select a file:",
+            question: LineMessage = "Select a file:",
             abort: Optional[bool | str] = None,
             mode: FilePickerMode = FilePickerMode.BOTH,
             allow_parent_selection: bool = False,
@@ -94,4 +95,3 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )
-

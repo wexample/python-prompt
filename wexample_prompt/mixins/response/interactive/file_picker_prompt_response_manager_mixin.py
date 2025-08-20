@@ -3,6 +3,7 @@ from typing import Optional, TYPE_CHECKING, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
 
 if TYPE_CHECKING:
@@ -15,7 +16,7 @@ class FilePickerPromptResponseManagerMixin:
 
     def file_picker(
             self: "IoManager",
-            question: str = "Select a file:",
+            question: LineMessage = "Select a file:",
             base_dir: Optional[str] = None,
             abort: Optional[bool | str]  = None,
             mode: FilePickerMode = FilePickerMode.BOTH,

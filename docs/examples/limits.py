@@ -23,6 +23,12 @@ def confirm_long_multiline_text(io: IoManager) -> None:
         default="ok",
     )
 
+def file_long_multiline_text(io: IoManager) -> None:
+    io.separator("Check file picker")
+    io.file_picker(
+        question=line_breaks_text
+    ).get_answer()
+
 def choice_long_multiline_text(io: IoManager) -> None:
     io.separator("Check lines break management in tasks")
 
@@ -38,5 +44,6 @@ if __name__ == "__main__":
     io = IoManager()
     echo_long_multiline_text(io)
     task_long_multiline_text(io)
+    file_long_multiline_text(io)
     choice_long_multiline_text(io)
     confirm_long_multiline_text(io)
