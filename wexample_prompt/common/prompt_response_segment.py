@@ -24,6 +24,14 @@ class PromptResponseSegment(ExtendedBaseModel):
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering"
     )
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        if "\n" in self.text:
+            raise ValueError(
+                "Segment should not contain line breaks; use separate line objects instead"
+            )
+
     def render(self, context: "PromptContext", line_remaining_width: int) -> Tuple[str, Optional["PromptResponseSegment"]]:
         """Render the segment respecting the remaining width for the current line.
 
