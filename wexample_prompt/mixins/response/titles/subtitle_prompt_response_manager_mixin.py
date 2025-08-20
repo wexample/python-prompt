@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 class SubtitlePromptResponseManagerMixin:
     def subtitle(
             self: "IoManager",
-            message: str,
+            message: LineMessage,
             color: Optional["TerminalColor"] = None,
             character: Optional[str] = None,
             width: Optional[int] = None,

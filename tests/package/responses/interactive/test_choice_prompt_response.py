@@ -27,7 +27,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
 
     def get_expected_lines(self) -> int:
         # By default: question (1) + 2 choices + abort (1)
-        return 6
+        return 5
 
     # Override: interactive choice does not render leading empty line.
     def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
@@ -77,4 +77,4 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         assert "> Abort" not in response.rendered_content
         # question + 2 choices
         non_empty = [l for l in response.rendered_content.split("\n") if l.strip()]
-        assert len(non_empty) == 6
+        assert len(non_empty) == self.get_expected_lines()

@@ -190,7 +190,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             controls_line = PromptResponseLine(
                 segments=[
                     PromptResponseSegment(
-                        text="\nUse ↑/↓ to navigate • Enter to select • Esc or q to abort",
+                        text="Use ↑/↓ to navigate • Enter to select • Esc or q to abort",
                         color=TerminalColor.WHITE,
                         styles=[],
                     )

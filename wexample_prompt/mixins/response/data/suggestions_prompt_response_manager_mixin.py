@@ -4,6 +4,7 @@ from typing import List, Optional, TYPE_CHECKING
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
@@ -15,7 +16,7 @@ class SuggestionsPromptResponseManagerMixin:
 
     def suggestions(
             self: "IoManager",
-            message: str,
+            message: LineMessage,
             suggestions: List[str],
             arrow_style: str = "→",
             verbosity: Optional[VerbosityLevel] = None,

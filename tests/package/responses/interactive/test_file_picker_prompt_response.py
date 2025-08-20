@@ -30,7 +30,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         # Minimal default: question + parent (..) + (no files/dirs due to failure) + abort
         # But render builds from merged dict (at least parent), plus abort.
-        return 4  # question + parent + abort
+        return 3 # question + parent + abort
 
     # Override: interactive file picker does not render leading empty line.
     def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
@@ -66,4 +66,4 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         assert "> Abort" not in response.rendered_content
         # question + parent only in the minimal fallback
         non_empty = [l for l in response.rendered_content.split("\n") if l.strip()]
-        assert len(non_empty) == 4
+        assert len(non_empty) == self.get_expected_lines()
