@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
+from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
 class TaskPromptResponseManagerMixin:
     def task(
             self: "IoManager",
-            message: str,
+            message: LineMessage,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs
     ) -> "TaskPromptResponse":
