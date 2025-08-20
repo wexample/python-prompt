@@ -2,11 +2,11 @@
 from typing import TYPE_CHECKING, Optional, List, Any, Union, Mapping
 
 from wexample_helpers.const.types import Kwargs
-from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class ChoicePromptResponseManagerMixin:
@@ -16,7 +16,7 @@ class ChoicePromptResponseManagerMixin:
             choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,
-            context: Optional[PromptContext] = None,
+            context: Optional["PromptContext"] = None,
             reset_on_finish: bool = False,
             predefined_answer: Any = None,
             **kwargs: Kwargs,

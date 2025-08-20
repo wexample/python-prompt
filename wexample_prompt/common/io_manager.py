@@ -25,6 +25,8 @@ from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_man
     FilePickerPromptResponseManagerMixin
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import \
     ProgressPromptResponseManagerMixin
+from wexample_prompt.mixins.response.interactive.screen_prompt_response_manager_mixin import \
+    ScreenPromptResponseManagerMixin
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import \
     LogPromptResponseManagerMixin
 from wexample_prompt.mixins.response.messages.debug_prompt_response_manager_mixin import \
@@ -82,6 +84,7 @@ class IoManager(
     ChoicePromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
+    ScreenPromptResponseManagerMixin,
     ConfirmPromptResponseManagerMixin,
     # Parent classes
     WithIndentation,
@@ -137,6 +140,7 @@ class IoManager(
         from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
         from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
 
         return [
             # Basics
@@ -165,6 +169,7 @@ class IoManager(
             ChoicePromptResponse,
             FilePickerPromptResponse,
             ProgressPromptResponse,
+            ScreenPromptResponse,
             ConfirmPromptResponse,
         ]
 
