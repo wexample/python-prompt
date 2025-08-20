@@ -4,67 +4,84 @@ from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
-if __name__ == "__main__":
-    demo_io = IoManager()
 
-    demo_io.separator('Introduction')
-    demo_io.log(f'This is a {"long " * 100}message that shows you the terminal width')
+def section_intro(io: IoManager) -> None:
+    io.separator('Introduction')
+    io.log('Examples demonstrating progress bars, percentages, and sub-ranges.')
+    io.log(f'Terminal width showcase: {"long " * 30}wrap check')
 
-    demo_io.separator('Using IoManager')
-    response = demo_io.progress(
-        label='Progress via IoManager',
-        total=100,
-        current=0
-    )
+
+def section_using_io_manager(io: IoManager) -> None:
+    io.separator('Using IoManager (managed output)')
+    response = io.progress(label='Downloading assets', total=100, current=0)
     handle = response.get_handle()
     for cur in (25, 50, 75, 100):
         sleep(0.1)
-        handle.update(current=cur, label=f"Io progress {cur}%", color=(None if cur <= 50 else TerminalColor.YELLOW))
+        handle.update(
+            current=cur,
+            label=f'Downloading… {cur}%',
+            color=(None if cur <= 50 else TerminalColor.YELLOW),
+        )
 
-    demo_io.separator('Standalone (no terminal info)')
+
+def section_standalone_no_manager() -> None:
+    print("\n--- Standalone (no IoManager) ---")
     response = ProgressPromptResponse.create_progress(
-        label='Progress without IoManager',
-        total=80,
-        current=0,
-        color=TerminalColor.CYAN
+        label='Processing tasks', total=80, current=0, color=TerminalColor.CYAN
     )
-
-    # First render
+    # Initial render
     print(response.render() or "")
-    handle2 = response.get_handle()
+    handle = response.get_handle()
     for cur in (10, 20, 40, 60, 80):
         sleep(0.1)
-        print(handle2.update(
-            current=cur,
-            label=f"Standalone {cur}/{response.total}",
-            color=(None if cur <= 50 else TerminalColor.MAGENTA)
-        ))
+        print(
+            handle.update(
+                current=cur,
+                label=f'Processing {cur}/{response.total}',
+                color=(None if cur <= 50 else TerminalColor.MAGENTA),
+            )
+            or ""
+        )
 
-    demo_io.separator('Test Various')
-    response = demo_io.progress(label='Progress', total=100)
-    handle = response.get_handle()
-    handle.update(current="10%", color=TerminalColor.CYAN, label="Percentage")
-    handle.advance(step="1%", label="Percentage advance")
-    handle.update(current="15.325%", color=TerminalColor.YELLOW, label="Percentage float")
-    handle.advance(step=21.51, label="Float")
-    handle.finish(color=TerminalColor.RED, label="Direct finish")
 
-    demo_io.separator('Test sub progress')
-    response = demo_io.progress(label='Progress', total=1000)
-    # IMPORTANT: fetch the new handle for this response
+def section_various_inputs(io: IoManager) -> None:
+    io.separator('Various inputs (int, float, percent)')
+    response = io.progress(label='Progress', total=100)
     handle = response.get_handle()
-    handle.update(current=50, label="First progression")
-    # Sub progression
-    # "from" is optional
-    # "current" is optional, by default 0
-    # "to" helps to calculate the "total" which is 350 - 50 = 300
+    handle.update(current="10%", color=TerminalColor.CYAN, label="Set to 10%")
+    handle.advance(step="1%", label="Advance by 1%")
+    handle.update(current="15.325%", color=TerminalColor.YELLOW, label="Set to 15.325%")
+    handle.advance(step=21.5, label="Advance by 21.5 units")
+    handle.finish(color=TerminalColor.RED, label="Finish")
+
+
+def section_sub_progress(io: IoManager) -> None:
+    io.separator('Sub progress (range handle)')
+    response = io.progress(label='Global task', total=1000)
+    handle = response.get_handle()
+    # Start global progress
+    handle.update(current=50, label="Global: initial 50/1000")
+
+    # Create sub-range: maps child [0..300] to parent [50..350]
     range_handle = handle.create_range_handle(to=350)
-    # global handle is now at 100
-    range_handle.update(current=50, label="First range progression")
-    # global handle is now at 50 + (350 * 0.5) = 2250
-    range_handle.advance(step="50%", label="Percentage range advance")
-    # The color can be still changed
-    range_handle.finish(label="Range complete", color=TerminalColor.MAGENTA)
 
-    # global handle complete.
-    handle.finish(color=TerminalColor.RED, label="Direct finish")
+    # Update within range: move 50 units inside the sub-range → parent at 100
+    range_handle.update(current=50, label="Sub-range: 50/300")
+
+    # Advance by 50% of the sub-range (150 units) → parent at 250
+    range_handle.advance(step="50%", label="Sub-range: +50%")
+
+    # Finish the sub-range → parent at 350
+    range_handle.finish(label="Sub-range complete", color=TerminalColor.MAGENTA)
+
+    # Complete the global task
+    handle.finish(color=TerminalColor.RED, label="Global: finished")
+
+
+if __name__ == "__main__":
+    io = IoManager()
+    section_intro(io)
+    section_using_io_manager(io)
+    section_standalone_no_manager()
+    section_various_inputs(io)
+    section_sub_progress(io)
