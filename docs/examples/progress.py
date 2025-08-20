@@ -72,9 +72,37 @@ def section_sub_progress(io: IoManager) -> None:
     handle.finish(color=TerminalColor.RED, label="Global: finished")
 
 
+def section_nested_sub_progress(io: IoManager) -> None:
+    io.separator('Nested sub progress (multi-level)')
+    response = io.progress(label='Global task', total=1000)
+    root = response.get_handle()
+
+    # Initialize global
+    root.update(current=100, label="Global: initial")
+
+    # Level 1 sub-range within the global range
+    lvl1 = root.create_range_handle(to=600)
+    lvl1.update(current="20%", label="Level 1: update")
+
+    # Level 2 sub-range within level 1
+    lvl2 = lvl1.create_range_handle(to=500)
+    lvl2.advance(step="50%", label="Level 2: advance")
+
+    # Level 3 sub-range within level 2
+    lvl3 = lvl2.create_range_handle(to=450)
+    lvl3.update(current="75%", label="Level 3: update")
+    lvl3.finish(label="Level 3: finish", color=TerminalColor.CYAN)
+
+    # Finish upwards
+    lvl2.finish(label="Level 2: finish")
+    lvl1.finish(label="Level 1: finish", color=TerminalColor.MAGENTA)
+    root.finish(color=TerminalColor.RED, label="Global: finished")
+
+
 if __name__ == "__main__":
     io = IoManager()
     section_using_io_manager(io)
     section_standalone_no_manager()
     section_various_inputs(io)
     section_sub_progress(io)
+    section_nested_sub_progress(io)
