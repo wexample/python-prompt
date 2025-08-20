@@ -6,13 +6,13 @@ from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
-from wexample_prompt.const.types import LineMessage
 
 
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
@@ -95,6 +95,17 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             verbosity=verbosity,
             predefined_answer=predefined_answer,
             # allow_abort is True by default; ESC/q return None
+        )
+
+    def is_ok(self) -> bool:
+        """Response match with one of common positive value"""
+        return (
+                self._answer == True
+                or self._answer == 1
+                or self._answer == "yes"
+                or self._answer == "yes_all"
+                or self._answer == "ok"
+                or self._answer == "continue"
         )
 
     def _build_lines(self, context: "PromptContext") -> None:
