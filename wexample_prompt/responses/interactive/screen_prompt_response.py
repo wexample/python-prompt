@@ -35,16 +35,11 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     _closed: bool = False
     _reload_requested: bool = False
-    _io_buffer: "BufferOutputHandler" = False
+    _io_buffer: Optional["BufferOutputHandler"] = None
 
     def __init__(self, **kwargs):
         AbstractInteractivePromptResponse.__init__(self, **kwargs)
         WithIoMethods.__init__(self)
-
-        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
-
-        self._io_buffer = BufferOutputHandler()
-        self.io = IoManager(output=self._io_buffer)
 
     @classmethod
     def create_screen(
@@ -67,7 +62,8 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         self.lines = []
 
     def print(self, text: str) -> None:
-        self._io_buffer.append_rendered(text)
+        # Convenience: push a single line into the frame buffer
+        self._io_buffer.append_rendered(f"{text}\n")
 
     def reload(self) -> None:
         self._reload_requested = True
@@ -79,6 +75,13 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         # Screen runs a simple controlled loop until closed.
         from time import sleep
         from wexample_prompt.common.prompt_context import PromptContext
+
+        # Wait first rendering to build nested io manager.
+        if self._io_buffer is None:
+            from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+
+            self._io_buffer = BufferOutputHandler()
+            self.io = IoManager(output=self._io_buffer)
 
         context = PromptContext.create_if_none(context=context)
         # Disable extra formatting to avoid extra lines
@@ -122,22 +125,16 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
             self._render_buffer()
 
-    def partial_render(self):
-        self._current_render_partial_render()
-
     def _render_buffer(self):
-        rendered = self._io_buffer.rendered
-        for text in rendered:
-            if text is not None:
-                self.lines.append(
-                    PromptResponseLine(
-                        segments=[
-                            PromptResponseSegment(
-                                text=text,
-                            )
-                        ]
-                    )
+        # Consume buffered output as a single string, split into lines
+        rendered = self._io_buffer.flush()
+        # Normalize to lines
+        for raw_line in rendered:
+            self.lines.append(
+                PromptResponseLine(
+                    segments=[PromptResponseSegment(text=raw_line)]
                 )
+            )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
