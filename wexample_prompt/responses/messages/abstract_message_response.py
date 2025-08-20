@@ -4,6 +4,7 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.const.types import LineMessage
 
 
 class AbstractMessageResponse(AbstractPromptResponse):
@@ -13,7 +14,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
     @classmethod
     def _create_symbol_message(
             cls,
-            text: str,
+            text: LineMessage,
             color: TerminalColor,
             symbol: Optional[str] = None,
             **kwargs
@@ -22,27 +23,12 @@ class AbstractMessageResponse(AbstractPromptResponse):
         # Determine effective symbol (explicit > class default)
         effective_symbol = symbol if symbol is not None else cls.SYMBOL
 
-        segments: list[PromptResponseSegment] = []
+        # Build lines from message handling multi-line inputs like PromptResponseLine.create_from_string
+        raw_lines = PromptResponseLine.create_from_string(text=text, color=color)
 
-        # Add symbol if non-empty
-        if effective_symbol:
-            symbol_text = f"{effective_symbol} "
-            segments.append(
-                PromptResponseSegment(
-                    text=symbol_text,
-                    color=color
-                )
-            )
+        # Prepend symbol (if any) to the first line only
+        if effective_symbol and raw_lines:
+            first = raw_lines[0]
+            first.segments.insert(0, PromptResponseSegment(text=f"{effective_symbol} ", color=color))
 
-        # Add message text
-        segments.append(
-            PromptResponseSegment(
-                text=text,
-                color=color
-            )
-        )
-
-        # Create response with context and additional kwargs
-        return cls._create(lines=[
-            PromptResponseLine(segments=segments)
-        ], **kwargs)
+        return cls._create(lines=raw_lines, **kwargs)
