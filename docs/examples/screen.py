@@ -50,17 +50,14 @@ if __name__ == "__main__":
         response.clear()
         response.print("Top CPU processes (refresh 1s, ~10s total)")
 
-        try:
-            # Get processes sorted by CPU descending; keep header + 10 rows
-            cmd = [
-                "ps", "-eo", "pid,comm,pcpu,pmem,etime", "--sort=-pcpu"
-            ]
-            res = subprocess.run(cmd, capture_output=True, text=True, check=False)
-            lines = [ln for ln in res.stdout.strip().splitlines() if ln.strip()]
-            for ln in lines[:11]:
-                response.print(ln)
-        except Exception as e:
-            response.print(f"Error running ps: {e}")
+        # Get processes sorted by CPU descending; keep header + 10 rows
+        cmd = [
+            "ps", "-eo", "pid,comm,pcpu,pmem,etime", "--sort=-pcpu"
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        lines = [ln for ln in res.stdout.strip().splitlines() if ln.strip()]
+        for ln in lines[:11]:
+            response.print(ln)
 
         if time.time() - start >= 10:
             response.close()
