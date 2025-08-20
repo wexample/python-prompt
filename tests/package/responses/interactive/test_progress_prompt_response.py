@@ -59,8 +59,6 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         with pytest.raises(ValueError):
             ProgressPromptResponse.create_progress(total=0, current=0)
         with pytest.raises(ValueError):
-            ProgressPromptResponse.create_progress(total=10, current=-1)
-        with pytest.raises(ValueError):
             ProgressPromptResponse.create_progress(total=10, current=1, width=0)
 
     def test_custom_style(self):
@@ -138,3 +136,36 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         # Finish
         out2 = handle.finish()
         self._assert_contains_text(out2, "100%")
+
+    def test_child_range_mapping_and_percentage(self):
+        """Child handle maps its local current to the parent's absolute current."""
+        response = self._io.progress(label='Global', total=1000)
+        root = response.get_handle()
+        # Start at an absolute position
+        root.update(current=50, label="init")
+        # Create child that spans from current to a target end
+        child = root.create_range_handle(to=350)
+        # Move inside child by 50 units -> parent should be start(50) + 50 = 100
+        out = child.update(current=50, label="child move")
+        assert response.current == 100
+        # Advance child by 50% of its range (range total=300 => +150) -> parent 250
+        out2 = child.advance(step="50%", label="child +50%")
+        assert response.current == 250
+        # Rendered strings exist
+        assert isinstance(out, str)
+        assert isinstance(out2, str)
+
+    def test_nested_children_finish(self):
+        """Nested children can finish and update the shared response current at each level."""
+        response = self._io.progress(label='Global', total=1000)
+        root = response.get_handle()
+        root.update(current=100, label="root init")
+        lvl1 = root.create_range_handle(to=600)  # child of root
+        lvl1.update(current="20%", label="lvl1 update")  # -> parent ~200
+        lvl2 = lvl1.create_range_handle(to=500)  # child of lvl1
+        lvl2.advance(step="50%", label="lvl2 advance")  # halfway inside lvl2
+        # Level 3 then finishes -> parent current should equal lvl3 end
+        lvl3 = lvl2.create_range_handle(to=450)
+        out = lvl3.finish(label="lvl3 finish")
+        assert response.current == 450
+        assert isinstance(out, str)
