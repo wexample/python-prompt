@@ -62,8 +62,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         self.lines = []
 
     def print(self, text: str) -> None:
-        # Convenience: push a single line into the frame buffer
-        self._io_buffer.append_rendered(f"{text}\n")
+        self._io_buffer.append_rendered(str(text))
 
     def reload(self) -> None:
         self._reload_requested = True
