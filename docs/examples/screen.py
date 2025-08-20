@@ -59,7 +59,7 @@ if __name__ == "__main__":
         for ln in lines[:11]:
             response.print(ln)
 
-        if time.time() - start >= 10:
+        if time.time() - start >= 3:
             response.close()
             return
 

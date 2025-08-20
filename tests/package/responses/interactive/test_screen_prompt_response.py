@@ -31,7 +31,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
 
     def get_expected_lines(self) -> int:
-        return 2
+        return 1
 
     # Override to match single-line behavior (no implicit empty line)
     def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
