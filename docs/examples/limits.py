@@ -39,3 +39,4 @@ if __name__ == "__main__":
     echo_long_multiline_text(io)
     task_long_multiline_text(io)
     choice_long_multiline_text(io)
+    confirm_long_multiline_text(io)

@@ -12,6 +12,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
+from wexample_prompt.const.types import LineMessage
 
 
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
@@ -36,7 +37,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         "n": ("cancel", "Cancel"),
     }
 
-    question: str = Field(
+    question: LineMessage = Field(
         default="Please confirm:",
         description="The question to ask to the user"
     )
@@ -70,7 +71,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     @classmethod
     def create_confirm(
             cls,
-            question: str = "Please confirm:",
+            question: LineMessage = "Please confirm:",
             choices: Optional[Dict[str, Tuple[str, str]]] = None,
             default: Optional[str] = None,
             width: Optional[int] = None,
@@ -106,7 +107,10 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             parts.append((k, v, label))
         options_text = " / ".join([f"[{k}: {label}]" for k, _, label in parts])
 
-        content_width = max(len(self.question), len(options_text))
+        # Determine question lines and maximum content width without newlines
+        q_lines = PromptResponseLine.create_from_string(self.question)
+        question_texts = ["".join(seg.text for seg in ln.segments) for ln in q_lines]
+        content_width = max(max((len(t) for t in question_texts), default=0), len(options_text))
         min_width = max(45, content_width + 4)
         box_width = max(self.width or 0, width or 0, min_width)
 
@@ -121,18 +125,19 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # empty line
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))
-        # question line centered
-        self.lines.append(
-            PromptResponseLine(
-                segments=[
-                    PromptResponseSegment(
-                        text=center(self.question),
-                        color=TerminalColor.LIGHT_WHITE,
-                        styles=[TextStyle.BOLD],
-                    ),
-                ]
+        # question lines centered (support multi-line)
+        for t in question_texts:
+            self.lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(
+                            text=center(t),
+                            color=TerminalColor.LIGHT_WHITE,
+                            styles=[TextStyle.BOLD],
+                        ),
+                    ]
+                )
             )
-        )
         # empty line
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=center(""), color=TerminalColor.RESET)]))

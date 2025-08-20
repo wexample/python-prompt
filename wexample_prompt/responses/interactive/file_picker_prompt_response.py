@@ -86,7 +86,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             default=parent_response.default,
             inquirer_kwargs=parent_response.inquirer_kwargs,
             question=parent_response.question,
-            question_line=parent_response.question_line,
+            question_lines=parent_response.question_lines,
             base_dir=base,
             mode=mode,
             abort_option=abort,
