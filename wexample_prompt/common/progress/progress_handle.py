@@ -9,6 +9,7 @@ from wexample_prompt.responses.interactive.progress_prompt_response import Progr
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.common.progress.range_progress_handle import RangeProgressHandle
 
 
 class ProgressHandle(ExtendedBaseModel):
@@ -78,6 +79,8 @@ class ProgressHandle(ExtendedBaseModel):
             from_: Optional[int] = None,
             total: Optional[int] = None,
     ) -> "RangeProgressHandle":
+        from wexample_prompt.common.progress.range_progress_handle import RangeProgressHandle
+
         """Create a handle that controls only a sub-range of the parent handle.
 
         Rules:
@@ -100,48 +103,3 @@ class ProgressHandle(ExtendedBaseModel):
         if end < start:
             start, end = end, start
         return RangeProgressHandle(parent=self, start=start, end=end, total=(end - start))
-
-
-class RangeProgressHandle(ExtendedBaseModel):
-    """A handle that controls a specific sub-range of a parent ProgressHandle."""
-
-    parent: ProgressHandle
-    start: int
-    end: int
-    total: int
-
-    def render(self) -> str:
-        return self.parent.render()
-
-    def _child_current(self) -> int:
-        # Current child value derived from parent's current
-        cur = max(self.start, min(self.end, self.parent.response.current))
-        return max(0, min(self.total, cur - self.start))
-
-    def update(
-            self,
-            current: Optional[Union[float, int, str]] = None,
-            label: Optional[str] = None,
-            color: Optional["TerminalColor"] = None,
-            auto_render: bool = True,
-    ) -> Optional[str]:
-        if current is not None:
-            # Normalize against child total; percentages like '50%' are relative to the sub-range
-            normalized = ProgressPromptResponse._normalize_value(self.total, current)
-            mapped = self.start + max(0, min(self.total, normalized))
-            return self.parent.update(current=mapped, label=label, color=color, auto_render=auto_render)
-        else:
-            # Only update label/color/render
-            return self.parent.update(current=None, label=label, color=color, auto_render=auto_render)
-
-    def advance(
-            self,
-            step: Optional[Union[float, int, str]] = None,
-            **kwargs
-    ) -> Optional[str]:
-        step_norm = ProgressPromptResponse._normalize_value(self.total, step)
-        cur_child = self._child_current()
-        return self.update(current=cur_child + step_norm, **kwargs)
-
-    def finish(self, **kwargs) -> Optional[str]:
-        return self.parent.update(current=self.end, **kwargs)
