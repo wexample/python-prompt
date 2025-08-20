@@ -41,9 +41,28 @@ if __name__ == "__main__":
         ))
 
     demo_io.separator('Test Various')
-    response = demo_io.progress(label='Progress via IoManager', total=100)
-    response.get_handle().update(current="10%", color=TerminalColor.CYAN)
-    response.get_handle().advance(step="1%")
-    response.get_handle().update(current="15.325%", color=TerminalColor.YELLOW)
-    response.get_handle().advance(step=21.51)
-    response.get_handle().finish(color=TerminalColor.RED)
+    response = demo_io.progress(label='Progress', total=100)
+    handle = response.get_handle()
+    handle.update(current="10%", color=TerminalColor.CYAN, label="Percentage")
+    handle.advance(step="1%", label="Percentage advance")
+    handle.update(current="15.325%", color=TerminalColor.YELLOW, label="Percentage float")
+    handle.advance(step=21.51, label="Float")
+    handle.finish(color=TerminalColor.RED, label="Direct finish")
+
+    demo_io.separator('Test sub progress')
+    response = demo_io.progress(label='Progress', total=1000)
+    handle.update(current=50, label="First progression")
+    # Sub progression
+    # "from" is optional
+    # "current" is optional, by default 0
+    # "to" helps to calculate the "total" which is 350 - 50 = 300
+    range_handle = handle.create_range_handle(to=350)
+    # global handle is now at 100
+    range_handle.update(current=50, label="First range progression")
+    # global handle is now at 50 + (350 * 0.5) = 2250
+    range_handle.advance(step="50%", label="Percentage range advance")
+    # The color can be still changed
+    range_handle.finish(label="Range complete", color=TerminalColor.MAGENTA)
+
+    # global handle complete.
+    handle.finish(color=TerminalColor.RED, label="Direct finish")
