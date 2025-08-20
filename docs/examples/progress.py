@@ -51,6 +51,8 @@ if __name__ == "__main__":
 
     demo_io.separator('Test sub progress')
     response = demo_io.progress(label='Progress', total=1000)
+    # IMPORTANT: fetch the new handle for this response
+    handle = response.get_handle()
     handle.update(current=50, label="First progression")
     # Sub progression
     # "from" is optional
