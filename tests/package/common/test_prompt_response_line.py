@@ -44,8 +44,8 @@ class TestPromptResponseLine:
         lines = PromptResponseLine.create_from_string(text)
         assert len(lines) == 2
 
-        r1 = lines[0].render(context=PromptContext(width=3))
-        r2 = lines[1].render(context=PromptContext(width=3))
+        r1 = lines[0].render(context=PromptContext(width=3, formatting=True))
+        r2 = lines[1].render(context=PromptContext(width=3, formatting=True))
 
         # Expect chunking independently per line
         assert r1 == "AAA\nAAA"
