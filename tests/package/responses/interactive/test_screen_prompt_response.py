@@ -1,7 +1,8 @@
 """Tests for ScreenPromptResponse (interactive)."""
 
-from typing import Callable
+from typing import Callable, Type
 
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -11,10 +12,16 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestScreenPromptResponse(AbstractPromptResponseTest):
     """Focused tests for ScreenPromptResponse core behavior with callback."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.screen_prompt_response import (
             ScreenPromptResponse,
         )
+
+        return ScreenPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        kwargs = kwargs or {}
 
         # Minimal callback: draw one line and close immediately
         def _cb_once(resp: "ScreenPromptResponse"):
@@ -24,7 +31,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
         kwargs.setdefault("callback", _cb_once)
         kwargs.setdefault("height", 5)
-        return ScreenPromptResponse.create_screen(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Should simply contain our message (single line screen)
@@ -40,7 +47,15 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(lines[0], self._test_message)
 
     def test_single_frame_close(self):
-        response = self.create_test_response()
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+
+        # Build response explicitly to ensure the callback is wired
+        def _cb_once(resp: "ScreenPromptResponse"):
+            resp.clear()
+            resp.print(self._test_message)
+            resp.close()
+
+        response = ScreenPromptResponse.create_screen(callback=_cb_once, height=5)
         response.render()
         # After render, last frame is stored in rendered_content
         self._assert_contains_text(response.rendered_content, self._test_message)
@@ -59,7 +74,8 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
             else:
                 resp.close()
 
-        response = self.create_test_response(callback=_cb)
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        response = ScreenPromptResponse.create_screen(callback=_cb, height=5)
         response.render()
         # Final frame should reflect the last tick (2)
         self._assert_contains_text(response.rendered_content, "tick 2")
@@ -101,7 +117,8 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
             else:
                 resp.reload()
 
-        resp = self.create_test_response(callback=_cb, reset_on_finish=True)
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        resp = ScreenPromptResponse.create_screen(callback=_cb, height=5, reset_on_finish=True)
 
         # Monkeypatch _partial_clear to observe calls
         original_clear = resp._partial_clear

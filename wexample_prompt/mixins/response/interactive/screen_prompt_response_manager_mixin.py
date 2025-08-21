@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Optional, Callable, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
@@ -15,6 +16,7 @@ class ScreenPromptResponseManagerMixin:
             *,
             callback: Callable[["ScreenPromptResponse"], Any],
             height: int = 30,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
@@ -24,6 +26,7 @@ class ScreenPromptResponseManagerMixin:
         response = ScreenPromptResponse.create_screen(
             callback=callback,
             height=height,
+            verbosity=verbosity,
             reset_on_finish=reset_on_finish,
         )
 
