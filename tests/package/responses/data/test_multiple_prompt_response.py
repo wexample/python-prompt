@@ -1,4 +1,7 @@
 """Test multiple prompt response."""
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
@@ -7,25 +10,32 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestMultiplePromptResponse(AbstractPromptResponseTest):
     """Test multiple prompt response."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def get_expected_lines(self) -> int:
+        # Default case builds a single LogPromptResponse
+        return 1
+
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.multiple_prompt_response import (
             MultiplePromptResponse,
         )
+        return MultiplePromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
         from wexample_prompt.responses.log_prompt_response import (
             LogPromptResponse,
         )
 
-        message = kwargs.pop("message", self._test_message)
-        responses = kwargs.pop("responses", [
+        kwargs = kwargs or {}
+        message = kwargs.get("message", self._test_message)
+        verbosity = kwargs.get("verbosity", VerbosityLevel.DEFAULT)
+        responses = kwargs.get("responses", [
             LogPromptResponse.create_log(
                 message=message,
-                verbosity=kwargs.pop("verbosity", VerbosityLevel.DEFAULT)
+                verbosity=verbosity,
             )
         ])
-        return MultiplePromptResponse.create_multiple(
-            responses=responses,
-            **kwargs
-        )
+        kwargs["responses"] = responses
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # No specific formatting required for multiple wrapper
@@ -39,7 +49,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         assert rendered is None
 
     def test_single_response(self):
-        response = self.create_test_response()
+        response = self._create_test_response()
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
 

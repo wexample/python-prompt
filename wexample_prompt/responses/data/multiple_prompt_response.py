@@ -38,8 +38,15 @@ class MultiplePromptResponse(AbstractPromptResponse):
         if responses is None:
             responses = []
 
+        # Work on deep copies to avoid mutating shared instances across calls.
+        cloned_responses: List[AbstractPromptResponse] = []
+        for response in responses:
+            cloned = response.model_copy(deep=True)
+            cloned.verbosity = verbosity
+            cloned_responses.append(cloned)
+
         return cls(
-            responses=responses,
+            responses=cloned_responses,
             verbosity=verbosity,
         )
 
@@ -49,13 +56,20 @@ class MultiplePromptResponse(AbstractPromptResponse):
         Returns:
             The concatenated rendered string, skipping None parts.
         """
+
+        context = PromptContext.create_if_none(context=context)
+
+        if self.verbosity > context.verbosity:
+            return None
+
         rendered_parts: List[str] = []
         for response in self.responses:
             part = response.render(context=context)
             if part is not None:
                 rendered_parts.append(part)
 
-        return "\n".join(rendered_parts) if rendered_parts else None
+        self._rendered_content = "\n".join(rendered_parts) if rendered_parts else None
+        return self._rendered_content
 
     def append_response(self, response: AbstractPromptResponse) -> "MultiplePromptResponse":
         """Append a single response and return self for chaining."""

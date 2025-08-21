@@ -2,6 +2,7 @@
 from typing import List, TYPE_CHECKING, Optional
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -15,6 +16,7 @@ class MultiplePromptResponseManagerMixin:
     def multiple(
             self: "IoManager",
             responses: List["AbstractPromptResponse"],
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs,
     ) -> "MultiplePromptResponse":
@@ -23,6 +25,7 @@ class MultiplePromptResponseManagerMixin:
 
         response = MultiplePromptResponse.create_multiple(
             responses=responses,
+            verbosity=verbosity,
         )
 
         return self.print_response(
