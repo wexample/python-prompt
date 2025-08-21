@@ -1,5 +1,8 @@
 """Tests for SuggestionsPromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -7,14 +10,18 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     """Test cases for SuggestionsPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.suggestions_prompt_response import (
             SuggestionsPromptResponse,
         )
 
+        return SuggestionsPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
         kwargs.setdefault("suggestions", ["command1 --arg value", "command2", "command3 --flag"])
-        return SuggestionsPromptResponse.create_suggestions(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Should include arrow indicators
@@ -25,7 +32,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         return 6
 
     def test_render_with_single_suggestion(self):
-        response = self.create_test_response(
+        response = self._create_test_response(
             message=self._test_message,
             suggestions=["command1 --arg value"],
         )
@@ -34,7 +41,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "command1 --arg value")
 
     def test_render_with_empty_suggestions(self):
-        response = self.create_test_response(
+        response = self._create_test_response(
             message=self._test_message,
             suggestions=[],
         )
@@ -44,7 +51,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
 
     def test_custom_arrow_style(self):
         custom_arrow = ">"
-        response = self.create_test_response(
+        response = self._create_test_response(
             message=self._test_message,
             arrow_style=custom_arrow,
         )

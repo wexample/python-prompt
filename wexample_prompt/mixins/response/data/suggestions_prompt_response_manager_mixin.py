@@ -29,7 +29,7 @@ class SuggestionsPromptResponseManagerMixin:
             message=message,
             suggestions=suggestions,
             arrow_style=arrow_style,
-            verbosity=verbosity or VerbosityLevel.DEFAULT,
+            verbosity=verbosity,
         )
 
         return self.print_response(
