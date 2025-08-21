@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional, Union
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_prompt.responses.interactive.progress_prompt_response import (
@@ -109,9 +110,7 @@ class ProgressHandle(ExtendedBaseModel):
                 return self.render()
             return None
 
-    def advance(
-        self, step: float | int | str | None = None, **kwargs
-    ) -> str | None:
+    def advance(self, step: float | int | str | None = None, **kwargs) -> str | None:
         """Increment progress by a number of steps and optionally render."""
         if self._is_child():
             step_norm = ProgressPromptResponse._normalize_value(

@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 

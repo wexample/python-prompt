@@ -1,9 +1,10 @@
 """Mixin for handling interactive screen response in IoManager."""
 
-from typing import TYPE_CHECKING, Any, Optional
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Optional
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 

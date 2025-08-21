@@ -1,7 +1,8 @@
-from typing import TYPE_CHECKING, Any, Optional, Type
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Optional, Type
 
 from pydantic import Field
+
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

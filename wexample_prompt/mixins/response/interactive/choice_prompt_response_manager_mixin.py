@@ -1,9 +1,10 @@
 """Mixin for handling interactive choice prompts in IoManager."""
 
-from typing import TYPE_CHECKING, Any, List, Optional, Union
 from collections.abc import Mapping
+from typing import TYPE_CHECKING, Any, List, Optional, Union
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
