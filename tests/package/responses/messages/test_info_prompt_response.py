@@ -1,5 +1,8 @@
 """Tests for InfoPromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
 
@@ -7,13 +10,17 @@ from wexample_prompt.testing.abstract_prompt_message_response_test import Abstra
 class TestInfoPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for InfoPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,
         )
 
+        return InfoPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
-        return InfoPromptResponse.create_info(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Info messages should include the info symbol
