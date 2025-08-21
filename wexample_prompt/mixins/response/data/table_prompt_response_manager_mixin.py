@@ -3,6 +3,7 @@ from typing import List, Optional, Any, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
@@ -17,6 +18,7 @@ class TablePromptResponseManagerMixin:
             data: List[List[Any]],
             headers: Optional[List[str]] = None,
             title: Optional[str] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "TablePromptResponse":
@@ -26,6 +28,7 @@ class TablePromptResponseManagerMixin:
             data=data,
             headers=headers,
             title=title,
+            verbosity=verbosity,
         )
 
         return self.print_response(
