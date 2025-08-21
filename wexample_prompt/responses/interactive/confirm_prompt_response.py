@@ -124,22 +124,15 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             parts.append((k, v, label))
         options_text = " / ".join([f"[{k}: {label}]" for k, _, label in parts])
 
-        # Determine question lines and maximum content width without newlines
+        # Determine question lines. We do NOT adapt the box width to content; we
+        # strictly use the terminal/context width as the fixed width.
         q_lines = PromptResponseLine.create_from_string(self.question)
         question_texts = ["".join(seg.text for seg in ln.segments) for ln in q_lines]
-        # Use ANSI-aware display width for content sizing
-        content_width = max(
-            max((ansi_display_width(t) for t in question_texts), default=0),
-            ansi_display_width(options_text),
-        )
-        min_width = max(45, content_width + 4)
-        # Desired width based on explicit width or content
-        desired_width = max(self.width or 0, min_width)
-        # Clamp to terminal width if available so we NEVER exceed it
+        # Fixed width: use get_width() strictly; if unavailable, fallback to self.width or 80
         if term_width and term_width > 0:
-            box_width = min(desired_width, term_width)
+            box_width = term_width
         else:
-            box_width = desired_width
+            box_width = self.width or 80
 
         # Compose a boxed layout using lines and segments
         self.lines = []
@@ -191,7 +184,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             self.lines.append(PromptResponseLine(segments=option_segments))
         else:
             # Too long: use purified, truncated plain text version, centered
-            truncated = truncate_visible(raw_options, box_width)
+            truncated = ansi_truncate_visible(raw_options, box_width)
             self.lines.append(
                 PromptResponseLine(
                     segments=[
