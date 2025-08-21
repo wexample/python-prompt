@@ -1,4 +1,7 @@
 """Tests for ListPromptResponse."""
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -6,13 +9,17 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestListPromptResponse(AbstractPromptResponseTest):
     """Test cases for ListPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
 
+        return ListPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("items", [self._test_message])
-        return ListPromptResponse.create_list(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # List should show bullet points
@@ -22,13 +29,13 @@ class TestListPromptResponse(AbstractPromptResponseTest):
         return 1  # Single list item
 
     def test_empty_list(self):
-        response = self.create_test_response(items=[])
+        response = self._create_test_response(items=[])
         rendered = response.render()
         assert rendered.strip() == ""
 
     def test_simple_list(self):
         items = ["First", "Second", "Third"]
-        response = self.create_test_response(items=items)
+        response = self._create_test_response(items=items)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, item)
@@ -39,7 +46,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
             "  • Sub item 1",
             "  • Sub item 2",
         ]
-        response = self.create_test_response(items=items)
+        response = self._create_test_response(items=items)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, item.strip())
@@ -47,7 +54,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
     def test_custom_bullet(self):
         bullet = "-"
         items = ["First", "Second", "Third"]
-        response = self.create_test_response(items=items, bullet=bullet)
+        response = self._create_test_response(items=items, bullet=bullet)
         rendered = response.render()
         for item in items:
             self._assert_contains_text(rendered, f"{bullet} {item}")
@@ -59,7 +66,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
             "    Level 2",
             "Level 0 again",
         ]
-        response = self.create_test_response(items=items)
+        response = self._create_test_response(items=items)
         rendered = response.render()
         lines = rendered.strip().split("\n")
         assert lines[0].startswith("• Level 0")
@@ -69,7 +76,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
 
     def test_custom_color(self):
         from wexample_prompt.enums.terminal_color import TerminalColor
-        response = self.create_test_response(
+        response = self._create_test_response(
             items=[self._test_message],
             color=TerminalColor.GREEN,
         )

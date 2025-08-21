@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, List, Optional, Any
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
@@ -15,6 +16,7 @@ class ListPromptResponseManagerMixin:
             items: List[str],
             bullet: str = "•",
             color: Optional["TerminalColor"] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs) -> "ListPromptResponse":
         from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
@@ -23,6 +25,7 @@ class ListPromptResponseManagerMixin:
             items=items,
             bullet=bullet,
             color=color,
+            verbosity=verbosity,
         )
 
         return self.print_response(
