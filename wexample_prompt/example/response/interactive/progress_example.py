@@ -3,10 +3,10 @@
 import time
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.interactive.progress_prompt_response import (
-    ProgressPromptResponse,
-)
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.interactive.progress_prompt_response import \
+    ProgressPromptResponse
 
 
 def step1() -> None:

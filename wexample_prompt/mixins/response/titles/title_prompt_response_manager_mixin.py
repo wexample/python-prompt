@@ -6,11 +6,10 @@ from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.responses.abstract_prompt_response import (
-        AbstractPromptResponse,
-    )
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.responses.abstract_prompt_response import \
+        AbstractPromptResponse
 
 
 class TitlePromptResponseManagerMixin:
@@ -24,9 +23,8 @@ class TitlePromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.titles.title_prompt_response import (
-            TitlePromptResponse,
-        )
+        from wexample_prompt.responses.titles.title_prompt_response import \
+            TitlePromptResponse
 
         response = TitlePromptResponse.create_title(
             text=text,

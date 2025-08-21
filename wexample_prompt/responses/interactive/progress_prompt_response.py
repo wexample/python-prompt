@@ -1,15 +1,16 @@
 """Progress bar response implementation."""
 
-from typing import Optional, ClassVar, Type, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, ClassVar, Optional, Type, Union
 
 from pydantic import Field
-
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import \
+    PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import \
+    AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
@@ -38,9 +39,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.progress_example import (
-            ProgressExample,
-        )
+        from wexample_prompt.example.response.interactive.progress_example import \
+            ProgressExample
 
         return ProgressExample
 
@@ -103,13 +103,15 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
     def get_handle(self) -> "ProgressHandle":
-        from wexample_prompt.common.progress.progress_handle import ProgressHandle
+        from wexample_prompt.common.progress.progress_handle import \
+            ProgressHandle
 
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
-        from wexample_prompt.common.progress.progress_handle import ProgressHandle
+        from wexample_prompt.common.progress.progress_handle import \
+            ProgressHandle
 
         # Normalize context
         context = PromptContext.create_if_none(context=context)

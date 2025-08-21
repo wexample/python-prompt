@@ -1,9 +1,11 @@
-from typing import Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Type
 
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.abstract_prompt_response import \
+    AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
@@ -19,8 +21,9 @@ class LogPromptResponse(AbstractPromptResponse):
         color: "TerminalColor" = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "LogPromptResponse":
+        from wexample_prompt.common.prompt_response_line import \
+            PromptResponseLine
         from wexample_prompt.enums.terminal_color import TerminalColor
-        from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
             lines=PromptResponseLine.create_from_string(

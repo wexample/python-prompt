@@ -5,11 +5,10 @@ from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.abstract_prompt_response import (
-        AbstractPromptResponse,
-    )
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.responses.abstract_prompt_response import \
+        AbstractPromptResponse
 
 
 class LogPromptResponseManagerMixin:
@@ -20,7 +19,8 @@ class LogPromptResponseManagerMixin:
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import \
+            LogPromptResponse
 
         response = LogPromptResponse.create_log(
             message=message,

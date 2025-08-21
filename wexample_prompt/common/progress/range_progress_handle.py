@@ -1,7 +1,6 @@
-from typing import Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from pydantic import Field
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
@@ -44,9 +43,8 @@ class RangeProgressHandle(ExtendedBaseModel):
     ) -> Optional[str]:
         if current is not None:
             # Normalize against child total; percentages like '50%' are relative to the sub-range
-            from wexample_prompt.responses.interactive.progress_prompt_response import (
-                ProgressPromptResponse,
-            )
+            from wexample_prompt.responses.interactive.progress_prompt_response import \
+                ProgressPromptResponse
 
             normalized = ProgressPromptResponse._normalize_value(self.total, current)
             mapped = self.start + max(0, min(self.total, normalized))
@@ -64,9 +62,8 @@ class RangeProgressHandle(ExtendedBaseModel):
         step: Optional[Union[float, int, str]] = None,
         **kwargs,
     ) -> Optional[str]:
-        from wexample_prompt.responses.interactive.progress_prompt_response import (
-            ProgressPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.progress_prompt_response import \
+            ProgressPromptResponse
 
         step_norm = ProgressPromptResponse._normalize_value(self.total, step)
         cur_child = self._child_current()

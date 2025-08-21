@@ -3,19 +3,18 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import (
-    AbstractPromptResponseTest,
-)
+from wexample_prompt.responses.abstract_prompt_response import \
+    AbstractPromptResponse
+from wexample_prompt.testing.abstract_prompt_response_test import \
+    AbstractPromptResponseTest
 
 
 class TestPropertiesPromptResponse(AbstractPromptResponseTest):
     """Test cases for PropertiesPromptResponse."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import \
+            PropertiesPromptResponse
 
         return PropertiesPromptResponse
 
@@ -34,9 +33,8 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         return 5
 
     def test_empty_properties(self):
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import \
+            PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(properties={})
         rendered = response.render()
@@ -58,9 +56,8 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
             "personal": {"name": "John Doe", "age": 30},
             "contact": {"email": "john@example.com", "phone": "123-456-7890"},
         }
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import \
+            PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(
             properties=nested, title=self._test_message
@@ -82,9 +79,8 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
 
     def test_custom_nested_indent(self):
         nested = {"level0": {"level1": {"key": "value"}}}
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import \
+            PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(
             properties=nested, nested_indent=4

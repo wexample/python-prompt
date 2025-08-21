@@ -3,19 +3,18 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import (
-    AbstractPromptResponseTest,
-)
+from wexample_prompt.responses.abstract_prompt_response import \
+    AbstractPromptResponse
+from wexample_prompt.testing.abstract_prompt_response_test import \
+    AbstractPromptResponseTest
 
 
 class TestTreePromptResponse(AbstractPromptResponseTest):
     """Test cases for TreePromptResponse."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.data.tree_prompt_response import \
+            TreePromptResponse
 
         return TreePromptResponse
 
@@ -46,18 +45,16 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         return 13
 
     def test_empty_tree(self):
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.data.tree_prompt_response import \
+            TreePromptResponse
 
         response = TreePromptResponse.create_tree(data={})
         rendered = response.render()
         assert rendered.strip() == ""
 
     def test_single_node(self):
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.data.tree_prompt_response import \
+            TreePromptResponse
 
         data = {"root": "value"}
         response = TreePromptResponse.create_tree(data=data)
@@ -66,9 +63,8 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "value")
 
     def test_deep_nesting(self):
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.data.tree_prompt_response import \
+            TreePromptResponse
 
         data = {"level1": {"level2": {"level3": {"level4": "value"}}}}
         response = TreePromptResponse.create_tree(data=data)
@@ -82,9 +78,8 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         assert sorted(indents) == indents
 
     def test_none_values(self):
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.data.tree_prompt_response import \
+            TreePromptResponse
 
         data = {"root": {"valid": "value", "none": None}}
         response = TreePromptResponse.create_tree(data=data)

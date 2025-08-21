@@ -1,6 +1,7 @@
 """Terminal color and style codes using colorama."""
 
 from enum import Enum
+
 from colorama import Fore, Style
 
 

@@ -1,3 +1,3 @@
-from typing import Union, List
+from typing import List, Union
 
 LineMessage = Union[str, List[str]]

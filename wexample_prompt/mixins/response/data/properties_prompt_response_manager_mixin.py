@@ -1,16 +1,15 @@
 """Properties response manager mixin."""
 
-from typing import Dict, Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.data.properties_prompt_response import (
-        PropertiesPromptResponse,
-    )
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.responses.data.properties_prompt_response import \
+        PropertiesPromptResponse
 
 
 class PropertiesPromptResponseManagerMixin:
@@ -25,9 +24,8 @@ class PropertiesPromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs,
     ) -> "PropertiesPromptResponse":
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import \
+            PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(
             properties=properties,

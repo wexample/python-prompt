@@ -1,13 +1,14 @@
-from typing import TYPE_CHECKING, List, Optional, Any
+from typing import TYPE_CHECKING, Any, List, Optional
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+    from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.responses.data.list_prompt_response import \
+        ListPromptResponse
 
 
 class ListPromptResponseManagerMixin:
@@ -20,9 +21,8 @@ class ListPromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs
     ) -> "ListPromptResponse":
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
+        from wexample_prompt.responses.data.list_prompt_response import \
+            ListPromptResponse
 
         response = ListPromptResponse.create_list(
             items=items,

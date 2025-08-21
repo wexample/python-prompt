@@ -1,16 +1,15 @@
 """Mixin for managing confirmation dialogs."""
 
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.const.types import LineMessage
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.interactive.confirm_prompt_response import (
-        ConfirmPromptResponse,
-    )
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.responses.interactive.confirm_prompt_response import \
+        ConfirmPromptResponse
 
 
 class ConfirmPromptResponseManagerMixin:
@@ -28,9 +27,8 @@ class ConfirmPromptResponseManagerMixin:
         predefined_answer: Any = None,
         **kwargs: Any,
     ) -> "ConfirmPromptResponse":
-        from wexample_prompt.responses.interactive.confirm_prompt_response import (
-            ConfirmPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.confirm_prompt_response import \
+            ConfirmPromptResponse
 
         response = ConfirmPromptResponse.create_confirm(
             question=question,

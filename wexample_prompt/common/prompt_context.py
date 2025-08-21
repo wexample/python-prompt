@@ -1,7 +1,6 @@
-from typing import Optional, ClassVar
+from typing import ClassVar, Optional
 
 from pydantic import Field
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.terminal_color import TerminalColor

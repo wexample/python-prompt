@@ -1,13 +1,12 @@
-from typing import Optional, TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, ClassVar, Optional
 
 from pydantic import Field
-
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import \
+    PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.messages.abstract_message_response import (
-    AbstractMessageResponse,
-)
+from wexample_prompt.responses.messages.abstract_message_response import \
+    AbstractMessageResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext

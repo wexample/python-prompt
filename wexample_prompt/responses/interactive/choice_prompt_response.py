@@ -1,24 +1,23 @@
-from typing import Any, List, Optional, Dict, Type, TYPE_CHECKING, Union, Mapping
+from typing import (TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Type,
+                    Union)
 
 from pydantic import Field
-
 from wexample_prompt.common.choice.choice import Choice
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import \
+    PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import ChoiceValue
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
-    AbstractInteractivePromptResponse,
-)
+from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import \
+    AbstractInteractivePromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.example.abstract_response_example import (
-        AbstractResponseExample,
-    )
+    from wexample_prompt.example.abstract_response_example import \
+        AbstractResponseExample
 
 
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
@@ -108,7 +107,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     def render(self, context: Optional["PromptContext"] = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
-
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
@@ -235,8 +233,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.interactive.choice_example import (
-            ChoiceExample,
-        )
+        from wexample_prompt.example.response.interactive.choice_example import \
+            ChoiceExample
 
         return ChoiceExample

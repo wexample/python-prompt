@@ -1,10 +1,10 @@
 from typing import List, Optional, Type
 
 from pydantic import Field
-
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import \
+    AbstractPromptResponse
 
 
 class MultiplePromptResponse(AbstractPromptResponse):
@@ -25,9 +25,8 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.multiple_example import (
-            MultipleExample,
-        )
+        from wexample_prompt.example.response.data.multiple_example import \
+            MultipleExample
 
         return MultipleExample
 

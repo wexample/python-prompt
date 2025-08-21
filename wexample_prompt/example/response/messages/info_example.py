@@ -1,5 +1,7 @@
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.messages.info_prompt_response import \
+    InfoPromptResponse
 
 
 class InfoExample(AbstractResponseExample):
