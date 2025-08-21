@@ -1,5 +1,4 @@
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class LogExample(AbstractResponseExample):
@@ -10,8 +9,7 @@ class LogExample(AbstractResponseExample):
         self.io.log(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         return LogPromptResponse.create_log(
             message=self.get_test_message(),

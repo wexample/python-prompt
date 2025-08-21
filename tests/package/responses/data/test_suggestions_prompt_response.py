@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -26,7 +27,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         )
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Should include arrow indicators
         self._assert_contains_text(rendered, "→")
 
@@ -34,7 +35,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         # Empty lines (2) + message (1) + 3 suggestions
         return 6
 
-    def test_render_with_single_suggestion(self):
+    def test_render_with_single_suggestion(self) -> None:
         response = self._create_test_response(
             message=self._test_message,
             suggestions=["command1 --arg value"],
@@ -43,7 +44,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
         self._assert_contains_text(rendered, "command1 --arg value")
 
-    def test_render_with_empty_suggestions(self):
+    def test_render_with_empty_suggestions(self) -> None:
         response = self._create_test_response(
             message=self._test_message,
             suggestions=[],
@@ -52,7 +53,7 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
         assert "→" not in rendered
 
-    def test_custom_arrow_style(self):
+    def test_custom_arrow_style(self) -> None:
         custom_arrow = ">"
         response = self._create_test_response(
             message=self._test_message,

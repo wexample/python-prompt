@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
@@ -22,7 +23,7 @@ class PromptResponseSegment(ExtendedBaseModel):
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
         if "\n" in self.text:

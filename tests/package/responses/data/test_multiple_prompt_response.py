@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
@@ -42,23 +43,23 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         kwargs["responses"] = responses
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # No specific formatting required for multiple wrapper
         pass
 
-    def test_empty_responses(self):
+    def test_empty_responses(self) -> None:
         from wexample_prompt.responses.data.multiple_prompt_response import \
             MultiplePromptResponse
 
         rendered = MultiplePromptResponse.create_multiple(responses=[]).render()
         assert rendered is None
 
-    def test_single_response(self):
+    def test_single_response(self) -> None:
         response = self._create_test_response()
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
 
-    def test_multiple_responses_join(self):
+    def test_multiple_responses_join(self) -> None:
         from wexample_prompt.responses.data.multiple_prompt_response import \
             MultiplePromptResponse
         from wexample_prompt.responses.log_prompt_response import \
@@ -76,7 +77,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         )
         assert rendered == "First\nSecond\nLast"
 
-    def test_append_and_extend(self):
+    def test_append_and_extend(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.responses.data.multiple_prompt_response import \
             MultiplePromptResponse

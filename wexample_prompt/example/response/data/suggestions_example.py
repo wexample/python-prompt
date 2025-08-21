@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.suggestions_prompt_response import \
-    SuggestionsPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.suggestions_prompt_response import (
+    SuggestionsPromptResponse,
+)
 
 
 class SuggestionsExample(AbstractResponseExample):
@@ -38,7 +38,7 @@ class SuggestionsExample(AbstractResponseExample):
             suggestions=suggestions,
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using IoManager directly."""
         message = "Here are some useful commands"
         suggestions = [
@@ -51,7 +51,7 @@ class SuggestionsExample(AbstractResponseExample):
             suggestions=suggestions,
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using context."""
         message = "Here are some useful commands"
         suggestions = [

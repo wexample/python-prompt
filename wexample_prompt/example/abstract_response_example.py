@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 if TYPE_CHECKING:
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 class AbstractResponseExample(WithIoManager, ExtendedBaseModel):
     _class_with_methods: Optional["ExampleClassWithMethods"] = None
 
-    def __init__(self, io: Optional["IoManager"] = None, **kwargs):
+    def __init__(self, io: Optional["IoManager"] = None, **kwargs) -> None:
         from wexample_prompt.example.example_class_with_methods import \
             ExampleClassWithMethods
 
@@ -24,11 +25,11 @@ class AbstractResponseExample(WithIoManager, ExtendedBaseModel):
         self._class_with_methods = ExampleClassWithMethods(io=self._io)
 
     @abstractmethod
-    def example_class(self):
+    def example_class(self) -> None:
         pass
 
     @abstractmethod
-    def example_manager(self):
+    def example_manager(self) -> None:
         pass
 
     @abstractmethod

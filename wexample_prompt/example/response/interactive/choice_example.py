@@ -1,9 +1,9 @@
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.interactive.choice_prompt_response import \
-    ChoicePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.interactive.choice_prompt_response import (
+    ChoicePromptResponse,
+)
 
 
 class ChoiceExample(AbstractResponseExample):
@@ -20,13 +20,13 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="value3",
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         choices = ["Option 1", "Option 2", "Option 3"]
         self.io.choice(
             question="Select an option:", choices=choices, predefined_answer="Option 2"
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         choices = ["Option 1", "Option 2", "Option 3"]
         self._class_with_methods.choice(
             question="Select an option:", choices=choices, predefined_answer="Option 2"

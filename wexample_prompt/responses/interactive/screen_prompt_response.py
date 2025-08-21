@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Any, Callable, Optional, Type
 
 from pydantic import Field
+
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import \
@@ -39,7 +40,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     _reload_requested: bool = False
     _io_buffer: Optional["BufferOutputHandler"] = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         AbstractInteractivePromptResponse.__init__(self, **kwargs)
         WithIoMethods.__init__(self)
 
@@ -126,7 +127,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
             self._render_buffer()
 
-    def _render_buffer(self):
+    def _render_buffer(self) -> None:
         # Consume buffered output as a single string, split into lines
         rendered = self._io_buffer.flush()
         # Normalize to lines

@@ -3,10 +3,10 @@
 import time
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.interactive.progress_prompt_response import \
-    ProgressPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.interactive.progress_prompt_response import (
+    ProgressPromptResponse,
+)
 
 
 def step1() -> None:
@@ -35,7 +35,7 @@ class ProgressExample(AbstractResponseExample):
             label="Processing",
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using the IoManager."""
         self.io.progress(
             total=5,
@@ -43,7 +43,7 @@ class ProgressExample(AbstractResponseExample):
             label="Processing",
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using a context class."""
         self._class_with_methods.progress(
             total=5,

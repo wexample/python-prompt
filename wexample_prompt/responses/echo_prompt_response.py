@@ -2,10 +2,8 @@ from typing import TYPE_CHECKING, Optional, Type
 
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -20,8 +18,7 @@ class EchoPromptResponse(AbstractPromptResponse):
         message: LineMessage,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "EchoPromptResponse":
-        from wexample_prompt.common.prompt_response_line import \
-            PromptResponseLine
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
             lines=PromptResponseLine.create_from_string(

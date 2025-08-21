@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_title_prompt_response_test import \
@@ -24,7 +25,7 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
         # keep defaults: color=BLUE, character=DEFAULT, width=None
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Subtitle uses prefix with two spaces then ❯ and default fill char
         self._assert_contains_text(rendered, "  ❯")
         self._assert_contains_text(rendered, "⫻")
@@ -35,7 +36,7 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
 
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
 
-    def test_renders_message_and_format(self):
+    def test_renders_message_and_format(self) -> None:
         from wexample_prompt.responses.titles.subtitle_prompt_response import \
             SubtitlePromptResponse
 
@@ -45,7 +46,7 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
         self._assert_contains_text(response.rendered_content, self._test_message)
         self._assert_specific_format(response.rendered_content)
 
-    def test_custom_character(self):
+    def test_custom_character(self) -> None:
         from wexample_prompt.responses.titles.subtitle_prompt_response import \
             SubtitlePromptResponse
 

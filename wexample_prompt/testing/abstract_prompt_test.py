@@ -23,21 +23,21 @@ class AbstractPromptTest(unittest.TestCase, ABC):
     _test_message_multiline: str = "\n".join(["Line 1", "Line 2", "Line 3"])
     _io: IoManager
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up common test fixtures."""
         self._io = IoManager()
 
-    def _asset_response_render_is_multiline(self, response: "AbstractResponse"):
+    def _asset_response_render_is_multiline(self, response: "AbstractResponse") -> None:
         rendered = response.render()
         self._assert_contains_text(rendered, "Line 1")
         self._assert_contains_text(rendered, "Line 2")
         self._assert_contains_text(rendered, "Line 3")
 
-    def _assert_contains_text(self, rendered: str, text: str):
+    def _assert_contains_text(self, rendered: str, text: str) -> None:
         """Assert that rendered output contains specific text."""
         self.assertIn(text, rendered)
 
     def _assert_rendered_lines_count(
         self, response: "AbstractResponse", lines_count: int
-    ):
+    ) -> None:
         assert len(response.rendered_content.split("\n")) == lines_count

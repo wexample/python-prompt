@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -24,7 +25,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         kwargs.setdefault("title", self._test_message)
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Should contain key-value formatting
         self.assertIn(":", rendered)
 
@@ -32,7 +33,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         # Boxed properties typically render with top/bottom borders and content
         return 5
 
-    def test_empty_properties(self):
+    def test_empty_properties(self) -> None:
         from wexample_prompt.responses.data.properties_prompt_response import \
             PropertiesPromptResponse
 
@@ -40,7 +41,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         rendered = response.render()
         assert rendered == ""
 
-    def test_simple_properties_rendering(self):
+    def test_simple_properties_rendering(self) -> None:
         response = self._create_test_response(
             properties={"name": "John Doe", "age": 30}
         )
@@ -51,7 +52,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "30")
         self._assert_specific_format(rendered)
 
-    def test_nested_properties_rendering(self):
+    def test_nested_properties_rendering(self) -> None:
         nested = {
             "personal": {"name": "John Doe", "age": 30},
             "contact": {"email": "john@example.com", "phone": "123-456-7890"},
@@ -70,14 +71,14 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "123-456-7890")
         self._assert_specific_format(rendered)
 
-    def test_with_custom_title(self):
+    def test_with_custom_title(self) -> None:
         custom_title = "User Information"
         response = self._create_test_response(title=custom_title)
         rendered = response.render()
         self._assert_contains_text(rendered, custom_title)
         self._assert_specific_format(rendered)
 
-    def test_custom_nested_indent(self):
+    def test_custom_nested_indent(self) -> None:
         nested = {"level0": {"level1": {"key": "value"}}}
         from wexample_prompt.responses.data.properties_prompt_response import \
             PropertiesPromptResponse

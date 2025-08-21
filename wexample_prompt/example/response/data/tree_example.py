@@ -2,10 +2,8 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.tree_prompt_response import \
-    TreePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
 
 class TreeExample(AbstractResponseExample):
@@ -50,7 +48,7 @@ class TreeExample(AbstractResponseExample):
             data=data,
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using IoManager directly."""
         data = {
             "root": {
@@ -67,7 +65,7 @@ class TreeExample(AbstractResponseExample):
         }
         self.io.tree(data=data)
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using context."""
         data = {
             "root": {

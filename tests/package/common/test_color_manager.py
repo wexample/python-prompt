@@ -3,12 +3,12 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
 
-def test_build_prefix_empty():
+def test_build_prefix_empty() -> None:
     assert ColorManager.build_prefix() == ""
     assert ColorManager.build_prefix(color=None, styles=[]) == ""
 
 
-def test_build_prefix_with_color_and_styles():
+def test_build_prefix_with_color_and_styles() -> None:
     prefix = ColorManager.build_prefix(
         color=TerminalColor.RED, styles=[TextStyle.BOLD, TextStyle.UNDERLINE]
     )

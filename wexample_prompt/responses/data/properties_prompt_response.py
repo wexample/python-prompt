@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, Type
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import \
@@ -64,7 +65,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         max_key_width = 0
 
-        def scan_keys(obj: Dict[str, Any]):
+        def scan_keys(obj: Dict[str, Any]) -> None:
             nonlocal max_key_width
             for k, v in obj.items():
                 max_key_width = max(max_key_width, len(str(k)))

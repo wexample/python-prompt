@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -25,7 +26,7 @@ class TestConfirmPromptResponse(AbstractPromptResponseTest):
         kwargs.setdefault("predefined_answer", "yes")
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Box borders and options format
         self._assert_contains_text(rendered, "-")
         self._assert_contains_text(rendered, "[")
@@ -36,7 +37,9 @@ class TestConfirmPromptResponse(AbstractPromptResponseTest):
         return 7
 
     # Override: confirm renders a boxed layout with specific structure
-    def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
+    def _assert_common_response_structure(
+        self, response: "AbstractPromptResponse"
+    ) -> None:
         lines = response.rendered_content.split("\n")
         assert len(lines) == self.get_expected_lines()
         # Question should appear
@@ -45,7 +48,7 @@ class TestConfirmPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, "[y: Yes]")
         self._assert_contains_text(response.rendered_content, "[n: No]")
 
-    def test_multiline_question_does_not_crash_and_renders_all_lines(self):
+    def test_multiline_question_does_not_crash_and_renders_all_lines(self) -> None:
         from wexample_prompt.responses.interactive.confirm_prompt_response import \
             ConfirmPromptResponse
 

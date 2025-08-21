@@ -5,7 +5,7 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestBufferOutputHandler(AbstractPromptTest):
-    def test_print_buffers_response_and_returns_rendered(self):
+    def test_print_buffers_response_and_returns_rendered(self) -> None:
         # Switch IoManager to buffer output handler
         self._io.output = BufferOutputHandler()
 

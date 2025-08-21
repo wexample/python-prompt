@@ -2,8 +2,9 @@
 
 from abc import ABC
 
-from wexample_prompt.testing.abstract_prompt_response_test import \
-    AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
@@ -13,7 +14,7 @@ class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
         """Return the expected number of lines in the rendered response."""
         return 3  # Title messages have empty lines before and after
 
-    def test_custom_fill_char(self):
+    def test_custom_fill_char(self) -> None:
         """Test response with custom fill character."""
         character = "."
         response = self._create_test_response(character=character)

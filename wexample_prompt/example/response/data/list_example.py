@@ -1,9 +1,7 @@
 from typing import List
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.list_prompt_response import \
-    ListPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
 
 class ListExample(AbstractResponseExample):
@@ -15,7 +13,7 @@ class ListExample(AbstractResponseExample):
             "Item B",
         ]
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         self.io.list(items=self.get_test_items())
 
     def example_class(self):
@@ -23,5 +21,5 @@ class ListExample(AbstractResponseExample):
             items=self.get_test_items(),
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         self._class_with_methods.list(items=self.get_test_items())

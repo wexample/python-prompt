@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
@@ -9,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
-    def __init__(self, parent_io_handler: "WithIoManager", **kwargs):
+    def __init__(self, parent_io_handler: "WithIoManager", **kwargs) -> None:
         ExtendedBaseModel.__init__(self, **kwargs)
         WithIoMethods.__init__(
             self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
@@ -21,7 +22,7 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
     def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
         return TerminalColor.BLUE
 
-    def print_deep_log_three(self):
+    def print_deep_log_three(self) -> None:
         from wexample_helpers.helpers.string import string_generate_lorem_ipsum
 
         self.io.log(message="test deep three LOG", context=self.io_context)

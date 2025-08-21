@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, ClassVar, Optional
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import \
     PromptResponseSegment

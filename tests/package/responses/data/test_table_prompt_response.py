@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -32,7 +33,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         kwargs.setdefault("title", self._test_message)
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Should include table borders/separators
         self.assertTrue("|" in rendered or "+" in rendered)
 
@@ -40,7 +41,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         # Empty lines (2) + title (1) + header (1) + 2 separators + 3 data rows
         return 9
 
-    def test_create_table_without_headers(self):
+    def test_create_table_without_headers(self) -> None:
         from wexample_prompt.responses.data.table_prompt_response import \
             TablePromptResponse
 
@@ -55,7 +56,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "30")
         self._assert_contains_text(rendered, "New York")
 
-    def test_empty_table(self):
+    def test_empty_table(self) -> None:
         from wexample_prompt.responses.data.table_prompt_response import \
             TablePromptResponse
 
@@ -63,7 +64,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         rendered = response.render()
         assert rendered.strip() == ""
 
-    def test_single_column(self):
+    def test_single_column(self) -> None:
         from wexample_prompt.responses.data.table_prompt_response import \
             TablePromptResponse
 
@@ -75,7 +76,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Row 1")
         self._assert_contains_text(rendered, "Row 2")
 
-    def test_column_alignment(self):
+    def test_column_alignment(self) -> None:
         from wexample_prompt.responses.data.table_prompt_response import \
             TablePromptResponse
 

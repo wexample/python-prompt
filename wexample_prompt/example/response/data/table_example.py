@@ -2,10 +2,8 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.table_prompt_response import \
-    TablePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 
 
 class TableExample(AbstractResponseExample):
@@ -40,7 +38,7 @@ class TableExample(AbstractResponseExample):
             title="Employee List",
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using IoManager directly."""
         headers = ["Name", "Age", "City"]
         data = [
@@ -54,7 +52,7 @@ class TableExample(AbstractResponseExample):
             title="Employee List",
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using context."""
         headers = ["Name", "Age", "City"]
         data = [

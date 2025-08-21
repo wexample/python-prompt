@@ -4,6 +4,7 @@ from abc import abstractmethod
 from typing import Optional, Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
@@ -16,7 +17,9 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Return the expected number of lines in the rendered response."""
         pass
 
-    def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
+    def _assert_common_response_structure(
+        self, response: "AbstractPromptResponse"
+    ) -> None:
         """Assert common structure for rendered responses."""
         lines = response.rendered_content.split("\n")
         expected_lines = self.get_expected_lines()
@@ -28,11 +31,11 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             self.assertEqual(lines[0].strip(), "")
 
     @abstractmethod
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         """Assert format specific to this response type."""
         pass
 
-    def _assert_no_color_codes(self, text: str):
+    def _assert_no_color_codes(self, text: str) -> None:
         """Assert that a string contains no ANSI escape sequences (colors/styles)."""
         import re
 
@@ -68,7 +71,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
     def _create_test_kwargs(self, **kwargs) -> Kwargs:
         return kwargs
 
-    def test_response_class(self):
+    def test_response_class(self) -> None:
         """Test response class behavior."""
         response = self._create_test_response()
         response.render()
@@ -77,7 +80,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         self._assert_contains_text(response.rendered_content, self._test_message)
         self._assert_specific_format(response.rendered_content)
 
-    def test_no_color(self):
+    def test_no_color(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
 
         response = self._create_test_response()
@@ -85,7 +88,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
         self._assert_no_color_codes(response.rendered_content)
 
-    def test_verbosity_standalone(self):
+    def test_verbosity_standalone(self) -> None:
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
         quiet_required = self._create_test_response(verbosity=VerbosityLevel.QUIET)
@@ -98,7 +101,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             maximum_required=maximum_required,
         )
 
-    def test_verbosity_methods(self):
+    def test_verbosity_methods(self) -> None:
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
         kwargs = self._create_test_kwargs()
@@ -124,7 +127,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         quiet_required: "AbstractPromptResponse",
         default_required: "AbstractPromptResponse",
         maximum_required: "AbstractPromptResponse",
-    ):
+    ) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -134,7 +137,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         medium_context = PromptContext(verbosity=VerbosityLevel.MEDIUM)
         max_context = PromptContext(verbosity=VerbosityLevel.MAXIMUM)
 
-        def assert_visibility(context, expectations):
+        def assert_visibility(context, expectations) -> None:
             # expectations: list of tuples (response, should_be_visible)
             for response, should_be_visible in expectations:
                 # Reset rendered when passing already rendered response.
@@ -193,7 +196,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             ],
         )
 
-    def test_manager_indentation(self):
+    def test_manager_indentation(self) -> None:
         response = self._create_test_response()
 
         response = self._io.print_response(response=response)

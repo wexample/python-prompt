@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, List, Optional, Type
 
 from pydantic import Field, PrivateAttr
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import \
     ListPromptResponseManagerMixin
@@ -104,7 +105,7 @@ class IoManager(
         description="The overall verbosity level used in contexts, if not specified.",
     )
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._init_output()
 
@@ -117,7 +118,7 @@ class IoManager(
 
         return self._terminal_width
 
-    def _init_output(self):
+    def _init_output(self) -> None:
         from wexample_prompt.output.stdout_output_handler import \
             StdoutOutputHandler
 

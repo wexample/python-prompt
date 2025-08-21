@@ -1,14 +1,12 @@
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.titles.title_prompt_response import \
-    TitlePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
 
 class TitleExample(AbstractResponseExample):
     def get_test_message(self) -> str:
         return "Test title"
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         self.io.title(message=self.get_test_message())
 
     def example_class(self):
@@ -16,7 +14,7 @@ class TitleExample(AbstractResponseExample):
             text=self.get_test_message() + " (from response)"
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         self._class_with_methods.title(
             message=self.get_test_message() + " (class method)"
         )

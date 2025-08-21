@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -26,7 +27,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         # keep default abort ("> Abort") behavior unless overridden
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Choice prompts should have arrow indicators and numbering
         self._assert_contains_text(rendered, "›")
         self._assert_contains_text(rendered, "⨯")
@@ -36,7 +37,9 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         return 5
 
     # Override: interactive choice does not render leading empty line.
-    def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
+    def _assert_common_response_structure(
+        self, response: "AbstractPromptResponse"
+    ) -> None:
         lines = response.rendered_content.split("\n")
         assert len(lines) == self.get_expected_lines()
         # First line should be the question text
@@ -46,7 +49,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
             choice_line = lines[i]
             self._assert_contains_text(choice_line, choice)
 
-    def test_create_with_choice_objects(self):
+    def test_create_with_choice_objects(self) -> None:
         from wexample_prompt.responses.interactive.choice_prompt_response import \
             ChoicePromptResponse
 
@@ -68,7 +71,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         assert "value1" not in response.rendered_content
         assert "value2" not in response.rendered_content
 
-    def test_abort_option(self):
+    def test_abort_option(self) -> None:
         abort_text = "Cancel"
         response = self._create_test_response(abort=abort_text)
         response.render()
@@ -78,7 +81,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
             response.rendered_content, str(len(["Option 1", "Option 2"]) + 1)
         )
 
-    def test_no_abort_option(self):
+    def test_no_abort_option(self) -> None:
         response = self._create_test_response(abort=None)
         response.render()
 
@@ -87,7 +90,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         non_empty = [l for l in response.rendered_content.split("\n") if l.strip()]
         assert len(non_empty) == self.get_expected_lines()
 
-    def test_multiline_question_does_not_crash_and_renders_both_lines(self):
+    def test_multiline_question_does_not_crash_and_renders_both_lines(self) -> None:
         from wexample_prompt.responses.interactive.choice_prompt_response import \
             ChoicePromptResponse
 

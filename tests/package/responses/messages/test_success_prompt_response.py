@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_message_response_test import \
@@ -23,7 +24,7 @@ class TestSuccessPromptResponse(AbstractPromptMessageResponseTest):
         kwargs.setdefault("message", self._test_message)
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Success messages should include the success symbol
         self._assert_contains_text(rendered, "✅")
 

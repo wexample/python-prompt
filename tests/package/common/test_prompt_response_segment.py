@@ -1,22 +1,21 @@
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
 
 class TestPromptResponseSegment:
-    def test_create_basic_segment(self):
+    def test_create_basic_segment(self) -> None:
         """Test creating a basic text segment without styling."""
         segment = PromptResponseSegment(text="Hello")
         assert segment.text == "Hello"
 
-    def test_empty_text(self):
+    def test_empty_text(self) -> None:
         """Test that empty text is allowed."""
         segment = PromptResponseSegment(text="")
         assert segment.text == ""
 
-    def test_render_with_styles_and_colorized(self):
+    def test_render_with_styles_and_colorized(self) -> None:
         segment = PromptResponseSegment(
             text="Hello",
             color=TerminalColor.GREEN,
@@ -31,7 +30,7 @@ class TestPromptResponseSegment:
         assert "\033[4m" in rendered  # underline
         assert rendered.endswith("\033[0m")
 
-    def test_render_without_colorized(self):
+    def test_render_without_colorized(self) -> None:
         segment = PromptResponseSegment(
             text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD]
         )
@@ -40,7 +39,7 @@ class TestPromptResponseSegment:
         assert remainder is None
         assert rendered == "Hello"
 
-    def test_render_wrap_preserves_styles(self):
+    def test_render_wrap_preserves_styles(self) -> None:
         segment = PromptResponseSegment(
             text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC]
         )

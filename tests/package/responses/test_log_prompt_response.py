@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
@@ -24,14 +25,14 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         kwargs.setdefault("message", self._test_message)
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Log messages have no specific format to check
         pass
 
     def get_expected_lines(self) -> int:
         return 1  # Log messages are single line
 
-    def test_multiline_log(self):
+    def test_multiline_log(self) -> None:
         from wexample_prompt.responses.log_prompt_response import \
             LogPromptResponse
 
@@ -42,7 +43,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Line 1")
         self._assert_contains_text(rendered, "Line 2")
 
-    def test_log_with_timestamp(self):
+    def test_log_with_timestamp(self) -> None:
         timestamp = "2025-01-04 12:00:00"
         message = f"[{timestamp}] System started"
 
@@ -52,7 +53,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, timestamp)
         self._assert_contains_text(rendered, "System started")
 
-    def test_log_with_level(self):
+    def test_log_with_level(self) -> None:
         from wexample_prompt.responses.log_prompt_response import \
             LogPromptResponse
 
@@ -63,7 +64,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "[INFO]")
         self._assert_contains_text(rendered, "Application initialized")
 
-    def test_single_indentation(self):
+    def test_single_indentation(self) -> None:
         from wexample_prompt.responses.log_prompt_response import \
             LogPromptResponse
 
@@ -74,7 +75,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         # Should have 2 spaces of indentation
         assert rendered.startswith("  ")
 
-    def test_multiple_indentation_levels(self):
+    def test_multiple_indentation_levels(self) -> None:
         messages = [
             (0, "Root level"),
             (1, "First indent"),

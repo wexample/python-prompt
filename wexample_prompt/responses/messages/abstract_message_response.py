@@ -1,12 +1,10 @@
 from typing import ClassVar, Optional
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
 class AbstractMessageResponse(AbstractPromptResponse):

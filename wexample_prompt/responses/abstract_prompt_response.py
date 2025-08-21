@@ -6,6 +6,7 @@ from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import \
     HasSnakeShortClassNameClassMixin
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel

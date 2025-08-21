@@ -1,5 +1,4 @@
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class SeparatorExample(AbstractResponseExample):
@@ -7,8 +6,9 @@ class SeparatorExample(AbstractResponseExample):
         self.io.separator()
 
     def example_class(self):
-        from wexample_prompt.responses.titles.separator_prompt_response import \
-            SeparatorPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
+        )
 
         return SeparatorPromptResponse.create_separator("From response")
 

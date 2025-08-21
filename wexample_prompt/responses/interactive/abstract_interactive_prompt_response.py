@@ -4,6 +4,7 @@ from abc import ABC
 from typing import Any
 
 from pydantic import Field
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 

@@ -3,6 +3,7 @@
 from typing import Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import \
     AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import \
@@ -33,7 +34,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         data["root"][kwargs.pop("message", self._test_message)] = ""
         return kwargs
 
-    def _assert_specific_format(self, rendered: str):
+    def _assert_specific_format(self, rendered: str) -> None:
         # Should include tree drawing characters
         self.assertIn("├", rendered)
         self.assertIn("└", rendered)
@@ -44,7 +45,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         # Empty lines (1) + root (1) + folder1 (5 files) + folder2 (3 file) + test text (1) + empty (2)
         return 13
 
-    def test_empty_tree(self):
+    def test_empty_tree(self) -> None:
         from wexample_prompt.responses.data.tree_prompt_response import \
             TreePromptResponse
 
@@ -52,7 +53,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         rendered = response.render()
         assert rendered.strip() == ""
 
-    def test_single_node(self):
+    def test_single_node(self) -> None:
         from wexample_prompt.responses.data.tree_prompt_response import \
             TreePromptResponse
 
@@ -62,7 +63,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "root")
         self._assert_contains_text(rendered, "value")
 
-    def test_deep_nesting(self):
+    def test_deep_nesting(self) -> None:
         from wexample_prompt.responses.data.tree_prompt_response import \
             TreePromptResponse
 
@@ -77,7 +78,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         indents = [len(line) - len(line.lstrip()) for line in lines]
         assert sorted(indents) == indents
 
-    def test_none_values(self):
+    def test_none_values(self) -> None:
         from wexample_prompt.responses.data.tree_prompt_response import \
             TreePromptResponse
 

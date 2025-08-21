@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.properties_prompt_response import \
-    PropertiesPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.properties_prompt_response import (
+    PropertiesPromptResponse,
+)
 
 
 class PropertiesExample(AbstractResponseExample):
@@ -43,7 +43,7 @@ class PropertiesExample(AbstractResponseExample):
             title="User Information",
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using IoManager directly."""
         properties = {
             "server": "localhost",
@@ -58,7 +58,7 @@ class PropertiesExample(AbstractResponseExample):
             title="Server Configuration",
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using context."""
         properties = {
             "status": "success",

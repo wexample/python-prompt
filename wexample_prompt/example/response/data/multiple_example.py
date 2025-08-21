@@ -2,12 +2,11 @@
 
 from typing import Any, Dict, List, Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.list_prompt_response import \
-    ListPromptResponse
-from wexample_prompt.responses.data.multiple_prompt_response import \
-    MultiplePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import (
+    MultiplePromptResponse,
+)
 from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
 
@@ -25,7 +24,7 @@ class MultipleExample(AbstractResponseExample):
             responses=responses,
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Example using the IoManager."""
         responses = [
             LogPromptResponse.create_log("First response"),
@@ -34,7 +33,7 @@ class MultipleExample(AbstractResponseExample):
         ]
         self.io.multiple(responses=responses)
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Example using PromptContext."""
         responses = [
             LogPromptResponse.create_log("First response"),

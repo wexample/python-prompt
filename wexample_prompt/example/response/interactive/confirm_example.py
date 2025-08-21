@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.interactive.confirm_prompt_response import \
-    ConfirmPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.interactive.confirm_prompt_response import (
+    ConfirmPromptResponse,
+)
 
 
 class ConfirmExample(AbstractResponseExample):
@@ -20,7 +20,7 @@ class ConfirmExample(AbstractResponseExample):
             predefined_answer="yes",
         )
 
-    def example_manager(self):
+    def example_manager(self) -> None:
         """Use IoManager mixin method."""
         self.io.confirm(
             question="Proceed?",
@@ -29,7 +29,7 @@ class ConfirmExample(AbstractResponseExample):
             predefined_answer="cancel",
         )
 
-    def example_extended(self):
+    def example_extended(self) -> None:
         """Use extended context with _class_with_methods."""
         self._class_with_methods.confirm(
             question="Proceed?",
