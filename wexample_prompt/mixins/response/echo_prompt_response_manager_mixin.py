@@ -14,8 +14,8 @@ class EchoPromptResponseManagerMixin:
     def echo(
         self: "IoManager",
         message: LineMessage,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs
     ) -> "EchoPromptResponse":
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse

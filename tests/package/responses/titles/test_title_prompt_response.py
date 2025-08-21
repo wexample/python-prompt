@@ -12,7 +12,7 @@ from wexample_prompt.testing.abstract_title_prompt_response_test import (
 class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for TitlePromptResponse rendering and options."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,
         )

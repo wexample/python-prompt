@@ -15,10 +15,10 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
             self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
         )
 
-    def get_io_context_indentation_character(self) -> Optional[str]:
+    def get_io_context_indentation_character(self) -> str | None:
         return "·"
 
-    def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
+    def get_io_context_indentation_color(self) -> TerminalColor | None:
         return TerminalColor.BLUE
 
     def print_deep_log_three(self) -> None:

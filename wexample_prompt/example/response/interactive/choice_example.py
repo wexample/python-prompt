@@ -8,7 +8,7 @@ from wexample_prompt.responses.interactive.choice_prompt_response import (
 
 class ChoiceExample(AbstractResponseExample):
 
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self, indentation: int | None = None):
         return ChoicePromptResponse.create_choice(
             question="Select an option:",
             choices={

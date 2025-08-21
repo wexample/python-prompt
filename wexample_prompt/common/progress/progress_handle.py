@@ -32,11 +32,11 @@ class ProgressHandle(ExtendedBaseModel):
         default=None,
         description="Parent handle if this handle controls a sub-range of another handle.",
     )
-    range_start: Optional[int] = Field(
+    range_start: int | None = Field(
         default=None,
         description="Inclusive start position on the parent response for this sub-range (absolute units).",
     )
-    range_end: Optional[int] = Field(
+    range_end: int | None = Field(
         default=None,
         description="Exclusive end position on the parent response for this sub-range (absolute units).",
     )
@@ -69,11 +69,11 @@ class ProgressHandle(ExtendedBaseModel):
 
     def update(
         self,
-        current: Optional[Union[float, int, str]] = None,
-        label: Optional[str] = None,
+        current: float | int | str | None = None,
+        label: str | None = None,
         color: Optional["TerminalColor"] = None,
         auto_render: bool = True,
-    ) -> Optional[str]:
+    ) -> str | None:
         """Update progress fields and optionally re-render.
 
         If this handle is a child, `current` is interpreted relative to the child range
@@ -110,8 +110,8 @@ class ProgressHandle(ExtendedBaseModel):
             return None
 
     def advance(
-        self, step: Optional[Union[float, int, str]] = None, **kwargs
-    ) -> Optional[str]:
+        self, step: float | int | str | None = None, **kwargs
+    ) -> str | None:
         """Increment progress by a number of steps and optionally render."""
         if self._is_child():
             step_norm = ProgressPromptResponse._normalize_value(
@@ -127,7 +127,7 @@ class ProgressHandle(ExtendedBaseModel):
                 current=max(0, self.response.current + step_val), **kwargs
             )
 
-    def finish(self, **kwargs) -> Optional[str]:
+    def finish(self, **kwargs) -> str | None:
         if self._is_child():
             # Set absolute end on shared response
             self.response.current = int(self.range_end)  # type: ignore[arg-type]
@@ -138,9 +138,9 @@ class ProgressHandle(ExtendedBaseModel):
     def create_range_handle(
         self,
         *,
-        to: Optional[int] = None,
-        from_: Optional[int] = None,
-        total: Optional[int] = None,
+        to: int | None = None,
+        from_: int | None = None,
+        total: int | None = None,
     ) -> "ProgressHandle":
         """Create a child handle that controls only a sub-range of this handle.
 

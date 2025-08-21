@@ -13,16 +13,16 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 class TablePromptResponse(AbstractPromptResponse):
     """Response for displaying data in a table layout with borders and formatting."""
 
-    data: List[List[Any]] = Field(
+    data: list[list[Any]] = Field(
         description="Table body rows: list of rows, each row a list of cell values"
     )
-    headers: Optional[List[str]] = Field(
+    headers: list[str] | None = Field(
         default=None, description="Optional list of column headers"
     )
-    title: Optional[str] = Field(default=None, description="Optional table title")
+    title: str | None = Field(default=None, description="Optional table title")
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.data.table_example import TableExample
 
         return TableExample
@@ -30,20 +30,20 @@ class TablePromptResponse(AbstractPromptResponse):
     @classmethod
     def create_table(
         cls,
-        data: List[List[Any]],
-        headers: Optional[List[str]] = None,
-        title: Optional[str] = None,
+        data: list[list[Any]],
+        headers: list[str] | None = None,
+        title: str | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "TablePromptResponse":
         return cls(
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         if not self.data and not self.headers:
             return ""
 
-        all_rows: List[List[Any]] = []
+        all_rows: list[list[Any]] = []
         if self.headers:
             all_rows.append(self.headers)
         all_rows.extend(self.data)
@@ -51,7 +51,7 @@ class TablePromptResponse(AbstractPromptResponse):
         max_widths = self._calculate_max_widths(all_rows)
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
 
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         if self.title:
@@ -86,7 +86,7 @@ class TablePromptResponse(AbstractPromptResponse):
         return super().render(context=context)
 
     @staticmethod
-    def _calculate_max_widths(rows: List[List[Any]]) -> List[int]:
+    def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
         if not rows:
             return []
         num_columns = max(len(row) for row in rows)
@@ -99,8 +99,8 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_row_segments(
-        row: List[Any], widths: List[int]
-    ) -> List[PromptResponseSegment]:
+        row: list[Any], widths: list[int]
+    ) -> list[PromptResponseSegment]:
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""

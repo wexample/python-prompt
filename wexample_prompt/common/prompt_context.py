@@ -13,31 +13,31 @@ class PromptContext(ExtendedBaseModel):
     DEFAULT_WIDTH: ClassVar[int] = 80
 
     """Context for rendering responses, including terminal information."""
-    colorized: Optional[bool] = Field(
+    colorized: bool | None = Field(
         default=True, description="Allow to return avoid coloration special characters"
     )
     parent_context: Optional["PromptContext"] = Field(
         default=None, description="A parent context"
     )
-    indentation: Optional[int] = Field(default=0, description="Base indentation level")
-    indentation_character: Optional[str] = Field(
+    indentation: int | None = Field(default=0, description="Base indentation level")
+    indentation_character: str | None = Field(
         default=" ", description="The character used for indentation"
     )
-    indentation_color: Optional[TerminalColor] = Field(
+    indentation_color: TerminalColor | None = Field(
         default=None, description="The indentation part color"
     )
-    indentation_length: Optional[int] = Field(
+    indentation_length: int | None = Field(
         default=2, description="Number of characters to repeat for one indentation"
     )
-    verbosity: Optional[VerbosityLevel] = Field(
+    verbosity: VerbosityLevel | None = Field(
         default=DEFAULT_VERBOSITY,
         description="The context verbosity, saying which response to render or not",
     )
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None,
         description="Context with, basically the terminal with including indentation",
     )
-    formatting: Optional[bool] = Field(
+    formatting: bool | None = Field(
         default=False,
         description="Format lines on rendering, should be disabled when passing raw text",
     )
@@ -117,7 +117,7 @@ class PromptContext(ExtendedBaseModel):
 
         return self.indentation
 
-    def get_indentation_color(self) -> Optional[TerminalColor]:
+    def get_indentation_color(self) -> TerminalColor | None:
         if self.indentation_color is None:
             if self.parent_context:
                 return self.parent_context.get_indentation_color()

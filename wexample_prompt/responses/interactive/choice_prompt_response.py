@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from collections.abc import Mapping
 
 from pydantic import Field
 from wexample_prompt.common.choice.choice import Choice
@@ -23,22 +24,22 @@ if TYPE_CHECKING:
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Display a list of choices and get a user selection."""
 
-    choices: List[Choice] = Field(
+    choices: list[Choice] = Field(
         default_factory=list,
         description="List of choices",
     )
-    default: Optional[Any] = Field(
+    default: Any | None = Field(
         default=None,
         description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
-    inquirer_kwargs: Dict[str, Any] = Field(
+    inquirer_kwargs: dict[str, Any] = Field(
         default_factory=dict,
         description="Additional kwargs forwarded to inquirer.select",
     )
     question: LineMessage = Field(
         default=None, description="Question text shown to the user"
     )
-    question_lines: List["PromptResponseLine"] = Field(
+    question_lines: list["PromptResponseLine"] = Field(
         description="Rendered question lines"
     )
     predefined_answer: Any = Field(
@@ -50,10 +51,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     def create_choice(
         cls,
         question: LineMessage,
-        choices: Union[List[Any], Mapping[Any, Any]],
-        default: Optional[Any] = None,
-        abort: Optional[bool | str] = None,
-        color: Optional[TerminalColor] = None,
+        choices: list[Any] | Mapping[Any, Any],
+        default: Any | None = None,
+        abort: bool | str | None = None,
+        color: TerminalColor | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
@@ -62,7 +63,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         # Build question lines from LineMessage, apply styles/colors on segments
         question_lines = PromptResponseLine.create_from_string(question, color=color)
 
-        choices_list: List[Choice] = []
+        choices_list: list[Choice] = []
 
         # Build choices from list or mapping
         if isinstance(choices, Mapping):
@@ -232,7 +233,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 return
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.interactive.choice_example import (
             ChoiceExample,
         )

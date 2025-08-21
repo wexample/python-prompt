@@ -12,7 +12,7 @@ from wexample_prompt.testing.abstract_prompt_message_response_test import (
 class TestInfoPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for InfoPromptResponse."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,
         )

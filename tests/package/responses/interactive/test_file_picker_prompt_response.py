@@ -13,7 +13,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for FilePickerPromptResponse."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )

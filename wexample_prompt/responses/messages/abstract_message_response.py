@@ -16,7 +16,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
         cls,
         text: LineMessage,
         color: TerminalColor,
-        symbol: Optional[str] = None,
+        symbol: str | None = None,
         **kwargs,
     ) -> "AbstractMessageResponse":
         """Create a message with a symbol"""

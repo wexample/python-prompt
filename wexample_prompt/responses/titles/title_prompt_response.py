@@ -17,8 +17,8 @@ class TitlePromptResponse(AbstractTitleResponse):
         cls: "TitlePromptResponse",
         text: str,
         color: Optional["TerminalColor"] = None,
-        character: Optional[str] = None,
-        width: Optional[int] = None,
+        character: str | None = None,
+        width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "TitlePromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -32,7 +32,7 @@ class TitlePromptResponse(AbstractTitleResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.titles.title_example import TitleExample
 
         return TitleExample

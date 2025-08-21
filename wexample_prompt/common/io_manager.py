@@ -115,14 +115,14 @@ class IoManager(
     WithIndentation,
     ExtendedBaseModel,
 ):
-    output: Optional[AbstractOutputHandler] = Field(
+    output: AbstractOutputHandler | None = Field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
         "by default print to stdout",
     )
 
     _terminal_width: int = PrivateAttr(default=None)
-    verbosity: Optional[VerbosityLevel] = Field(
+    verbosity: VerbosityLevel | None = Field(
         default=VerbosityLevel.DEFAULT,
         description="The overall verbosity level used in contexts, if not specified.",
     )
@@ -148,7 +148,7 @@ class IoManager(
         )
 
     @classmethod
-    def get_response_types(cls) -> List[Type["AbstractPromptResponse"]]:
+    def get_response_types(cls) -> list[type["AbstractPromptResponse"]]:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )

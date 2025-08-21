@@ -5,7 +5,7 @@ from wexample_prompt.responses.data.list_prompt_response import ListPromptRespon
 
 
 class ListExample(AbstractResponseExample):
-    def get_test_items(self) -> List[str]:
+    def get_test_items(self) -> list[str]:
         return [
             "Item A",
             "  Sub-item A1",

@@ -19,12 +19,12 @@ class ConfirmPromptResponseManagerMixin:
     def confirm(
         self: "IoManager",
         question: LineMessage = "Please confirm:",
-        choices: Optional[Dict[str, tuple]] = None,
-        default: Optional[str] = None,
-        width: Optional[int] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        choices: dict[str, tuple] | None = None,
+        default: str | None = None,
+        width: int | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         reset_on_finish: bool = False,
-        context: Optional[PromptContext] = None,
+        context: PromptContext | None = None,
         predefined_answer: Any = None,
         **kwargs: Any,
     ) -> "ConfirmPromptResponse":

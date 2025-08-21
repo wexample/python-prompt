@@ -18,10 +18,10 @@ class TitlePromptResponseManagerMixin:
         self: "IoManager",
         text: LineMessage,
         color: Optional["TerminalColor"] = None,
-        character: Optional[str] = None,
-        width: Optional[int] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        character: str | None = None,
+        width: int | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
         from wexample_prompt.responses.titles.title_prompt_response import (

@@ -13,7 +13,7 @@ from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 class MultipleExample(AbstractResponseExample):
     """Example usage of MultiplePromptResponse."""
 
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self, indentation: int | None = None):
         """Example using the class directly."""
         responses = [
             LogPromptResponse.create_log("First response"),
@@ -42,7 +42,7 @@ class MultipleExample(AbstractResponseExample):
         ]
         self._class_with_methods.multiple(responses=responses)
 
-    def get_examples(self) -> List[Dict[str, Any]]:
+    def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
 
         Returns:
@@ -66,7 +66,7 @@ class MultipleExample(AbstractResponseExample):
             },
         ]
 
-    def simple_multiple(self) -> Optional[MultiplePromptResponse]:
+    def simple_multiple(self) -> MultiplePromptResponse | None:
         """Show a simple multiple response example."""
         responses = [
             LogPromptResponse.create_log("First message"),
@@ -75,7 +75,7 @@ class MultipleExample(AbstractResponseExample):
         ]
         return self.io.multiple(responses=responses)
 
-    def mixed_types(self) -> Optional[MultiplePromptResponse]:
+    def mixed_types(self) -> MultiplePromptResponse | None:
         """Show different response types together."""
         responses = [
             LogPromptResponse.create_log("Log response"),
@@ -86,7 +86,7 @@ class MultipleExample(AbstractResponseExample):
         ]
         return self.io.multiple(responses=responses)
 
-    def dynamic_multiple(self) -> Optional[MultiplePromptResponse]:
+    def dynamic_multiple(self) -> MultiplePromptResponse | None:
         """Show building responses dynamically."""
         response = MultiplePromptResponse.create_multiple(
             responses=[LogPromptResponse.create_log("Initial response")],

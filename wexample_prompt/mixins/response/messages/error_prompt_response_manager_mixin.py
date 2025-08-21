@@ -14,9 +14,9 @@ if TYPE_CHECKING:
 class ErrorPromptResponseManagerMixin:
     def error(
         self: "IoManager",
-        message: Optional[str] = None,
-        exception: Optional[BaseException] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        message: str | None = None,
+        exception: BaseException | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
     ) -> "ErrorPromptResponse":

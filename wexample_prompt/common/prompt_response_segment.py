@@ -13,11 +13,11 @@ class PromptResponseSegment(ExtendedBaseModel):
     """A segment of text with optional styling."""
 
     text: str = Field(description="The content of the segment")
-    color: Optional[TerminalColor] = Field(
+    color: TerminalColor | None = Field(
         default=None,
         description="The color to apply to segment on rendering, if allowed by context",
     )
-    styles: List[TextStyle] = Field(
+    styles: list[TextStyle] = Field(
         default_factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
@@ -32,7 +32,7 @@ class PromptResponseSegment(ExtendedBaseModel):
 
     def render(
         self, context: "PromptContext", line_remaining_width: int
-    ) -> Tuple[str, Optional["PromptResponseSegment"]]:
+    ) -> tuple[str, Optional["PromptResponseSegment"]]:
         """Render the segment respecting the remaining width for the current line.
 
         Returns a tuple of (rendered_fit, remainder_segment).
@@ -60,7 +60,7 @@ class PromptResponseSegment(ExtendedBaseModel):
             )
         return rendered_fit, remainder_seg
 
-    def _split_by_visible_width(self, text: str, width: int) -> Tuple[str, str]:
+    def _split_by_visible_width(self, text: str, width: int) -> tuple[str, str]:
         """Split text so that the first part fits within `width` visible chars.
 
         Returns (fit, remainder). If width <= 0, fit is '', remainder is text.

@@ -19,20 +19,20 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     """Confirmation dialog with a boxed layout and keyboard shortcuts."""
 
     # Preset mappings (key -> (value, label))
-    MAPPING_PRESET_YES_NO: ClassVar[Dict[str, Tuple[str, str]]] = {
+    MAPPING_PRESET_YES_NO: ClassVar[dict[str, tuple[str, str]]] = {
         "y": ("yes", "Yes"),
         "n": ("no", "No"),
     }
-    MAPPING_PRESET_OK_CANCEL: ClassVar[Dict[str, Tuple[str, str]]] = {
+    MAPPING_PRESET_OK_CANCEL: ClassVar[dict[str, tuple[str, str]]] = {
         "y": ("ok", "Ok"),
         "n": ("cancel", "Cancel"),
     }
-    MAPPING_PRESET_YES_NO_ALL: ClassVar[Dict[str, Tuple[str, str]]] = {
+    MAPPING_PRESET_YES_NO_ALL: ClassVar[dict[str, tuple[str, str]]] = {
         "y": ("yes", "Yes"),
         "Y": ("yes_all", "Yes for all"),
         "n": ("no", "No"),
     }
-    MAPPING_PRESET_CONTINUE_CANCEL: ClassVar[Dict[str, Tuple[str, str]]] = {
+    MAPPING_PRESET_CONTINUE_CANCEL: ClassVar[dict[str, tuple[str, str]]] = {
         "y": ("continue", "Continue"),
         "n": ("cancel", "Cancel"),
     }
@@ -40,16 +40,16 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     question: LineMessage = Field(
         default="Please confirm:", description="The question to ask to the user"
     )
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None,
         description="Total width of the box (in characters). If None, uses context width or content width.",
     )
     # Map pressed key -> (value, label)
-    options: Dict[str, Tuple[str, str]] = Field(
+    options: dict[str, tuple[str, str]] = Field(
         default_factory=dict,
         description="Keyboard shortcuts mapping to (return value, display label)",
     )
-    default_value: Optional[str] = Field(
+    default_value: str | None = Field(
         default=None, description="The value to return when quitting"
     )
     allow_abort: bool = Field(
@@ -61,7 +61,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.interactive.confirm_example import (
             ConfirmExample,
         )
@@ -72,9 +72,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def create_confirm(
         cls,
         question: LineMessage = "Please confirm:",
-        choices: Optional[Dict[str, Tuple[str, str]]] = None,
-        default: Optional[str] = None,
-        width: Optional[int] = None,
+        choices: dict[str, tuple[str, str]] | None = None,
+        default: str | None = None,
+        width: int | None = None,
         predefined_answer: Any = None,
         reset_on_finish: bool = False,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
@@ -84,7 +84,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         choices expects a mapping of key -> (value, label).
         If not provided, defaults to MAPPING_PRESET_YES_NO for convenience.
         """
-        mapping: Dict[str, Tuple[str, str]] = choices or cls.MAPPING_PRESET_YES_NO
+        mapping: dict[str, tuple[str, str]] = choices or cls.MAPPING_PRESET_YES_NO
 
         return cls(
             question=question,

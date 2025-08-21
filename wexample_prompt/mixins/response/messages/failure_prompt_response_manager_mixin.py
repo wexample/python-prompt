@@ -16,7 +16,7 @@ class FailurePromptResponseManagerMixin:
     def failure(
         self: "IoManager",
         message: LineMessage,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
     ) -> "FailurePromptResponse":

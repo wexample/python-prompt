@@ -27,7 +27,7 @@ class PropertiesExample(AbstractResponseExample):
         )
         return response.render()
 
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         properties = {
             "name": "John Doe",

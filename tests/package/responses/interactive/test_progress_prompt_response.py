@@ -16,7 +16,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         # No indentation for interactive prints.
         pass
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )

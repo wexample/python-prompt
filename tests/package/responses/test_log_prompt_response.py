@@ -13,7 +13,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         return LogPromptResponse

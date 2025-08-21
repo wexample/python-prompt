@@ -18,8 +18,8 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         cls: "SubtitlePromptResponse",
         text: str,
         color: Optional["TerminalColor"] = None,
-        character: Optional[str] = None,
-        width: Optional[int] = None,
+        character: str | None = None,
+        width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "SubtitlePromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -33,7 +33,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.titles.subtitle_example import (
             SubtitleExample,
         )

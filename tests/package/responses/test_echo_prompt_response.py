@@ -8,7 +8,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 
 
 class TestEchoPromptResponse(AbstractPromptResponseTest):
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
         return EchoPromptResponse

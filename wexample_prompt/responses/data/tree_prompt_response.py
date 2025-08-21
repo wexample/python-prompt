@@ -13,7 +13,7 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 class TreePromptResponse(AbstractPromptResponse):
     """Response for displaying hierarchical data in a tree structure."""
 
-    data: Dict[str, Any] = Field(description="The data to display")
+    data: dict[str, Any] = Field(description="The data to display")
     branch_style: str = Field(
         default="├", description="The character used to render branch"
     )
@@ -28,7 +28,7 @@ class TreePromptResponse(AbstractPromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.data.tree_example import TreeExample
 
         return TreeExample
@@ -36,7 +36,7 @@ class TreePromptResponse(AbstractPromptResponse):
     @classmethod
     def create_tree(
         cls,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "TreePromptResponse":
         return cls(
@@ -45,11 +45,11 @@ class TreePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         if not self.data:
             return ""
 
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         self._build_tree(self.data, "", lines)
@@ -59,7 +59,7 @@ class TreePromptResponse(AbstractPromptResponse):
         return super().render(context=context)
 
     def _build_tree(
-        self, data: Dict[str, Any], prefix: str, lines: List[PromptResponseLine]
+        self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
         items = list(data.items())
         for i, (key, value) in enumerate(items):

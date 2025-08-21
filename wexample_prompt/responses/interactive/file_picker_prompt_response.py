@@ -22,7 +22,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         default=FilePickerMode.BOTH,
         description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection.",
     )
-    abort_option: Optional[bool | str] = Field(
+    abort_option: bool | str | None = Field(
         default=None,
         description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label).",
     )
@@ -32,7 +32,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.interactive.file_picker_example import (
             FilePickerExample,
         )
@@ -42,9 +42,9 @@ class FilePickerPromptResponse(ChoicePromptResponse):
     @classmethod
     def create_file_picker(
         cls,
-        base_dir: Optional[str] = None,
+        base_dir: str | None = None,
         question: LineMessage = "Select a file:",
-        abort: Optional[bool | str] = None,
+        abort: bool | str | None = None,
         mode: FilePickerMode = FilePickerMode.BOTH,
         allow_parent_selection: bool = False,
         reset_on_finish: bool = False,
@@ -54,8 +54,8 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         base = base_dir or os.getcwd()
 
         # Build mapping with ".." first, then folders (with icon), then files
-        dirs: Dict[str, str] = {}
-        files: Dict[str, str] = {}
+        dirs: dict[str, str] = {}
+        files: dict[str, str] = {}
         try:
             for element in os.listdir(base):
                 full_path = os.path.join(base, element)
@@ -68,7 +68,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         except Exception:
             pass
 
-        merged: Dict[str, str] = {}
+        merged: dict[str, str] = {}
         if allow_parent_selection:
             merged[".."] = ".."
         for name in sorted(dirs.keys(), key=str.casefold):

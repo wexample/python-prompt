@@ -16,11 +16,11 @@ class TablePromptResponseManagerMixin:
 
     def table(
         self: "IoManager",
-        data: List[List[Any]],
-        headers: Optional[List[str]] = None,
-        title: Optional[str] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        data: list[list[Any]],
+        headers: list[str] | None = None,
+        title: str | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> "TablePromptResponse":
         from wexample_prompt.responses.data.table_prompt_response import (

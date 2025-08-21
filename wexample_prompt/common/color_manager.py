@@ -15,8 +15,8 @@ class ColorManager:
     def colorize(
         cls,
         text: str,
-        color: Optional[TerminalColor] = None,
-        style: Optional[TerminalColor] = None,
+        color: TerminalColor | None = None,
+        style: TerminalColor | None = None,
     ) -> str:
         prefix = ""
         if color:
@@ -45,8 +45,8 @@ class ColorManager:
     @classmethod
     def build_prefix(
         cls,
-        color: Optional[TerminalColor] = None,
-        styles: Optional[List[TextStyle]] = None,
+        color: TerminalColor | None = None,
+        styles: list[TextStyle] | None = None,
     ) -> str:
         """Build ANSI prefix combining color and a list of TextStyle entries."""
         prefix = ""

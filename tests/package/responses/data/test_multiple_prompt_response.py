@@ -17,7 +17,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         # Default case builds a single LogPromptResponse
         return 1
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.multiple_prompt_response import (
             MultiplePromptResponse,
         )

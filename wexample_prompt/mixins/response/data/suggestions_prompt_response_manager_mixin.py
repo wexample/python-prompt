@@ -20,10 +20,10 @@ class SuggestionsPromptResponseManagerMixin:
     def suggestions(
         self: "IoManager",
         message: LineMessage,
-        suggestions: List[str],
+        suggestions: list[str],
         arrow_style: str = "→",
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> "SuggestionsPromptResponse":
         from wexample_prompt.responses.data.suggestions_prompt_response import (

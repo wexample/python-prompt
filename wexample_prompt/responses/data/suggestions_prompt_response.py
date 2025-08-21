@@ -15,7 +15,7 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
     """Display a list of suggestions with an introductory message."""
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.data.suggestions_example import (
             SuggestionsExample,
         )
@@ -26,12 +26,12 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
     def create_suggestions(
         cls,
         message: LineMessage,
-        suggestions: List[str],
+        suggestions: list[str],
         arrow_style: str = "→",
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "SuggestionsPromptResponse":
         # Build lines independent of context
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
         # Top spacer
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 

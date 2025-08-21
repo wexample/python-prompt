@@ -8,7 +8,7 @@ from wexample_prompt.testing.abstract_prompt_message_response_test import (
 
 
 class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.debug_prompt_response import (
             DebugPromptResponse,
         )

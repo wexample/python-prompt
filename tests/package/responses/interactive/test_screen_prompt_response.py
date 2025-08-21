@@ -1,6 +1,7 @@
 """Tests for ScreenPromptResponse (interactive)."""
 
-from typing import Callable, Type
+from typing import Type
+from collections.abc import Callable
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -12,7 +13,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestScreenPromptResponse(AbstractPromptResponseTest):
     """Focused tests for ScreenPromptResponse core behavior with callback."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.screen_prompt_response import (
             ScreenPromptResponse,
         )

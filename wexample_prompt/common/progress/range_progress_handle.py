@@ -36,11 +36,11 @@ class RangeProgressHandle(ExtendedBaseModel):
 
     def update(
         self,
-        current: Optional[Union[float, int, str]] = None,
-        label: Optional[str] = None,
+        current: float | int | str | None = None,
+        label: str | None = None,
         color: Optional["TerminalColor"] = None,
         auto_render: bool = True,
-    ) -> Optional[str]:
+    ) -> str | None:
         if current is not None:
             # Normalize against child total; percentages like '50%' are relative to the sub-range
             from wexample_prompt.responses.interactive.progress_prompt_response import (
@@ -60,9 +60,9 @@ class RangeProgressHandle(ExtendedBaseModel):
 
     def advance(
         self,
-        step: Optional[Union[float, int, str]] = None,
+        step: float | int | str | None = None,
         **kwargs,
-    ) -> Optional[str]:
+    ) -> str | None:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
@@ -71,5 +71,5 @@ class RangeProgressHandle(ExtendedBaseModel):
         cur_child = self._child_current()
         return self.update(current=cur_child + step_norm, **kwargs)
 
-    def finish(self, **kwargs) -> Optional[str]:
+    def finish(self, **kwargs) -> str | None:
         return self.parent.update(current=self.end, **kwargs)

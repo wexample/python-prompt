@@ -15,10 +15,10 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     render, so the response remains context-agnostic until displayed.
     """
 
-    properties: Dict[str, Any] = Field(
+    properties: dict[str, Any] = Field(
         default_factory=dict, description="The list of properties to display"
     )
-    title: Optional[str] = Field(
+    title: str | None = Field(
         default=None, description="The title of the properties list"
     )
     nested_indent: int = Field(
@@ -27,7 +27,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.data.properties_example import (
             PropertiesExample,
         )
@@ -37,8 +37,8 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     @classmethod
     def create_properties(
         cls,
-        properties: Dict[str, Any],
-        title: Optional[str] = None,
+        properties: dict[str, Any],
+        title: str | None = None,
         nested_indent: int = 2,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "PropertiesPromptResponse":
@@ -50,7 +50,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         """Render the properties into lines using the provided context width."""
         if not self.properties:
             return ""
@@ -63,7 +63,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         max_key_width = 0
 
-        def scan_keys(obj: Dict[str, Any]) -> None:
+        def scan_keys(obj: dict[str, Any]) -> None:
             nonlocal max_key_width
             for k, v in obj.items():
                 max_key_width = max(max_key_width, len(str(k)))
@@ -76,7 +76,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             self.properties, max_key_width, self.nested_indent
         )
 
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
         # Empty top spacer
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
@@ -114,12 +114,12 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _format_properties(
-        properties: Dict[str, Any],
+        properties: dict[str, Any],
         key_width: int,
         indent: int,
         current_indent: int = 0,
-    ) -> List[str]:
-        lines: List[str] = []
+    ) -> list[str]:
+        lines: list[str] = []
         indent_str = " " * current_indent
         for key, value in properties.items():
             if isinstance(value, dict):

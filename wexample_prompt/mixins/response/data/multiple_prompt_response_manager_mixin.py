@@ -20,9 +20,9 @@ class MultiplePromptResponseManagerMixin:
 
     def multiple(
         self: "IoManager",
-        responses: List["AbstractPromptResponse"],
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        responses: list["AbstractPromptResponse"],
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a multiple prompt response."""

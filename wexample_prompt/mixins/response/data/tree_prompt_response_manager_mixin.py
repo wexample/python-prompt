@@ -16,9 +16,9 @@ class TreePromptResponseManagerMixin:
 
     def tree(
         self: "IoManager",
-        data: Dict[str, Any],
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        data: dict[str, Any],
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> "TreePromptResponse":
         from wexample_prompt.responses.data.tree_prompt_response import (

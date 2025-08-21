@@ -19,10 +19,10 @@ class ProgressPromptResponseManagerMixin:
     def progress(
         self: "IoManager",
         total: int = 100,
-        current: Union[float, int, str] = 0,
-        width: Optional[int] = None,
-        label: Optional[str] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs,
     ) -> "ProgressPromptResponse":

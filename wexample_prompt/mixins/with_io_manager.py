@@ -6,14 +6,14 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class WithIoManager:
-    _io: Optional[IoManager] = None
-    _io_context_colorized: Optional[bool] = None
+    _io: IoManager | None = None
+    _io_context_colorized: bool | None = None
     _io_context: "PromptContext"
     _io_parent_context: "Any" = None
 
     def __init__(
         self,
-        io: Optional[IoManager] = None,
+        io: IoManager | None = None,
         parent_io_handler: "WithIoManager" = None,
     ) -> None:
         if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
@@ -72,17 +72,17 @@ class WithIoManager:
             kwargs=defaults,
         )
 
-    def get_io_context_colorized(self) -> Optional[bool]:
+    def get_io_context_colorized(self) -> bool | None:
         return None
 
-    def get_io_context_indentation(self) -> Optional[int]:
+    def get_io_context_indentation(self) -> int | None:
         return None
 
-    def get_io_context_indentation_character(self) -> Optional[str]:
+    def get_io_context_indentation_character(self) -> str | None:
         return None
 
-    def get_io_context_indentation_color(self) -> Optional[TerminalColor]:
+    def get_io_context_indentation_color(self) -> TerminalColor | None:
         return None
 
-    def get_io_context_indentation_width(self) -> Optional[int]:
+    def get_io_context_indentation_width(self) -> int | None:
         return None

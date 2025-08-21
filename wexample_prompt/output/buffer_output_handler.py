@@ -18,15 +18,15 @@ class BufferOutputHandler(AbstractOutputHandler):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._buffer_responses: List["AbstractPromptResponse"] = []
-        self._buffer_rendered: List[Union[str, None]] = []
+        self._buffer_responses: list["AbstractPromptResponse"] = []
+        self._buffer_rendered: list[str | None] = []
 
     @property
-    def responses(self) -> List["AbstractPromptResponse"]:
+    def responses(self) -> list["AbstractPromptResponse"]:
         return self._buffer_responses
 
     @property
-    def rendered(self) -> List[Union[str, None]]:
+    def rendered(self) -> list[str | None]:
         return self._buffer_rendered
 
     @property
@@ -40,7 +40,7 @@ class BufferOutputHandler(AbstractOutputHandler):
         self._buffer_responses = []
         self._buffer_rendered = []
 
-    def flush(self) -> List[Union[str, None]]:
+    def flush(self) -> list[str | None]:
         rendered = self.rendered
         self.clear()
         return rendered

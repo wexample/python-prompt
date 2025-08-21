@@ -17,13 +17,13 @@ class MultiplePromptResponse(AbstractPromptResponse):
         responses: List of prompt responses to be rendered together.
     """
 
-    responses: List[AbstractPromptResponse] = Field(
+    responses: list[AbstractPromptResponse] = Field(
         default_factory=list,
         description="List of prompt responses to be rendered together",
     )
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.data.multiple_example import (
             MultipleExample,
         )
@@ -33,7 +33,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
     @classmethod
     def create_multiple(
         cls,
-        responses: Optional[List[AbstractPromptResponse]] = None,
+        responses: list[AbstractPromptResponse] | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "MultiplePromptResponse":
         """Create a new MultiplePromptResponse from a list of responses."""
@@ -41,7 +41,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
             responses = []
 
         # Work on deep copies to avoid mutating shared instances across calls.
-        cloned_responses: List[AbstractPromptResponse] = []
+        cloned_responses: list[AbstractPromptResponse] = []
         for response in responses:
             cloned = response.model_copy(deep=True)
             cloned.verbosity = verbosity
@@ -52,7 +52,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         """Render all contained responses in sequence.
 
         Returns:
@@ -64,7 +64,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
         if self.verbosity > context.verbosity:
             return None
 
-        rendered_parts: List[str] = []
+        rendered_parts: list[str] = []
         for response in self.responses:
             part = response.render(context=context)
             if part is not None:
@@ -81,7 +81,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
         return self
 
     def extend_responses(
-        self, responses: List[AbstractPromptResponse]
+        self, responses: list[AbstractPromptResponse]
     ) -> "MultiplePromptResponse":
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)

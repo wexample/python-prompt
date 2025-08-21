@@ -1,6 +1,7 @@
 """Mixin for handling interactive screen response in IoManager."""
 
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any, Optional
+from collections.abc import Callable
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
@@ -19,9 +20,9 @@ class ScreenPromptResponseManagerMixin:
         *,
         callback: Callable[["ScreenPromptResponse"], Any],
         height: int = 30,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         reset_on_finish: bool = False,
-        context: Optional[PromptContext] = None,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> "ScreenPromptResponse":
         from wexample_prompt.responses.interactive.screen_prompt_response import (

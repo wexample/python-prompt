@@ -18,11 +18,11 @@ class PropertiesPromptResponseManagerMixin:
 
     def properties(
         self: "IoManager",
-        properties: Dict[str, Any],
-        title: Optional[str] = None,
+        properties: dict[str, Any],
+        title: str | None = None,
         nested_indent: int = 2,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-        context: Optional[PromptContext] = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> "PropertiesPromptResponse":
         from wexample_prompt.responses.data.properties_prompt_response import (

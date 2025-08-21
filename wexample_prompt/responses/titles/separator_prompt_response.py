@@ -17,29 +17,29 @@ class SeparatorPromptResponse(AbstractMessageResponse):
     DEFAULT_CHARACTER: ClassVar[str] = "~"
 
     """Response for log messages."""
-    character: Optional[str] = Field(
+    character: str | None = Field(
         default=DEFAULT_CHARACTER, description="The character to repeat"
     )
-    label: Optional[str] = Field(
+    label: str | None = Field(
         default=None, description="A label to display on the separator right"
     )
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None, description="A fixed width, use context width if not provided"
     )
     separator_response_segment: PromptResponseSegment = Field(
         description="The line segment used by render process"
     )
-    separator_response_label: Optional[PromptResponseSegment] = Field(
+    separator_response_label: PromptResponseSegment | None = Field(
         default=None, description="The label displayed at the right"
     )
 
     @classmethod
     def create_separator(
         cls: "SeparatorPromptResponse",
-        label: Optional[str] = None,
-        width: Optional[int] = None,
+        label: str | None = None,
+        width: int | None = None,
         color: "TerminalColor" = None,
-        character: Optional[str] = None,
+        character: str | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "SeparatorPromptResponse":
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -69,14 +69,14 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.titles.separator_example import (
             SeparatorExample,
         )
 
         return SeparatorExample
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         width = self.width or context.get_width()
         length = width - len(context.render_indentation_text())
         if self.separator_response_label:

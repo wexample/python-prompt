@@ -20,28 +20,28 @@ if TYPE_CHECKING:
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
     """Abstract base class for all prompt responses."""
 
-    lines: List[PromptResponseLine] = Field(
+    lines: list[PromptResponseLine] = Field(
         default_factory=list,
         description="The list of lines of the response content",
     )
-    verbosity: Optional[VerbosityLevel] = Field(
+    verbosity: VerbosityLevel | None = Field(
         default=VerbosityLevel.DEFAULT,
         description="The context verbosity, saying which response to render or not",
     )
-    _rendered_content: Optional[str] = None
+    _rendered_content: str | None = None
 
     @property
-    def rendered_content(self) -> Optional[str]:
+    def rendered_content(self) -> str | None:
         return self._rendered_content
 
     @classmethod
-    def get_class_name_suffix(cls) -> Optional[str]:
+    def get_class_name_suffix(cls) -> str | None:
         return "PromptResponse"
 
     @classmethod
     def _create(
         cls: "AbstractPromptResponse",
-        lines: List[PromptResponseLine],
+        lines: list[PromptResponseLine],
         **kwargs,
     ) -> "AbstractPromptResponse":
         """Create a new response with the given lines."""
@@ -49,7 +49,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     @abstractmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         cls._raise_not_implemented_error()
 
     @classmethod
@@ -75,7 +75,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     def reset(self) -> None:
         self._rendered_content = None
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         """Render the complete response."""
 
         context = PromptContext.create_if_none(context=context)

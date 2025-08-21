@@ -18,12 +18,12 @@ class ListPromptResponse(AbstractMessageResponse):
     @classmethod
     def create_list(
         cls,
-        items: List[str],
+        items: list[str],
         bullet: str = "•",
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ListPromptResponse":
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
 
         for item in items:
             # Determine indentation level by counting leading double-spaces
@@ -47,7 +47,7 @@ class ListPromptResponse(AbstractMessageResponse):
         return cls(lines=lines, verbosity=verbosity)
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.data.list_example import ListExample
 
         return ListExample

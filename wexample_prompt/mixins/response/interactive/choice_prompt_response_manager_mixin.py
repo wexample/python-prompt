@@ -1,6 +1,7 @@
 """Mixin for handling interactive choice prompts in IoManager."""
 
-from typing import TYPE_CHECKING, Any, List, Mapping, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Union
+from collections.abc import Mapping
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.const.types import LineMessage
@@ -18,10 +19,10 @@ class ChoicePromptResponseManagerMixin:
     def choice(
         self: "IoManager",
         question: LineMessage,
-        choices: Union[List[Any], Mapping[Any, Any]],
-        default: Optional[Any] = None,
-        abort: Optional[bool | str] = None,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        choices: list[Any] | Mapping[Any, Any],
+        default: Any | None = None,
+        abort: bool | str | None = None,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,

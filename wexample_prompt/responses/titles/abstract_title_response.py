@@ -28,10 +28,10 @@ class AbstractTitleResponse(AbstractMessageResponse):
     fill_segment: PromptResponseSegment = Field(
         description="The trailing fill characters segment"
     )
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None, description="Optional fixed width; if not set uses context width"
     )
-    character: Optional[str] = Field(
+    character: str | None = Field(
         default=DEFAULT_CHARACTER,
         description="Character used to fill the remaining line",
     )
@@ -41,8 +41,8 @@ class AbstractTitleResponse(AbstractMessageResponse):
         cls,
         text: str,
         color: Optional["TerminalColor"] = None,
-        character: Optional[str] = None,
-        width: Optional[int] = None,
+        character: str | None = None,
+        width: int | None = None,
         verbosity: "VerbosityLevel" = None,
     ) -> "AbstractTitleResponse":
         prefix = PromptResponseSegment(
@@ -76,7 +76,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)

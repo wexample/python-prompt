@@ -15,19 +15,19 @@ if TYPE_CHECKING:
 class PromptResponseLine(ExtendedBaseModel):
     """A line of text composed of one or more segments with optional styling and layout."""
 
-    segments: List[PromptResponseSegment] = Field(
+    segments: list[PromptResponseSegment] = Field(
         default_factory=list, description="List of text segments that constitute a line"
     )
 
     @classmethod
     def create_from_string(
         cls, text: LineMessage, color: Optional["TerminalColor"] = None
-    ) -> List["PromptResponseLine"]:
+    ) -> list["PromptResponseLine"]:
         """
         Create a line from a single text string.
         """
         # Normalize input to a list of raw lines without newline characters
-        raw_lines: List[str] = []
+        raw_lines: list[str] = []
         if isinstance(text, str):
             # splitlines() handles \r\n, \r, \n and does not keep separators
             raw_lines = text.splitlines()
@@ -35,7 +35,7 @@ class PromptResponseLine(ExtendedBaseModel):
             for item in text:
                 raw_lines.extend(item.splitlines())
 
-        lines: List[PromptResponseLine] = []
+        lines: list[PromptResponseLine] = []
         for raw in raw_lines:
             lines.append(
                 cls(
@@ -77,7 +77,7 @@ class PromptResponseLine(ExtendedBaseModel):
 
     def _compute_max_content_width(
         self, context: PromptContext, indentation: str
-    ) -> Optional[int]:
+    ) -> int | None:
         """Compute the maximum visible width available for content on a line, or None if unbounded."""
         return (
             max(0, (context.get_width()) - self._visible_len(indentation))
@@ -102,7 +102,7 @@ class PromptResponseLine(ExtendedBaseModel):
         remaining = max_content_width
 
         queue = list(self.segments)
-        carry_over: Optional[PromptResponseSegment] = None
+        carry_over: PromptResponseSegment | None = None
 
         while queue or carry_over:
             if carry_over is not None:

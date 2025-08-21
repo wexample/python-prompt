@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Any, Callable, Optional, Type
+from typing import TYPE_CHECKING, Any, Optional, Type
+from collections.abc import Callable
 
 from pydantic import Field
 from wexample_prompt.common.io_manager import IoManager
@@ -72,7 +73,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     def close(self) -> None:
         self._closed = True
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         # Screen runs a simple controlled loop until closed.
         from time import sleep
 
@@ -135,7 +136,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.interactive.choice_example import (  # type: ignore
             ChoiceExample,
         )

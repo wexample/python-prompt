@@ -21,13 +21,13 @@ class FilePickerPromptResponseManagerMixin:
     def file_picker(
         self: "IoManager",
         question: LineMessage = "Select a file:",
-        base_dir: Optional[str] = None,
-        abort: Optional[bool | str] = None,
+        base_dir: str | None = None,
+        abort: bool | str | None = None,
         mode: FilePickerMode = FilePickerMode.BOTH,
         allow_parent_selection: bool = False,
-        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         reset_on_finish: bool = False,
-        context: Optional[PromptContext] = None,
+        context: PromptContext | None = None,
         predefined_answer: Any = None,
         **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":

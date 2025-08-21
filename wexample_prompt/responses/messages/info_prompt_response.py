@@ -30,7 +30,7 @@ class InfoPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         from wexample_prompt.example.response.messages.info_example import InfoExample
 
         return InfoExample

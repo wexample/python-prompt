@@ -11,7 +11,7 @@ from wexample_prompt.responses.interactive.confirm_prompt_response import (
 class ConfirmExample(AbstractResponseExample):
     """Example usage of confirmation dialog responses."""
 
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self, indentation: int | None = None):
         """Use the response class directly."""
         return ConfirmPromptResponse.create_confirm(
             question="Proceed?",

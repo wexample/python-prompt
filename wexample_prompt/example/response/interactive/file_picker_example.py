@@ -11,7 +11,7 @@ from wexample_prompt.responses.interactive.file_picker_prompt_response import (
 class FilePickerExample(AbstractResponseExample):
     """Example usage of FilePickerPromptResponse."""
 
-    def example_class(self, indentation: Optional[int] = None):
+    def example_class(self, indentation: int | None = None):
         """Example using the class directly."""
         return FilePickerPromptResponse.create_file_picker(
             question="Select a file:",

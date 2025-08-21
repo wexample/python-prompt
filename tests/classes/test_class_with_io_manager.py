@@ -41,14 +41,14 @@ class TestIoManager(AbstractPromptTest):
         self.assertMissingArgumentError(ExtendedBaseModelWithRequiredIoManager)
         self.assertClassInstanceSucceeded(ExtendedBaseModelWithRequiredIoManager)
 
-    def assertClassHasNoneManager(self, class_type: Type) -> None:
+    def assertClassHasNoneManager(self, class_type: type) -> None:
         instance = class_type()
         assert instance.io is None
 
-    def assertMissingArgumentError(self, class_type: Type) -> None:
+    def assertMissingArgumentError(self, class_type: type) -> None:
         with self.assertRaises(TypeError):
             class_type()
 
-    def assertClassInstanceSucceeded(self, class_type: Type) -> None:
+    def assertClassInstanceSucceeded(self, class_type: type) -> None:
         instance = class_type(io=self._io)
         assert isinstance(instance.io, IoManager)

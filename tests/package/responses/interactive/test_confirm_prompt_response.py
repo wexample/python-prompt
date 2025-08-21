@@ -12,7 +12,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestConfirmPromptResponse(AbstractPromptResponseTest):
     """Test cases for ConfirmPromptResponse."""
 
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )

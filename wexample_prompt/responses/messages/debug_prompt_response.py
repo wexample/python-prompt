@@ -30,7 +30,7 @@ class DebugPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> Type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type["AbstractResponseExample"]:
         """Get the example class for debug messages."""
         from wexample_prompt.example.response.messages.debug_example import DebugExample
 

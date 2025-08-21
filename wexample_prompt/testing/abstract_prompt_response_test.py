@@ -44,11 +44,11 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         ), f"Unexpected ANSI escape sequences found in: {text!r}"
 
     @abstractmethod
-    def _get_response_class(self) -> Type[AbstractPromptResponse]:
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
         pass
 
     def _create_test_response(
-        self, response_kwargs: Optional[Kwargs] = None, **kwargs
+        self, response_kwargs: Kwargs | None = None, **kwargs
     ) -> "AbstractPromptResponse":
         """Create a response using the class: LogPromptResponse.create_log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
@@ -59,7 +59,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         return getattr(response_class, method_name)(**kwargs)
 
     def _create_test_response_from_method(
-        self, response_kwargs: Optional[Kwargs] = None, **kwargs
+        self, response_kwargs: Kwargs | None = None, **kwargs
     ) -> "AbstractPromptResponse":
         """Create a response using io manager: self._io.log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)

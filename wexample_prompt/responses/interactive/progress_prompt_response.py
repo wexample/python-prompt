@@ -24,19 +24,19 @@ class ProgressPromptResponse(AbstractPromptResponse):
     # Instance fields
     total: int = Field(description="Total number of items (must be > 0)")
     current: int = Field(description="Current progress (must be >= 0)")
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None, description="Width of the progress bar in characters"
     )
-    label: Optional[str] = Field(
+    label: str | None = Field(
         default=None, description="Optional label displayed before the bar"
     )
-    color: Optional[TerminalColor] = Field(
+    color: TerminalColor | None = Field(
         default=None, description="Optional color applied to the bar"
     )
     _handle: Optional["ProgressHandle"] = None
 
     @classmethod
-    def get_example_class(cls) -> Type:
+    def get_example_class(cls) -> type:
         from wexample_prompt.example.response.interactive.progress_example import (
             ProgressExample,
         )
@@ -50,7 +50,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         cls.EMPTY_CHAR = empty_char
 
     @staticmethod
-    def _normalize_value(total: int, current: Union[float, int, str]) -> int:
+    def _normalize_value(total: int, current: float | int | str) -> int:
         """Accept int or percentage string like '54%' and return an int current.
 
         Clamps the result to [0, total].
@@ -78,10 +78,10 @@ class ProgressPromptResponse(AbstractPromptResponse):
     def create_progress(
         cls,
         total: int = 100,
-        current: Union[float, int, str] = 0,
-        width: Optional[int] = None,
-        label: Optional[str] = None,
-        color: Optional[TerminalColor] = None,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ProgressPromptResponse":
         if total <= 0:
@@ -107,7 +107,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
-    def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
+    def render(self, context: Optional["PromptContext"] = None) -> str | None:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         # Normalize context
