@@ -1,5 +1,8 @@
 """Tests for ConfirmPromptResponse (interactive)."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -9,15 +12,19 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestConfirmPromptResponse(AbstractPromptResponseTest):
     """Test cases for ConfirmPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
 
+        return ConfirmPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("question", self._test_message)
         kwargs.setdefault("choices", None)  # default YES/NO
         kwargs.setdefault("predefined_answer", "yes")
-        return ConfirmPromptResponse.create_confirm(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Box borders and options format

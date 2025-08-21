@@ -2,6 +2,7 @@
 from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
@@ -18,6 +19,7 @@ class ConfirmPromptResponseManagerMixin:
             choices: Optional[Dict[str, tuple]] = None,
             default: Optional[str] = None,
             width: Optional[int] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             predefined_answer: Any = None,
@@ -30,6 +32,7 @@ class ConfirmPromptResponseManagerMixin:
             choices=choices,
             default=default,
             width=width,
+            verbosity=verbosity,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer
         )
