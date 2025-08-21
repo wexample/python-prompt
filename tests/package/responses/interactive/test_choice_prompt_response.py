@@ -51,6 +51,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.choice_prompt_response import (
             ChoicePromptResponse,
         )
+
         choices = {
             "value1": "Display 1",
             "value2": "Display 2",
@@ -75,7 +76,9 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         response.render()
         self._assert_contains_text(response.rendered_content, abort_text)
         # abort should be numbered after the choices
-        self._assert_contains_text(response.rendered_content, str(len(["Option 1", "Option 2"]) + 1))
+        self._assert_contains_text(
+            response.rendered_content, str(len(["Option 1", "Option 2"]) + 1)
+        )
 
     def test_no_abort_option(self):
         response = self._create_test_response(abort=None)

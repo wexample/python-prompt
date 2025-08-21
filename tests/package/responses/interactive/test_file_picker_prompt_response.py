@@ -36,7 +36,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     def get_expected_lines(self) -> int:
         # Minimal default: question + parent (..) + (no files/dirs due to failure) + abort
         # But render builds from merged dict (at least parent), plus abort.
-        return 3 # question + parent + abort
+        return 3  # question + parent + abort
 
     # Override: interactive file picker does not render leading empty line.
     def _assert_common_response_structure(self, response: "AbstractPromptResponse"):
@@ -51,12 +51,16 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )
-        with mock.patch("os.listdir", return_value=["dir1", "file1", "dir2", "file2"]), \
-                mock.patch("os.path.isdir", side_effect=lambda p: p.endswith(("dir1", "dir2"))):
+
+        with mock.patch(
+            "os.listdir", return_value=["dir1", "file1", "dir2", "file2"]
+        ), mock.patch(
+            "os.path.isdir", side_effect=lambda p: p.endswith(("dir1", "dir2"))
+        ):
             response = FilePickerPromptResponse.create_file_picker(
                 base_dir="/tmp/base",
                 question=self._test_message,
-                predefined_answer="dir1"
+                predefined_answer="dir1",
             )
         response.render()
         # dirs should be present (with a leading space label per implementation)
@@ -70,6 +74,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )
+
         # Build using the same defaults as _create_test_kwargs, but without abort option
         response = FilePickerPromptResponse.create_file_picker(
             base_dir="/nonexistent_dir_for_test",

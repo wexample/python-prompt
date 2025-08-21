@@ -16,7 +16,11 @@ class TestPromptResponseSegment:
         assert segment.text == ""
 
     def test_render_with_styles_and_colorized(self):
-        segment = PromptResponseSegment(text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD, TextStyle.UNDERLINE])
+        segment = PromptResponseSegment(
+            text="Hello",
+            color=TerminalColor.GREEN,
+            styles=[TextStyle.BOLD, TextStyle.UNDERLINE],
+        )
         context = PromptContext(colorized=True, width=80)
         rendered, remainder = segment.render(context=context, line_remaining_width=80)
         assert remainder is None
@@ -27,14 +31,18 @@ class TestPromptResponseSegment:
         assert rendered.endswith("\033[0m")
 
     def test_render_without_colorized(self):
-        segment = PromptResponseSegment(text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD])
+        segment = PromptResponseSegment(
+            text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD]
+        )
         context = PromptContext(colorized=False, width=80)
         rendered, remainder = segment.render(context=context, line_remaining_width=80)
         assert remainder is None
         assert rendered == "Hello"
 
     def test_render_wrap_preserves_styles(self):
-        segment = PromptResponseSegment(text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC])
+        segment = PromptResponseSegment(
+            text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC]
+        )
         context = PromptContext(colorized=True, width=80)
         # Force wrap after 5 characters
         rendered1, remainder = segment.render(context=context, line_remaining_width=5)
@@ -44,7 +52,9 @@ class TestPromptResponseSegment:
         assert "\033[3m" in rendered1  # italic
         assert rendered1.endswith("\033[0m")
         # Render remainder on next line
-        rendered2, remainder2 = remainder.render(context=context, line_remaining_width=80)
+        rendered2, remainder2 = remainder.render(
+            context=context, line_remaining_width=80
+        )
         assert remainder2 is None
         assert "World" in rendered2
         assert str(TerminalColor.RED) in rendered2

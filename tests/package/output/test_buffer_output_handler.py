@@ -1,4 +1,5 @@
 """Tests for BufferOutputHandler."""
+
 from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 

@@ -4,7 +4,9 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestPropertiesPromptResponse(AbstractPromptResponseTest):
@@ -35,12 +37,15 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
+
         response = PropertiesPromptResponse.create_properties(properties={})
         rendered = response.render()
         assert rendered == ""
 
     def test_simple_properties_rendering(self):
-        response = self._create_test_response(properties={"name": "John Doe", "age": 30})
+        response = self._create_test_response(
+            properties={"name": "John Doe", "age": 30}
+        )
         rendered = response.render()
         self._assert_contains_text(rendered, "name")
         self._assert_contains_text(rendered, "John Doe")
@@ -56,7 +61,10 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
-        response = PropertiesPromptResponse.create_properties(properties=nested, title=self._test_message)
+
+        response = PropertiesPromptResponse.create_properties(
+            properties=nested, title=self._test_message
+        )
         rendered = response.render()
         # Section headers and nested values appear
         self._assert_contains_text(rendered, "personal")
@@ -77,7 +85,10 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
-        response = PropertiesPromptResponse.create_properties(properties=nested, nested_indent=4)
+
+        response = PropertiesPromptResponse.create_properties(
+            properties=nested, nested_indent=4
+        )
         rendered = response.render()
         # Expect at least one line with 4-space indentation
         assert any(line.startswith("    ") for line in rendered.splitlines())

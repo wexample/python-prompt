@@ -20,7 +20,10 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         return ScreenPromptResponse
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
+
         kwargs = kwargs or {}
 
         # Minimal callback: draw one line and close immediately
@@ -47,7 +50,9 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(lines[0], self._test_message)
 
     def test_single_frame_close(self):
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         # Build response explicitly to ensure the callback is wired
         def _cb_once(resp: "ScreenPromptResponse"):
@@ -61,7 +66,9 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, self._test_message)
 
     def test_reload_then_close(self):
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         ticks = {"n": 0}
 
@@ -74,7 +81,10 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
             else:
                 resp.close()
 
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
+
         response = ScreenPromptResponse.create_screen(callback=_cb, height=5)
         response.render()
         # Final frame should reflect the last tick (2)
@@ -82,7 +92,9 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
     def test_manager_entrypoint(self):
         # Ensure IoManager.screen constructs and renders without error
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         steps = {"n": 0}
 
@@ -102,7 +114,9 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
     def test_reset_on_finish_triggers_clear(self):
         """When reset_on_finish=True, Screen should perform a final clear after closing."""
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         clears = {"count": 0, "last": None}
 
@@ -117,8 +131,13 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
             else:
                 resp.reload()
 
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
-        resp = ScreenPromptResponse.create_screen(callback=_cb, height=5, reset_on_finish=True)
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
+
+        resp = ScreenPromptResponse.create_screen(
+            callback=_cb, height=5, reset_on_finish=True
+        )
 
         # Monkeypatch _partial_clear to observe calls
         original_clear = resp._partial_clear

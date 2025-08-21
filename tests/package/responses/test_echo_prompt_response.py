@@ -2,12 +2,15 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestEchoPromptResponse(AbstractPromptResponseTest):
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+
         return EchoPromptResponse
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
@@ -25,6 +28,7 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
     def test_empty_response(self):
         """Test empty response."""
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+
         response = EchoPromptResponse.create_echo(message="")
         self.assertEqual(response.render(), "")
 
@@ -38,7 +42,11 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
         assert self._io.terminal_width is not None
 
         # Echo a string using the terminal with length
-        response = self._get_response_class().create_echo(**self._create_test_kwargs(kwargs={"message": self._io.terminal_width * "!"}))
+        response = self._get_response_class().create_echo(
+            **self._create_test_kwargs(
+                kwargs={"message": self._io.terminal_width * "!"}
+            )
+        )
         response.render()
 
         # It should print only one line.

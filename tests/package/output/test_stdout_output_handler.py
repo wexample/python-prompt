@@ -1,4 +1,5 @@
 """Simple tests for StdoutOutputHandler."""
+
 from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 

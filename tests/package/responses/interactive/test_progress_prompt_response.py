@@ -38,6 +38,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         self._assert_contains_text(rendered, ProgressPromptResponse.FILL_CHAR)
         self._assert_contains_text(rendered, ProgressPromptResponse.EMPTY_CHAR)
 
@@ -58,7 +59,10 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
-        response = ProgressPromptResponse.create_progress(total=10, current=5, width=20, label=self._test_message)
+
+        response = ProgressPromptResponse.create_progress(
+            total=10, current=5, width=20, label=self._test_message
+        )
         rendered = response.render()
         self._assert_contains_text(rendered, "50%")
 
@@ -67,6 +71,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
             ProgressPromptResponse,
         )
         import pytest
+
         with pytest.raises(ValueError):
             ProgressPromptResponse.create_progress(total=0, current=0)
         with pytest.raises(ValueError):
@@ -76,6 +81,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         old_fill = ProgressPromptResponse.FILL_CHAR
         old_empty = ProgressPromptResponse.EMPTY_CHAR
         try:
@@ -90,6 +96,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         resp = self._create_test_response(total=10, current=20, width=10, label=None)
         rendered = resp.render()
         self._assert_contains_text(rendered, "100%")
@@ -98,22 +105,16 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_progress_width(self):
         # Echo a string using the terminal with length
-        response = self._io.progress(
-            total=20,
-            current=10
-        )
+        response = self._io.progress(total=20, current=10)
         self._assert_rendered_lines_count(response=response, lines_count=1)
 
-        response = self._io.progress(
-            label="With a label",
-            total=20,
-            current=10
-        )
+        response = self._io.progress(label="With a label", total=20, current=10)
         self._assert_rendered_lines_count(response=response, lines_count=1)
 
     def test_handle_updates_with_manager(self):
         """Using IoManager: render once, then update via handle and check output string."""
         from wexample_prompt.enums.terminal_color import TerminalColor
+
         response = self._io.progress(
             label="Progress via IoManager",
             total=100,
@@ -121,15 +122,20 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         )
         handle = response.get_handle()
         # Update to 25%
-        out = handle.update(current=25, label="Io progress 25%", color=TerminalColor.YELLOW)
+        out = handle.update(
+            current=25, label="Io progress 25%", color=TerminalColor.YELLOW
+        )
         assert isinstance(out, str)
         self._assert_contains_text(out, "25%")
         self._assert_contains_text(out, "Io progress 25%")
 
     def test_handle_updates_standalone_and_finish(self):
         """Standalone usage: create, render, then update via handle and finish."""
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
         from wexample_prompt.enums.terminal_color import TerminalColor
+
         # Create standalone response
         resp = ProgressPromptResponse.create_progress(
             label="Standalone",
@@ -150,7 +156,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_child_range_mapping_and_percentage(self):
         """Child handle maps its local current to the parent's absolute current."""
-        response = self._io.progress(label='Global', total=1000)
+        response = self._io.progress(label="Global", total=1000)
         root = response.get_handle()
         # Start at an absolute position
         root.update(current=50, label="init")
@@ -168,7 +174,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_nested_children_finish(self):
         """Nested children can finish and update the shared response current at each level."""
-        response = self._io.progress(label='Global', total=1000)
+        response = self._io.progress(label="Global", total=1000)
         root = response.get_handle()
         root.update(current=100, label="root init")
         lvl1 = root.create_range_handle(to=600)  # child of root

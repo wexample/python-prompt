@@ -4,7 +4,9 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_title_prompt_response_test import AbstractTitlePromptResponseTest
+from wexample_prompt.testing.abstract_title_prompt_response_test import (
+    AbstractTitlePromptResponseTest,
+)
 
 
 class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
@@ -14,6 +16,7 @@ class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,
         )
+
         return TitlePromptResponse
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
@@ -34,7 +37,10 @@ class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
 
     def test_renders_message_and_format(self):
-        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
+        )
+
         response = TitlePromptResponse.create_title(text=self._test_message)
         response.render()
         self._assert_common_response_structure(response)
@@ -42,9 +48,16 @@ class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
         self._assert_specific_format(response.rendered_content)
 
     def test_custom_character(self):
-        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-        response = TitlePromptResponse.create_title(text=self._test_message, character="=")
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
+        )
+
+        response = TitlePromptResponse.create_title(
+            text=self._test_message, character="="
+        )
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
         self._assert_contains_text(rendered, "=")
-        assert "⫻" not in rendered  # default character should not appear when custom set
+        assert (
+            "⫻" not in rendered
+        )  # default character should not appear when custom set

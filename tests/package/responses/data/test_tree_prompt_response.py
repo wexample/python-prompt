@@ -4,7 +4,9 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestTreePromptResponse(AbstractPromptResponseTest):
@@ -19,12 +21,15 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
         kwargs = kwargs or {}
-        data = kwargs.setdefault("data", {
-            "root": {
-                "folder1": {"file1": "content1", "file2": "content2"},
-                "folder2": {"file3": "content3"},
-            }
-        })
+        data = kwargs.setdefault(
+            "data",
+            {
+                "root": {
+                    "folder1": {"file1": "content1", "file2": "content2"},
+                    "folder2": {"file3": "content3"},
+                }
+            },
+        )
         # Ensure test message is present in the tree to satisfy base assertion
         data["root"][kwargs.pop("message", self._test_message)] = ""
         return kwargs
@@ -44,6 +49,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         response = TreePromptResponse.create_tree(data={})
         rendered = response.render()
         assert rendered.strip() == ""
@@ -52,6 +58,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         data = {"root": "value"}
         response = TreePromptResponse.create_tree(data=data)
         rendered = response.render()
@@ -62,6 +69,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         data = {"level1": {"level2": {"level3": {"level4": "value"}}}}
         response = TreePromptResponse.create_tree(data=data)
         rendered = response.render()
@@ -77,6 +85,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         data = {"root": {"valid": "value", "none": None}}
         response = TreePromptResponse.create_tree(data=data)
         rendered = response.render()

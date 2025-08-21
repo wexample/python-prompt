@@ -16,7 +16,7 @@ class TestPromptResponseLine:
         """Test converting line to string."""
         segments = [
             PromptResponseSegment(text="Hello"),
-            PromptResponseSegment(text=" World")
+            PromptResponseSegment(text=" World"),
         ]
         line = PromptResponseLine(segments=segments)
         assert line.render(context=PromptContext()) == "Hello World"

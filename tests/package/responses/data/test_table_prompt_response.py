@@ -4,7 +4,9 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestTablePromptResponse(AbstractPromptResponseTest):
@@ -20,11 +22,14 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
         kwargs = kwargs or {}
         kwargs.setdefault("headers", ["Name", "Age", "City"])
-        kwargs.setdefault("data", [
-            ["John", "30", "New York"],
-            ["Jane", "25", "San Francisco"],
-            ["Bob", "35", "Chicago"],
-        ])
+        kwargs.setdefault(
+            "data",
+            [
+                ["John", "30", "New York"],
+                ["Jane", "25", "San Francisco"],
+                ["Bob", "35", "Chicago"],
+            ],
+        )
         kwargs.setdefault("title", self._test_message)
         return kwargs
 
@@ -40,6 +45,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         response = TablePromptResponse.create_table(
             data=[
                 ["John", "30", "New York"],
@@ -55,6 +61,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         response = TablePromptResponse.create_table(data=[])
         rendered = response.render()
         assert rendered.strip() == ""
@@ -63,6 +70,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         data = [["Row 1"], ["Row 2"]]
         headers = ["Header"]
         response = TablePromptResponse.create_table(data=data, headers=headers)
@@ -75,6 +83,7 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         response = TablePromptResponse.create_table(
             data=[
                 ["John", "30", "New York"],

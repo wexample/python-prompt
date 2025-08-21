@@ -4,7 +4,9 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
+from wexample_prompt.testing.abstract_prompt_message_response_test import (
+    AbstractPromptMessageResponseTest,
+)
 
 
 class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
@@ -31,6 +33,7 @@ class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
 
     def test_simple_error_is_red(self):
         from wexample_prompt.enums.terminal_color import TerminalColor
+
         response = self._create_test_response()
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
@@ -42,7 +45,9 @@ class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
         try:
             raise ValueError("boom")
         except Exception as e:
-            response = self._create_test_response({"message": "Error with exception", "exception": e})
+            response = self._create_test_response(
+                {"message": "Error with exception", "exception": e}
+            )
 
         rendered = response.render()
         lines = rendered.split("\n")
