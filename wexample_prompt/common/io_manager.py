@@ -1,8 +1,9 @@
-from typing import List, Type, TYPE_CHECKING, Optional, Any
+from typing import List, Type, TYPE_CHECKING, Optional
 
 from pydantic import Field, PrivateAttr
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import \
     ListPromptResponseManagerMixin
 from wexample_prompt.mixins.response.data.multiple_prompt_response_manager_mixin import \
@@ -99,6 +100,10 @@ class IoManager(
     _terminal_width: int = PrivateAttr(
         default=None
     )
+    verbosity: Optional[VerbosityLevel] = Field(
+        default=VerbosityLevel.DEFAULT,
+        description="The overall verbosity level used in contexts, if not specified."
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -173,10 +178,15 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
-    def print_response(self, response: "AbstractPromptResponse", context: Optional["PromptContext"] = None) -> "AbstractPromptResponse":
+    def print_response(
+            self,
+            response: "AbstractPromptResponse",
+            context: Optional["PromptContext"] = None
+    ) -> "AbstractPromptResponse":
         from wexample_prompt.common.prompt_context import PromptContext
-        context = context or PromptContext()
+        context = PromptContext.create_if_none(context=context)
 
+        context.verbosity = context.verbosity or self.verbosity
         context.indentation = context.indentation or self.indentation
         context.width = context.width or self.terminal_width
 
