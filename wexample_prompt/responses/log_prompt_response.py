@@ -14,23 +14,23 @@ class LogPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_log(
-            cls: "LogPromptResponse",
-            message: LineMessage,
-            color: "TerminalColor" = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls: "LogPromptResponse",
+        message: LineMessage,
+        color: "TerminalColor" = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "LogPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(
             lines=PromptResponseLine.create_from_string(
-                text=message,
-                color=color or TerminalColor.WHITE
+                text=message, color=color or TerminalColor.WHITE
             ),
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         from wexample_prompt.example.response.log_example import LogExample
+
         return LogExample

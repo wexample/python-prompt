@@ -16,7 +16,9 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
@@ -28,35 +30,34 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     )
     default: Optional[Any] = Field(
         default=None,
-        description="Default selected value for the prompt (matched against Choice.value, title, or index)"
+        description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
     inquirer_kwargs: Dict[str, Any] = Field(
         default_factory=dict,
-        description="Additional kwargs forwarded to inquirer.select"
+        description="Additional kwargs forwarded to inquirer.select",
     )
     question: LineMessage = Field(
-        default=None,
-        description="Question text shown to the user"
+        default=None, description="Question text shown to the user"
     )
     question_lines: List["PromptResponseLine"] = Field(
         description="Rendered question lines"
     )
     predefined_answer: Any = Field(
         default=None,
-        description="The answer of the question, in order to make the response non interactive"
+        description="The answer of the question, in order to make the response non interactive",
     )
 
     @classmethod
     def create_choice(
-            cls,
-            question: LineMessage,
-            choices: Union[List[Any], Mapping[Any, Any]],
-            default: Optional[Any] = None,
-            abort: Optional[bool | str] = None,
-            color: Optional[TerminalColor] = None,
-            reset_on_finish: bool = False,
-            predefined_answer: Any = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls,
+        question: LineMessage,
+        choices: Union[List[Any], Mapping[Any, Any]],
+        default: Optional[Any] = None,
+        abort: Optional[bool | str] = None,
+        color: Optional[TerminalColor] = None,
+        reset_on_finish: bool = False,
+        predefined_answer: Any = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ChoicePromptResponse":
         """Factory to create a ChoicePromptResponse."""
         # Build question lines from LineMessage, apply styles/colors on segments
@@ -109,6 +110,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         import readchar
 
         from wexample_prompt.common.prompt_context import PromptContext
+
         context = PromptContext.create_if_none(context=context)
 
         if not self.choices:
@@ -131,7 +133,11 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             return 0
 
         # Preselect default or injected answer for the first render
-        idx = _resolve_index_for(self.predefined_answer if self.predefined_answer is not None else self.default)
+        idx = _resolve_index_for(
+            self.predefined_answer
+            if self.predefined_answer is not None
+            else self.default
+        )
         printed_lines = 0  # how many lines we printed last frame
 
         while True:
@@ -144,8 +150,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             for i, choice in enumerate(self.choices):
                 line = choice.line
 
-                is_selected = (i == idx)
-                is_abort = (choice.value == ChoiceValue.ABORT)
+                is_selected = i == idx
+                is_abort = choice.value == ChoiceValue.ABORT
 
                 # Prefix: no numbering, use chevron only for non-abort selected.
                 if is_abort:
@@ -154,11 +160,17 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     prefix_styles = []
                 else:
                     prefix = "  › " if is_selected else "    "
-                    prefix_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
+                    prefix_color = (
+                        TerminalColor.LIGHT_WHITE
+                        if is_selected
+                        else TerminalColor.RESET
+                    )
                     prefix_styles = [TextStyle.BOLD] if is_selected else []
 
                 # Title styling
-                title_color = TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
+                title_color = (
+                    TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
+                )
                 title_styles = [TextStyle.BOLD] if is_selected else []
 
                 line.segments = [
@@ -223,5 +235,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.interactive.choice_example import ChoiceExample
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
+
         return ChoiceExample

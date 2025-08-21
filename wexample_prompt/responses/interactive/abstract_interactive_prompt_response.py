@@ -1,4 +1,5 @@
 """Abstract base class for interactive prompt responses."""
+
 from abc import ABC
 from typing import Any
 
@@ -12,7 +13,7 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
 
     reset_on_finish: bool = Field(
         default=False,
-        description="If True, clears the prompt block from the terminal after a selection or abort."
+        description="If True, clears the prompt block from the terminal after a selection or abort.",
     )
     _answer: Any = None
 
@@ -31,6 +32,7 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
     @staticmethod
     def _read_key() -> str:
         import readchar
+
         return readchar.readkey()
 
     def get_answer(self) -> Any:

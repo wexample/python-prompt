@@ -8,12 +8,6 @@ from wexample_prompt.enums.choice import ChoiceValue
 
 
 class Choice(ExtendedBaseModel):
-    title: str = Field(
-        description="The title of the choice"
-    )
-    value: Union[str, int, ChoiceValue] = Field(
-        description="The value of the choice"
-    )
-    line: PromptResponseLine = Field(
-        description="The line that renders the choice"
-    )
+    title: str = Field(description="The title of the choice")
+    value: Union[str, int, ChoiceValue] = Field(description="The value of the choice")
+    line: PromptResponseLine = Field(description="The line that renders the choice")

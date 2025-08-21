@@ -1,10 +1,14 @@
 from typing import ClassVar, Optional, Type, TYPE_CHECKING
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
+from wexample_prompt.responses.messages.abstract_message_response import (
+    AbstractMessageResponse,
+)
 
 if TYPE_CHECKING:
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.common.prompt_context import PromptContext
 
@@ -15,15 +19,16 @@ class ErrorPromptResponse(AbstractMessageResponse):
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         from wexample_prompt.example.response.messages.error_example import ErrorExample
+
         return ErrorExample
 
     @classmethod
     def create_error(
-            cls: "ErrorPromptResponse",
-            message: Optional[str] = None,
-            exception: Optional[BaseException] = None,
-            color: Optional["TerminalColor"] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls: "ErrorPromptResponse",
+        message: Optional[str] = None,
+        exception: Optional[BaseException] = None,
+        color: Optional["TerminalColor"] = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ErrorPromptResponse":
         from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -32,19 +37,29 @@ class ErrorPromptResponse(AbstractMessageResponse):
         if exception is not None:
             from wexample_helpers.helpers.error import error_format
             from wexample_prompt.common.prompt_response_line import PromptResponseLine
-            from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
 
-            header_text = message if (message is not None and message != "") else "An error occurred"
+            header_text = (
+                message
+                if (message is not None and message != "")
+                else "An error occurred"
+            )
 
             # First line: symbol + header in red
             effective_symbol = cls.SYMBOL
             header_segments: list[PromptResponseSegment] = []
             if effective_symbol:
                 header_segments.append(
-                    PromptResponseSegment(text=f"{effective_symbol} ", color=(color or TerminalColor.RED))
+                    PromptResponseSegment(
+                        text=f"{effective_symbol} ", color=(color or TerminalColor.RED)
+                    )
                 )
             header_segments.append(
-                PromptResponseSegment(text=header_text, color=(color or TerminalColor.RED))
+                PromptResponseSegment(
+                    text=header_text, color=(color or TerminalColor.RED)
+                )
             )
 
             lines: list[PromptResponseLine] = [
@@ -53,15 +68,15 @@ class ErrorPromptResponse(AbstractMessageResponse):
 
             # Trace lines: preserve helper formatting (may include ANSI), no extra color
             formatted = error_format(exception)
-            lines.extend(
-                PromptResponseLine.create_from_string(formatted.splitlines())
-            )
+            lines.extend(PromptResponseLine.create_from_string(formatted.splitlines()))
 
             return cls._create(lines=lines, verbosity=verbosity)
         else:
-            text = message if (message is not None and message != "") else "An error occurred"
+            text = (
+                message
+                if (message is not None and message != "")
+                else "An error occurred"
+            )
             return cls._create_symbol_message(
-                text=text,
-                color=(color or TerminalColor.RED),
-                verbosity=verbosity
+                text=text, color=(color or TerminalColor.RED), verbosity=verbosity
             )

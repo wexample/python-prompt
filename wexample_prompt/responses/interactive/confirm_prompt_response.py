@@ -1,4 +1,5 @@
 """Confirmation dialog interactive response (box style)."""
+
 from typing import Any, Dict, Optional, Tuple, Type, ClassVar
 
 from pydantic import Field
@@ -38,12 +39,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     }
 
     question: LineMessage = Field(
-        default="Please confirm:",
-        description="The question to ask to the user"
+        default="Please confirm:", description="The question to ask to the user"
     )
     width: Optional[int] = Field(
         default=None,
-        description="Total width of the box (in characters). If None, uses context width or content width."
+        description="Total width of the box (in characters). If None, uses context width or content width.",
     )
     # Map pressed key -> (value, label)
     options: Dict[str, Tuple[str, str]] = Field(
@@ -51,33 +51,34 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         description="Keyboard shortcuts mapping to (return value, display label)",
     )
     default_value: Optional[str] = Field(
-        default=None,
-        description="The value to return when quitting"
+        default=None, description="The value to return when quitting"
     )
     allow_abort: bool = Field(
-        default=True,
-        description="ESC/q aborts and returns None when allowed."
+        default=True, description="ESC/q aborts and returns None when allowed."
     )
     predefined_answer: Any = Field(
         default=None,
-        description="The answer of the question, in order to make the response non interactive"
+        description="The answer of the question, in order to make the response non interactive",
     )
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.confirm_example import ConfirmExample
+        from wexample_prompt.example.response.interactive.confirm_example import (
+            ConfirmExample,
+        )
+
         return ConfirmExample
 
     @classmethod
     def create_confirm(
-            cls,
-            question: LineMessage = "Please confirm:",
-            choices: Optional[Dict[str, Tuple[str, str]]] = None,
-            default: Optional[str] = None,
-            width: Optional[int] = None,
-            predefined_answer: Any = None,
-            reset_on_finish: bool = False,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        question: LineMessage = "Please confirm:",
+        choices: Optional[Dict[str, Tuple[str, str]]] = None,
+        default: Optional[str] = None,
+        width: Optional[int] = None,
+        predefined_answer: Any = None,
+        reset_on_finish: bool = False,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ConfirmPromptResponse":
         """Create a confirmation dialog with explicit key mappings.
 
@@ -100,12 +101,12 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
         return (
-                self._answer == True
-                or self._answer == 1
-                or self._answer == "yes"
-                or self._answer == "yes_all"
-                or self._answer == "ok"
-                or self._answer == "continue"
+            self._answer == True
+            or self._answer == 1
+            or self._answer == "yes"
+            or self._answer == "yes_all"
+            or self._answer == "ok"
+            or self._answer == "continue"
         )
 
     def _build_lines(self, context: "PromptContext") -> None:
@@ -138,10 +139,21 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines = []
         horiz = "-" * box_width
         # top border
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
+        self.lines.append(
+            PromptResponseLine(
+                segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]
+            )
+        )
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
+            PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(
+                        text=ansi_center("", box_width), color=TerminalColor.RESET
+                    )
+                ]
+            )
+        )
         # question lines centered (support multi-line)
         for t in question_texts:
             # Ensure question line never exceeds the box visible width
@@ -159,7 +171,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
+            PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(
+                        text=ansi_center("", box_width), color=TerminalColor.RESET
+                    )
+                ]
+            )
+        )
         # options line centered; highlight default_value if set
         # First, try building a styled options line without exceeding width
         # Compute the raw options visible width (texts don't include ANSI; styles are applied separately)
@@ -168,19 +187,29 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             left_pad = max((box_width - ansi_display_width(raw_options)) // 2, 0)
             option_segments: list[PromptResponseSegment] = []
             if left_pad:
-                option_segments.append(PromptResponseSegment(text=(" " * left_pad), color=TerminalColor.RESET))
+                option_segments.append(
+                    PromptResponseSegment(
+                        text=(" " * left_pad), color=TerminalColor.RESET
+                    )
+                )
             for idx, (k, v, label) in enumerate(parts):
                 text = f"[{k}: {label}]"
                 if self.default_value is not None and v == self.default_value:
                     option_segments.append(
-                        PromptResponseSegment(text=text, color=TerminalColor.LIGHT_WHITE, styles=[TextStyle.BOLD])
+                        PromptResponseSegment(
+                            text=text,
+                            color=TerminalColor.LIGHT_WHITE,
+                            styles=[TextStyle.BOLD],
+                        )
                     )
                 else:
                     option_segments.append(
                         PromptResponseSegment(text=text, color=TerminalColor.WHITE)
                     )
                 if idx < len(parts) - 1:
-                    option_segments.append(PromptResponseSegment(text=" ", color=TerminalColor.WHITE))
+                    option_segments.append(
+                        PromptResponseSegment(text=" ", color=TerminalColor.WHITE)
+                    )
             self.lines.append(PromptResponseLine(segments=option_segments))
         else:
             # Too long: use purified, truncated plain text version, centered
@@ -189,19 +218,32 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 PromptResponseLine(
                     segments=[
                         PromptResponseSegment(
-                            text=ansi_center(truncated, box_width), color=TerminalColor.WHITE
+                            text=ansi_center(truncated, box_width),
+                            color=TerminalColor.WHITE,
                         )
                     ]
                 )
             )
         # empty line
         self.lines.append(
-            PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
+            PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(
+                        text=ansi_center("", box_width), color=TerminalColor.RESET
+                    )
+                ]
+            )
+        )
         # bottom border
-        self.lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]))
+        self.lines.append(
+            PromptResponseLine(
+                segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]
+            )
+        )
 
     def render(self, context: Optional["PromptContext"] = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
+
         context = PromptContext.create_if_none(context=context)
 
         printed = 0
@@ -221,7 +263,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             # Support left/right arrows to cycle the current default selection among options
             # Arrow sequences typically are: left='\x1b[D', right='\x1b[C'
             if key in ("\x1b[C", "\x1b[D"):
-                items = list(self.options.items())  # [(k, (value, label)), ...] preserving insertion order
+                items = list(
+                    self.options.items()
+                )  # [(k, (value, label)), ...] preserving insertion order
                 if items:
                     # Determine current index from default_value
                     current_idx = None

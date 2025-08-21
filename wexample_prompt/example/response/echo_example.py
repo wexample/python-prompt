@@ -10,11 +10,10 @@ class EchoExample(AbstractResponseExample):
 
     def example_class(self):
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+
         return EchoPromptResponse.create_echo(
             message=self.get_test_message(),
         )
 
     def example_extended(self) -> None:
-        self._class_with_methods.echo(
-            self.get_test_message()
-        )
+        self._class_with_methods.echo(self.get_test_message())

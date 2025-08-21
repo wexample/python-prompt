@@ -12,16 +12,15 @@ if TYPE_CHECKING:
 
 class PromptResponseSegment(ExtendedBaseModel):
     """A segment of text with optional styling."""
-    text: str = Field(
-        description="The content of the segment"
-    )
+
+    text: str = Field(description="The content of the segment")
     color: Optional[TerminalColor] = Field(
         default=None,
-        description="The color to apply to segment on rendering, if allowed by context"
+        description="The color to apply to segment on rendering, if allowed by context",
     )
     styles: List[TextStyle] = Field(
         default_factory=list,
-        description="Optional text styles (bold, italic, underline, etc.) to apply when rendering"
+        description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
 
     def __init__(self, **kwargs):
@@ -32,7 +31,9 @@ class PromptResponseSegment(ExtendedBaseModel):
                 "Segment should not contain line breaks; use separate line objects instead"
             )
 
-    def render(self, context: "PromptContext", line_remaining_width: int) -> Tuple[str, Optional["PromptResponseSegment"]]:
+    def render(
+        self, context: "PromptContext", line_remaining_width: int
+    ) -> Tuple[str, Optional["PromptResponseSegment"]]:
         """Render the segment respecting the remaining width for the current line.
 
         Returns a tuple of (rendered_fit, remainder_segment).
@@ -40,19 +41,24 @@ class PromptResponseSegment(ExtendedBaseModel):
         - remainder_segment: a new PromptResponseSegment with the leftover RAW text and same color, or None
         """
         # Split the RAW text by visible width first (no ANSI involved yet)
-        fit_raw, remainder_raw = self._split_by_visible_width(self.text, line_remaining_width)
+        fit_raw, remainder_raw = self._split_by_visible_width(
+            self.text, line_remaining_width
+        )
 
         # Apply styles and color if allowed by context (single reset at the end)
         rendered_fit = fit_raw
         if context.colorized and fit_raw:
             from wexample_prompt.common.color_manager import ColorManager
+
             prefix = ColorManager.build_prefix(color=self.color, styles=self.styles)
             if prefix:
                 rendered_fit = f"{prefix}{fit_raw}\033[0m"
 
         remainder_seg = None
         if remainder_raw:
-            remainder_seg = PromptResponseSegment(text=remainder_raw, color=self.color, styles=list(self.styles))
+            remainder_seg = PromptResponseSegment(
+                text=remainder_raw, color=self.color, styles=list(self.styles)
+            )
         return rendered_fit, remainder_seg
 
     def _split_by_visible_width(self, text: str, width: int) -> Tuple[str, str]:
@@ -66,5 +72,3 @@ class PromptResponseSegment(ExtendedBaseModel):
         if len(text) <= width:
             return text, ""
         return text[:width], text[width:]
-
-    

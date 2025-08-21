@@ -6,12 +6,11 @@ class SeparatorExample(AbstractResponseExample):
         self.io.separator()
 
     def example_class(self):
-        from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
-        return SeparatorPromptResponse.create_separator(
-            'From response'
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
         )
 
+        return SeparatorPromptResponse.create_separator("From response")
+
     def example_extended(self) -> None:
-        self._class_with_methods.separator(
-            label="Class method"
-        )
+        self._class_with_methods.separator(label="Class method")

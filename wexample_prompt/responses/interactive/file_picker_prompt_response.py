@@ -1,4 +1,5 @@
 """Response for displaying and handling file picker prompts."""
+
 import os
 from typing import Dict, Optional, Type, Any
 
@@ -7,43 +8,49 @@ from pydantic import Field
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+from wexample_prompt.responses.interactive.choice_prompt_response import (
+    ChoicePromptResponse,
+)
 
 
 class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""
 
     base_dir: str = Field(
-        description="Base directory to browse from; defaults to current working directory if not provided")
+        description="Base directory to browse from; defaults to current working directory if not provided"
+    )
     mode: FilePickerMode = Field(
         default=FilePickerMode.BOTH,
-        description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection."
+        description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection.",
     )
     abort_option: Optional[bool | str] = Field(
         default=None,
-        description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label)."
+        description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label).",
     )
     allow_parent_selection: bool = Field(
         default=False,
-        description="If True, include '..' as a selectable entry at the top; otherwise hide it."
+        description="If True, include '..' as a selectable entry at the top; otherwise hide it.",
     )
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.file_picker_example import FilePickerExample
+        from wexample_prompt.example.response.interactive.file_picker_example import (
+            FilePickerExample,
+        )
+
         return FilePickerExample
 
     @classmethod
     def create_file_picker(
-            cls,
-            base_dir: Optional[str] = None,
-            question: LineMessage = "Select a file:",
-            abort: Optional[bool | str] = None,
-            mode: FilePickerMode = FilePickerMode.BOTH,
-            allow_parent_selection: bool = False,
-            reset_on_finish: bool = False,
-            predefined_answer: Any = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls,
+        base_dir: Optional[str] = None,
+        question: LineMessage = "Select a file:",
+        abort: Optional[bool | str] = None,
+        mode: FilePickerMode = FilePickerMode.BOTH,
+        allow_parent_selection: bool = False,
+        reset_on_finish: bool = False,
+        predefined_answer: Any = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "FilePickerPromptResponse":
         base = base_dir or os.getcwd()
 

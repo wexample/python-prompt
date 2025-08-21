@@ -15,40 +15,32 @@ class PromptContext(ExtendedBaseModel):
 
     """Context for rendering responses, including terminal information."""
     colorized: Optional[bool] = Field(
-        default=True,
-        description="Allow to return avoid coloration special characters"
+        default=True, description="Allow to return avoid coloration special characters"
     )
     parent_context: Optional["PromptContext"] = Field(
-        default=None,
-        description="A parent context"
+        default=None, description="A parent context"
     )
-    indentation: Optional[int] = Field(
-        default=0,
-        description="Base indentation level"
-    )
+    indentation: Optional[int] = Field(default=0, description="Base indentation level")
     indentation_character: Optional[str] = Field(
-        default=" ",
-        description="The character used for indentation"
+        default=" ", description="The character used for indentation"
     )
     indentation_color: Optional[TerminalColor] = Field(
-        default=None,
-        description="The indentation part color"
+        default=None, description="The indentation part color"
     )
     indentation_length: Optional[int] = Field(
-        default=2,
-        description="Number of characters to repeat for one indentation"
+        default=2, description="Number of characters to repeat for one indentation"
     )
     verbosity: Optional[VerbosityLevel] = Field(
         default=DEFAULT_VERBOSITY,
-        description="The context verbosity, saying which response to render or not"
+        description="The context verbosity, saying which response to render or not",
     )
     width: Optional[int] = Field(
         default=None,
-        description="Context with, basically the terminal with including indentation"
+        description="Context with, basically the terminal with including indentation",
     )
     formatting: Optional[bool] = Field(
         default=False,
-        description="Format lines on rendering, should be disabled when passing raw text"
+        description="Format lines on rendering, should be disabled when passing raw text",
     )
 
     @classmethod
@@ -60,29 +52,29 @@ class PromptContext(ExtendedBaseModel):
     @classmethod
     def create_kwargs_from_context(cls, context: "PromptContext") -> "Kwargs":
         return {
-            'indentation': context.indentation,
-            'indentation_character': context.indentation_character,
-            'indentation_color': context.indentation_color,
-            'indentation_length': context.indentation_length,
-            'verbosity': context.verbosity,
-            'width': context.width,
+            "indentation": context.indentation,
+            "indentation_character": context.indentation_character,
+            "indentation_color": context.indentation_color,
+            "indentation_length": context.indentation_length,
+            "verbosity": context.verbosity,
+            "width": context.width,
         }
 
     @classmethod
     def create_from_parent_context_and_kwargs(
-            cls,
-            kwargs: Kwargs,
-            parent_context: Optional["PromptContext"] = None
+        cls, kwargs: Kwargs, parent_context: Optional["PromptContext"] = None
     ) -> "PromptContext":
         if parent_context:
-            kwargs['parent_context'] = parent_context
+            kwargs["parent_context"] = parent_context
 
         return cls.create_from_kwargs(
             kwargs,
         )
 
     @classmethod
-    def create_if_none(cls, context: Optional["PromptContext"] = None) -> "PromptContext":
+    def create_if_none(
+        cls, context: Optional["PromptContext"] = None
+    ) -> "PromptContext":
         """
         Creating a context allows to execute render without any extra information,
         but manager parameters like terminal width are not available in this case.
@@ -90,7 +82,7 @@ class PromptContext(ExtendedBaseModel):
         return context or PromptContext()
 
     def render_indentation_text(self) -> str:
-        output = ''
+        output = ""
         if self.parent_context:
             output = self.parent_context.render_indentation()
 
@@ -103,12 +95,15 @@ class PromptContext(ExtendedBaseModel):
         indentation_color = self.get_indentation_color()
         if self.colorized and indentation_color:
             from wexample_prompt.common.color_manager import ColorManager
+
             return ColorManager.colorize(indentation, indentation_color)
 
         return indentation
 
     def render_indentation_part(self) -> str:
-        return self.get_indentation_character() * (self.get_indentation() * self.indentation_length)
+        return self.get_indentation_character() * (
+            self.get_indentation() * self.indentation_length
+        )
 
     def get_width(self) -> int:
         # None width allowed to let know that no fixed width has been specified before using it.

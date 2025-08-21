@@ -1,8 +1,11 @@
 """Example usage of ConfirmPromptResponse."""
+
 from typing import Optional
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+from wexample_prompt.responses.interactive.confirm_prompt_response import (
+    ConfirmPromptResponse,
+)
 
 
 class ConfirmExample(AbstractResponseExample):
@@ -14,7 +17,7 @@ class ConfirmExample(AbstractResponseExample):
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
             reset_on_finish=True,
-            predefined_answer="yes"
+            predefined_answer="yes",
         )
 
     def example_manager(self):
@@ -23,7 +26,7 @@ class ConfirmExample(AbstractResponseExample):
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             reset_on_finish=True,
-            predefined_answer="cancel"
+            predefined_answer="cancel",
         )
 
     def example_extended(self):
@@ -32,5 +35,5 @@ class ConfirmExample(AbstractResponseExample):
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
             reset_on_finish=True,
-            predefined_answer="no"
+            predefined_answer="no",
         )

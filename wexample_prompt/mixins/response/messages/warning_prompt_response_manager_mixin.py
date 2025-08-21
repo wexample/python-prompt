@@ -6,19 +6,23 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+    from wexample_prompt.responses.messages.warning_prompt_response import (
+        WarningPromptResponse,
+    )
     from wexample_prompt.common.io_manager import IoManager
 
 
 class WarningPromptResponseManagerMixin:
     def warning(
-            self: "IoManager",
-            message: LineMessage,
-            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-            context: Optional["PromptContext"] = None,
-            **kwargs: Kwargs
+        self: "IoManager",
+        message: LineMessage,
+        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        context: Optional["PromptContext"] = None,
+        **kwargs: Kwargs
     ) -> "WarningPromptResponse":
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import (
+            WarningPromptResponse,
+        )
 
         response = WarningPromptResponse.create_warning(
             message=message,
@@ -28,7 +32,6 @@ class WarningPromptResponseManagerMixin:
         return self.print_response(
             response=response,
             context=WarningPromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs
-            )
+                context=context, parent_kwargs=kwargs
+            ),
         )

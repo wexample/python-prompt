@@ -1,11 +1,12 @@
 """Terminal color and style codes using colorama."""
+
 from enum import Enum
 from colorama import Fore, Style
 
 
 class TerminalColor(Enum):
     """Terminal color and style codes using colorama constants."""
-    
+
     # Standard colors
     BLACK = Fore.BLACK
     RED = Fore.RED
@@ -15,7 +16,7 @@ class TerminalColor(Enum):
     MAGENTA = Fore.MAGENTA
     CYAN = Fore.CYAN
     WHITE = Fore.WHITE
-    
+
     # Light/Bright colors
     LIGHT_RED = Fore.LIGHTRED_EX
     LIGHT_GREEN = Fore.LIGHTGREEN_EX
@@ -24,15 +25,15 @@ class TerminalColor(Enum):
     LIGHT_MAGENTA = Fore.LIGHTMAGENTA_EX
     LIGHT_CYAN = Fore.LIGHTCYAN_EX
     LIGHT_WHITE = Fore.LIGHTWHITE_EX
-    
+
     # Special
     DEFAULT = Fore.RESET
     RESET = Style.RESET_ALL
-    
+
     # Text styles
     BOLD = Style.BRIGHT
     DIM = Style.DIM
-            
+
     def __str__(self) -> str:
         """Return the color/style code when converting to string."""
         return self.value

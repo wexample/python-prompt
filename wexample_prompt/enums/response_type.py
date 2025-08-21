@@ -3,6 +3,7 @@ from enum import Enum
 
 class ResponseType(Enum):
     """Types of prompt responses."""
+
     LIST = "list"
     MULTIPLE = "multiple"
     PLAIN = "plain"

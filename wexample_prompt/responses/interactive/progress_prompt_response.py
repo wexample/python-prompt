@@ -1,4 +1,5 @@
 """Progress bar response implementation."""
+
 from typing import Optional, ClassVar, Type, TYPE_CHECKING, Union
 
 from pydantic import Field
@@ -24,14 +25,23 @@ class ProgressPromptResponse(AbstractPromptResponse):
     # Instance fields
     total: int = Field(description="Total number of items (must be > 0)")
     current: int = Field(description="Current progress (must be >= 0)")
-    width: Optional[int] = Field(default=None, description="Width of the progress bar in characters")
-    label: Optional[str] = Field(default=None, description="Optional label displayed before the bar")
-    color: Optional[TerminalColor] = Field(default=None, description="Optional color applied to the bar")
+    width: Optional[int] = Field(
+        default=None, description="Width of the progress bar in characters"
+    )
+    label: Optional[str] = Field(
+        default=None, description="Optional label displayed before the bar"
+    )
+    color: Optional[TerminalColor] = Field(
+        default=None, description="Optional color applied to the bar"
+    )
     _handle: Optional["ProgressHandle"] = None
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.progress_example import ProgressExample
+        from wexample_prompt.example.response.interactive.progress_example import (
+            ProgressExample,
+        )
+
         return ProgressExample
 
     @classmethod
@@ -48,7 +58,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         """
         if isinstance(current, str):
             s = current.strip()
-            if s.endswith('%'):
+            if s.endswith("%"):
                 try:
                     pct = float(s[:-1].strip())
                 except ValueError:
@@ -67,13 +77,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_progress(
-            cls,
-            total: int = 100,
-            current: Union[float, int, str] = 0,
-            width: Optional[int] = None,
-            label: Optional[str] = None,
-            color: Optional[TerminalColor] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls,
+        total: int = 100,
+        current: Union[float, int, str] = 0,
+        width: Optional[int] = None,
+        label: Optional[str] = None,
+        color: Optional[TerminalColor] = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ProgressPromptResponse":
         if total <= 0:
             raise ValueError("Total must be greater than 0")
@@ -89,11 +99,12 @@ class ProgressPromptResponse(AbstractPromptResponse):
             width=width,
             label=label,
             color=color or TerminalColor.BLUE,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     def get_handle(self) -> "ProgressHandle":
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
+
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
@@ -121,6 +132,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         # Compute available content width (context width minus indentation)
         indent_text = context.render_indentation()
         from wexample_helpers.helpers.ansi import ansi_strip
+
         visible_indent = len(ansi_strip(indent_text))
         total_width = self.width or context.get_width()
         max_content_width = max(0, total_width - visible_indent)
@@ -130,7 +142,12 @@ class ProgressPromptResponse(AbstractPromptResponse):
         right_percent = f" {percentage}%"
 
         # Determine bar width to perfectly fit the line
-        bar_width = max(0, max_content_width - len(ansi_strip(left_label)) - len(ansi_strip(right_percent)))
+        bar_width = max(
+            0,
+            max_content_width
+            - len(ansi_strip(left_label))
+            - len(ansi_strip(right_percent)),
+        )
 
         # Build colored bar of exact computed width
         if bar_width > 0:
@@ -141,7 +158,11 @@ class ProgressPromptResponse(AbstractPromptResponse):
             empty = 0
 
         # Build plain bar text (ANSI will be applied by segment color handling, after splitting)
-        bar_text = f"{self.FILL_CHAR * filled}{self.EMPTY_CHAR * empty}" if bar_width > 0 else ""
+        bar_text = (
+            f"{self.FILL_CHAR * filled}{self.EMPTY_CHAR * empty}"
+            if bar_width > 0
+            else ""
+        )
 
         segments = []
         if left_label:

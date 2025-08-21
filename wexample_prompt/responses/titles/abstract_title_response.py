@@ -5,7 +5,9 @@ from pydantic import Field
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.messages.abstract_message_response import AbstractMessageResponse
+from wexample_prompt.responses.messages.abstract_message_response import (
+    AbstractMessageResponse,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -23,29 +25,26 @@ class AbstractTitleResponse(AbstractMessageResponse):
     prefix_segment: PromptResponseSegment = Field(
         description="The prefix segment displayed before the title text"
     )
-    text_segment: PromptResponseSegment = Field(
-        description="The title text segment"
-    )
+    text_segment: PromptResponseSegment = Field(description="The title text segment")
     fill_segment: PromptResponseSegment = Field(
         description="The trailing fill characters segment"
     )
     width: Optional[int] = Field(
-        default=None,
-        description="Optional fixed width; if not set uses context width"
+        default=None, description="Optional fixed width; if not set uses context width"
     )
     character: Optional[str] = Field(
         default=DEFAULT_CHARACTER,
-        description="Character used to fill the remaining line"
+        description="Character used to fill the remaining line",
     )
 
     @classmethod
     def _create_title(
-            cls,
-            text: str,
-            color: Optional["TerminalColor"] = None,
-            character: Optional[str] = None,
-            width: Optional[int] = None,
-            verbosity:"VerbosityLevel" = None
+        cls,
+        text: str,
+        color: Optional["TerminalColor"] = None,
+        character: Optional[str] = None,
+        width: Optional[int] = None,
+        verbosity: "VerbosityLevel" = None,
     ) -> "AbstractTitleResponse":
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",
@@ -75,11 +74,12 @@ class AbstractTitleResponse(AbstractMessageResponse):
                     ]
                 )
             ],
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         from wexample_prompt.common.prompt_context import PromptContext
+
         context = PromptContext.create_if_none(context=context)
 
         # Prefer provided context, else defer to super to resolve any defaulting
@@ -90,6 +90,8 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
         remaining -= len(self.prefix_segment.text)
         remaining -= len(self.text_segment.text)
-        self.fill_segment.text = max(0, remaining) * (self.character or self.DEFAULT_CHARACTER)
+        self.fill_segment.text = max(0, remaining) * (
+            self.character or self.DEFAULT_CHARACTER
+        )
 
         return super().render(context=context)

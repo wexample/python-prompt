@@ -1,5 +1,7 @@
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+from wexample_prompt.responses.titles.subtitle_prompt_response import (
+    SubtitlePromptResponse,
+)
 
 
 class SubtitleExample(AbstractResponseExample):
@@ -11,10 +13,10 @@ class SubtitleExample(AbstractResponseExample):
 
     def example_class(self):
         return SubtitlePromptResponse.create_subtitle(
-            text=self.get_test_message() + ' (from response)'
+            text=self.get_test_message() + " (from response)"
         )
 
     def example_extended(self):
         self._class_with_methods.title(
-            message=self.get_test_message() + ' (class method)'
+            message=self.get_test_message() + " (class method)"
         )

@@ -12,14 +12,17 @@ if TYPE_CHECKING:
 
 class ListPromptResponseManagerMixin:
     def list(
-            self: "IoManager",
-            items: List[str],
-            bullet: str = "•",
-            color: Optional["TerminalColor"] = None,
-            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-            context: Optional[PromptContext] = None,
-            **kwargs: Kwargs) -> "ListPromptResponse":
-        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        self: "IoManager",
+        items: List[str],
+        bullet: str = "•",
+        color: Optional["TerminalColor"] = None,
+        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        context: Optional[PromptContext] = None,
+        **kwargs: Kwargs
+    ) -> "ListPromptResponse":
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
 
         response = ListPromptResponse.create_list(
             items=items,

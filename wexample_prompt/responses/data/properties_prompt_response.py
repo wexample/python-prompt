@@ -17,30 +17,31 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     """
 
     properties: Dict[str, Any] = Field(
-        default_factory=dict,
-        description="The list of properties to display"
+        default_factory=dict, description="The list of properties to display"
     )
     title: Optional[str] = Field(
-        default=None,
-        description="The title of the properties list"
+        default=None, description="The title of the properties list"
     )
     nested_indent: int = Field(
         default=2,
-        description="Indentation inside the properties list, when rendering sub list of items"
+        description="Indentation inside the properties list, when rendering sub list of items",
     )
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.properties_example import PropertiesExample
+        from wexample_prompt.example.response.data.properties_example import (
+            PropertiesExample,
+        )
+
         return PropertiesExample
 
     @classmethod
     def create_properties(
-            cls,
-            properties: Dict[str, Any],
-            title: Optional[str] = None,
-            nested_indent: int = 2,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        properties: Dict[str, Any],
+        title: Optional[str] = None,
+        nested_indent: int = 2,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "PropertiesPromptResponse":
         return cls(
             lines=[],  # Lines will be built in render() because we neet context with to create them.
@@ -72,7 +73,9 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         scan_keys(self.properties)
 
-        content_lines = self._format_properties(self.properties, max_key_width, self.nested_indent)
+        content_lines = self._format_properties(
+            self.properties, max_key_width, self.nested_indent
+        )
 
         lines: List[PromptResponseLine] = []
         # Empty top spacer
@@ -83,21 +86,25 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             left_pad = max(0, (content_width - title_len) // 2)
             right_pad = max(0, content_width - title_len - left_pad)
             lines.append(
-                PromptResponseLine(segments=[
-                    PromptResponseSegment(text="-" * left_pad),
-                    PromptResponseSegment(text=f" {self.title} "),
-                    PromptResponseSegment(text="-" * max(0, right_pad - 2)),
-                ])
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(text="-" * left_pad),
+                        PromptResponseSegment(text=f" {self.title} "),
+                        PromptResponseSegment(text="-" * max(0, right_pad - 2)),
+                    ]
+                )
             )
         else:
             lines.append(self._create_border_line(content_width))
 
         for content in content_lines:
             lines.append(
-                PromptResponseLine(segments=[
-                    PromptResponseSegment(text=" "),
-                    PromptResponseSegment(text=content),
-                ])
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(text=" "),
+                        PromptResponseSegment(text=content),
+                    ]
+                )
             )
 
         lines.append(self._create_border_line(content_width))
@@ -108,10 +115,10 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _format_properties(
-            properties: Dict[str, Any],
-            key_width: int,
-            indent: int,
-            current_indent: int = 0,
+        properties: Dict[str, Any],
+        key_width: int,
+        indent: int,
+        current_indent: int = 0,
     ) -> List[str]:
         lines: List[str] = []
         indent_str = " " * current_indent
@@ -130,4 +137,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
-        return PromptResponseLine(segments=[PromptResponseSegment(text=f"{'-' * width}")])
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text=f"{'-' * width}")]
+        )

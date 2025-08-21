@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 
 class EchoPromptResponseManagerMixin:
     def echo(
-            self: "IoManager",
-            message: LineMessage,
-            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-            context: Optional[PromptContext] = None,
-            **kwargs: Kwargs
+        self: "IoManager",
+        message: LineMessage,
+        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        context: Optional[PromptContext] = None,
+        **kwargs: Kwargs
     ) -> "EchoPromptResponse":
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
@@ -28,7 +28,6 @@ class EchoPromptResponseManagerMixin:
         return self.print_response(
             response=response,
             context=EchoPromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs
-            )
+                context=context, parent_kwargs=kwargs
+            ),
         )

@@ -1,4 +1,5 @@
 """Tree response implementation."""
+
 from typing import Dict, Any, List, Type, Optional
 
 from pydantic import Field
@@ -12,36 +13,32 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 class TreePromptResponse(AbstractPromptResponse):
     """Response for displaying hierarchical data in a tree structure."""
-    data: Dict[str, Any] = Field(
-        description="The data to display"
-    )
+
+    data: Dict[str, Any] = Field(description="The data to display")
     branch_style: str = Field(
-        default="├",
-        description="The character used to render branch"
+        default="├", description="The character used to render branch"
     )
     leaf_style: str = Field(
-        default="└",
-        description="The character used to render leaf"
+        default="└", description="The character used to render leaf"
     )
     pipe_style: str = Field(
-        default="│",
-        description="The character used to render pipe"
+        default="│", description="The character used to render pipe"
     )
     dash_style: str = Field(
-        default="──",
-        description="The character used to render dash"
+        default="──", description="The character used to render dash"
     )
 
     @classmethod
     def get_example_class(cls) -> Type:
         from wexample_prompt.example.response.data.tree_example import TreeExample
+
         return TreeExample
 
     @classmethod
     def create_tree(
-            cls,
-            data: Dict[str, Any],
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        data: Dict[str, Any],
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "TreePromptResponse":
         return cls(
             lines=[],
@@ -62,11 +59,17 @@ class TreePromptResponse(AbstractPromptResponse):
         self.lines = lines
         return super().render(context=context)
 
-    def _build_tree(self, data: Dict[str, Any], prefix: str, lines: List[PromptResponseLine]) -> None:
+    def _build_tree(
+        self, data: Dict[str, Any], prefix: str, lines: List[PromptResponseLine]
+    ) -> None:
         items = list(data.items())
         for i, (key, value) in enumerate(items):
             is_last = i == len(items) - 1
-            current_prefix = f"{self.leaf_style}{self.dash_style} " if is_last else f"{self.branch_style}{self.dash_style} "
+            current_prefix = (
+                f"{self.leaf_style}{self.dash_style} "
+                if is_last
+                else f"{self.branch_style}{self.dash_style} "
+            )
 
             segments = [PromptResponseSegment(text=f"{prefix}{current_prefix}{key}")]
             lines.append(PromptResponseLine(segments=segments))
@@ -76,5 +79,9 @@ class TreePromptResponse(AbstractPromptResponse):
                 self._build_tree(value, next_prefix, lines)
             elif value is not None:
                 next_prefix = prefix + ("    " if is_last else f"{self.pipe_style}   ")
-                segments = [PromptResponseSegment(text=f"{next_prefix}{self.leaf_style}{self.dash_style} {value}")]
+                segments = [
+                    PromptResponseSegment(
+                        text=f"{next_prefix}{self.leaf_style}{self.dash_style} {value}"
+                    )
+                ]
                 lines.append(PromptResponseLine(segments=segments))

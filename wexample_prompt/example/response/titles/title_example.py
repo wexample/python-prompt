@@ -11,10 +11,10 @@ class TitleExample(AbstractResponseExample):
 
     def example_class(self):
         return TitlePromptResponse.create_title(
-            text=self.get_test_message() + ' (from response)'
+            text=self.get_test_message() + " (from response)"
         )
 
     def example_extended(self):
         self._class_with_methods.title(
-            message=self.get_test_message() + ' (class method)'
+            message=self.get_test_message() + " (class method)"
         )

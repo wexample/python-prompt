@@ -1,4 +1,5 @@
 """Response for displaying suggestions with optional descriptions."""
+
 from typing import List, Type
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -15,16 +16,19 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.suggestions_example import SuggestionsExample
+        from wexample_prompt.example.response.data.suggestions_example import (
+            SuggestionsExample,
+        )
+
         return SuggestionsExample
 
     @classmethod
     def create_suggestions(
-            cls,
-            message: LineMessage,
-            suggestions: List[str],
-            arrow_style: str = "→",
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        message: LineMessage,
+        suggestions: List[str],
+        arrow_style: str = "→",
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "SuggestionsPromptResponse":
         # Build lines independent of context
         lines: List[PromptResponseLine] = []

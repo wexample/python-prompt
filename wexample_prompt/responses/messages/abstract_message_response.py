@@ -13,12 +13,12 @@ class AbstractMessageResponse(AbstractPromptResponse):
 
     @classmethod
     def _create_symbol_message(
-            cls,
-            text: LineMessage,
-            color: TerminalColor,
-            symbol: Optional[str] = None,
-            **kwargs
-    ) -> 'AbstractMessageResponse':
+        cls,
+        text: LineMessage,
+        color: TerminalColor,
+        symbol: Optional[str] = None,
+        **kwargs,
+    ) -> "AbstractMessageResponse":
         """Create a message with a symbol"""
         # Determine effective symbol (explicit > class default)
         effective_symbol = symbol if symbol is not None else cls.SYMBOL
@@ -29,6 +29,8 @@ class AbstractMessageResponse(AbstractPromptResponse):
         # Prepend symbol (if any) to the first line only
         if effective_symbol and raw_lines:
             first = raw_lines[0]
-            first.segments.insert(0, PromptResponseSegment(text=f"{effective_symbol} ", color=color))
+            first.segments.insert(
+                0, PromptResponseSegment(text=f"{effective_symbol} ", color=color)
+            )
 
         return cls._create(lines=raw_lines, **kwargs)

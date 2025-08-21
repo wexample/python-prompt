@@ -13,13 +13,16 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
     from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
 
 class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided
-    callback, allowing the callback to draw text lines, sleep, and request reload/close."""
+    callback, allowing the callback to draw text lines, sleep, and request reload/close.
+    """
 
     callback: Callable[["ScreenPromptResponse"], Any] = Field(
         description="Function called repeatedly with this response instance to draw and control flow.",
@@ -43,12 +46,12 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     @classmethod
     def create_screen(
-            cls,
-            callback: Callable[["ScreenPromptResponse"], Any],
-            *,
-            height: int = 30,
-            reset_on_finish: bool = False,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        callback: Callable[["ScreenPromptResponse"], Any],
+        *,
+        height: int = 30,
+        reset_on_finish: bool = False,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "ScreenPromptResponse":
         return cls(
             callback=callback,
@@ -128,13 +131,12 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         # Normalize to lines
         for raw_line in rendered:
             self.lines.append(
-                PromptResponseLine(
-                    segments=[PromptResponseSegment(text=raw_line)]
-                )
+                PromptResponseLine(segments=[PromptResponseSegment(text=raw_line)])
             )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         from wexample_prompt.example.response.interactive.choice_example import ChoiceExample  # type: ignore
+
         # Reuse any example class infra; a dedicated Screen example can be added later.
         return ChoiceExample

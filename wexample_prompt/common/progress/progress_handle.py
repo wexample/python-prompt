@@ -5,7 +5,9 @@ from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
-from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+from wexample_prompt.responses.interactive.progress_prompt_response import (
+    ProgressPromptResponse,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
@@ -25,25 +27,28 @@ class ProgressHandle(ExtendedBaseModel):
         description="The rendering context used by the response."
     )
     output: Optional["AbstractOutputHandler"] = Field(
-        default=None,
-        description="Optional output handler when used via IoManager."
+        default=None, description="Optional output handler when used via IoManager."
     )
     parent: Optional["ProgressHandle"] = Field(
         default=None,
-        description="Parent handle if this handle controls a sub-range of another handle."
+        description="Parent handle if this handle controls a sub-range of another handle.",
     )
     range_start: Optional[int] = Field(
         default=None,
-        description="Inclusive start position on the parent response for this sub-range (absolute units)."
+        description="Inclusive start position on the parent response for this sub-range (absolute units).",
     )
     range_end: Optional[int] = Field(
         default=None,
-        description="Exclusive end position on the parent response for this sub-range (absolute units)."
+        description="Exclusive end position on the parent response for this sub-range (absolute units).",
     )
 
     # --- Internal helpers ---
     def _is_child(self) -> bool:
-        return self.parent is not None and self.range_start is not None and self.range_end is not None
+        return (
+            self.parent is not None
+            and self.range_start is not None
+            and self.range_end is not None
+        )
 
     def _effective_total(self) -> int:
         if self._is_child():
@@ -64,11 +69,11 @@ class ProgressHandle(ExtendedBaseModel):
         return self.response.render(context=self.context)
 
     def update(
-            self,
-            current: Optional[Union[float, int, str]] = None,
-            label: Optional[str] = None,
-            color: Optional["TerminalColor"] = None,
-            auto_render: bool = True,
+        self,
+        current: Optional[Union[float, int, str]] = None,
+        label: Optional[str] = None,
+        color: Optional["TerminalColor"] = None,
+        auto_render: bool = True,
     ) -> Optional[str]:
         """Update progress fields and optionally re-render.
 
@@ -78,7 +83,9 @@ class ProgressHandle(ExtendedBaseModel):
         if self._is_child():
             if current is not None:
                 # Normalize against child total; supports percentage strings.
-                norm = ProgressPromptResponse._normalize_value(self._effective_total(), current)
+                norm = ProgressPromptResponse._normalize_value(
+                    self._effective_total(), current
+                )
                 mapped = int(self.range_start) + max(0, min(self._effective_total(), norm))  # type: ignore[arg-type]
                 # Directly set absolute current on the shared response
                 self.response.current = mapped
@@ -91,7 +98,9 @@ class ProgressHandle(ExtendedBaseModel):
             return None
         else:
             if current is not None:
-                self.response.current = ProgressPromptResponse._normalize_value(self.response.total, current)
+                self.response.current = ProgressPromptResponse._normalize_value(
+                    self.response.total, current
+                )
             if label is not None:
                 self.response.label = label
             if color is not None:
@@ -102,18 +111,22 @@ class ProgressHandle(ExtendedBaseModel):
             return None
 
     def advance(
-            self,
-            step: Optional[Union[float, int, str]] = None,
-            **kwargs
+        self, step: Optional[Union[float, int, str]] = None, **kwargs
     ) -> Optional[str]:
         """Increment progress by a number of steps and optionally render."""
         if self._is_child():
-            step_norm = ProgressPromptResponse._normalize_value(self._effective_total(), step)
+            step_norm = ProgressPromptResponse._normalize_value(
+                self._effective_total(), step
+            )
             cur_child = self._child_current()
             return self.update(current=cur_child + step_norm, **kwargs)
         else:
-            step_val = ProgressPromptResponse._normalize_value(self.response.total, step)
-            return self.update(current=max(0, self.response.current + step_val), **kwargs)
+            step_val = ProgressPromptResponse._normalize_value(
+                self.response.total, step
+            )
+            return self.update(
+                current=max(0, self.response.current + step_val), **kwargs
+            )
 
     def finish(self, **kwargs) -> Optional[str]:
         if self._is_child():
@@ -124,11 +137,11 @@ class ProgressHandle(ExtendedBaseModel):
 
     # --- Sub-range API ---
     def create_range_handle(
-            self,
-            *,
-            to: Optional[int] = None,
-            from_: Optional[int] = None,
-            total: Optional[int] = None,
+        self,
+        *,
+        to: Optional[int] = None,
+        from_: Optional[int] = None,
+        total: Optional[int] = None,
     ) -> "ProgressHandle":
         """Create a child handle that controls only a sub-range of this handle.
 

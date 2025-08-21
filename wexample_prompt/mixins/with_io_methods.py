@@ -3,9 +3,7 @@ from typing import Any
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 
-class WithIoMethods(
-    WithIoManager
-):
+class WithIoMethods(WithIoManager):
     """
     Allow class to provide Io methods like .log(), .title() etc.
     """
@@ -19,8 +17,9 @@ class WithIoMethods(
             attr = getattr(self.io, name)
 
             if callable(attr):
+
                 def wrapper(*args, **kwargs):
-                    kwargs['context'] = self.io_context
+                    kwargs["context"] = self.io_context
                     return attr(*args, **kwargs)
 
                 return wrapper

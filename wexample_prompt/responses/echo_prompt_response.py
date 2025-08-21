@@ -14,9 +14,9 @@ class EchoPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_echo(
-            cls: "EchoPromptResponse",
-            message: LineMessage,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT
+        cls: "EchoPromptResponse",
+        message: LineMessage,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "EchoPromptResponse":
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -24,17 +24,19 @@ class EchoPromptResponse(AbstractPromptResponse):
             lines=PromptResponseLine.create_from_string(
                 text=message,
             ),
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         from wexample_prompt.example.response.echo_example import EchoExample
+
         return EchoExample
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         # No style on echo.
         from wexample_prompt.common.prompt_context import PromptContext
+
         context = PromptContext.create_if_none(context=context)
         context.colorized = False
 

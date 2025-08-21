@@ -4,25 +4,30 @@ from typing import TYPE_CHECKING, List, Optional, Type
 from pydantic import Field
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import HasSnakeShortClassNameClassMixin
+from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
+    HasSnakeShortClassNameClassMixin,
+)
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
     """Abstract base class for all prompt responses."""
+
     lines: List[PromptResponseLine] = Field(
         default_factory=list,
         description="The list of lines of the response content",
     )
     verbosity: Optional[VerbosityLevel] = Field(
         default=VerbosityLevel.DEFAULT,
-        description="The context verbosity, saying which response to render or not"
+        description="The context verbosity, saying which response to render or not",
     )
     _rendered_content: Optional[str] = None
 
@@ -36,9 +41,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def _create(
-            cls: "AbstractPromptResponse",
-            lines: List[PromptResponseLine],
-            **kwargs,
+        cls: "AbstractPromptResponse",
+        lines: List[PromptResponseLine],
+        **kwargs,
     ) -> "AbstractPromptResponse":
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
@@ -50,9 +55,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def rebuild_context_for_kwargs(
-            cls,
-            parent_kwargs: Kwargs,
-            context: Optional["PromptContext"] = None,
+        cls,
+        parent_kwargs: Kwargs,
+        context: Optional["PromptContext"] = None,
     ) -> "PromptContext":
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.

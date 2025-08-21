@@ -10,11 +10,10 @@ class LogExample(AbstractResponseExample):
 
     def example_class(self):
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
         return LogPromptResponse.create_log(
             message=self.get_test_message(),
         )
 
     def example_extended(self) -> None:
-        self._class_with_methods.log(
-            message=self.get_test_message()
-        )
+        self._class_with_methods.log(message=self.get_test_message())

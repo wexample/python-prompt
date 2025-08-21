@@ -1,4 +1,5 @@
 """Base class for testing prompt responses."""
+
 import unittest
 from abc import ABC
 from typing import TYPE_CHECKING
@@ -11,12 +12,13 @@ if TYPE_CHECKING:
 
 class AbstractPromptTest(unittest.TestCase, ABC):
     """Base class for testing prompt responses.
-    
+
     This class provides common functionality for testing prompt responses at three levels:
     1. Response class behavior
     2. IoManager integration
     3. PromptContext implementation
     """
+
     _test_message: str = "Test message"
     _test_message_multiline: str = "\n".join(["Line 1", "Line 2", "Line 3"])
     _io: IoManager
@@ -35,5 +37,7 @@ class AbstractPromptTest(unittest.TestCase, ABC):
         """Assert that rendered output contains specific text."""
         self.assertIn(text, rendered)
 
-    def _assert_rendered_lines_count(self, response: "AbstractResponse", lines_count: int):
+    def _assert_rendered_lines_count(
+        self, response: "AbstractResponse", lines_count: int
+    ):
         assert len(response.rendered_content.split("\n")) == lines_count

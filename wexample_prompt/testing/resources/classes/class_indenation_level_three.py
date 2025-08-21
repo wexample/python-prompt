@@ -12,9 +12,7 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
     def __init__(self, parent_io_handler: "WithIoManager", **kwargs):
         ExtendedBaseModel.__init__(self, **kwargs)
         WithIoMethods.__init__(
-            self,
-            io=parent_io_handler.io,
-            parent_io_handler=parent_io_handler
+            self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
         )
 
     def get_io_context_indentation_character(self) -> Optional[str]:
@@ -26,19 +24,16 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
     def print_deep_log_three(self):
         from wexample_helpers.helpers.string import string_generate_lorem_ipsum
 
-        self.io.log(
-            message='test deep three LOG',
-            context=self.io_context
+        self.io.log(message="test deep three LOG", context=self.io_context)
+
+        self.log(
+            message="test deep three LOG (shortcut)",
         )
 
         self.log(
-            message='test deep three LOG (shortcut)',
-        )
-
-        self.log(
-            message='test deep three LOG (no color)',
+            message="test deep three LOG (no color)",
             context=self._create_io_context(),
-            colorized=False
+            colorized=False,
         )
 
         self.io_context.width = 100
@@ -46,31 +41,15 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
         self.separator(
             label="Text width management",
             color=TerminalColor.MAGENTA,
-            context=self.io_context
-        )
-
-        self.io.log(
-            string_generate_lorem_ipsum(1000),
-            context=self.io_context
-        )
-
-        self.log(
-            string_generate_lorem_ipsum(200),
             context=self.io_context,
-            width=60
         )
 
-        self.separator(
-            width=60
-        )
+        self.io.log(string_generate_lorem_ipsum(1000), context=self.io_context)
 
-        self.echo(
-            message='test deep three ECHO',
-            context=self._create_io_context()
-        )
+        self.log(string_generate_lorem_ipsum(200), context=self.io_context, width=60)
 
-        self.echo(
-            string_generate_lorem_ipsum(200),
-            context=self.io_context,
-            width=60
-        )
+        self.separator(width=60)
+
+        self.echo(message="test deep three ECHO", context=self._create_io_context())
+
+        self.echo(string_generate_lorem_ipsum(200), context=self.io_context, width=60)

@@ -8,14 +8,18 @@ from wexample_prompt.enums.text_style import TextStyle
 
 class ColorManager:
     """Manages color application and terminal capabilities."""
-    
+
     # Initialize colorama when class is loaded
     init()
 
     @classmethod
-    def colorize(cls, text: str, color: Optional[TerminalColor] = None,
-                 style: Optional[TerminalColor] = None) -> str:
-        prefix = ''
+    def colorize(
+        cls,
+        text: str,
+        color: Optional[TerminalColor] = None,
+        style: Optional[TerminalColor] = None,
+    ) -> str:
+        prefix = ""
         if color:
             prefix += str(color)
         if style:
@@ -46,9 +50,9 @@ class ColorManager:
         styles: Optional[List[TextStyle]] = None,
     ) -> str:
         """Build ANSI prefix combining color and a list of TextStyle entries."""
-        prefix = ''
+        prefix = ""
         if color:
             prefix += str(color)
         if styles:
-            prefix += ''.join(cls.get_style_ansi(s) for s in styles)
+            prefix += "".join(cls.get_style_ansi(s) for s in styles)
         return prefix

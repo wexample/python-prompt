@@ -1,4 +1,5 @@
 """Table response for displaying data in a formatted table layout."""
+
 from typing import List, Any, Optional, Type
 
 from pydantic import Field
@@ -24,22 +25,19 @@ class TablePromptResponse(AbstractPromptResponse):
     @classmethod
     def get_example_class(cls) -> Type:
         from wexample_prompt.example.response.data.table_example import TableExample
+
         return TableExample
 
     @classmethod
     def create_table(
-            cls,
-            data: List[List[Any]],
-            headers: Optional[List[str]] = None,
-            title: Optional[str] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        data: List[List[Any]],
+        headers: Optional[List[str]] = None,
+        title: Optional[str] = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "TablePromptResponse":
         return cls(
-            lines=[],
-            data=data,
-            headers=headers,
-            title=title,
-            verbosity=verbosity
+            lines=[], data=data, headers=headers, title=title, verbosity=verbosity
         )
 
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
@@ -59,11 +57,16 @@ class TablePromptResponse(AbstractPromptResponse):
 
         if self.title:
             title_padding = max(0, (total_width - len(self.title)) // 2)
-            title_line = PromptResponseLine(segments=[
-                PromptResponseSegment(text="+" + "-" * title_padding),
-                PromptResponseSegment(text=f" {self.title} "),
-                PromptResponseSegment(text="-" * (total_width - title_padding - len(self.title) - 2) + "+"),
-            ])
+            title_line = PromptResponseLine(
+                segments=[
+                    PromptResponseSegment(text="+" + "-" * title_padding),
+                    PromptResponseSegment(text=f" {self.title} "),
+                    PromptResponseSegment(
+                        text="-" * (total_width - title_padding - len(self.title) - 2)
+                        + "+"
+                    ),
+                ]
+            )
             lines.append(title_line)
         else:
             lines.append(self._create_border_line(total_width))
@@ -96,7 +99,9 @@ class TablePromptResponse(AbstractPromptResponse):
         return max_widths
 
     @staticmethod
-    def _create_row_segments(row: List[Any], widths: List[int]) -> List[PromptResponseSegment]:
+    def _create_row_segments(
+        row: List[Any], widths: List[int]
+    ) -> List[PromptResponseSegment]:
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
@@ -105,4 +110,6 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
-        return PromptResponseLine(segments=[PromptResponseSegment(text="+" + "-" * width + "+")])
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
+        )

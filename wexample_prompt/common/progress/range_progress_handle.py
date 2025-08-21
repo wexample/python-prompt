@@ -25,9 +25,7 @@ class RangeProgressHandle(ExtendedBaseModel):
     end: int = Field(
         description="Exclusive end position (start + total) of the mapped range on the parent"
     )
-    total: int = Field(
-        description="Total size of the child range (end - start)"
-    )
+    total: int = Field(description="Total size of the child range (end - start)")
 
     def render(self) -> str:
         return self.parent.render()
@@ -46,20 +44,30 @@ class RangeProgressHandle(ExtendedBaseModel):
     ) -> Optional[str]:
         if current is not None:
             # Normalize against child total; percentages like '50%' are relative to the sub-range
-            from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+            from wexample_prompt.responses.interactive.progress_prompt_response import (
+                ProgressPromptResponse,
+            )
+
             normalized = ProgressPromptResponse._normalize_value(self.total, current)
             mapped = self.start + max(0, min(self.total, normalized))
-            return self.parent.update(current=mapped, label=label, color=color, auto_render=auto_render)
+            return self.parent.update(
+                current=mapped, label=label, color=color, auto_render=auto_render
+            )
         else:
             # Only update label/color/render
-            return self.parent.update(current=None, label=label, color=color, auto_render=auto_render)
+            return self.parent.update(
+                current=None, label=label, color=color, auto_render=auto_render
+            )
 
     def advance(
         self,
         step: Optional[Union[float, int, str]] = None,
         **kwargs,
     ) -> Optional[str]:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
+
         step_norm = ProgressPromptResponse._normalize_value(self.total, step)
         cur_child = self._child_current()
         return self.update(current=cur_child + step_norm, **kwargs)

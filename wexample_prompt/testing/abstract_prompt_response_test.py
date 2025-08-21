@@ -1,4 +1,5 @@
 """Base class for testing prompt responses."""
+
 from abc import abstractmethod
 from typing import Type, Optional
 
@@ -33,31 +34,30 @@ class AbstractPromptResponseTest(AbstractPromptTest):
     def _assert_no_color_codes(self, text: str):
         """Assert that a string contains no ANSI escape sequences (colors/styles)."""
         import re
+
         # Generic ANSI escape sequence regex (covers CSI, OSC, and single-char escapes)
-        ansi_pattern = re.compile(
-            r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])"
-        )
-        assert not ansi_pattern.search(text), f"Unexpected ANSI escape sequences found in: {text!r}"
+        ansi_pattern = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+        assert not ansi_pattern.search(
+            text
+        ), f"Unexpected ANSI escape sequences found in: {text!r}"
 
     @abstractmethod
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
         pass
 
     def _create_test_response(
-            self,
-            response_kwargs: Optional[Kwargs] = None,
-            **kwargs
+        self, response_kwargs: Optional[Kwargs] = None, **kwargs
     ) -> "AbstractPromptResponse":
         """Create a response using the class: LogPromptResponse.create_log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
         response_class = self._get_response_class()
-        method_name = f"create_{self._get_response_class().get_snake_short_class_name()}"
+        method_name = (
+            f"create_{self._get_response_class().get_snake_short_class_name()}"
+        )
         return getattr(response_class, method_name)(**kwargs)
 
     def _create_test_response_from_method(
-            self,
-            response_kwargs: Optional[Kwargs] = None,
-            **kwargs
+        self, response_kwargs: Optional[Kwargs] = None, **kwargs
     ) -> "AbstractPromptResponse":
         """Create a response using io manager: self._io.log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
@@ -78,6 +78,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def test_no_color(self):
         from wexample_prompt.common.prompt_context import PromptContext
+
         response = self._create_test_response()
         response.render(context=PromptContext(colorized=False))
 
@@ -85,6 +86,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def test_verbosity_standalone(self):
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
+
         quiet_required = self._create_test_response(verbosity=VerbosityLevel.QUIET)
         default_required = self._create_test_response(verbosity=VerbosityLevel.DEFAULT)
         maximum_required = self._create_test_response(verbosity=VerbosityLevel.MAXIMUM)
@@ -102,9 +104,13 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         kwargs["verbosity"] = VerbosityLevel.QUIET
         quiet_required = self._create_test_response_from_method(response_kwargs=kwargs)
         kwargs["verbosity"] = VerbosityLevel.DEFAULT
-        default_required = self._create_test_response_from_method(response_kwargs=kwargs)
+        default_required = self._create_test_response_from_method(
+            response_kwargs=kwargs
+        )
         kwargs["verbosity"] = VerbosityLevel.MAXIMUM
-        maximum_required = self._create_test_response_from_method(response_kwargs=kwargs)
+        maximum_required = self._create_test_response_from_method(
+            response_kwargs=kwargs
+        )
 
         self._test_verbosity(
             quiet_required=quiet_required,
@@ -113,10 +119,10 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         )
 
     def _test_verbosity(
-            self,
-            quiet_required: "AbstractPromptResponse",
-            default_required: "AbstractPromptResponse",
-            maximum_required: "AbstractPromptResponse",
+        self,
+        quiet_required: "AbstractPromptResponse",
+        default_required: "AbstractPromptResponse",
+        maximum_required: "AbstractPromptResponse",
     ):
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -136,66 +142,74 @@ class AbstractPromptResponseTest(AbstractPromptTest):
                 response.render(context=context)
                 if should_be_visible:
                     assert response.rendered_content is not None
-                    self._assert_contains_text(response.rendered_content, self._test_message)
+                    self._assert_contains_text(
+                        response.rendered_content, self._test_message
+                    )
                 else:
                     assert response.rendered_content is None
 
         # Quiet context: only QUIET-level responses should appear
-        assert_visibility(quiet_context, [
-            (quiet_required, True),
-            (default_required, False),
-            (maximum_required, False),
-        ])
+        assert_visibility(
+            quiet_context,
+            [
+                (quiet_required, True),
+                (default_required, False),
+                (maximum_required, False),
+            ],
+        )
 
         # Default context: QUIET and DEFAULT appear; MAXIMUM hidden
-        assert_visibility(default_context, [
-            (quiet_required, True),
-            (default_required, True),
-            (maximum_required, False),
-        ])
+        assert_visibility(
+            default_context,
+            [
+                (quiet_required, True),
+                (default_required, True),
+                (maximum_required, False),
+            ],
+        )
 
         # Medium context: QUIET, DEFAULT, MEDIUM appear; MAXIMUM hidden
         temp_kwargs = self._create_test_kwargs()
         temp_kwargs["verbosity"] = VerbosityLevel.MEDIUM
         medium_required = self._create_test_response(temp_kwargs)
-        assert_visibility(medium_context, [
-            (quiet_required, True),
-            (default_required, True),
-            (medium_required, True),
-            (maximum_required, False),
-        ])
+        assert_visibility(
+            medium_context,
+            [
+                (quiet_required, True),
+                (default_required, True),
+                (medium_required, True),
+                (maximum_required, False),
+            ],
+        )
 
         # Maximum context: all appear
-        assert_visibility(max_context, [
-            (quiet_required, True),
-            (default_required, True),
-            (maximum_required, True),
-        ])
+        assert_visibility(
+            max_context,
+            [
+                (quiet_required, True),
+                (default_required, True),
+                (maximum_required, True),
+            ],
+        )
 
     def test_manager_indentation(self):
         response = self._create_test_response()
 
-        response = self._io.print_response(
-            response=response
-        )
+        response = self._io.print_response(response=response)
 
         assert isinstance(response.rendered_content, str)
         assert not response.rendered_content.startswith("  ")
 
         self._io.indentation_up()
 
-        response = self._io.print_response(
-            response=response
-        )
+        response = self._io.print_response(response=response)
 
         assert isinstance(response.rendered_content, str)
         assert response.rendered_content.startswith("  ")
 
         self._io.indentation_up()
 
-        response = self._io.print_response(
-            response=response
-        )
+        response = self._io.print_response(response=response)
 
         assert isinstance(response.rendered_content, str)
         assert response.rendered_content.startswith("    ")
@@ -203,9 +217,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         self._io.indentation_down()
         self._io.indentation_down()
 
-        response = self._io.print_response(
-            response=response
-        )
+        response = self._io.print_response(response=response)
 
         assert isinstance(response.rendered_content, str)
         assert not response.rendered_content.startswith("  ")

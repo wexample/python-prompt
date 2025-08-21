@@ -1,4 +1,5 @@
 """Prompt response line implementation."""
+
 from typing import List, Optional, TYPE_CHECKING
 
 from pydantic import Field
@@ -16,15 +17,15 @@ class PromptResponseLine(ExtendedBaseModel):
     """A line of text composed of one or more segments with optional styling and layout."""
 
     segments: List[PromptResponseSegment] = Field(
-        default_factory=list,
-        description="List of text segments that constitute a line"
+        default_factory=list, description="List of text segments that constitute a line"
     )
 
     @classmethod
-    def create_from_string(cls, text: LineMessage, color: Optional["TerminalColor"] = None) \
-            -> List["PromptResponseLine"]:
+    def create_from_string(
+        cls, text: LineMessage, color: Optional["TerminalColor"] = None
+    ) -> List["PromptResponseLine"]:
         """
-            Create a line from a single text string.
+        Create a line from a single text string.
         """
         # Normalize input to a list of raw lines without newline characters
         raw_lines: List[str] = []
@@ -71,23 +72,31 @@ class PromptResponseLine(ExtendedBaseModel):
         rendered_segments = []
         for seg in self.segments:
             # Provide a very large remaining width to avoid splitting segments
-            rendered, _ = seg.render(context, line_remaining_width=10 ** 9)
+            rendered, _ = seg.render(context, line_remaining_width=10**9)
             rendered_segments.append(rendered)
         return f"{indentation}{''.join(rendered_segments)}"
 
-    def _compute_max_content_width(self, context: PromptContext, indentation: str) -> Optional[int]:
+    def _compute_max_content_width(
+        self, context: PromptContext, indentation: str
+    ) -> Optional[int]:
         """Compute the maximum visible width available for content on a line, or None if unbounded."""
-        return max(0, (context.get_width()) - self._visible_len(indentation)) if context.width else None
+        return (
+            max(0, (context.get_width()) - self._visible_len(indentation))
+            if context.width
+            else None
+        )
 
     def _render_unbounded(self, context: PromptContext, indentation: str) -> str:
         """Render without width restriction (no wrapping)."""
         rendered_segments = []
         for seg in self.segments:
-            rendered, _ = seg.render(context, line_remaining_width=10 ** 9)
+            rendered, _ = seg.render(context, line_remaining_width=10**9)
             rendered_segments.append(rendered)
         return f"{indentation}{''.join(rendered_segments)}"
 
-    def _render_wrapped(self, context: PromptContext, indentation: str, max_content_width: int) -> str:
+    def _render_wrapped(
+        self, context: PromptContext, indentation: str, max_content_width: int
+    ) -> str:
         """Render with wrapping according to max_content_width."""
         lines: list[str] = []
         current_line = ""

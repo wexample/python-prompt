@@ -6,19 +6,23 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+    from wexample_prompt.responses.messages.info_prompt_response import (
+        InfoPromptResponse,
+    )
     from wexample_prompt.common.io_manager import IoManager
 
 
 class InfoPromptResponseManagerMixin:
     def info(
-            self: "IoManager",
-            message: LineMessage,
-            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
-            context: Optional["PromptContext"] = None,
-            **kwargs: Kwargs
+        self: "IoManager",
+        message: LineMessage,
+        verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
+        context: Optional["PromptContext"] = None,
+        **kwargs: Kwargs
     ) -> "InfoPromptResponse":
-        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import (
+            InfoPromptResponse,
+        )
 
         response = InfoPromptResponse.create_info(
             message=message,
@@ -28,7 +32,6 @@ class InfoPromptResponseManagerMixin:
         return self.print_response(
             response=response,
             context=InfoPromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs
-            )
+                context=context, parent_kwargs=kwargs
+            ),
         )

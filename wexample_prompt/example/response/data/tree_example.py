@@ -1,4 +1,5 @@
 """Example for tree response."""
+
 from typing import Optional
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample

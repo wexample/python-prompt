@@ -25,14 +25,17 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.multiple_example import MultipleExample
+        from wexample_prompt.example.response.data.multiple_example import (
+            MultipleExample,
+        )
+
         return MultipleExample
 
     @classmethod
     def create_multiple(
-            cls,
-            responses: Optional[List[AbstractPromptResponse]] = None,
-            verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        cls,
+        responses: Optional[List[AbstractPromptResponse]] = None,
+        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> "MultiplePromptResponse":
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:
@@ -71,12 +74,16 @@ class MultiplePromptResponse(AbstractPromptResponse):
         self._rendered_content = "\n".join(rendered_parts) if rendered_parts else None
         return self._rendered_content
 
-    def append_response(self, response: AbstractPromptResponse) -> "MultiplePromptResponse":
+    def append_response(
+        self, response: AbstractPromptResponse
+    ) -> "MultiplePromptResponse":
         """Append a single response and return self for chaining."""
         self.responses.append(response)
         return self
 
-    def extend_responses(self, responses: List[AbstractPromptResponse]) -> "MultiplePromptResponse":
+    def extend_responses(
+        self, responses: List[AbstractPromptResponse]
+    ) -> "MultiplePromptResponse":
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)
         return self
