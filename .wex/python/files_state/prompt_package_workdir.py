@@ -1,5 +1,5 @@
-from wexample_filestate_python.workdir.python_workdir import PythonWorkdir
+from wexample_filestate_python.workdir.python_package_workdir import PythonPackageWorkdir
 
 
-class PromptPackageWorkdir(PythonWorkdir):
+class PromptPackageWorkdir(PythonPackageWorkdir):
     pass
