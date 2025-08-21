@@ -1,5 +1,8 @@
 """Tests for TreePromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -7,11 +10,15 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestTreePromptResponse(AbstractPromptResponseTest):
     """Test cases for TreePromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
 
+        return TreePromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         data = kwargs.setdefault("data", {
             "root": {
                 "folder1": {"file1": "content1", "file2": "content2"},
@@ -20,9 +27,7 @@ class TestTreePromptResponse(AbstractPromptResponseTest):
         })
         # Ensure test message is present in the tree to satisfy base assertion
         data["root"][kwargs.pop("message", self._test_message)] = ""
-        return TreePromptResponse.create_tree(
-            **kwargs
-        )
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Should include tree drawing characters

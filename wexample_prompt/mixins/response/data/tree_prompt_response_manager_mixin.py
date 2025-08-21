@@ -3,6 +3,7 @@ from typing import Dict, Any, Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
@@ -15,6 +16,7 @@ class TreePromptResponseManagerMixin:
     def tree(
             self: "IoManager",
             data: Dict[str, Any],
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "TreePromptResponse":
@@ -22,6 +24,7 @@ class TreePromptResponseManagerMixin:
 
         response = TreePromptResponse.create_tree(
             data=data,
+            verbosity=verbosity,
         )
 
         return self.print_response(
