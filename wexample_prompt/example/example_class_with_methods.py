@@ -1,5 +1,6 @@
-from wexample_prompt.testing.resources.classes.extended_base_model_with_io_methods import \
-    ExtendedBaseModelWithIoMethods
+from wexample_prompt.testing.resources.classes.extended_base_model_with_io_methods import (
+    ExtendedBaseModelWithIoMethods,
+)
 
 
 class ExampleClassWithMethods(ExtendedBaseModelWithIoMethods):

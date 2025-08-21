@@ -7,10 +7,12 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.abstract_prompt_response import \
-        AbstractPromptResponse
-    from wexample_prompt.responses.data.multiple_prompt_response import \
-        MultiplePromptResponse
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
+    from wexample_prompt.responses.data.multiple_prompt_response import (
+        MultiplePromptResponse,
+    )
 
 
 class MultiplePromptResponseManagerMixin:
@@ -24,8 +26,9 @@ class MultiplePromptResponseManagerMixin:
         **kwargs,
     ) -> "MultiplePromptResponse":
         """Create a multiple prompt response."""
-        from wexample_prompt.responses.data.multiple_prompt_response import \
-            MultiplePromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import (
+            MultiplePromptResponse,
+        )
 
         response = MultiplePromptResponse.create_multiple(
             responses=responses,

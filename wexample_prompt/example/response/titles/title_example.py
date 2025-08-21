@@ -1,7 +1,5 @@
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.titles.title_prompt_response import \
-    TitlePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
 
 
 class TitleExample(AbstractResponseExample):

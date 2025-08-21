@@ -2,10 +2,10 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.interactive.confirm_prompt_response import \
-    ConfirmPromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.interactive.confirm_prompt_response import (
+    ConfirmPromptResponse,
+)
 
 
 class ConfirmExample(AbstractResponseExample):

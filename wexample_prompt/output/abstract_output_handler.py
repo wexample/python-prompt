@@ -5,8 +5,9 @@ from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.abstract_prompt_response import \
-        AbstractPromptResponse
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 
 
 class AbstractOutputHandler(ExtendedBaseModel):

@@ -3,14 +3,12 @@
 from typing import List, Type
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
 class SuggestionsPromptResponse(AbstractPromptResponse):
@@ -18,8 +16,9 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.suggestions_example import \
-            SuggestionsExample
+        from wexample_prompt.example.response.data.suggestions_example import (
+            SuggestionsExample,
+        )
 
         return SuggestionsExample
 

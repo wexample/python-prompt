@@ -2,10 +2,8 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.data.table_prompt_response import \
-    TablePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 
 
 class TableExample(AbstractResponseExample):

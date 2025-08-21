@@ -1,9 +1,9 @@
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
-from wexample_prompt.responses.interactive.choice_prompt_response import \
-    ChoicePromptResponse
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.interactive.choice_prompt_response import (
+    ChoicePromptResponse,
+)
 
 
 class ChoiceExample(AbstractResponseExample):

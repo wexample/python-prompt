@@ -1,5 +1,4 @@
-from wexample_prompt.example.abstract_response_example import \
-    AbstractResponseExample
+from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class EchoExample(AbstractResponseExample):
@@ -10,8 +9,7 @@ class EchoExample(AbstractResponseExample):
         self.io.echo(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.echo_prompt_response import \
-            EchoPromptResponse
+        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
         return EchoPromptResponse.create_echo(
             message=self.get_test_message(),

@@ -6,8 +6,9 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 class TestIoManager(AbstractPromptTest):
     def test_instantiate_class(self) -> None:
-        from wexample_prompt.testing.resources.classes.class_with_io_manager import \
-            ClassWithIoManager
+        from wexample_prompt.testing.resources.classes.class_with_io_manager import (
+            ClassWithIoManager,
+        )
 
         instance = ClassWithIoManager()
         assert instance.io is None
@@ -16,23 +17,26 @@ class TestIoManager(AbstractPromptTest):
         self.assertClassInstanceSucceeded(ClassWithIoManager)
 
     def test_instantiate_class_required(self) -> None:
-        from wexample_prompt.testing.resources.classes.class_with_required_io_manager import \
-            ClassWithRequiredIoManager
+        from wexample_prompt.testing.resources.classes.class_with_required_io_manager import (
+            ClassWithRequiredIoManager,
+        )
 
         # Missing required 'io' should raise a TypeError from __init__
         self.assertMissingArgumentError(class_type=ClassWithRequiredIoManager)
         self.assertClassInstanceSucceeded(class_type=ClassWithRequiredIoManager)
 
     def test_instantiate_extended_base_model(self) -> None:
-        from wexample_prompt.testing.resources.classes.extended_base_model_with_io_manager import \
-            ExtendedBaseModelWithIoManager
+        from wexample_prompt.testing.resources.classes.extended_base_model_with_io_manager import (
+            ExtendedBaseModelWithIoManager,
+        )
 
         self.assertClassHasNoneManager(ExtendedBaseModelWithIoManager)
         self.assertClassInstanceSucceeded(ExtendedBaseModelWithIoManager)
 
     def test_instantiate_extended_base_model_required(self) -> None:
-        from wexample_prompt.testing.resources.classes.extended_base_model_with_required_io_manager import \
-            ExtendedBaseModelWithRequiredIoManager
+        from wexample_prompt.testing.resources.classes.extended_base_model_with_required_io_manager import (
+            ExtendedBaseModelWithRequiredIoManager,
+        )
 
         self.assertMissingArgumentError(ExtendedBaseModelWithRequiredIoManager)
         self.assertClassInstanceSucceeded(ExtendedBaseModelWithRequiredIoManager)
