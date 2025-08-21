@@ -9,7 +9,9 @@ def test_build_prefix_empty():
 
 
 def test_build_prefix_with_color_and_styles():
-    prefix = ColorManager.build_prefix(color=TerminalColor.RED, styles=[TextStyle.BOLD, TextStyle.UNDERLINE])
+    prefix = ColorManager.build_prefix(
+        color=TerminalColor.RED, styles=[TextStyle.BOLD, TextStyle.UNDERLINE]
+    )
     assert prefix.startswith(str(TerminalColor.RED))
     # Contains bold and underline codes (order of join preserved)
     assert "\033[1m" in prefix
