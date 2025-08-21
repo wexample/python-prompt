@@ -1,5 +1,8 @@
 """Tests for ErrorPromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
 
@@ -7,13 +10,17 @@ from wexample_prompt.testing.abstract_prompt_message_response_test import Abstra
 class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for ErrorPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,
         )
 
+        return ErrorPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
-        return ErrorPromptResponse.create_error(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Error messages should include the error symbol
@@ -24,7 +31,7 @@ class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
 
     def test_simple_error_is_red(self):
         from wexample_prompt.enums.terminal_color import TerminalColor
-        response = self.create_test_response()
+        response = self._create_test_response()
         rendered = response.render()
         self._assert_contains_text(rendered, self._test_message)
         # Expect red color sequence
@@ -35,7 +42,7 @@ class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
         try:
             raise ValueError("boom")
         except Exception as e:
-            response = self.create_test_response(message="Error with exception", exception=e)
+            response = self._create_test_response({"message": "Error with exception", "exception": e})
 
         rendered = response.render()
         lines = rendered.split("\n")

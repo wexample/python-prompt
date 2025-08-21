@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -13,6 +14,7 @@ class ErrorPromptResponseManagerMixin:
             self: "IoManager",
             message: Optional[str] = None,
             exception: Optional[BaseException] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs
     ) -> "ErrorPromptResponse":
@@ -21,6 +23,7 @@ class ErrorPromptResponseManagerMixin:
         response = ErrorPromptResponse.create_error(
             message=message,
             exception=exception,
+            verbosity=verbosity,
         )
 
         return self.print_response(
