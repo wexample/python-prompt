@@ -1,5 +1,8 @@
 """Tests for ProgressPromptResponse (interactive)."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -13,16 +16,21 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         # No indentation for interactive prints.
         pass
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
+        return ProgressPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         # Sensible defaults
         kwargs.setdefault("total", 10)
         kwargs.setdefault("current", 5)
         kwargs.setdefault("width", 20)
         kwargs.setdefault("label", self._test_message)
-        return ProgressPromptResponse.create_progress(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Should contain percentage and progress characters
@@ -47,7 +55,10 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         assert lines[0].strip().endswith("%")
 
     def test_create_progress_renders_expected_percentage(self):
-        response = self.create_test_response(total=10, current=5, width=20)
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
+        response = ProgressPromptResponse.create_progress(total=10, current=5, width=20, label=self._test_message)
         rendered = response.render()
         self._assert_contains_text(rendered, "50%")
 
@@ -69,7 +80,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         old_empty = ProgressPromptResponse.EMPTY_CHAR
         try:
             ProgressPromptResponse.set_style(fill_char="#", empty_char="-")
-            rendered = self.create_test_response().render()
+            rendered = self._create_test_response().render()
             self._assert_contains_text(rendered, "#")
             self._assert_contains_text(rendered, "-")
         finally:
@@ -79,7 +90,7 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
-        resp = self.create_test_response(total=10, current=20, width=10, label=None)
+        resp = self._create_test_response(total=10, current=20, width=10, label=None)
         rendered = resp.render()
         self._assert_contains_text(rendered, "100%")
         # When full, there should be no EMPTY_CHAR present inside the bar segment

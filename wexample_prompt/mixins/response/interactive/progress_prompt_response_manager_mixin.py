@@ -3,6 +3,7 @@ from typing import Optional, TYPE_CHECKING, Union
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
@@ -18,6 +19,7 @@ class ProgressPromptResponseManagerMixin:
             current: Union[float, int, str] = 0,
             width: Optional[int] = None,
             label: Optional[str] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional["PromptContext"] = None,
             **kwargs: Kwargs,
     ) -> "ProgressPromptResponse":
@@ -28,6 +30,7 @@ class ProgressPromptResponseManagerMixin:
             current=current,
             width=width,
             label=label,
+            verbosity=verbosity,
         )
 
         # The first print is done without progress handle.
