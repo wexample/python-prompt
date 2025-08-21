@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Type, Union
 
 from pydantic import Field
-
 from wexample_prompt.common.choice.choice import Choice
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -108,7 +107,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     def render(self, context: Optional["PromptContext"] = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
-
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)

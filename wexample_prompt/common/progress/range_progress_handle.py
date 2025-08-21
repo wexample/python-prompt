@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING, Optional, Union
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-
 from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
 if TYPE_CHECKING:
