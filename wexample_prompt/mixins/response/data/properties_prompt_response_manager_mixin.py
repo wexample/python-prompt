@@ -3,6 +3,7 @@ from typing import Dict, Any, Optional, TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
@@ -17,6 +18,7 @@ class PropertiesPromptResponseManagerMixin:
             properties: Dict[str, Any],
             title: Optional[str] = None,
             nested_indent: int = 2,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "PropertiesPromptResponse":
@@ -26,6 +28,7 @@ class PropertiesPromptResponseManagerMixin:
             properties=properties,
             title=title,
             nested_indent=nested_indent,
+            verbosity=verbosity,
         )
 
         return self.print_response(

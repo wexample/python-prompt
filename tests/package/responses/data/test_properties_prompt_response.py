@@ -1,5 +1,8 @@
 """Tests for PropertiesPromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
@@ -7,14 +10,18 @@ from wexample_prompt.testing.abstract_prompt_response_test import AbstractPrompt
 class TestPropertiesPromptResponse(AbstractPromptResponseTest):
     """Test cases for PropertiesPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
 
+        return PropertiesPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("properties", {"name": "John Doe", "age": 30})
         kwargs.setdefault("title", self._test_message)
-        return PropertiesPromptResponse.create_properties(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Should contain key-value formatting
@@ -33,7 +40,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         assert rendered == ""
 
     def test_simple_properties_rendering(self):
-        response = self.create_test_response(properties={"name": "John Doe", "age": 30})
+        response = self._create_test_response(properties={"name": "John Doe", "age": 30})
         rendered = response.render()
         self._assert_contains_text(rendered, "name")
         self._assert_contains_text(rendered, "John Doe")
@@ -60,7 +67,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
 
     def test_with_custom_title(self):
         custom_title = "User Information"
-        response = self.create_test_response(title=custom_title)
+        response = self._create_test_response(title=custom_title)
         rendered = response.render()
         self._assert_contains_text(rendered, custom_title)
         self._assert_specific_format(rendered)
