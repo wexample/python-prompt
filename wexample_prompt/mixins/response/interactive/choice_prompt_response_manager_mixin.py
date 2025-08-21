@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Optional, List, Any, Union, Mapping
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.const.types import LineMessage
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
@@ -17,6 +18,7 @@ class ChoicePromptResponseManagerMixin:
             choices: Union[List[Any], Mapping[Any, Any]],
             default: Optional[Any] = None,
             abort: Optional[bool | str] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional["PromptContext"] = None,
             reset_on_finish: bool = False,
             predefined_answer: Any = None,
@@ -29,6 +31,7 @@ class ChoicePromptResponseManagerMixin:
             choices=choices,
             default=default,
             abort=abort,
+            verbosity=verbosity,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer
         )

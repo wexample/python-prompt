@@ -1,5 +1,8 @@
 """Tests for ChoicePromptResponse (interactive)."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -9,16 +12,20 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestChoicePromptResponse(AbstractPromptResponseTest):
     """Test cases for ChoicePromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.choice_prompt_response import (
             ChoicePromptResponse,
         )
 
+        return ChoicePromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("question", self._test_message)
         kwargs.setdefault("choices", ["Option 1", "Option 2"])
         kwargs.setdefault("predefined_answer", "Option 2")
         # keep default abort ("> Abort") behavior unless overridden
-        return ChoicePromptResponse.create_choice(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Choice prompts should have arrow indicators and numbering
@@ -64,14 +71,14 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
 
     def test_abort_option(self):
         abort_text = "Cancel"
-        response = self.create_test_response(abort=abort_text)
+        response = self._create_test_response(abort=abort_text)
         response.render()
         self._assert_contains_text(response.rendered_content, abort_text)
         # abort should be numbered after the choices
         self._assert_contains_text(response.rendered_content, str(len(["Option 1", "Option 2"]) + 1))
 
     def test_no_abort_option(self):
-        response = self.create_test_response(abort=None)
+        response = self._create_test_response(abort=None)
         response.render()
 
         assert "> Abort" not in response.rendered_content
