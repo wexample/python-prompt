@@ -1,13 +1,19 @@
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import AbstractPromptResponseTest
 
 
 class TestEchoPromptResponse(AbstractPromptResponseTest):
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+        return EchoPromptResponse
 
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
-        return EchoPromptResponse.create_echo(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Echo messages have no specific format to check
@@ -18,23 +24,22 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
 
     def test_empty_response(self):
         """Test empty response."""
-        response = self.create_test_response(
-            message=""
-        )
+        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+        response = EchoPromptResponse.create_echo(message="")
         self.assertEqual(response.render(), "")
 
     def test_multiline_response(self):
         """Test multiline response."""
         self._asset_response_render_is_multiline(
-            response=self.create_test_response(
-                message=self._test_message_multiline
-            )
+            response=self._get_response_class().create_echo(message=self._test_message_multiline)  # type: ignore[attr-defined]
         )
 
     def test_echo_width(self):
         assert self._io.terminal_width is not None
 
         # Echo a string using the terminal with length
-        response = self._io.echo(message=(self._io.terminal_width * "!"))
+        response = self._get_response_class().create_echo(**self._create_test_kwargs(kwargs={"message": self._io.terminal_width * "!"}))
+        response.render()
+
         # It should print only one line.
         self._assert_rendered_lines_count(response=response, lines_count=1)

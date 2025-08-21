@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Optional
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.const.types import LineMessage
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
@@ -13,6 +14,7 @@ class EchoPromptResponseManagerMixin:
     def echo(
             self: "IoManager",
             message: LineMessage,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs
     ) -> "EchoPromptResponse":
@@ -20,6 +22,7 @@ class EchoPromptResponseManagerMixin:
 
         response = EchoPromptResponse.create_echo(
             message=message,
+            verbosity=verbosity,
         )
 
         return self.print_response(
