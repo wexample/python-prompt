@@ -5,8 +5,9 @@ class ClassIndentationLevelOne(WithIoManager):
     def print_deep_log_one(self) -> None:
         from wexample_helpers.helpers.string import string_generate_lorem_ipsum
 
-        from wexample_prompt.testing.resources.classes.class_indenation_level_two import \
-            ClassIndentationLevelTwo
+        from wexample_prompt.testing.resources.classes.class_indenation_level_two import (
+            ClassIndentationLevelTwo,
+        )
 
         self.io.log("test deep log one", context=self.io_context)
         self.io.log(string_generate_lorem_ipsum(1000), context=self.io_context)

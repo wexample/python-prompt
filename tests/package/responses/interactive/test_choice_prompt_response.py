@@ -4,18 +4,19 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import \
-    AbstractPromptResponseTest
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestChoicePromptResponse(AbstractPromptResponseTest):
     """Test cases for ChoicePromptResponse."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.interactive.choice_prompt_response import \
-            ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
 
         return ChoicePromptResponse
 
@@ -50,8 +51,9 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
             self._assert_contains_text(choice_line, choice)
 
     def test_create_with_choice_objects(self) -> None:
-        from wexample_prompt.responses.interactive.choice_prompt_response import \
-            ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
 
         choices = {
             "value1": "Display 1",
@@ -91,8 +93,9 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
         assert len(non_empty) == self.get_expected_lines()
 
     def test_multiline_question_does_not_crash_and_renders_both_lines(self) -> None:
-        from wexample_prompt.responses.interactive.choice_prompt_response import \
-            ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
 
         question = "What to do?\nPick wisely"
         response = ChoicePromptResponse.create_choice(

@@ -10,8 +10,9 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.data.suggestions_prompt_response import \
-        SuggestionsPromptResponse
+    from wexample_prompt.responses.data.suggestions_prompt_response import (
+        SuggestionsPromptResponse,
+    )
 
 
 class SuggestionsPromptResponseManagerMixin:
@@ -26,8 +27,9 @@ class SuggestionsPromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs,
     ) -> "SuggestionsPromptResponse":
-        from wexample_prompt.responses.data.suggestions_prompt_response import \
-            SuggestionsPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
 
         response = SuggestionsPromptResponse.create_suggestions(
             message=message,

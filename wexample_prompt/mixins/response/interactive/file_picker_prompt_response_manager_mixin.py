@@ -11,8 +11,9 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.interactive.file_picker_prompt_response import \
-        FilePickerPromptResponse
+    from wexample_prompt.responses.interactive.file_picker_prompt_response import (
+        FilePickerPromptResponse,
+    )
 
 
 class FilePickerPromptResponseManagerMixin:
@@ -31,8 +32,9 @@ class FilePickerPromptResponseManagerMixin:
         predefined_answer: Any = None,
         **kwargs: Kwargs,
     ) -> "FilePickerPromptResponse":
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import \
-            FilePickerPromptResponse
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
+            FilePickerPromptResponse,
+        )
 
         response = FilePickerPromptResponse.create_file_picker(
             question=question,

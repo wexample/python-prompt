@@ -8,8 +8,9 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages.task_prompt_response import \
-        TaskPromptResponse
+    from wexample_prompt.responses.messages.task_prompt_response import (
+        TaskPromptResponse,
+    )
 
 
 class TaskPromptResponseManagerMixin:
@@ -20,8 +21,9 @@ class TaskPromptResponseManagerMixin:
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
     ) -> "TaskPromptResponse":
-        from wexample_prompt.responses.messages.task_prompt_response import \
-            TaskPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import (
+            TaskPromptResponse,
+        )
 
         response = TaskPromptResponse.create_task(
             message=message,

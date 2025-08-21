@@ -9,8 +9,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.data.tree_prompt_response import \
-        TreePromptResponse
+    from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
 
 class TreePromptResponseManagerMixin:
@@ -23,8 +22,9 @@ class TreePromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs,
     ) -> "TreePromptResponse":
-        from wexample_prompt.responses.data.tree_prompt_response import \
-            TreePromptResponse
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
 
         response = TreePromptResponse.create_tree(
             data=data,

@@ -6,11 +6,9 @@ from pydantic import Field
 
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
 class TreePromptResponse(AbstractPromptResponse):
@@ -32,8 +30,7 @@ class TreePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.data.tree_example import \
-            TreeExample
+        from wexample_prompt.example.response.data.tree_example import TreeExample
 
         return TreeExample
 

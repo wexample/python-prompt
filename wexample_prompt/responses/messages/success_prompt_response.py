@@ -2,15 +2,13 @@ from typing import TYPE_CHECKING, ClassVar, Optional, Type
 
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.messages.abstract_message_response import (
-    AbstractMessageResponse,
-)
+from wexample_prompt.responses.messages.abstract_message_response import \
+    AbstractMessageResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.example.abstract_response_example import (
-        AbstractResponseExample,
-    )
+    from wexample_prompt.example.abstract_response_example import \
+        AbstractResponseExample
 
 
 class SuccessPromptResponse(AbstractMessageResponse):
@@ -32,8 +30,7 @@ class SuccessPromptResponse(AbstractMessageResponse):
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
         """Get the example class for success messages."""
-        from wexample_prompt.example.response.messages.success_example import (
-            SuccessExample,
-        )
+        from wexample_prompt.example.response.messages.success_example import \
+            SuccessExample
 
         return SuccessExample

@@ -6,14 +6,14 @@ from pydantic import Field
 
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import \
-    AbstractInteractivePromptResponse
+from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
+    AbstractInteractivePromptResponse,
+)
 
 
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
@@ -63,8 +63,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.confirm_example import \
-            ConfirmExample
+        from wexample_prompt.example.response.interactive.confirm_example import (
+            ConfirmExample,
+        )
 
         return ConfirmExample
 
@@ -109,9 +110,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: "PromptContext") -> None:
-        from wexample_helpers.helpers.ansi import (ansi_center,
-                                                   ansi_display_width,
-                                                   ansi_truncate_visible)
+        from wexample_helpers.helpers.ansi import (
+            ansi_center,
+            ansi_display_width,
+            ansi_truncate_visible,
+        )
 
         # Compute box width: clamp to terminal/context width so it is NEVER exceeded.
         term_width = context.get_width()

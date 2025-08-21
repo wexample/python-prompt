@@ -1,5 +1,7 @@
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.messages.debug_prompt_response import \
+    DebugPromptResponse
 
 
 class DebugExample(AbstractResponseExample):

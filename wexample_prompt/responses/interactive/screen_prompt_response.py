@@ -4,19 +4,19 @@ from pydantic import Field
 
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import \
-    PromptResponseSegment
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
-from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import \
-    AbstractInteractivePromptResponse
+from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
+    AbstractInteractivePromptResponse,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.example.abstract_response_example import \
-        AbstractResponseExample
-    from wexample_prompt.output.buffer_output_handler import \
-        BufferOutputHandler
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
+    from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
 
 class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
@@ -81,8 +81,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
         # Wait first rendering to build nested io manager.
         if self._io_buffer is None:
-            from wexample_prompt.output.buffer_output_handler import \
-                BufferOutputHandler
+            from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
             self._io_buffer = BufferOutputHandler()
             self.io = IoManager(output=self._io_buffer)
@@ -138,8 +137,9 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.interactive.choice_example import \
-            ChoiceExample  # type: ignore
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )  # type: ignore
 
         # Reuse any example class infra; a dedicated Screen example can be added later.
         return ChoiceExample

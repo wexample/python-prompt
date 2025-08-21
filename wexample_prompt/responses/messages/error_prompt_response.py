@@ -1,14 +1,16 @@
 from typing import TYPE_CHECKING, ClassVar, Optional, Type
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.messages.abstract_message_response import \
-    AbstractMessageResponse
+from wexample_prompt.responses.messages.abstract_message_response import (
+    AbstractMessageResponse,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.example.abstract_response_example import \
-        AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
 class ErrorPromptResponse(AbstractMessageResponse):
@@ -16,8 +18,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> Type["AbstractResponseExample"]:
-        from wexample_prompt.example.response.messages.error_example import \
-            ErrorExample
+        from wexample_prompt.example.response.messages.error_example import ErrorExample
 
         return ErrorExample
 
@@ -36,10 +37,10 @@ class ErrorPromptResponse(AbstractMessageResponse):
         if exception is not None:
             from wexample_helpers.helpers.error import error_format
 
-            from wexample_prompt.common.prompt_response_line import \
-                PromptResponseLine
-            from wexample_prompt.common.prompt_response_segment import \
-                PromptResponseSegment
+            from wexample_prompt.common.prompt_response_line import PromptResponseLine
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
 
             header_text = (
                 message

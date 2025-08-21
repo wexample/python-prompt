@@ -6,8 +6,9 @@ from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.abstract_prompt_response import \
-        AbstractPromptResponse
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 
 
 class SeparatorPromptResponseManagerMixin:
@@ -19,8 +20,9 @@ class SeparatorPromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs
     ) -> "AbstractPromptResponse":
-        from wexample_prompt.responses.titles.separator_prompt_response import \
-            SeparatorPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
+        )
 
         response = SeparatorPromptResponse.create_separator(
             label=label,

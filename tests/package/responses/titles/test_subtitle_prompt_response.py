@@ -4,18 +4,19 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
-from wexample_prompt.testing.abstract_title_prompt_response_test import \
-    AbstractTitlePromptResponseTest
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.testing.abstract_title_prompt_response_test import (
+    AbstractTitlePromptResponseTest,
+)
 
 
 class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for SubtitlePromptResponse rendering and options."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.titles.subtitle_prompt_response import \
-            SubtitlePromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
 
         return SubtitlePromptResponse
 
@@ -37,8 +38,9 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
 
     def test_renders_message_and_format(self) -> None:
-        from wexample_prompt.responses.titles.subtitle_prompt_response import \
-            SubtitlePromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
 
         response = SubtitlePromptResponse.create_subtitle(text=self._test_message)
         response.render()
@@ -47,8 +49,9 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
         self._assert_specific_format(response.rendered_content)
 
     def test_custom_character(self) -> None:
-        from wexample_prompt.responses.titles.subtitle_prompt_response import \
-            SubtitlePromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
 
         response = SubtitlePromptResponse.create_subtitle(
             text=self._test_message, character="."

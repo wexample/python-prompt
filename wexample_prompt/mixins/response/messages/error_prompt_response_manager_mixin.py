@@ -7,8 +7,9 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.responses.messages.error_prompt_response import \
-        ErrorPromptResponse
+    from wexample_prompt.responses.messages.error_prompt_response import (
+        ErrorPromptResponse,
+    )
 
 
 class ErrorPromptResponseManagerMixin:
@@ -20,8 +21,9 @@ class ErrorPromptResponseManagerMixin:
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
     ) -> "ErrorPromptResponse":
-        from wexample_prompt.responses.messages.error_prompt_response import \
-            ErrorPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
 
         response = ErrorPromptResponse.create_error(
             message=message,

@@ -9,8 +9,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.responses.data.table_prompt_response import \
-        TablePromptResponse
+    from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
 
 
 class TablePromptResponseManagerMixin:
@@ -25,8 +24,9 @@ class TablePromptResponseManagerMixin:
         context: Optional[PromptContext] = None,
         **kwargs: Kwargs,
     ) -> "TablePromptResponse":
-        from wexample_prompt.responses.data.table_prompt_response import \
-            TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         response = TablePromptResponse.create_table(
             data=data,

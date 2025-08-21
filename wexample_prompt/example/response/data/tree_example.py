@@ -2,8 +2,10 @@
 
 from typing import Optional
 
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.data.tree_prompt_response import \
+    TreePromptResponse
 
 
 class TreeExample(AbstractResponseExample):

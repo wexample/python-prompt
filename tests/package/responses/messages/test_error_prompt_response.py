@@ -4,18 +4,19 @@ from typing import Type
 
 from wexample_helpers.const.types import Kwargs
 
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_message_response_test import \
-    AbstractPromptMessageResponseTest
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.testing.abstract_prompt_message_response_test import (
+    AbstractPromptMessageResponseTest,
+)
 
 
 class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for ErrorPromptResponse."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.error_prompt_response import \
-            ErrorPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
 
         return ErrorPromptResponse
 

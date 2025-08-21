@@ -5,18 +5,17 @@ from typing import Type
 from wexample_helpers.const.types import Kwargs
 
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
-from wexample_prompt.testing.abstract_prompt_response_test import \
-    AbstractPromptResponseTest
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from wexample_prompt.testing.abstract_prompt_response_test import (
+    AbstractPromptResponseTest,
+)
 
 
 class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
 
     def _get_response_class(self) -> Type[AbstractPromptResponse]:
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         return LogPromptResponse
 
@@ -33,8 +32,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         return 1  # Log messages are single line
 
     def test_multiline_log(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         message = "Line 1\nLine 2"
         response = LogPromptResponse.create_log(message=message)
@@ -54,8 +52,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "System started")
 
     def test_log_with_level(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         message = "[INFO] Application initialized"
         response = LogPromptResponse.create_log(message=message)
@@ -65,8 +62,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Application initialized")
 
     def test_single_indentation(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         message = "Indented message"
         response = LogPromptResponse.create_log(message=message)
@@ -85,8 +81,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         ]
 
         # Create response with multiple lines at different indentation levels
-        from wexample_prompt.responses.log_prompt_response import \
-            LogPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         for indent, message in messages:
             response = LogPromptResponse.create_log(message=message)

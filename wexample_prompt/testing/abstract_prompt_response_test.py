@@ -5,8 +5,7 @@ from typing import Optional, Type
 
 from wexample_helpers.const.types import Kwargs
 
-from wexample_prompt.responses.abstract_prompt_response import \
-    AbstractPromptResponse
+from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 

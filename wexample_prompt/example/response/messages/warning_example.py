@@ -1,7 +1,7 @@
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.warning_prompt_response import (
-    WarningPromptResponse,
-)
+from wexample_prompt.example.abstract_response_example import \
+    AbstractResponseExample
+from wexample_prompt.responses.messages.warning_prompt_response import \
+    WarningPromptResponse
 
 
 class WarningExample(AbstractResponseExample):

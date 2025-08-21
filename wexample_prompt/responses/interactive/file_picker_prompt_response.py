@@ -8,8 +8,9 @@ from pydantic import Field
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.interactive.choice_prompt_response import \
-    ChoicePromptResponse
+from wexample_prompt.responses.interactive.choice_prompt_response import (
+    ChoicePromptResponse,
+)
 
 
 class FilePickerPromptResponse(ChoicePromptResponse):
@@ -33,8 +34,9 @@ class FilePickerPromptResponse(ChoicePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> Type:
-        from wexample_prompt.example.response.interactive.file_picker_example import \
-            FilePickerExample
+        from wexample_prompt.example.response.interactive.file_picker_example import (
+            FilePickerExample,
+        )
 
         return FilePickerExample
 

@@ -2,9 +2,8 @@
 
 from abc import ABC
 
-from wexample_prompt.testing.abstract_prompt_response_test import (
-    AbstractPromptResponseTest,
-)
+from wexample_prompt.testing.abstract_prompt_response_test import \
+    AbstractPromptResponseTest
 
 
 class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
