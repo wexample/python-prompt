@@ -1,5 +1,8 @@
 """Tests for WarningPromptResponse."""
 
+from typing import Type
+
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_message_response_test import AbstractPromptMessageResponseTest
 
@@ -7,13 +10,17 @@ from wexample_prompt.testing.abstract_prompt_message_response_test import Abstra
 class TestWarningPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for WarningPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.warning_prompt_response import (
             WarningPromptResponse,
         )
 
+        return WarningPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
-        return WarningPromptResponse.create_warning(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # Warning messages should include the warning symbol
