@@ -109,10 +109,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: "PromptContext") -> None:
-        from wexample_helpers.helpers.ansi import ansi_center
+        from wexample_helpers.helpers.ansi import (
+            ansi_center,
+            ansi_display_width,
+            ansi_truncate_visible,
+        )
 
-        # Compute box width: prefer explicit width, else context width, else content-based with a floor
-        width = context.get_width()
+        # Compute box width: clamp to terminal/context width so it is NEVER exceeded.
+        term_width = context.get_width()
 
         # Build options text in the order provided by the mapping (insertion order)
         parts: list[tuple[str, str, str]] = []  # (key, value, label)
@@ -123,9 +127,19 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # Determine question lines and maximum content width without newlines
         q_lines = PromptResponseLine.create_from_string(self.question)
         question_texts = ["".join(seg.text for seg in ln.segments) for ln in q_lines]
-        content_width = max(max((len(t) for t in question_texts), default=0), len(options_text))
+        # Use ANSI-aware display width for content sizing
+        content_width = max(
+            max((ansi_display_width(t) for t in question_texts), default=0),
+            ansi_display_width(options_text),
+        )
         min_width = max(45, content_width + 4)
-        box_width = max(self.width or 0, width or 0, min_width)
+        # Desired width based on explicit width or content
+        desired_width = max(self.width or 0, min_width)
+        # Clamp to terminal width if available so we NEVER exceed it
+        if term_width and term_width > 0:
+            box_width = min(desired_width, term_width)
+        else:
+            box_width = desired_width
 
         # Compose a boxed layout using lines and segments
         self.lines = []
@@ -137,6 +151,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
         # question lines centered (support multi-line)
         for t in question_texts:
+            # Ensure question line never exceeds the box visible width
+            t = ansi_truncate_visible(t, box_width)
             self.lines.append(
                 PromptResponseLine(
                     segments=[
@@ -152,24 +168,39 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
         # options line centered; highlight default_value if set
-        left_pad = max((box_width - len(options_text)) // 2, 0)
-        option_segments: list[PromptResponseSegment] = []
-        if left_pad:
-            option_segments.append(PromptResponseSegment(text=(" " * left_pad), color=TerminalColor.RESET))
-        for idx, (k, v, label) in enumerate(parts):
-            text = f"[{k}: {label}]"
-            if self.default_value is not None and v == self.default_value:
-                option_segments.append(
-                    PromptResponseSegment(text=text, color=TerminalColor.LIGHT_WHITE, styles=[TextStyle.BOLD])
+        # First, try building a styled options line without exceeding width
+        # Compute the raw options visible width (texts don't include ANSI; styles are applied separately)
+        raw_options = " ".join([f"[{k}: {label}]" for k, _, label in parts])
+        if ansi_display_width(raw_options) <= box_width:
+            left_pad = max((box_width - ansi_display_width(raw_options)) // 2, 0)
+            option_segments: list[PromptResponseSegment] = []
+            if left_pad:
+                option_segments.append(PromptResponseSegment(text=(" " * left_pad), color=TerminalColor.RESET))
+            for idx, (k, v, label) in enumerate(parts):
+                text = f"[{k}: {label}]"
+                if self.default_value is not None and v == self.default_value:
+                    option_segments.append(
+                        PromptResponseSegment(text=text, color=TerminalColor.LIGHT_WHITE, styles=[TextStyle.BOLD])
+                    )
+                else:
+                    option_segments.append(
+                        PromptResponseSegment(text=text, color=TerminalColor.WHITE)
+                    )
+                if idx < len(parts) - 1:
+                    option_segments.append(PromptResponseSegment(text=" ", color=TerminalColor.WHITE))
+            self.lines.append(PromptResponseLine(segments=option_segments))
+        else:
+            # Too long: use purified, truncated plain text version, centered
+            truncated = truncate_visible(raw_options, box_width)
+            self.lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(
+                            text=ansi_center(truncated, box_width), color=TerminalColor.WHITE
+                        )
+                    ]
                 )
-            else:
-                option_segments.append(
-                    PromptResponseSegment(text=text, color=TerminalColor.WHITE)
-                )
-            if idx < len(parts) - 1:
-                option_segments.append(PromptResponseSegment(text=" ", color=TerminalColor.WHITE))
-
-        self.lines.append(PromptResponseLine(segments=option_segments))
+            )
         # empty line
         self.lines.append(
             PromptResponseLine(segments=[PromptResponseSegment(text=ansi_center("", box_width), color=TerminalColor.RESET)]))
