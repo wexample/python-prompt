@@ -14,7 +14,7 @@ class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
     def test_custom_fill_char(self):
         """Test response with custom fill character."""
         character = "."
-        response = self.create_test_response(character=character)
+        response = self._create_test_response(character=character)
         response.render()
 
         self._assert_common_response_structure(response)

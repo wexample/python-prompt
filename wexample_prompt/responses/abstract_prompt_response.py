@@ -68,6 +68,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
             kwargs=parent_kwargs,
         )
 
+    def reset(self) -> None:
+        self._rendered_content = None
+
     def render(self, context: Optional["PromptContext"] = None) -> Optional[str]:
         """Render the complete response."""
 

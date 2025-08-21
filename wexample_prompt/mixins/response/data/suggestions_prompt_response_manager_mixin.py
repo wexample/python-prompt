@@ -19,7 +19,7 @@ class SuggestionsPromptResponseManagerMixin:
             message: LineMessage,
             suggestions: List[str],
             arrow_style: str = "→",
-            verbosity: Optional[VerbosityLevel] = None,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             context: Optional[PromptContext] = None,
             **kwargs: Kwargs,
     ) -> "SuggestionsPromptResponse":
