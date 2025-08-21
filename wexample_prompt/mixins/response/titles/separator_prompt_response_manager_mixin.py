@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, Optional
 
 from wexample_helpers.const.types import Kwargs
-
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
