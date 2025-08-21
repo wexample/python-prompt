@@ -5,6 +5,7 @@ from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
+from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
@@ -21,6 +22,7 @@ class FilePickerPromptResponseManagerMixin:
             abort: Optional[bool | str]  = None,
             mode: FilePickerMode = FilePickerMode.BOTH,
             allow_parent_selection: bool = False,
+            verbosity: Optional[VerbosityLevel] = VerbosityLevel.DEFAULT,
             reset_on_finish: bool = False,
             context: Optional[PromptContext] = None,
             predefined_answer: Any = None,
@@ -33,6 +35,7 @@ class FilePickerPromptResponseManagerMixin:
             base_dir=base_dir,
             abort=abort,
             mode=mode,
+            verbosity=verbosity,
             allow_parent_selection=allow_parent_selection,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer

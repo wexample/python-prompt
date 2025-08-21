@@ -1,7 +1,9 @@
 """Tests for FilePickerPromptResponse (interactive)."""
 
 from unittest import mock
+from typing import Type
 
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -11,17 +13,21 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for FilePickerPromptResponse."""
 
-    def create_test_response(self, **kwargs) -> AbstractPromptResponse:
+    def _get_response_class(self) -> Type[AbstractPromptResponse]:
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )
 
+        return FilePickerPromptResponse
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
         # Deterministic minimal case when listing fails
         kwargs.setdefault("base_dir", "/nonexistent_dir_for_test")
         kwargs.setdefault("question", self._test_message)
         kwargs.setdefault("predefined_answer", "fake_selection")
         # keep default abort ("> Abort") unless overridden
-        return FilePickerPromptResponse.create_file_picker(**kwargs)
+        return kwargs
 
     def _assert_specific_format(self, rendered: str):
         # File picker prompts should have arrow indicators and numbering
@@ -61,7 +67,16 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, "file2")
 
     def test_no_abort_option(self):
-        response = self.create_test_response(abort=None)
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
+            FilePickerPromptResponse,
+        )
+        # Build using the same defaults as _create_test_kwargs, but without abort option
+        response = FilePickerPromptResponse.create_file_picker(
+            base_dir="/nonexistent_dir_for_test",
+            question=self._test_message,
+            predefined_answer="fake_selection",
+            abort=None,
+        )
         response.render()
         assert "> Abort" not in response.rendered_content
         # question + parent only in the minimal fallback
