@@ -1,5 +1,4 @@
 colorama
 pip-tools
 pydantic
-pytest
 readchar
