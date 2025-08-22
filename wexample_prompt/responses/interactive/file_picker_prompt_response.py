@@ -6,7 +6,6 @@ import os
 from typing import Any
 
 from pydantic import Field
-
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
