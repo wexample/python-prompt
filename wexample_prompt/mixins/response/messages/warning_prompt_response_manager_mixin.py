@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class WarningPromptResponseManagerMixin:
     def warning(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "WarningPromptResponse":
+    ) -> WarningPromptResponse:
         from wexample_prompt.responses.messages.warning_prompt_response import (
             WarningPromptResponse,
         )

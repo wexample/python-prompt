@@ -43,7 +43,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         title: str | None = None,
         nested_indent: int = 2,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "PropertiesPromptResponse":
+    ) -> PropertiesPromptResponse:
         return cls(
             lines=[],  # Lines will be built in render() because we neet context with to create them.
             properties=properties,

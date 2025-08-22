@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
-    def __init__(self, parent_io_handler: "WithIoManager", **kwargs) -> None:
+    def __init__(self, parent_io_handler: WithIoManager, **kwargs) -> None:
         ExtendedBaseModel.__init__(self, **kwargs)
         WithIoMethods.__init__(
             self, io=parent_io_handler.io, parent_io_handler=parent_io_handler

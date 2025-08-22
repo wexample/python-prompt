@@ -37,7 +37,7 @@ class TestChoicePromptResponse(AbstractPromptResponseTest):
 
     # Override: interactive choice does not render leading empty line.
     def _assert_common_response_structure(
-        self, response: "AbstractPromptResponse"
+        self, response: AbstractPromptResponse
     ) -> None:
         lines = response.rendered_content.split("\n")
         assert len(lines) == self.get_expected_lines()

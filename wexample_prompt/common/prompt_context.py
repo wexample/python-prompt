@@ -45,13 +45,13 @@ class PromptContext(ExtendedBaseModel):
     )
 
     @classmethod
-    def create_from_kwargs(cls, kwargs: Kwargs) -> "PromptContext":
+    def create_from_kwargs(cls, kwargs: Kwargs) -> PromptContext:
         return PromptContext(
             **kwargs,
         )
 
     @classmethod
-    def create_kwargs_from_context(cls, context: "PromptContext") -> "Kwargs":
+    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
         return {
             "indentation": context.indentation,
             "indentation_character": context.indentation_character,
@@ -64,7 +64,7 @@ class PromptContext(ExtendedBaseModel):
     @classmethod
     def create_from_parent_context_and_kwargs(
         cls, kwargs: Kwargs, parent_context: Optional["PromptContext"] = None
-    ) -> "PromptContext":
+    ) -> PromptContext:
         if parent_context:
             kwargs["parent_context"] = parent_context
 
@@ -75,7 +75,7 @@ class PromptContext(ExtendedBaseModel):
     @classmethod
     def create_if_none(
         cls, context: Optional["PromptContext"] = None
-    ) -> "PromptContext":
+    ) -> PromptContext:
         """
         Creating a context allows to execute render without any extra information,
         but manager parameters like terminal width are not available in this case.

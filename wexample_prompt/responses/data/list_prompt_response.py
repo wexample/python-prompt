@@ -24,7 +24,7 @@ class ListPromptResponse(AbstractMessageResponse):
         bullet: str = "•",
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "ListPromptResponse":
+    ) -> ListPromptResponse:
         lines: list[PromptResponseLine] = []
 
         for item in items:

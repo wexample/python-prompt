@@ -20,11 +20,11 @@ class SuccessPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_success(
-        cls: "SuccessPromptResponse",
+        cls: SuccessPromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "SuccessPromptResponse":
+    ) -> SuccessPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

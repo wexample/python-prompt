@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 class ClassIndentationLevelTwo(WithIoMethods):
-    def __init__(self, parent_io_handler: "WithIoManager") -> None:
+    def __init__(self, parent_io_handler: WithIoManager) -> None:
         WithIoMethods.__init__(
             self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
         )

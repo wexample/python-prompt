@@ -19,14 +19,14 @@ class SuggestionsPromptResponseManagerMixin:
     """Mixin for IoManager to handle suggestions responses."""
 
     def suggestions(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         suggestions: list[str],
         arrow_style: str = "→",
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
-    ) -> "SuggestionsPromptResponse":
+    ) -> SuggestionsPromptResponse:
         from wexample_prompt.responses.data.suggestions_prompt_response import (
             SuggestionsPromptResponse,
         )

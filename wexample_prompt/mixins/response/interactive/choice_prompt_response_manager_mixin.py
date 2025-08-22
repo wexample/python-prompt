@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class ChoicePromptResponseManagerMixin:
     def choice(
-        self: "IoManager",
+        self: IoManager,
         question: LineMessage,
         choices: list[Any] | Mapping[Any, Any],
         default: Any | None = None,
@@ -28,7 +28,7 @@ class ChoicePromptResponseManagerMixin:
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
         **kwargs: Kwargs,
-    ) -> "ChoicePromptResponse":
+    ) -> ChoicePromptResponse:
         from wexample_prompt.responses.interactive.choice_prompt_response import (
             ChoicePromptResponse,
         )

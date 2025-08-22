@@ -20,7 +20,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
         color: TerminalColor,
         symbol: str | None = None,
         **kwargs,
-    ) -> "AbstractMessageResponse":
+    ) -> AbstractMessageResponse:
         """Create a message with a symbol"""
         # Determine effective symbol (explicit > class default)
         effective_symbol = symbol if symbol is not None else cls.SYMBOL

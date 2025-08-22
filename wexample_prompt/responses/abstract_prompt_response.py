@@ -42,10 +42,10 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def _create(
-        cls: "AbstractPromptResponse",
+        cls: AbstractPromptResponse,
         lines: list[PromptResponseLine],
         **kwargs,
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
 
@@ -59,7 +59,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         cls,
         parent_kwargs: Kwargs,
         context: Optional["PromptContext"] = None,
-    ) -> "PromptContext":
+    ) -> PromptContext:
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
             return context or PromptContext.create_from_kwargs({})

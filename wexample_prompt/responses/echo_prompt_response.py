@@ -16,10 +16,10 @@ class EchoPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_echo(
-        cls: "EchoPromptResponse",
+        cls: EchoPromptResponse,
         message: LineMessage,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "EchoPromptResponse":
+    ) -> EchoPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         return cls(

@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class SuccessPromptResponseManagerMixin:
     def success(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "SuccessPromptResponse":
+    ) -> SuccessPromptResponse:
         from wexample_prompt.responses.messages.success_prompt_response import (
             SuccessPromptResponse,
         )

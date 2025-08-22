@@ -20,11 +20,11 @@ class InfoPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_info(
-        cls: "InfoPromptResponse",
+        cls: InfoPromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "InfoPromptResponse":
+    ) -> InfoPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

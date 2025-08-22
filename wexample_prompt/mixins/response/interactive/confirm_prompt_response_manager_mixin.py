@@ -18,7 +18,7 @@ class ConfirmPromptResponseManagerMixin:
     """Mixin class for managing confirmation dialog prompt responses."""
 
     def confirm(
-        self: "IoManager",
+        self: IoManager,
         question: LineMessage = "Please confirm:",
         choices: dict[str, tuple] | None = None,
         default: str | None = None,
@@ -28,7 +28,7 @@ class ConfirmPromptResponseManagerMixin:
         context: PromptContext | None = None,
         predefined_answer: Any = None,
         **kwargs: Any,
-    ) -> "ConfirmPromptResponse":
+    ) -> ConfirmPromptResponse:
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )

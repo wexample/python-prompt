@@ -84,7 +84,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label: str | None = None,
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "ProgressPromptResponse":
+    ) -> ProgressPromptResponse:
         if total <= 0:
             raise ValueError("Total must be greater than 0")
         if width is not None and width < 1:
@@ -102,7 +102,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def get_handle(self) -> "ProgressHandle":
+    def get_handle(self) -> ProgressHandle:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         assert isinstance(self._handle, ProgressHandle)

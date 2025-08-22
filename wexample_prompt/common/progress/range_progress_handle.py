@@ -17,7 +17,7 @@ class RangeProgressHandle(ExtendedBaseModel):
     Percentages provided to update/advance are relative to this child range.
     """
 
-    parent: "ProgressHandle" = Field(
+    parent: ProgressHandle = Field(
         description="The parent progress handle that this range controls"
     )
     start: int = Field(

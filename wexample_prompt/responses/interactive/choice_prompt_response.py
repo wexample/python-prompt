@@ -60,7 +60,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "ChoicePromptResponse":
+    ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
         # Build question lines from LineMessage, apply styles/colors on segments
         question_lines = PromptResponseLine.create_from_string(question, color=color)

@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class InfoPromptResponseManagerMixin:
     def info(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "InfoPromptResponse":
+    ) -> InfoPromptResponse:
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,
         )

@@ -26,7 +26,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         kwargs = kwargs or {}
 
         # Minimal callback: draw one line and close immediately
-        def _cb_once(resp: "ScreenPromptResponse") -> None:
+        def _cb_once(resp: ScreenPromptResponse) -> None:
             resp.clear()
             resp.print(self._test_message)
             resp.close()
@@ -44,7 +44,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
     # Override to match single-line behavior (no implicit empty line)
     def _assert_common_response_structure(
-        self, response: "AbstractPromptResponse"
+        self, response: AbstractPromptResponse
     ) -> None:
         lines = response.rendered_content.split("\n")
         assert len(lines) == self.get_expected_lines()
@@ -56,7 +56,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         )
 
         # Build response explicitly to ensure the callback is wired
-        def _cb_once(resp: "ScreenPromptResponse"):
+        def _cb_once(resp: ScreenPromptResponse):
             resp.clear()
             resp.print(self._test_message)
             resp.close()

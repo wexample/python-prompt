@@ -45,8 +45,8 @@ class AbstractTitleResponse(AbstractMessageResponse):
         color: Optional["TerminalColor"] = None,
         character: str | None = None,
         width: int | None = None,
-        verbosity: "VerbosityLevel" = None,
-    ) -> "AbstractTitleResponse":
+        verbosity: VerbosityLevel = None,
+    ) -> AbstractTitleResponse:
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",
             color=color,

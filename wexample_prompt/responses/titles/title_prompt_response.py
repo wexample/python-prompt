@@ -16,13 +16,13 @@ class TitlePromptResponse(AbstractTitleResponse):
 
     @classmethod
     def create_title(
-        cls: "TitlePromptResponse",
+        cls: TitlePromptResponse,
         text: str,
         color: Optional["TerminalColor"] = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "TitlePromptResponse":
+    ) -> TitlePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return super()._create_title(

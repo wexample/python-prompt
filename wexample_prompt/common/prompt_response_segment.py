@@ -33,7 +33,7 @@ class PromptResponseSegment(ExtendedBaseModel):
             )
 
     def render(
-        self, context: "PromptContext", line_remaining_width: int
+        self, context: PromptContext, line_remaining_width: int
     ) -> tuple[str, Optional["PromptResponseSegment"]]:
         """Render the segment respecting the remaining width for the current line.
 

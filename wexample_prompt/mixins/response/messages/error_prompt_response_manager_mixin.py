@@ -15,13 +15,13 @@ if TYPE_CHECKING:
 
 class ErrorPromptResponseManagerMixin:
     def error(
-        self: "IoManager",
+        self: IoManager,
         message: str | None = None,
         exception: BaseException | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "ErrorPromptResponse":
+    ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,
         )

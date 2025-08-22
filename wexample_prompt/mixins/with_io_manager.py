@@ -10,13 +10,13 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 class WithIoManager:
     _io: IoManager | None = None
     _io_context_colorized: bool | None = None
-    _io_context: "PromptContext"
-    _io_parent_context: "Any" = None
+    _io_context: PromptContext
+    _io_parent_context: Any = None
 
     def __init__(
         self,
         io: IoManager | None = None,
-        parent_io_handler: "WithIoManager" = None,
+        parent_io_handler: WithIoManager = None,
     ) -> None:
         if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
             self._io_parent_context = parent_io_handler.io_context
@@ -36,13 +36,13 @@ class WithIoManager:
         self._io_context = self._create_io_context()
 
     @property
-    def io_context(self) -> "PromptContext":
+    def io_context(self) -> PromptContext:
         return self._io_context
 
     def _init_io_manager(self) -> None:
         self.io = IoManager()
 
-    def _create_io_context(self, **kwargs) -> "PromptContext":
+    def _create_io_context(self, **kwargs) -> PromptContext:
         defaults = {
             "parent_context": self._io_parent_context,
             "indentation": self.get_io_context_indentation(),

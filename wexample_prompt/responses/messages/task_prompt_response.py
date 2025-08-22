@@ -20,11 +20,11 @@ class TaskPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_task(
-        cls: "TaskPromptResponse",
+        cls: TaskPromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "TaskPromptResponse":
+    ) -> TaskPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

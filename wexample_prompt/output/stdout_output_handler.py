@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class StdoutOutputHandler(AbstractOutputHandler):
     def print(
         self,
-        response: "AbstractPromptResponse",
+        response: AbstractPromptResponse,
         context: Optional["PromptContext"] = None,
     ) -> Any:
         rendered_response = response.render(context=context)

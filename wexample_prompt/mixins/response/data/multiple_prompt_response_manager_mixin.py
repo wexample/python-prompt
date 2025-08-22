@@ -20,12 +20,12 @@ class MultiplePromptResponseManagerMixin:
     """Mixin for managing multiple prompt responses in IoManager."""
 
     def multiple(
-        self: "IoManager",
+        self: IoManager,
         responses: list["AbstractPromptResponse"],
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs,
-    ) -> "MultiplePromptResponse":
+    ) -> MultiplePromptResponse:
         """Create a multiple prompt response."""
         from wexample_prompt.responses.data.multiple_prompt_response import (
             MultiplePromptResponse,

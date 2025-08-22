@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class TaskPromptResponseManagerMixin:
     def task(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "TaskPromptResponse":
+    ) -> TaskPromptResponse:
         from wexample_prompt.responses.messages.task_prompt_response import (
             TaskPromptResponse,
         )

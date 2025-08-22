@@ -20,7 +20,7 @@ class FilePickerPromptResponseManagerMixin:
     """Mixin class for managing file picker prompt responses."""
 
     def file_picker(
-        self: "IoManager",
+        self: IoManager,
         question: LineMessage = "Select a file:",
         base_dir: str | None = None,
         abort: bool | str | None = None,
@@ -31,7 +31,7 @@ class FilePickerPromptResponseManagerMixin:
         context: PromptContext | None = None,
         predefined_answer: Any = None,
         **kwargs: Kwargs,
-    ) -> "FilePickerPromptResponse":
+    ) -> FilePickerPromptResponse:
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )

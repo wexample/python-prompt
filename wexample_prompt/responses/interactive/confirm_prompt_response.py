@@ -79,7 +79,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         predefined_answer: Any = None,
         reset_on_finish: bool = False,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "ConfirmPromptResponse":
+    ) -> ConfirmPromptResponse:
         """Create a confirmation dialog with explicit key mappings.
 
         choices expects a mapping of key -> (value, label).
@@ -109,7 +109,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             or self._answer == "continue"
         )
 
-    def _build_lines(self, context: "PromptContext") -> None:
+    def _build_lines(self, context: PromptContext) -> None:
         from wexample_helpers.helpers.ansi import (
             ansi_center,
             ansi_display_width,

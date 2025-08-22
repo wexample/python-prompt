@@ -14,13 +14,13 @@ if TYPE_CHECKING:
 
 class SeparatorPromptResponseManagerMixin:
     def separator(
-        self: "IoManager",
+        self: IoManager,
         label: str | None = None,
         width: int | None = None,
         character: str | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         from wexample_prompt.responses.titles.separator_prompt_response import (
             SeparatorPromptResponse,
         )

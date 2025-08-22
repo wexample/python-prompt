@@ -21,10 +21,10 @@ class ProgressHandle(ExtendedBaseModel):
     Supports arbitrary nesting (child of child, etc.).
     """
 
-    response: "ProgressPromptResponse" = Field(
+    response: ProgressPromptResponse = Field(
         description="The associated progress response (root response)."
     )
-    context: "PromptContext" = Field(
+    context: PromptContext = Field(
         description="The rendering context used by the response."
     )
     output: Optional["AbstractOutputHandler"] = Field(
@@ -141,7 +141,7 @@ class ProgressHandle(ExtendedBaseModel):
         to: int | None = None,
         from_: int | None = None,
         total: int | None = None,
-    ) -> "ProgressHandle":
+    ) -> ProgressHandle:
         """Create a child handle that controls only a sub-range of this handle.
 
         Rules:

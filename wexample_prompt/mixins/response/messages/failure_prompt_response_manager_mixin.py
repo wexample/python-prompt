@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class FailurePromptResponseManagerMixin:
     def failure(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "FailurePromptResponse":
+    ) -> FailurePromptResponse:
         from wexample_prompt.responses.messages.failure_prompt_response import (
             FailurePromptResponse,
         )

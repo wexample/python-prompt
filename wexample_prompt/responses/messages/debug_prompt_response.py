@@ -20,11 +20,11 @@ class DebugPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_debug(
-        cls: "DebugPromptResponse",
+        cls: DebugPromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "DebugPromptResponse":
+    ) -> DebugPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

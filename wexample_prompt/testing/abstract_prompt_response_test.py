@@ -15,7 +15,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Return the expected number of lines in the rendered response."""
 
     def _assert_common_response_structure(
-        self, response: "AbstractPromptResponse"
+        self, response: AbstractPromptResponse
     ) -> None:
         """Assert common structure for rendered responses."""
         lines = response.rendered_content.split("\n")
@@ -47,7 +47,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def _create_test_response(
         self, response_kwargs: Kwargs | None = None, **kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         """Create a response using the class: LogPromptResponse.create_log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
         response_class = self._get_response_class()
@@ -58,7 +58,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def _create_test_response_from_method(
         self, response_kwargs: Kwargs | None = None, **kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         """Create a response using io manager: self._io.log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
         method_name = self._get_response_class().get_snake_short_class_name()
@@ -120,9 +120,9 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def _test_verbosity(
         self,
-        quiet_required: "AbstractPromptResponse",
-        default_required: "AbstractPromptResponse",
-        maximum_required: "AbstractPromptResponse",
+        quiet_required: AbstractPromptResponse,
+        default_required: AbstractPromptResponse,
+        maximum_required: AbstractPromptResponse,
     ) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.enums.verbosity_level import VerbosityLevel

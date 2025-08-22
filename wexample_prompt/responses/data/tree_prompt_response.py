@@ -39,7 +39,7 @@ class TreePromptResponse(AbstractPromptResponse):
         cls,
         data: dict[str, Any],
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "TreePromptResponse":
+    ) -> TreePromptResponse:
         return cls(
             lines=[],
             data=data,

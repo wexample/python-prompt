@@ -49,7 +49,7 @@ class BufferOutputHandler(AbstractOutputHandler):
 
     def print(
         self,
-        response: "AbstractPromptResponse",
+        response: AbstractPromptResponse,
         context: Optional["PromptContext"] = None,
     ) -> Any:
         # Preserve legacy: store the response object

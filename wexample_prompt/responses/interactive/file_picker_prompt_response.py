@@ -51,7 +51,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "FilePickerPromptResponse":
+    ) -> FilePickerPromptResponse:
         base = base_dir or os.getcwd()
 
         # Build mapping with ".." first, then folders (with icon), then files

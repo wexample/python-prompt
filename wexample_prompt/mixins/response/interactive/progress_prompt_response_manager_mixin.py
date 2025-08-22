@@ -18,7 +18,7 @@ class ProgressPromptResponseManagerMixin:
     """Mixin class for managing progress prompt responses."""
 
     def progress(
-        self: "IoManager",
+        self: IoManager,
         total: int = 100,
         current: float | int | str = 0,
         width: int | None = None,
@@ -26,7 +26,7 @@ class ProgressPromptResponseManagerMixin:
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs,
-    ) -> "ProgressPromptResponse":
+    ) -> ProgressPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class ScreenPromptResponseManagerMixin:
     def screen(
-        self: "IoManager",
+        self: IoManager,
         *,
         callback: Callable[["ScreenPromptResponse"], Any],
         height: int = 30,
@@ -25,7 +25,7 @@ class ScreenPromptResponseManagerMixin:
         reset_on_finish: bool = False,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
-    ) -> "ScreenPromptResponse":
+    ) -> ScreenPromptResponse:
         from wexample_prompt.responses.interactive.screen_prompt_response import (
             ScreenPromptResponse,
         )

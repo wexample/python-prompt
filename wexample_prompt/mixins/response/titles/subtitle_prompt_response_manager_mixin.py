@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 class SubtitlePromptResponseManagerMixin:
     def subtitle(
-        self: "IoManager",
+        self: IoManager,
         text: LineMessage,
         color: Optional["TerminalColor"] = None,
         character: str | None = None,
@@ -25,7 +25,7 @@ class SubtitlePromptResponseManagerMixin:
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs: Kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
             SubtitlePromptResponse,
         )

@@ -17,13 +17,13 @@ class SubtitlePromptResponse(AbstractTitleResponse):
 
     @classmethod
     def create_subtitle(
-        cls: "SubtitlePromptResponse",
+        cls: SubtitlePromptResponse,
         text: str,
         color: Optional["TerminalColor"] = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "SubtitlePromptResponse":
+    ) -> SubtitlePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return super()._create_title(

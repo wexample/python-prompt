@@ -16,7 +16,7 @@ class AbstractOutputHandler(ExtendedBaseModel):
     @abstractmethod
     def print(
         self,
-        response: "AbstractPromptResponse",
+        response: AbstractPromptResponse,
         context: Optional["PromptContext"] = None,
     ) -> Any:
         self._raise_not_implemented_error()

@@ -22,11 +22,11 @@ class FailurePromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_failure(
-        cls: "FailurePromptResponse",
+        cls: FailurePromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "FailurePromptResponse":
+    ) -> FailurePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

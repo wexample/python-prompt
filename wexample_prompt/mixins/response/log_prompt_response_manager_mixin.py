@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class LogPromptResponseManagerMixin:
     def log(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         response = LogPromptResponse.create_log(

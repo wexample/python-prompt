@@ -16,12 +16,12 @@ if TYPE_CHECKING:
 
 class DebugPromptResponseManagerMixin:
     def debug(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: Optional["PromptContext"] = None,
         **kwargs: Kwargs
-    ) -> "DebugPromptResponse":
+    ) -> DebugPromptResponse:
         from wexample_prompt.responses.messages.debug_prompt_response import (
             DebugPromptResponse,
         )

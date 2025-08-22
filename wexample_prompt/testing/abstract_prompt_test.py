@@ -28,7 +28,7 @@ class AbstractPromptTest(unittest.TestCase, ABC):
         """Set up common test fixtures."""
         self._io = IoManager()
 
-    def _asset_response_render_is_multiline(self, response: "AbstractResponse") -> None:
+    def _asset_response_render_is_multiline(self, response: AbstractResponse) -> None:
         rendered = response.render()
         self._assert_contains_text(rendered, "Line 1")
         self._assert_contains_text(rendered, "Line 2")
@@ -39,6 +39,6 @@ class AbstractPromptTest(unittest.TestCase, ABC):
         self.assertIn(text, rendered)
 
     def _assert_rendered_lines_count(
-        self, response: "AbstractResponse", lines_count: int
+        self, response: AbstractResponse, lines_count: int
     ) -> None:
         assert len(response.rendered_content.split("\n")) == lines_count

@@ -14,12 +14,12 @@ if TYPE_CHECKING:
 
 class EchoPromptResponseManagerMixin:
     def echo(
-        self: "IoManager",
+        self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs: Kwargs
-    ) -> "EchoPromptResponse":
+    ) -> EchoPromptResponse:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
         response = EchoPromptResponse.create_echo(

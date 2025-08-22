@@ -14,14 +14,14 @@ if TYPE_CHECKING:
 
 class ListPromptResponseManagerMixin:
     def list(
-        self: "IoManager",
+        self: IoManager,
         items: list[str],
         bullet: str = "•",
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs: Kwargs
-    ) -> "ListPromptResponse":
+    ) -> ListPromptResponse:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )

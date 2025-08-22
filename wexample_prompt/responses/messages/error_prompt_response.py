@@ -25,12 +25,12 @@ class ErrorPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_error(
-        cls: "ErrorPromptResponse",
+        cls: ErrorPromptResponse,
         message: str | None = None,
         exception: BaseException | None = None,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "ErrorPromptResponse":
+    ) -> ErrorPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         # Build content: if there's an exception, create a red header line (symbol + message)

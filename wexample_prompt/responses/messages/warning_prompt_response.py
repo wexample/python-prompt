@@ -22,11 +22,11 @@ class WarningPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_warning(
-        cls: "WarningPromptResponse",
+        cls: WarningPromptResponse,
         message: LineMessage,
         color: Optional["TerminalColor"] = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "WarningPromptResponse":
+    ) -> WarningPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(

@@ -37,13 +37,13 @@ class SeparatorPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_separator(
-        cls: "SeparatorPromptResponse",
+        cls: SeparatorPromptResponse,
         label: str | None = None,
         width: int | None = None,
-        color: "TerminalColor" = None,
+        color: TerminalColor = None,
         character: str | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "SeparatorPromptResponse":
+    ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 

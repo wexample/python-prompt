@@ -37,7 +37,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
         cls,
         responses: list[AbstractPromptResponse] | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-    ) -> "MultiplePromptResponse":
+    ) -> MultiplePromptResponse:
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:
             responses = []
@@ -77,14 +77,14 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     def append_response(
         self, response: AbstractPromptResponse
-    ) -> "MultiplePromptResponse":
+    ) -> MultiplePromptResponse:
         """Append a single response and return self for chaining."""
         self.responses.append(response)
         return self
 
     def extend_responses(
         self, responses: list[AbstractPromptResponse]
-    ) -> "MultiplePromptResponse":
+    ) -> MultiplePromptResponse:
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)
         return self

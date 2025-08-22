@@ -16,14 +16,14 @@ class TablePromptResponseManagerMixin:
     """Mixin for IoManager to handle table responses."""
 
     def table(
-        self: "IoManager",
+        self: IoManager,
         data: list[list[Any]],
         headers: list[str] | None = None,
         title: str | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
-    ) -> "TablePromptResponse":
+    ) -> TablePromptResponse:
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )

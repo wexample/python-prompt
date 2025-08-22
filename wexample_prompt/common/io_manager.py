@@ -250,9 +250,9 @@ class IoManager(
 
     def print_response(
         self,
-        response: "AbstractPromptResponse",
+        response: AbstractPromptResponse,
         context: Optional["PromptContext"] = None,
-    ) -> "AbstractPromptResponse":
+    ) -> AbstractPromptResponse:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
