@@ -20,11 +20,11 @@ class BufferOutputHandler(AbstractOutputHandler):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self._buffer_responses: list["AbstractPromptResponse"] = []
+        self._buffer_responses: list[AbstractPromptResponse] = []
         self._buffer_rendered: list[str | None] = []
 
     @property
-    def responses(self) -> list["AbstractPromptResponse"]:
+    def responses(self) -> list[AbstractPromptResponse]:
         return self._buffer_responses
 
     @property
@@ -50,7 +50,7 @@ class BufferOutputHandler(AbstractOutputHandler):
     def print(
         self,
         response: AbstractPromptResponse,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
     ) -> Any:
         # Preserve legacy: store the response object
         self._buffer_responses.append(response)

@@ -18,7 +18,7 @@ class PromptContext(ExtendedBaseModel):
     colorized: bool | None = Field(
         default=True, description="Allow to return avoid coloration special characters"
     )
-    parent_context: Optional["PromptContext"] = Field(
+    parent_context: PromptContext | None = Field(
         default=None, description="A parent context"
     )
     indentation: int | None = Field(default=0, description="Base indentation level")
@@ -63,7 +63,7 @@ class PromptContext(ExtendedBaseModel):
 
     @classmethod
     def create_from_parent_context_and_kwargs(
-        cls, kwargs: Kwargs, parent_context: Optional["PromptContext"] = None
+        cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
         if parent_context:
             kwargs["parent_context"] = parent_context
@@ -73,9 +73,7 @@ class PromptContext(ExtendedBaseModel):
         )
 
     @classmethod
-    def create_if_none(
-        cls, context: Optional["PromptContext"] = None
-    ) -> PromptContext:
+    def create_if_none(cls, context: PromptContext | None = None) -> PromptContext:
         """
         Creating a context allows to execute render without any extra information,
         but manager parameters like terminal width are not available in this case.

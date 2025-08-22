@@ -1,4 +1,5 @@
 """Confirmation dialog interactive response (box style)."""
+
 from __future__ import annotations
 
 from typing import Any, ClassVar, Optional
@@ -241,7 +242,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> None:
+    def render(self, context: PromptContext | None = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)

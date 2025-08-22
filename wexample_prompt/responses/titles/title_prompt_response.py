@@ -18,7 +18,7 @@ class TitlePromptResponse(AbstractTitleResponse):
     def create_title(
         cls: TitlePromptResponse,
         text: str,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
@@ -34,7 +34,7 @@ class TitlePromptResponse(AbstractTitleResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.titles.title_example import TitleExample
 
         return TitleExample

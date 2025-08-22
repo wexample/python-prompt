@@ -1,4 +1,5 @@
 """Simple tests for StdoutOutputHandler."""
+
 from __future__ import annotations
 
 from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler

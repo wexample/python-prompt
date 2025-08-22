@@ -1,4 +1,5 @@
 """Tests for BufferOutputHandler."""
+
 from __future__ import annotations
 
 from wexample_prompt.output.buffer_output_handler import BufferOutputHandler

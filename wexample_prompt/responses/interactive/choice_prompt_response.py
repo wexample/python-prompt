@@ -41,7 +41,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     question: LineMessage = Field(
         default=None, description="Question text shown to the user"
     )
-    question_lines: list["PromptResponseLine"] = Field(
+    question_lines: list[PromptResponseLine] = Field(
         description="Rendered question lines"
     )
     predefined_answer: Any = Field(
@@ -107,7 +107,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             predefined_answer=predefined_answer,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> None:
+    def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
         from wexample_prompt.common.prompt_context import PromptContext
@@ -235,7 +235,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 return
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.interactive.choice_example import (
             ChoiceExample,
         )

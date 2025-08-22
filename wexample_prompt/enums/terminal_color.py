@@ -1,4 +1,5 @@
 """Terminal color and style codes using colorama."""
+
 from __future__ import annotations
 
 from enum import Enum

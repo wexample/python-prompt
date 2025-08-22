@@ -19,8 +19,8 @@ class SuccessPromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> SuccessPromptResponse:
         from wexample_prompt.responses.messages.success_prompt_response import (
             SuccessPromptResponse,

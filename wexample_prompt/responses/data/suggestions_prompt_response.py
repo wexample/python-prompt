@@ -1,4 +1,5 @@
 """Response for displaying suggestions with optional descriptions."""
+
 from __future__ import annotations
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine

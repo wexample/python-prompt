@@ -1,4 +1,5 @@
 """Response for displaying and handling file picker prompts."""
+
 from __future__ import annotations
 
 import os

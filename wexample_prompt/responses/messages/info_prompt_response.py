@@ -22,7 +22,7 @@ class InfoPromptResponse(AbstractMessageResponse):
     def create_info(
         cls: InfoPromptResponse,
         message: LineMessage,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> InfoPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -32,7 +32,7 @@ class InfoPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.messages.info_example import InfoExample
 
         return InfoExample

@@ -19,7 +19,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
     def create_subtitle(
         cls: SubtitlePromptResponse,
         text: str,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
@@ -35,7 +35,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.titles.subtitle_example import (
             SubtitleExample,
         )

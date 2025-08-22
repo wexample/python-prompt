@@ -16,7 +16,7 @@ class StdoutOutputHandler(AbstractOutputHandler):
     def print(
         self,
         response: AbstractPromptResponse,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
     ) -> Any:
         rendered_response = response.render(context=context)
         if rendered_response:

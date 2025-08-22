@@ -19,8 +19,8 @@ class ErrorPromptResponseManagerMixin:
         message: str | None = None,
         exception: BaseException | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,

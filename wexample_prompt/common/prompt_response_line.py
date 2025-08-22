@@ -1,4 +1,5 @@
 """Prompt response line implementation."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
@@ -22,8 +23,8 @@ class PromptResponseLine(ExtendedBaseModel):
 
     @classmethod
     def create_from_string(
-        cls, text: LineMessage, color: Optional["TerminalColor"] = None
-    ) -> list["PromptResponseLine"]:
+        cls, text: LineMessage, color: TerminalColor | None = None
+    ) -> list[PromptResponseLine]:
         """
         Create a line from a single text string.
         """

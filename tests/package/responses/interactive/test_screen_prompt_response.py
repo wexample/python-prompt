@@ -1,4 +1,5 @@
 """Tests for ScreenPromptResponse (interactive)."""
+
 from __future__ import annotations
 
 from wexample_helpers.const.types import Kwargs

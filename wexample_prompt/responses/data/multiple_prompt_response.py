@@ -54,7 +54,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         """Render all contained responses in sequence.
 
         Returns:

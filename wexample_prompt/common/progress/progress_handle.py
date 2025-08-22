@@ -27,10 +27,10 @@ class ProgressHandle(ExtendedBaseModel):
     context: PromptContext = Field(
         description="The rendering context used by the response."
     )
-    output: Optional["AbstractOutputHandler"] = Field(
+    output: AbstractOutputHandler | None = Field(
         default=None, description="Optional output handler when used via IoManager."
     )
-    parent: Optional["ProgressHandle"] = Field(
+    parent: ProgressHandle | None = Field(
         default=None,
         description="Parent handle if this handle controls a sub-range of another handle.",
     )
@@ -73,7 +73,7 @@ class ProgressHandle(ExtendedBaseModel):
         self,
         current: float | int | str | None = None,
         label: str | None = None,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         auto_render: bool = True,
     ) -> str | None:
         """Update progress fields and optionally re-render.

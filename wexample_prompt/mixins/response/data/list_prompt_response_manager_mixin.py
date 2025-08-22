@@ -17,10 +17,10 @@ class ListPromptResponseManagerMixin:
         self: IoManager,
         items: list[str],
         bullet: str = "•",
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
-        **kwargs: Kwargs
+        **kwargs: Kwargs,
     ) -> ListPromptResponse:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,

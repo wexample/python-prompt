@@ -1,4 +1,5 @@
 """Mixin for managing multiple prompt responses."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -21,7 +22,7 @@ class MultiplePromptResponseManagerMixin:
 
     def multiple(
         self: IoManager,
-        responses: list["AbstractPromptResponse"],
+        responses: list[AbstractPromptResponse],
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
         **kwargs,

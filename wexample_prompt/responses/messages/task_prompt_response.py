@@ -22,7 +22,7 @@ class TaskPromptResponse(AbstractMessageResponse):
     def create_task(
         cls: TaskPromptResponse,
         message: LineMessage,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> TaskPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -32,7 +32,7 @@ class TaskPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         """Get the example class for task messages."""
         from wexample_prompt.example.response.messages.task_example import TaskExample
 

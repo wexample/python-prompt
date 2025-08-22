@@ -52,7 +52,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
         if not self.properties:
             return ""

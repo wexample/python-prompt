@@ -19,8 +19,8 @@ class LogPromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 

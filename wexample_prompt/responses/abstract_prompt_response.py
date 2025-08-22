@@ -51,14 +51,14 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     @abstractmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         cls._raise_not_implemented_error()
 
     @classmethod
     def rebuild_context_for_kwargs(
         cls,
         parent_kwargs: Kwargs,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
     ) -> PromptContext:
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
@@ -77,7 +77,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     def reset(self) -> None:
         self._rendered_content = None
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         """Render the complete response."""
 
         context = PromptContext.create_if_none(context=context)

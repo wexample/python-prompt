@@ -19,12 +19,12 @@ class SubtitlePromptResponseManagerMixin:
     def subtitle(
         self: IoManager,
         text: LineMessage,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
-        **kwargs: Kwargs
+        **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
             SubtitlePromptResponse,

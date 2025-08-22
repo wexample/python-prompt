@@ -32,7 +32,7 @@ class LogPromptResponse(AbstractPromptResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.log_example import LogExample
 
         return LogExample

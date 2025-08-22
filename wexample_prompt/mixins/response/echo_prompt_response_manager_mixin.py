@@ -18,7 +18,7 @@ class EchoPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         context: PromptContext | None = None,
-        **kwargs: Kwargs
+        **kwargs: Kwargs,
     ) -> EchoPromptResponse:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 

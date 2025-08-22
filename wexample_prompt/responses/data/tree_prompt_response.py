@@ -1,4 +1,5 @@
 """Tree response implementation."""
+
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -46,7 +47,7 @@ class TreePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         if not self.data:
             return ""
 

@@ -1,4 +1,5 @@
 """Mixin for handling interactive choice prompts in IoManager."""
+
 from __future__ import annotations
 
 from collections.abc import Mapping
@@ -24,7 +25,7 @@ class ChoicePromptResponseManagerMixin:
         default: Any | None = None,
         abort: bool | str | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
         **kwargs: Kwargs,

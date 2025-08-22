@@ -22,7 +22,7 @@ class SuccessPromptResponse(AbstractMessageResponse):
     def create_success(
         cls: SuccessPromptResponse,
         message: LineMessage,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> SuccessPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -32,7 +32,7 @@ class SuccessPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         """Get the example class for success messages."""
         from wexample_prompt.example.response.messages.success_example import (
             SuccessExample,

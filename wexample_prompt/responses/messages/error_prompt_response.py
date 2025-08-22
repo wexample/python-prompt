@@ -18,7 +18,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "❌"
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.messages.error_example import ErrorExample
 
         return ErrorExample
@@ -28,7 +28,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         cls: ErrorPromptResponse,
         message: str | None = None,
         exception: BaseException | None = None,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> ErrorPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor

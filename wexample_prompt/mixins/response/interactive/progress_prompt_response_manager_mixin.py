@@ -1,4 +1,5 @@
 """Mixin for managing progress prompt responses."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional
@@ -24,7 +25,7 @@ class ProgressPromptResponseManagerMixin:
         width: int | None = None,
         label: str | None = None,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (

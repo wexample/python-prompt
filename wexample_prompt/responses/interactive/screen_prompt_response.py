@@ -26,7 +26,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     callback, allowing the callback to draw text lines, sleep, and request reload/close.
     """
 
-    callback: Callable[["ScreenPromptResponse"], Any] = Field(
+    callback: Callable[[ScreenPromptResponse], Any] = Field(
         description="Function called repeatedly with this response instance to draw and control flow.",
     )
     height: int = Field(
@@ -40,7 +40,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     _closed: bool = False
     _reload_requested: bool = False
-    _io_buffer: Optional["BufferOutputHandler"] = None
+    _io_buffer: BufferOutputHandler | None = None
 
     def __init__(self, **kwargs) -> None:
         AbstractInteractivePromptResponse.__init__(self, **kwargs)
@@ -49,7 +49,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     @classmethod
     def create_screen(
         cls,
-        callback: Callable[["ScreenPromptResponse"], Any],
+        callback: Callable[[ScreenPromptResponse], Any],
         *,
         height: int = 30,
         reset_on_finish: bool = False,
@@ -75,7 +75,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     def close(self) -> None:
         self._closed = True
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         # Screen runs a simple controlled loop until closed.
         from time import sleep
 
@@ -138,7 +138,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.interactive.choice_example import (  # type: ignore
             ChoiceExample,
         )

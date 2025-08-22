@@ -1,4 +1,5 @@
 """Mixin for handling suggestions responses in IoManager."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

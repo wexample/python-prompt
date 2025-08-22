@@ -19,7 +19,7 @@ class SeparatorPromptResponseManagerMixin:
         width: int | None = None,
         character: str | None = None,
         context: PromptContext | None = None,
-        **kwargs: Kwargs
+        **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.responses.titles.separator_prompt_response import (
             SeparatorPromptResponse,

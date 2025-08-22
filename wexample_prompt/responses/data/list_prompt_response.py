@@ -22,7 +22,7 @@ class ListPromptResponse(AbstractMessageResponse):
         cls,
         items: list[str],
         bullet: str = "•",
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
     ) -> ListPromptResponse:
         lines: list[PromptResponseLine] = []
@@ -49,7 +49,7 @@ class ListPromptResponse(AbstractMessageResponse):
         return cls(lines=lines, verbosity=verbosity)
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.data.list_example import ListExample
 
         return ListExample

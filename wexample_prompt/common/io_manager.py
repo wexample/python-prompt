@@ -150,7 +150,7 @@ class IoManager(
         )
 
     @classmethod
-    def get_response_types(cls) -> list[type["AbstractPromptResponse"]]:
+    def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
@@ -251,7 +251,7 @@ class IoManager(
     def print_response(
         self,
         response: AbstractPromptResponse,
-        context: Optional["PromptContext"] = None,
+        context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         from wexample_prompt.common.prompt_context import PromptContext
 

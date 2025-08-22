@@ -19,8 +19,8 @@ class DebugPromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> DebugPromptResponse:
         from wexample_prompt.responses.messages.debug_prompt_response import (
             DebugPromptResponse,

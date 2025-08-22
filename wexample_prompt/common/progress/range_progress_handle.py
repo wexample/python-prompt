@@ -40,7 +40,7 @@ class RangeProgressHandle(ExtendedBaseModel):
         self,
         current: float | int | str | None = None,
         label: str | None = None,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         auto_render: bool = True,
     ) -> str | None:
         if current is not None:

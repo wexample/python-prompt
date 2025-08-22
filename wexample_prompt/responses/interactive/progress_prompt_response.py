@@ -1,4 +1,5 @@
 """Progress bar response implementation."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar, Optional
@@ -34,7 +35,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
     color: TerminalColor | None = Field(
         default=None, description="Optional color applied to the bar"
     )
-    _handle: Optional["ProgressHandle"] = None
+    _handle: ProgressHandle | None = None
 
     @classmethod
     def get_example_class(cls) -> type:
@@ -108,7 +109,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         # Normalize context

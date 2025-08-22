@@ -1,4 +1,5 @@
 """Mixin for handling interactive screen response in IoManager."""
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -19,7 +20,7 @@ class ScreenPromptResponseManagerMixin:
     def screen(
         self: IoManager,
         *,
-        callback: Callable[["ScreenPromptResponse"], Any],
+        callback: Callable[[ScreenPromptResponse], Any],
         height: int = 30,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
         reset_on_finish: bool = False,

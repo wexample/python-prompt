@@ -71,14 +71,14 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.titles.separator_example import (
             SeparatorExample,
         )
 
         return SeparatorExample
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         width = self.width or context.get_width()
         length = width - len(context.render_indentation_text())
         if self.separator_response_label:

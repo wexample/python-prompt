@@ -19,8 +19,8 @@ class FailurePromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> FailurePromptResponse:
         from wexample_prompt.responses.messages.failure_prompt_response import (
             FailurePromptResponse,

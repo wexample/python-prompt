@@ -19,8 +19,8 @@ class WarningPromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> WarningPromptResponse:
         from wexample_prompt.responses.messages.warning_prompt_response import (
             WarningPromptResponse,

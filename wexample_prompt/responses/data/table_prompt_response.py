@@ -1,4 +1,5 @@
 """Table response for displaying data in a formatted table layout."""
+
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -40,7 +41,7 @@ class TablePromptResponse(AbstractPromptResponse):
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         if not self.data and not self.headers:
             return ""
 

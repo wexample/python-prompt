@@ -19,8 +19,8 @@ class InfoPromptResponseManagerMixin:
         self: IoManager,
         message: LineMessage,
         verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
-        context: Optional["PromptContext"] = None,
-        **kwargs: Kwargs
+        context: PromptContext | None = None,
+        **kwargs: Kwargs,
     ) -> InfoPromptResponse:
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,

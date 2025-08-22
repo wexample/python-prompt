@@ -42,7 +42,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
     def _create_title(
         cls,
         text: str,
-        color: Optional["TerminalColor"] = None,
+        color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = None,
@@ -78,7 +78,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)

@@ -30,12 +30,12 @@ class EchoPromptResponse(AbstractPromptResponse):
         )
 
     @classmethod
-    def get_example_class(cls) -> type["AbstractResponseExample"]:
+    def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.echo_example import EchoExample
 
         return EchoExample
 
-    def render(self, context: Optional["PromptContext"] = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         # No style on echo.
         from wexample_prompt.common.prompt_context import PromptContext
 

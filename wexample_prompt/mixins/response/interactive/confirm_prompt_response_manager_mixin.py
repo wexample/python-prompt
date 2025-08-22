@@ -1,4 +1,5 @@
 """Mixin for managing confirmation dialogs."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
