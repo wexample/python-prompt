@@ -1,6 +1,5 @@
 """Example for properties response."""
 
-from typing import Optional
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.data.properties_prompt_response import (

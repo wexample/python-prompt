@@ -1,7 +1,8 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_prompt.responses.interactive.progress_prompt_response import (

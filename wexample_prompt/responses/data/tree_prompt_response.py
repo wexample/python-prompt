@@ -1,8 +1,9 @@
 """Tree response implementation."""
 
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Optional
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

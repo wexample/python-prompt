@@ -1,7 +1,8 @@
-from typing import TYPE_CHECKING, List, Optional, Type
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import Field, PrivateAttr
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,

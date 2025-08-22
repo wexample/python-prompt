@@ -1,9 +1,9 @@
 """Base class for testing prompt responses."""
 
 from abc import abstractmethod
-from typing import Optional, Type
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
@@ -13,7 +13,6 @@ class AbstractPromptResponseTest(AbstractPromptTest):
     @abstractmethod
     def get_expected_lines(self) -> int:
         """Return the expected number of lines in the rendered response."""
-        pass
 
     def _assert_common_response_structure(
         self, response: "AbstractPromptResponse"
@@ -31,7 +30,6 @@ class AbstractPromptResponseTest(AbstractPromptTest):
     @abstractmethod
     def _assert_specific_format(self, rendered: str) -> None:
         """Assert format specific to this response type."""
-        pass
 
     def _assert_no_color_codes(self, text: str) -> None:
         """Assert that a string contains no ANSI escape sequences (colors/styles)."""

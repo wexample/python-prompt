@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, ClassVar, Optional, Type
+from typing import TYPE_CHECKING, ClassVar, Optional
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
@@ -6,7 +6,6 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 )
 
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
@@ -36,6 +35,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         # and append the formatted trace as raw lines (no added color) so its own formatting stays intact.
         if exception is not None:
             from wexample_helpers.helpers.error import error_format
+
             from wexample_prompt.common.prompt_response_line import PromptResponseLine
             from wexample_prompt.common.prompt_response_segment import (
                 PromptResponseSegment,

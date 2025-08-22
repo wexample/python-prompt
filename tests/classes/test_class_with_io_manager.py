@@ -1,4 +1,3 @@
-from typing import Type
 
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest

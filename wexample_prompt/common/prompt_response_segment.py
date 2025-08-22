@@ -1,7 +1,8 @@
-from typing import TYPE_CHECKING, List, Optional, Tuple
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 

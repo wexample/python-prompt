@@ -1,6 +1,6 @@
 """Mixin for managing confirmation dialogs."""
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
 
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.const.types import LineMessage

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 

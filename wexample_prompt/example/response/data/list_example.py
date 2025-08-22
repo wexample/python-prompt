@@ -1,4 +1,3 @@
-from typing import List
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse

@@ -1,8 +1,9 @@
 """Mixin for handling tree responses in IoManager."""
 
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 

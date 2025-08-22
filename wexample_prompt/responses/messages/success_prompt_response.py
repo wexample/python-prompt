@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, ClassVar, Optional, Type
+from typing import TYPE_CHECKING, ClassVar, Optional
 
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel

@@ -1,9 +1,10 @@
 """Prompt response line implementation."""
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage

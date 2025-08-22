@@ -1,6 +1,6 @@
-from typing import List, Optional
 
 from colorama import Style, init
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 

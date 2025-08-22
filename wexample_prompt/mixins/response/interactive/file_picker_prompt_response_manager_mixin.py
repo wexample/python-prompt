@@ -1,8 +1,9 @@
 """Mixin for managing file picker prompt responses."""
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.const.types import Kwargs
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.choice import FilePickerMode

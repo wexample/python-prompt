@@ -1,6 +1,5 @@
 """Response for displaying suggestions with optional descriptions."""
 
-from typing import List, Type
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
