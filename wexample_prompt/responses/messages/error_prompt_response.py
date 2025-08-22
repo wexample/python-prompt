@@ -37,6 +37,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         # and append the formatted trace as raw lines (no added color) so its own formatting stays intact.
         if exception is not None:
             from wexample_helpers.helpers.error import error_format
+
             from wexample_prompt.common.prompt_response_line import PromptResponseLine
             from wexample_prompt.common.prompt_response_segment import (
                 PromptResponseSegment,

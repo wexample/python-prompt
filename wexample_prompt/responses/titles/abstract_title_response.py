@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
