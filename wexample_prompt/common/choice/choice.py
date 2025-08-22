@@ -1,7 +1,5 @@
-
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.choice import ChoiceValue
 

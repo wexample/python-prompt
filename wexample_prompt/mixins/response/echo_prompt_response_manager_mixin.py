@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
 from wexample_helpers.const.types import Kwargs
-
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel

@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, ClassVar, Optional
 
 from pydantic import Field
-
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample

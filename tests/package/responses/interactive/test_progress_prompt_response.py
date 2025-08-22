@@ -1,8 +1,6 @@
 """Tests for ProgressPromptResponse (interactive)."""
 
-
 from wexample_helpers.const.types import Kwargs
-
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
@@ -70,7 +68,6 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_invalid_values_raise(self) -> None:
         import pytest
-
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )

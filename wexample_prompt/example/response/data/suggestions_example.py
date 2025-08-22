@@ -1,6 +1,5 @@
 """Example for suggestions response."""
 
-
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.data.suggestions_prompt_response import (
     SuggestionsPromptResponse,
