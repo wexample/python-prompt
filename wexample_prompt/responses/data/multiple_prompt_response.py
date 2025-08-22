@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
