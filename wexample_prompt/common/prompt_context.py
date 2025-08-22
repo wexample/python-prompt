@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import ClassVar, Optional
+from typing import ClassVar
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, ClassVar, Optional
+from typing import TYPE_CHECKING, ClassVar
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (

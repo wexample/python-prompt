@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
 
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
