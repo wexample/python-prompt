@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class WithIndentation:
     _indentation: int = 0
     _indent_string: str = "  "

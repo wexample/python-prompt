@@ -1,4 +1,5 @@
 """Table response for displaying data in a formatted table layout."""
+from __future__ import annotations
 
 from typing import Any, Optional
 

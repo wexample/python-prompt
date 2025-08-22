@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel

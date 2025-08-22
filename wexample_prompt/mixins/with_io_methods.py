@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 
 from wexample_prompt.mixins.with_io_manager import WithIoManager

@@ -1,4 +1,5 @@
 """Example usage of ConfirmPromptResponse."""
+from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.interactive.confirm_prompt_response import (

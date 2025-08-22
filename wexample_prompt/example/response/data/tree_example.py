@@ -1,4 +1,5 @@
 """Example for tree response."""
+from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse

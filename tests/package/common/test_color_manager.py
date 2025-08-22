@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle

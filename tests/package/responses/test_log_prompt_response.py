@@ -1,4 +1,5 @@
 """Tests for LogPromptResponse."""
+from __future__ import annotations
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext

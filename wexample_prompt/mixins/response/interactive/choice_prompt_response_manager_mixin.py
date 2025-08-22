@@ -1,4 +1,5 @@
 """Mixin for handling interactive choice prompts in IoManager."""
+from __future__ import annotations
 
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, Optional

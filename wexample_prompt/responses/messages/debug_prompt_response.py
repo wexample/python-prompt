@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, ClassVar, Optional
 
 from wexample_prompt.const.types import LineMessage

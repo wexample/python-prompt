@@ -1,4 +1,5 @@
 """Tests for FilePickerPromptResponse (interactive)."""
+from __future__ import annotations
 
 from unittest import mock
 

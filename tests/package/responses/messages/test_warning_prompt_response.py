@@ -1,4 +1,5 @@
 """Tests for WarningPromptResponse."""
+from __future__ import annotations
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse

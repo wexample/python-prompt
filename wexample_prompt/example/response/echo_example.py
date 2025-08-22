@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 

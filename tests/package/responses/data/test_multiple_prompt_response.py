@@ -1,4 +1,5 @@
 """Test multiple prompt response."""
+from __future__ import annotations
 
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.verbosity_level import VerbosityLevel

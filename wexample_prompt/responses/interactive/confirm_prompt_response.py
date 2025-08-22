@@ -1,4 +1,5 @@
 """Confirmation dialog interactive response (box style)."""
+from __future__ import annotations
 
 from typing import Any, ClassVar, Optional
 

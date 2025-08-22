@@ -1,4 +1,5 @@
 """Example usage of ProgressPromptResponse."""
+from __future__ import annotations
 
 import time
 
