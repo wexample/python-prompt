@@ -23,7 +23,6 @@ dependencies = [
     "inquirerpy",
     "pip-tools",
     "pydantic",
-    "pytest",
     "readchar"
 ]
 
@@ -37,6 +36,8 @@ text = "MIT"
 [project.urls]
 homepage = "https://github.com/wexample/python-prompt"
 
+[project.optional-dependencies]
+dev = ["pytest"]
 [tool.setuptools.packages.find]
 where = [
     ".",
