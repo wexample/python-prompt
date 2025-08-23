@@ -1,9 +1,6 @@
 [build-system]
-requires = [
-    "setuptools",
-    "wheel",
-]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [project]
 name = "wexample-prompt"
@@ -12,7 +9,7 @@ description = "Helper for your tty interactions"
 authors = [
     { name = "weeger", email = "contact@wexample.com" },
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -21,7 +18,7 @@ classifiers = [
 dependencies = [
     "colorama",
     "inquirerpy",
-    "pydantic",
+    "pydantic>=2,<3",
     "readchar"
 ]
 
@@ -53,3 +50,6 @@ testpaths = [
     "tests",
 ]
 addopts = "-p wexample_helpers.test.plugin.runtest_makereport"
+
+[tool.pdm.build]
+includes = ["prompt/py.typed"]
