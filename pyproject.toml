@@ -21,7 +21,6 @@ classifiers = [
 dependencies = [
     "colorama",
     "inquirerpy",
-    "pip-tools",
     "pydantic",
     "readchar"
 ]
