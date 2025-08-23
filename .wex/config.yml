@@ -3,3 +3,4 @@ files_state:
     class: PromptPackageWorkdir
     file: .wex/python/files_state/prompt_package_workdir.py
 name: prompt
+version: 0.0.43
