@@ -52,7 +52,7 @@ testpaths = [
 addopts = "-p wexample_helpers.test.plugin.runtest_makereport"
 
 [tool.pdm.build]
-includes = ["prompt/py.typed", "src/prompt/py.typed"]
+includes = ["src/prompt/py.typed"]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]
