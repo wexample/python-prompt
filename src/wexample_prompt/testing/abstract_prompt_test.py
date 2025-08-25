@@ -9,7 +9,9 @@ from typing import TYPE_CHECKING
 from wexample_prompt.common.io_manager import IoManager
 
 if TYPE_CHECKING:
-    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 
 
 class AbstractPromptTest(unittest.TestCase, ABC):
