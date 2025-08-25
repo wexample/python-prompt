@@ -20,7 +20,7 @@ dependencies = [
     "inquirerpy",
     "pydantic>=2,<3",
     "readchar",
-    "wexample-helpers",
+    "wexample-helpers==0.0.64",
 ]
 
 [project.readme]
