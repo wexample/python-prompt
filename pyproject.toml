@@ -18,6 +18,7 @@ classifiers = [
 dependencies = [
     "colorama",
     "inquirerpy",
+    "wexample-helpers",
     "pydantic>=2,<3",
     "readchar"
 ]
