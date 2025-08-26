@@ -6,6 +6,7 @@ from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
@@ -17,6 +18,7 @@ class SeparatorPromptResponseManagerMixin:
         self: IoManager,
         label: str | None = None,
         width: int | None = None,
+        verbosity: VerbosityLevel | None = None,
         character: str | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
@@ -29,6 +31,7 @@ class SeparatorPromptResponseManagerMixin:
             label=label,
             width=width,
             character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
+            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
         )
 
         return self.print_response(

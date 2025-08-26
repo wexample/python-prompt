@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pydantic import Field, PrivateAttr
+
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
@@ -260,7 +261,7 @@ class IoManager(
 
         context = PromptContext.create_if_none(context=context)
 
-        context.verbosity = context.verbosity or self.default_context_verbosity
+        context.verbosity = context.verbosity if context.verbosity is not None else self.default_context_verbosity
         context.indentation = context.indentation or self.indentation
         context.width = context.width or self.terminal_width
 

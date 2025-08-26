@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -32,9 +33,9 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_multiple(
-        cls,
-        responses: list[AbstractPromptResponse] | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            responses: list[AbstractPromptResponse] | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> MultiplePromptResponse:
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:
@@ -61,7 +62,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
         context = PromptContext.create_if_none(context=context)
 
-        if self.verbosity > context.verbosity:
+        if not self._verbosity_context_allows_display(context=context):
             return None
 
         rendered_parts: list[str] = []
@@ -74,14 +75,14 @@ class MultiplePromptResponse(AbstractPromptResponse):
         return self._rendered_content
 
     def append_response(
-        self, response: AbstractPromptResponse
+            self, response: AbstractPromptResponse
     ) -> MultiplePromptResponse:
         """Append a single response and return self for chaining."""
         self.responses.append(response)
         return self
 
     def extend_responses(
-        self, responses: list[AbstractPromptResponse]
+            self, responses: list[AbstractPromptResponse]
     ) -> MultiplePromptResponse:
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)

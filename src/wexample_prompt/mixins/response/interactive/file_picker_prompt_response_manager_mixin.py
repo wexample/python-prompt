@@ -42,7 +42,7 @@ class FilePickerPromptResponseManagerMixin:
             base_dir=base_dir,
             abort=abort,
             mode=mode,
-            verbosity=verbosity or self.default_response_verbosity,
+            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
             allow_parent_selection=allow_parent_selection,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
