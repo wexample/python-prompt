@@ -24,7 +24,7 @@ class ConfirmPromptResponseManagerMixin:
         choices: dict[str, tuple] | None = None,
         default: str | None = None,
         width: int | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         reset_on_finish: bool = False,
         context: PromptContext | None = None,
         predefined_answer: Any = None,
@@ -39,7 +39,7 @@ class ConfirmPromptResponseManagerMixin:
             choices=choices,
             default=default,
             width=width,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )

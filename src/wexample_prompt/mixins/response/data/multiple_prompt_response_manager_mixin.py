@@ -23,7 +23,7 @@ class MultiplePromptResponseManagerMixin:
     def multiple(
         self: IoManager,
         responses: list[AbstractPromptResponse],
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs,
     ) -> MultiplePromptResponse:
@@ -34,7 +34,7 @@ class MultiplePromptResponseManagerMixin:
 
         response = MultiplePromptResponse.create_multiple(
             responses=responses,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

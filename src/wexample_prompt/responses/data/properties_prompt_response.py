@@ -42,7 +42,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         properties: dict[str, Any],
         title: str | None = None,
         nested_indent: int = 2,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> PropertiesPromptResponse:
         return cls(
             lines=[],  # Lines will be built in render() because we neet context with to create them.

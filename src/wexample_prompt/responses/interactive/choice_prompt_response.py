@@ -59,7 +59,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         color: TerminalColor | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
         # Build question lines from LineMessage, apply styles/colors on segments

@@ -22,7 +22,7 @@ class SubtitlePromptResponseManagerMixin:
         color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
@@ -35,7 +35,7 @@ class SubtitlePromptResponseManagerMixin:
             color=color,
             character=character,
             width=width,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

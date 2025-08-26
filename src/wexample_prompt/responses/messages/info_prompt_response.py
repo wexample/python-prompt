@@ -23,7 +23,7 @@ class InfoPromptResponse(AbstractMessageResponse):
         cls: InfoPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> InfoPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

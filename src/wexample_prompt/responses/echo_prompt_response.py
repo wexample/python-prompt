@@ -18,7 +18,7 @@ class EchoPromptResponse(AbstractPromptResponse):
     def create_echo(
         cls: EchoPromptResponse,
         message: LineMessage,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> EchoPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 

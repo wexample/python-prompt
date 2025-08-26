@@ -28,7 +28,7 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         message: LineMessage,
         suggestions: list[str],
         arrow_style: str = "→",
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> SuggestionsPromptResponse:
         # Build lines independent of context
         lines: list[PromptResponseLine] = []

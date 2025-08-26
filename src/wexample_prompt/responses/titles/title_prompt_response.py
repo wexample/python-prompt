@@ -21,7 +21,7 @@ class TitlePromptResponse(AbstractTitleResponse):
         color: TerminalColor | None = None,
         character: str | None = None,
         width: int | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> TitlePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

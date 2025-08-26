@@ -16,7 +16,7 @@ class EchoPromptResponseManagerMixin:
     def echo(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> EchoPromptResponse:
@@ -24,7 +24,7 @@ class EchoPromptResponseManagerMixin:
 
         response = EchoPromptResponse.create_echo(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

@@ -23,7 +23,7 @@ class SuccessPromptResponse(AbstractMessageResponse):
         cls: SuccessPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> SuccessPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

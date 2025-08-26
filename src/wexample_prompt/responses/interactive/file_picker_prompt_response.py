@@ -51,7 +51,7 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         allow_parent_selection: bool = False,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> FilePickerPromptResponse:
         base = base_dir or os.getcwd()
 

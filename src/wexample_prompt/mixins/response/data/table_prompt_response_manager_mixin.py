@@ -21,7 +21,7 @@ class TablePromptResponseManagerMixin:
         data: list[list[Any]],
         headers: list[str] | None = None,
         title: str | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> TablePromptResponse:
@@ -33,7 +33,7 @@ class TablePromptResponseManagerMixin:
             data=data,
             headers=headers,
             title=title,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

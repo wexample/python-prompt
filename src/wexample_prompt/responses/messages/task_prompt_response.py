@@ -23,7 +23,7 @@ class TaskPromptResponse(AbstractMessageResponse):
         cls: TaskPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> TaskPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

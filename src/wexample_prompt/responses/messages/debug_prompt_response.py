@@ -23,7 +23,7 @@ class DebugPromptResponse(AbstractMessageResponse):
         cls: DebugPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> DebugPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

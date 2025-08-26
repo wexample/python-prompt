@@ -23,7 +23,7 @@ class PropertiesPromptResponseManagerMixin:
         properties: dict[str, Any],
         title: str | None = None,
         nested_indent: int = 2,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> PropertiesPromptResponse:
@@ -35,7 +35,7 @@ class PropertiesPromptResponseManagerMixin:
             properties=properties,
             title=title,
             nested_indent=nested_indent,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

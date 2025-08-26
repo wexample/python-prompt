@@ -18,7 +18,7 @@ class TaskPromptResponseManagerMixin:
     def task(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> TaskPromptResponse:
@@ -28,7 +28,7 @@ class TaskPromptResponseManagerMixin:
 
         response = TaskPromptResponse.create_task(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

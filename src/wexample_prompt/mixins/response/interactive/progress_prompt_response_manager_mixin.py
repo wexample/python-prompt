@@ -24,7 +24,7 @@ class ProgressPromptResponseManagerMixin:
         current: float | int | str = 0,
         width: int | None = None,
         label: str | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
@@ -37,7 +37,7 @@ class ProgressPromptResponseManagerMixin:
             current=current,
             width=width,
             label=label,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         # The first print is done without progress handle.

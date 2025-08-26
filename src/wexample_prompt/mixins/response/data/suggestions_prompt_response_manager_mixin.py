@@ -24,7 +24,7 @@ class SuggestionsPromptResponseManagerMixin:
         message: LineMessage,
         suggestions: list[str],
         arrow_style: str = "→",
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> SuggestionsPromptResponse:
@@ -36,7 +36,7 @@ class SuggestionsPromptResponseManagerMixin:
             message=message,
             suggestions=suggestions,
             arrow_style=arrow_style,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

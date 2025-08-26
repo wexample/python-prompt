@@ -29,7 +29,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         message: str | None = None,
         exception: BaseException | None = None,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ErrorPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

@@ -34,7 +34,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
     def create_multiple(
         cls,
         responses: list[AbstractPromptResponse] | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> MultiplePromptResponse:
         """Create a new MultiplePromptResponse from a list of responses."""
         if responses is None:

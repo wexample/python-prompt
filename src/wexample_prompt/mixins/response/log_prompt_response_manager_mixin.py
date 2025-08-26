@@ -18,7 +18,7 @@ class LogPromptResponseManagerMixin:
     def log(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
@@ -26,7 +26,7 @@ class LogPromptResponseManagerMixin:
 
         response = LogPromptResponse.create_log(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

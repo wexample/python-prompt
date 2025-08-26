@@ -84,7 +84,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         width: int | None = None,
         label: str | None = None,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
         if total <= 0:
             raise ValueError("Total must be greater than 0")

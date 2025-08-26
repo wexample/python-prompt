@@ -42,7 +42,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         width: int | None = None,
         color: TerminalColor = None,
         character: str | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

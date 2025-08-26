@@ -53,7 +53,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         *,
         height: int = 30,
         reset_on_finish: bool = False,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ScreenPromptResponse:
         return cls(
             callback=callback,

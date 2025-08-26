@@ -35,7 +35,7 @@ class TablePromptResponse(AbstractPromptResponse):
         data: list[list[Any]],
         headers: list[str] | None = None,
         title: str | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> TablePromptResponse:
         return cls(
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity

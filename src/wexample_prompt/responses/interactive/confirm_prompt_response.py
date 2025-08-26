@@ -79,7 +79,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         width: int | None = None,
         predefined_answer: Any = None,
         reset_on_finish: bool = False,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ConfirmPromptResponse:
         """Create a confirmation dialog with explicit key mappings.
 

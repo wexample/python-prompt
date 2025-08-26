@@ -18,7 +18,7 @@ class ErrorPromptResponseManagerMixin:
         self: IoManager,
         message: str | None = None,
         exception: BaseException | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
@@ -29,7 +29,7 @@ class ErrorPromptResponseManagerMixin:
         response = ErrorPromptResponse.create_error(
             message=message,
             exception=exception,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

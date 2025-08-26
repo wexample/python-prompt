@@ -18,7 +18,7 @@ class FailurePromptResponseManagerMixin:
     def failure(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> FailurePromptResponse:
@@ -28,7 +28,7 @@ class FailurePromptResponseManagerMixin:
 
         response = FailurePromptResponse.create_failure(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

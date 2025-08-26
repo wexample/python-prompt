@@ -27,7 +27,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         description="The list of lines of the response content",
     )
     verbosity: VerbosityLevel | None = Field(
-        default=VerbosityLevel.DEFAULT,
+        default=None,
         description="The context verbosity, saying which response to render or not",
     )
     _rendered_content: str | None = None

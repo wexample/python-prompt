@@ -22,7 +22,7 @@ class ScreenPromptResponseManagerMixin:
         *,
         callback: Callable[[ScreenPromptResponse], Any],
         height: int = 30,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         reset_on_finish: bool = False,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
@@ -34,7 +34,7 @@ class ScreenPromptResponseManagerMixin:
         response = ScreenPromptResponse.create_screen(
             callback=callback,
             height=height,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
             reset_on_finish=reset_on_finish,
         )
 

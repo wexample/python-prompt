@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pydantic import Field, PrivateAttr
+
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
@@ -117,16 +118,19 @@ class IoManager(
     WithIndentation,
     ExtendedBaseModel,
 ):
+    _terminal_width: int = PrivateAttr(default=None)
     output: AbstractOutputHandler | None = Field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-        "by default print to stdout",
+                    "by default print to stdout",
     )
-
-    _terminal_width: int = PrivateAttr(default=None)
-    verbosity: VerbosityLevel | None = Field(
+    default_context_verbosity: VerbosityLevel = Field(
         default=VerbosityLevel.DEFAULT,
-        description="The overall verbosity level used in contexts, if not specified.",
+        description="The overall verbosity level used in contexts.",
+    )
+    default_response_verbosity: VerbosityLevel = Field(
+        default=VerbosityLevel.DEFAULT,
+        description="The default verbosity for every generated message.",
     )
 
     def __init__(self, **kwargs) -> None:
@@ -249,15 +253,15 @@ class IoManager(
         ]
 
     def print_response(
-        self,
-        response: AbstractPromptResponse,
-        context: PromptContext | None = None,
+            self,
+            response: AbstractPromptResponse,
+            context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
 
-        context.verbosity = context.verbosity or self.verbosity
+        context.verbosity = context.verbosity or self.default_context_verbosity
         context.indentation = context.indentation or self.indentation
         context.width = context.width or self.terminal_width
 

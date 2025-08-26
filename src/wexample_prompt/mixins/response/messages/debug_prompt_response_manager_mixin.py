@@ -18,7 +18,7 @@ class DebugPromptResponseManagerMixin:
     def debug(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> DebugPromptResponse:
@@ -28,7 +28,7 @@ class DebugPromptResponseManagerMixin:
 
         response = DebugPromptResponse.create_debug(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

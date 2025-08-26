@@ -18,7 +18,7 @@ class ListPromptResponseManagerMixin:
         items: list[str],
         bullet: str = "•",
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ListPromptResponse:
@@ -30,7 +30,7 @@ class ListPromptResponseManagerMixin:
             items=items,
             bullet=bullet,
             color=color,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

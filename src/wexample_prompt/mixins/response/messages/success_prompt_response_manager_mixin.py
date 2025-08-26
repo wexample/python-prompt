@@ -18,7 +18,7 @@ class SuccessPromptResponseManagerMixin:
     def success(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> SuccessPromptResponse:
@@ -28,7 +28,7 @@ class SuccessPromptResponseManagerMixin:
 
         response = SuccessPromptResponse.create_success(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

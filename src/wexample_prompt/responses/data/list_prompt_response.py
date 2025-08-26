@@ -23,7 +23,7 @@ class ListPromptResponse(AbstractMessageResponse):
         items: list[str],
         bullet: str = "•",
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> ListPromptResponse:
         lines: list[PromptResponseLine] = []
 

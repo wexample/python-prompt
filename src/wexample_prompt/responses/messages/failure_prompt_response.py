@@ -25,7 +25,7 @@ class FailurePromptResponse(AbstractMessageResponse):
         cls: FailurePromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
-        verbosity: VerbosityLevel = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
     ) -> FailurePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 

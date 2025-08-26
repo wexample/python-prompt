@@ -18,7 +18,7 @@ class WarningPromptResponseManagerMixin:
     def warning(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> WarningPromptResponse:
@@ -28,7 +28,7 @@ class WarningPromptResponseManagerMixin:
 
         response = WarningPromptResponse.create_warning(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

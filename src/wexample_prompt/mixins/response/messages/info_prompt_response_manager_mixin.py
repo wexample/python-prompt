@@ -18,7 +18,7 @@ class InfoPromptResponseManagerMixin:
     def info(
         self: IoManager,
         message: LineMessage,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> InfoPromptResponse:
@@ -28,7 +28,7 @@ class InfoPromptResponseManagerMixin:
 
         response = InfoPromptResponse.create_info(
             message=message,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
         )
 
         return self.print_response(

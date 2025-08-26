@@ -24,7 +24,7 @@ class ChoicePromptResponseManagerMixin:
         choices: list[Any] | Mapping[Any, Any],
         default: Any | None = None,
         abort: bool | str | None = None,
-        verbosity: VerbosityLevel | None = VerbosityLevel.DEFAULT,
+        verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
@@ -39,7 +39,7 @@ class ChoicePromptResponseManagerMixin:
             choices=choices,
             default=default,
             abort=abort,
-            verbosity=verbosity,
+            verbosity=verbosity or self.default_response_verbosity,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )
