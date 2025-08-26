@@ -146,7 +146,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             self._partial_clear(printed_lines)
 
             # Rebuild lines for this frame (all question lines first)
-            self.lines = self.question_lines
+            # Copy the list to avoid mutating the original across frames
+            # If we assigned the same list object, each frame's appends would
+            # accumulate and cause duplicated blocks to be printed.
+            self.lines = list(self.question_lines)
 
             for i, choice in enumerate(self.choices):
                 line = choice.line
