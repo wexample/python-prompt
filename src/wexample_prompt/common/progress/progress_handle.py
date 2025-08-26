@@ -63,6 +63,49 @@ class ProgressHandle(ExtendedBaseModel):
         cur = max(self.range_start, min(self.range_end, self.response.current))  # type: ignore[arg-type]
         return max(0, min(self._effective_total(), cur - int(self.range_start)))  # type: ignore[arg-type]
 
+    # --- Public properties ---
+    @property
+    def total(self) -> int:
+        """Return the effective total for this handle.
+
+        - For a child handle, it's the size of the mapped range (range_end - range_start).
+        - For a root handle, it's the underlying response total.
+        """
+        return self._effective_total()
+
+    @total.setter
+    def total(self, value: int) -> None:
+        """Set the total dynamically after creation.
+
+        - For a child handle, adjusts range_end = range_start + value (clamped to parent bounds).
+        - For a root handle, sets response.total and clamps response.current.
+        """
+        if value is None:
+            return
+        new_total = max(0, int(value))
+        if self._is_child():
+            # Adjust child absolute end within parent bounds
+            start = int(self.range_start)  # type: ignore[arg-type]
+            parent_total = self.parent.response.total if self.parent else self.response.total
+            end = max(0, min(parent_total, start + new_total))
+            # Ensure monotonicity (end >= start)
+            if end < start:
+                end = start
+            self.range_end = end
+            # Clamp parent's absolute current to the new range
+            if self.response.current < start:
+                self.response.current = start
+            if self.response.current > end:
+                self.response.current = end
+        else:
+            # Root: enforce strictly positive total to keep semantics with creation
+            if new_total <= 0:
+                raise ValueError("Total must be greater than 0")
+            self.response.total = new_total
+            # Clamp current to new total
+            if self.response.current > new_total:
+                self.response.current = new_total
+
     def render(self) -> str:
         """Render once using the stored context and optional output handler."""
         if self.output is not None:
@@ -74,6 +117,8 @@ class ProgressHandle(ExtendedBaseModel):
         current: float | int | str | None = None,
         label: str | None = None,
         color: TerminalColor | None = None,
+        total: int | None = None,
+        to: int | None = None,
         auto_render: bool = True,
     ) -> str | None:
         """Update progress fields and optionally re-render.
@@ -82,6 +127,24 @@ class ProgressHandle(ExtendedBaseModel):
         and mapped to the parent's absolute scale.
         """
         if self._is_child():
+            # Dynamic range adjustments first so that current mapping uses latest bounds
+            if total is not None:
+                # Set child total relative to start
+                self.total = int(total)
+            if to is not None:
+                # Set absolute end bound within parent
+                parent_total = self.parent.response.total if self.parent else self.response.total
+                new_end = max(0, min(parent_total, int(to)))
+                start = int(self.range_start)  # type: ignore[arg-type]
+                if new_end < start:
+                    new_end = start
+                self.range_end = new_end
+                # Clamp absolute current to new bounds
+                if self.response.current < start:
+                    self.response.current = start
+                if self.response.current > new_end:
+                    self.response.current = new_end
+
             if current is not None:
                 # Normalize against child total; supports percentage strings.
                 norm = ProgressPromptResponse._normalize_value(
@@ -98,6 +161,12 @@ class ProgressHandle(ExtendedBaseModel):
                 return self.render()
             return None
         else:
+            # Root adjustments
+            if total is not None:
+                self.total = int(total)
+            if to is not None:
+                # Alias for total at root level
+                self.total = int(to)
             if current is not None:
                 self.response.current = ProgressPromptResponse._normalize_value(
                     self.response.total, current
