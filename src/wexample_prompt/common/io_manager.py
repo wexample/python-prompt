@@ -121,7 +121,7 @@ class IoManager(
     output: AbstractOutputHandler | None = Field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-                    "by default print to stdout",
+        "by default print to stdout",
     )
     default_context_verbosity: VerbosityLevel = Field(
         default=VerbosityLevel.DEFAULT,
@@ -252,15 +252,19 @@ class IoManager(
         ]
 
     def print_response(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
 
-        context.verbosity = context.verbosity if context.verbosity is not None else self.default_context_verbosity
+        context.verbosity = (
+            context.verbosity
+            if context.verbosity is not None
+            else self.default_context_verbosity
+        )
         context.indentation = context.indentation or self.indentation
         context.width = context.width or self.terminal_width
 
