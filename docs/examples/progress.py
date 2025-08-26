@@ -99,6 +99,33 @@ def section_nested_sub_progress(io: IoManager) -> None:
     root.finish(color=TerminalColor.RED, label="Global: finished")
 
 
+def section_dynamic_resize_sub_progress(io: IoManager) -> None:
+    io.separator('Dynamic resize of sub progress (change total/to after creation)')
+    response = io.progress(label='Global task', total=1000)
+    root = response.get_handle()
+
+    # Start somewhere
+    root.update(current=100, label="Global: initial")
+
+    # Create a sub-range initially of size 200 (100 -> 300)
+    child = root.create_range_handle(to=300)
+    child.update(current=50, label="Child before resize")
+
+    # Now decide the child will actually need a total of 400 units instead of 200
+    # Option 1: via update(total=...)
+    child.update(total=400, label="Child resized via total=400")
+    # Continue within the resized range
+    child.update(current=200, label="Child mid after resize")
+
+    # Option 2: direct property assignment (equivalent)
+    child.total = 500  # expands the child to map 100 -> 600 on parent
+    child.update(current=500, label="Child end after property resize")
+    child.finish(color=TerminalColor.YELLOW, label="Child finished")
+
+    # Finish global
+    root.finish(color=TerminalColor.RED, label="Global: finished")
+
+
 if __name__ == "__main__":
     io = IoManager()
     section_using_io_manager(io)
@@ -106,3 +133,4 @@ if __name__ == "__main__":
     section_various_inputs(io)
     section_sub_progress(io)
     section_nested_sub_progress(io)
+    section_dynamic_resize_sub_progress(io)
