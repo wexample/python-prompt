@@ -34,7 +34,9 @@ class ScreenPromptResponseManagerMixin:
         response = ScreenPromptResponse.create_screen(
             callback=callback,
             height=height,
-            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
+            verbosity=(
+                verbosity if verbosity is not None else self.default_response_verbosity
+            ),
             reset_on_finish=reset_on_finish,
         )
 

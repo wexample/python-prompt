@@ -36,7 +36,9 @@ class SuggestionsPromptResponseManagerMixin:
             message=message,
             suggestions=suggestions,
             arrow_style=arrow_style,
-            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
+            verbosity=(
+                verbosity if verbosity is not None else self.default_response_verbosity
+            ),
         )
 
         return self.print_response(

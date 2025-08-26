@@ -39,7 +39,9 @@ class ChoicePromptResponseManagerMixin:
             choices=choices,
             default=default,
             abort=abort,
-            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
+            verbosity=(
+                verbosity if verbosity is not None else self.default_response_verbosity
+            ),
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )

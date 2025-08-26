@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import Field
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,

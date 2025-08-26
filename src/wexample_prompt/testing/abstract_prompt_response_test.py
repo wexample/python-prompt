@@ -103,9 +103,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
         kwargs = self._create_test_kwargs()
         kwargs["verbosity"] = VerbosityLevel.QUIET
-        quiet_required = self._create_test_response_from_method(
-            response_kwargs=kwargs
-        )
+        quiet_required = self._create_test_response_from_method(response_kwargs=kwargs)
         kwargs["verbosity"] = VerbosityLevel.DEFAULT
         default_required = self._create_test_response_from_method(
             response_kwargs=kwargs

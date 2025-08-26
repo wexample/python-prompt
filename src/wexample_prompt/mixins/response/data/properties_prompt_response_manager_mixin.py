@@ -35,7 +35,9 @@ class PropertiesPromptResponseManagerMixin:
             properties=properties,
             title=title,
             nested_indent=nested_indent,
-            verbosity=verbosity if verbosity is not None else self.default_response_verbosity,
+            verbosity=(
+                verbosity if verbosity is not None else self.default_response_verbosity
+            ),
         )
 
         return self.print_response(
