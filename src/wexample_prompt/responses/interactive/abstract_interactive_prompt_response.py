@@ -21,13 +21,13 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
     @staticmethod
     def _partial_clear(printed_lines: int) -> None:
         if printed_lines > 0:
-            print(f"\033[{printed_lines}F\033[J", end="")
+            print(f"\033[{printed_lines}F\033[J", end="", flush=True)
 
     def _print_render(self, context) -> int:
         rendered = super().render(context=context)
         if rendered is None:
             return 0
-        print(rendered)
+        print(rendered, flush=True)
         return rendered.count("\n") + 1
 
     @staticmethod
