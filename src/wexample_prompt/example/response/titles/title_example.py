@@ -9,7 +9,7 @@ class TitleExample(AbstractResponseExample):
         return "Test title"
 
     def example_manager(self) -> None:
-        self.io.title(message=self.get_test_message())
+        self.io.title(text=self.get_test_message())
 
     def example_class(self):
         return TitlePromptResponse.create_title(
