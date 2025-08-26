@@ -86,7 +86,9 @@ class ProgressHandle(ExtendedBaseModel):
         if self._is_child():
             # Adjust child absolute end within parent bounds
             start = int(self.range_start)  # type: ignore[arg-type]
-            parent_total = self.parent.response.total if self.parent else self.response.total
+            parent_total = (
+                self.parent.response.total if self.parent else self.response.total
+            )
             end = max(0, min(parent_total, start + new_total))
             # Ensure monotonicity (end >= start)
             if end < start:
@@ -133,7 +135,9 @@ class ProgressHandle(ExtendedBaseModel):
                 self.total = int(total)
             if to is not None:
                 # Set absolute end bound within parent
-                parent_total = self.parent.response.total if self.parent else self.response.total
+                parent_total = (
+                    self.parent.response.total if self.parent else self.response.total
+                )
                 new_end = max(0, min(parent_total, int(to)))
                 start = int(self.range_start)  # type: ignore[arg-type]
                 if new_end < start:
