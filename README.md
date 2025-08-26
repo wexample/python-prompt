@@ -1,31 +1,25 @@
-# Prompt
+# wexample-prompt
 
 Helper for your tty interactions
 
-Version: 0.0.32
+Version: 0.0.43
 
 ## Requirements
 
-- Python >=3.6
+- Python >=3.10
 
 ## Dependencies
 
 - colorama
 - inquirerpy
-- pip-tools
-- pydantic
-- pytest
+- pydantic>=2,<3
+- readchar
+- wexample-helpers==0.0.64
 
 ## Installation
 
 ```bash
 pip install wexample-prompt
-```
-
-## Demo
-
-```bash
-bash docs/demo.sh
 ```
 
 ## Links
