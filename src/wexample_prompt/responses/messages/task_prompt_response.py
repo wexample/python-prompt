@@ -28,7 +28,7 @@ class TaskPromptResponse(AbstractMessageResponse):
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
-            text=message, color=color or TerminalColor.CYAN, verbosity=verbosity
+            text=message, color=color or TerminalColor.MAGENTA, verbosity=verbosity
         )
 
     @classmethod
