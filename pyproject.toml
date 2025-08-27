@@ -54,6 +54,9 @@ testpaths = [
 ]
 addopts = "-p wexample_helpers.testing.plugin.runtest_makereport"
 
+[tool.pdm]
+distribution = true
+
 [tool.pdm.build]
 includes = [
     "src/wexample_prompt/py.typed",
