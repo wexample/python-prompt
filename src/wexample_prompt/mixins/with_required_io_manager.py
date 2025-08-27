@@ -8,8 +8,8 @@ class WithRequiredIoManager(WithIoManager):
     """Mixin that requires an IoManager instance."""
 
     def __init__(
-        self,
-        io: IoManager,
-        parent_io_handler: WithIoManager = None,
+            self,
+            io: IoManager,
+            parent_io_handler: WithIoManager | None = None,
     ) -> None:
         super().__init__(io=io, parent_io_handler=parent_io_handler)
