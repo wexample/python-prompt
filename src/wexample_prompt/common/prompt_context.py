@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import ClassVar
 
 from pydantic import Field
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.const.types import Kwargs
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
@@ -69,7 +68,7 @@ class PromptContext(ExtendedBaseModel):
 
     @classmethod
     def create_from_parent_context_and_kwargs(
-            cls, kwargs: Kwargs, parent_context: PromptContext | None = None
+        cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
         if parent_context:
             kwargs["parent_context"] = parent_context
@@ -105,14 +104,14 @@ class PromptContext(ExtendedBaseModel):
             return ColorManager.colorize(
                 text=indentation,
                 color=indentation_color,
-                bg=indentation_background_color
+                bg=indentation_background_color,
             )
 
         return indentation
 
     def render_indentation_part(self) -> str:
         return self.get_indentation_character() * (
-                self.get_indentation() * self.indentation_length
+            self.get_indentation() * self.indentation_length
         )
 
     def get_width(self) -> int:

@@ -11,9 +11,9 @@ class WithIoManager:
     _io_parent_context: PromptContext | None = None
 
     def __init__(
-            self,
-            io: IoManager | None = None,
-            parent_io_handler: WithIoManager | None = None,
+        self,
+        io: IoManager | None = None,
+        parent_io_handler: WithIoManager | None = None,
     ) -> None:
         if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
             self._io_parent_context = parent_io_handler.io_context
@@ -47,23 +47,23 @@ class WithIoManager:
             "indentation_color": self.get_io_context_indentation_color(),
             "indentation_background_color": self.get_io_context_indentation_background_color(),
             "colorized": self.get_io_context_colorized()
-                         or (
-                             self._io_parent_context.colorized
-                             if self._io_parent_context is not None
-                             else PromptContext.DEFAULT_COLORIZED
-                         ),
+            or (
+                self._io_parent_context.colorized
+                if self._io_parent_context is not None
+                else PromptContext.DEFAULT_COLORIZED
+            ),
             "verbosity": (
                 self._io_parent_context.verbosity
                 if self._io_parent_context is not None
                 else PromptContext.DEFAULT_VERBOSITY
             ),
             "width": self.get_io_context_indentation_width()
-                     or (
-                         self._io_parent_context.width
-                         if self._io_parent_context is not None
-                         else None
-                     )
-                     or (self._io.terminal_width if self._io else None),
+            or (
+                self._io_parent_context.width
+                if self._io_parent_context is not None
+                else None
+            )
+            or (self._io.terminal_width if self._io else None),
         }
 
         defaults.update(kwargs)
