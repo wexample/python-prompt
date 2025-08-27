@@ -14,7 +14,7 @@ Version: 0.0.44
 - inquirerpy
 - pydantic>=2,<3
 - readchar
-- wexample-helpers==0.0.64
+- wexample-helpers==0.0.65
 
 ## Installation
 
