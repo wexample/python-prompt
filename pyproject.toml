@@ -34,7 +34,9 @@ text = "MIT"
 homepage = "https://github.com/wexample/python-prompt"
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = [
+    "pytest",
+]
 [tool.setuptools.packages.find]
 where = [
     ".",
@@ -53,7 +55,9 @@ testpaths = [
 addopts = "-p wexample_helpers.testing.plugin.runtest_makereport"
 
 [tool.pdm.build]
-includes = ["src/wexample_prompt/py.typed"]
+includes = [
+    "src/wexample_prompt/py.typed",
+]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]
