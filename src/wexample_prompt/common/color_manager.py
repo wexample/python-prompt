@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from colorama import Style, init
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.text_style import TextStyle
 
 
@@ -17,10 +18,19 @@ class ColorManager:
         text: str,
         color: TerminalColor | None = None,
         style: TerminalColor | None = None,
+        bg: TerminalBgColor | None = None,
+        styles: list[TextStyle] | None = None,
     ) -> str:
+        # Backward compatibility: if caller passes single style via `style`
+        # (which historically reused TerminalColor entries BOLD/DIM),
+        # we still honor it. New code should use `styles` and/or `bg`.
         prefix = ""
         if color:
             prefix += str(color)
+        if bg:
+            prefix += str(bg)
+        if styles:
+            prefix += "".join(cls.get_style_ansi(s) for s in styles)
         if style:
             prefix += str(style)
 
@@ -32,13 +42,13 @@ class ColorManager:
     def get_style_ansi(cls, style: TextStyle) -> str:
         """Map TextStyle to ANSI code without reset."""
         style_codes = {
-            TextStyle.BOLD: "\033[1m",
-            TextStyle.ITALIC: "\033[3m",
-            TextStyle.UNDERLINE: "\033[4m",
-            TextStyle.STRIKETHROUGH: "\033[9m",
-            TextStyle.DIM: "\033[2m",
-            TextStyle.REVERSE: "\033[7m",
-            TextStyle.HIDDEN: "\033[8m",
+            TextStyle.BOLD: "\u001b[1m",
+            TextStyle.ITALIC: "\u001b[3m",
+            TextStyle.UNDERLINE: "\u001b[4m",
+            TextStyle.STRIKETHROUGH: "\u001b[9m",
+            TextStyle.DIM: "\u001b[2m",
+            TextStyle.REVERSE: "\u001b[7m",
+            TextStyle.HIDDEN: "\u001b[8m",
         }
         return style_codes.get(style, "")
 
@@ -46,12 +56,15 @@ class ColorManager:
     def build_prefix(
         cls,
         color: TerminalColor | None = None,
+        bg: TerminalBgColor | None = None,
         styles: list[TextStyle] | None = None,
     ) -> str:
         """Build ANSI prefix combining color and a list of TextStyle entries."""
         prefix = ""
         if color:
             prefix += str(color)
+        if bg:
+            prefix += str(bg)
         if styles:
             prefix += "".join(cls.get_style_ansi(s) for s in styles)
         return prefix

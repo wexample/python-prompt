@@ -3,8 +3,10 @@ from __future__ import annotations
 from typing import ClassVar
 
 from pydantic import Field
+
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.const.types import Kwargs
+from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -27,6 +29,9 @@ class PromptContext(ExtendedBaseModel):
     )
     indentation_color: TerminalColor | None = Field(
         default=None, description="The indentation part color"
+    )
+    indentation_background_color: TerminalBgColor | None = Field(
+        default=None, description="The indentation part background color"
     )
     indentation_length: int | None = Field(
         default=2, description="Number of characters to repeat for one indentation"
@@ -56,6 +61,7 @@ class PromptContext(ExtendedBaseModel):
             "indentation": context.indentation,
             "indentation_character": context.indentation_character,
             "indentation_color": context.indentation_color,
+            "indentation_background_color": context.indentation_background_color,
             "indentation_length": context.indentation_length,
             "verbosity": context.verbosity,
             "width": context.width,
@@ -63,7 +69,7 @@ class PromptContext(ExtendedBaseModel):
 
     @classmethod
     def create_from_parent_context_and_kwargs(
-        cls, kwargs: Kwargs, parent_context: PromptContext | None = None
+            cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
         if parent_context:
             kwargs["parent_context"] = parent_context
@@ -83,7 +89,7 @@ class PromptContext(ExtendedBaseModel):
     def render_indentation_text(self) -> str:
         output = ""
         if self.parent_context:
-            output = self.parent_context.render_indentation()
+            output = self.parent_context.render_indentation_text()
 
         """Get the current indentation string."""
         return output + self.render_indentation_part()
@@ -92,16 +98,21 @@ class PromptContext(ExtendedBaseModel):
         indentation = self.render_indentation_text()
 
         indentation_color = self.get_indentation_color()
-        if self.colorized and indentation_color:
+        indentation_background_color = self.get_indentation_background_color()
+        if self.colorized and indentation_color or indentation_background_color:
             from wexample_prompt.common.color_manager import ColorManager
 
-            return ColorManager.colorize(indentation, indentation_color)
+            return ColorManager.colorize(
+                text=indentation,
+                color=indentation_color,
+                bg=indentation_background_color
+            )
 
         return indentation
 
     def render_indentation_part(self) -> str:
         return self.get_indentation_character() * (
-            self.get_indentation() * self.indentation_length
+                self.get_indentation() * self.indentation_length
         )
 
     def get_width(self) -> int:
@@ -125,6 +136,15 @@ class PromptContext(ExtendedBaseModel):
                 return None
 
         return self.indentation_color
+
+    def get_indentation_background_color(self) -> TerminalBgColor | None:
+        if self.indentation_background_color is None:
+            if self.parent_context:
+                return self.parent_context.get_indentation_background_color()
+            else:
+                return None
+
+        return self.indentation_background_color
 
     def get_indentation_character(self) -> str:
         if self.indentation_character is None:

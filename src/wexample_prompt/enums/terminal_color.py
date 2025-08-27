@@ -21,6 +21,7 @@ class TerminalColor(Enum):
     WHITE = Fore.WHITE
 
     # Light/Bright colors
+    LIGHT_BLACK = Fore.LIGHTBLACK_EX
     LIGHT_RED = Fore.LIGHTRED_EX
     LIGHT_GREEN = Fore.LIGHTGREEN_EX
     LIGHT_YELLOW = Fore.LIGHTYELLOW_EX
