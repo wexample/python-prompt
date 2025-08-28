@@ -214,20 +214,27 @@ class ProgressHandle(ExtendedBaseModel):
         to: int | None = None,
         from_: int | None = None,
         total: int | None = None,
+        to_step: int | None = None,
     ) -> ProgressHandle:
         """Create a child handle that controls only a sub-range of this handle.
 
         Rules:
         - If from_ is None, it defaults to the current parent progress.
-        - Specify either `to` or `total` (or both). If both, they must be consistent.
-        - Effective child total = total if provided else (to - from_).
+        - You can specify one of:
+          - `total` (explicit size of the child range), or
+          - `to` (absolute end bound on the parent; child size = to - from_), or
+          - `to_step` (relative size from the start, i.e. child size = to_step).
+          If multiple are provided, `total` takes precedence, then `to`, then `to_step`.
         - The sub-range maps child's [0..child_total] onto parent's [from_..end].
         """
         start = from_ if from_ is not None else self.response.current
-        if total is None and to is None:
-            raise ValueError("create_range_handle requires at least 'to' or 'total'")
+        if total is None and to is None and to_step is None:
+            raise ValueError("create_range_handle requires one of 'total', 'to', or 'to_step'")
         if total is None:
-            total = int(to - start)  # type: ignore[arg-type]
+            if to is not None:
+                total = int(to - start)  # type: ignore[arg-type]
+            else:
+                total = int(to_step)  # type: ignore[arg-type]
         if total < 0:
             raise ValueError("Sub-range total must be >= 0")
         end = start + total
