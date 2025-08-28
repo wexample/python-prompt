@@ -229,7 +229,9 @@ class ProgressHandle(ExtendedBaseModel):
         """
         start = from_ if from_ is not None else self.response.current
         if total is None and to is None and to_step is None:
-            raise ValueError("create_range_handle requires one of 'total', 'to', or 'to_step'")
+            raise ValueError(
+                "create_range_handle requires one of 'total', 'to', or 'to_step'"
+            )
         if total is None:
             if to is not None:
                 total = int(to - start)  # type: ignore[arg-type]
