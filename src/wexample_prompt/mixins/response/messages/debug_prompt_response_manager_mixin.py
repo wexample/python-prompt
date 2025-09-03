@@ -32,7 +32,7 @@ class DebugPromptResponseManagerMixin:
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
-            symbol=symbol
+            symbol=symbol,
         )
 
         return self.print_response(
