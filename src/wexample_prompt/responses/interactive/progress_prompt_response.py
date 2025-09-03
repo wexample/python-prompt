@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -78,13 +79,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_progress(
-        cls,
-        total: int = 100,
-        current: float | int | str = 0,
-        width: int | None = None,
-        label: str | None = None,
-        color: TerminalColor | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            total: int = 100,
+            current: float | int | str = 0,
+            width: int | None = None,
+            label: str | None = None,
+            color: TerminalColor | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
         if total <= 0:
             raise ValueError("Total must be greater than 0")
@@ -109,7 +110,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
-    def render(self, context: PromptContext | None = None) -> str | None:
+    def init_handle(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         # Normalize context
@@ -123,8 +124,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
                 context=context,
             )
 
-        # In case of context change.
-        self._handle.context = context
+            # In case of context change.
+            self._handle.context = context
+
+        return context
+
+    def render(self, context: PromptContext | None = None) -> str | None:
+        context = self.init_handle(context=context)
 
         # Progress values
         current = min(self.current, self.total)

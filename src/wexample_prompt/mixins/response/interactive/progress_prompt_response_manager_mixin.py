@@ -27,6 +27,7 @@ class ProgressPromptResponseManagerMixin:
         label: str | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        print: bool = True,
         **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
@@ -43,14 +44,18 @@ class ProgressPromptResponseManagerMixin:
             ),
         )
 
-        # The first print is done without progress handle.
-        response = self.print_response(
-            response=response,
-            context=ProgressPromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs,
-            ),
-        )
+        # We may need to initialize a hidden progress handle.
+        if print:
+            # The first print is done without progress handle.
+            response = self.print_response(
+                response=response,
+                context=ProgressPromptResponse.rebuild_context_for_kwargs(
+                    context=context,
+                    parent_kwargs=kwargs,
+                ),
+            )
+        else:
+            response.init_handle(context=context)
 
         # The first print is done without progress handle.
         response.get_handle().output = self.output
