@@ -20,6 +20,7 @@ class DebugPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> DebugPromptResponse:
         from wexample_prompt.responses.messages.debug_prompt_response import (
@@ -31,6 +32,7 @@ class DebugPromptResponseManagerMixin:
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
+            symbol=symbol
         )
 
         return self.print_response(
