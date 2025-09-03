@@ -23,12 +23,16 @@ class InfoPromptResponse(AbstractMessageResponse):
         cls: InfoPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
+        symbol: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> InfoPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
-            text=message, color=color or TerminalColor.BLUE, verbosity=verbosity
+            text=message,
+            color=color or TerminalColor.BLUE,
+            symbol=symbol,
+            verbosity=verbosity
         )
 
     @classmethod

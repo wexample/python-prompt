@@ -20,6 +20,7 @@ class TaskPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> TaskPromptResponse:
         from wexample_prompt.responses.messages.task_prompt_response import (
@@ -28,6 +29,7 @@ class TaskPromptResponseManagerMixin:
 
         response = TaskPromptResponse.create_task(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

@@ -20,6 +20,7 @@ class ErrorPromptResponseManagerMixin:
         exception: BaseException | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
@@ -29,6 +30,7 @@ class ErrorPromptResponseManagerMixin:
         response = ErrorPromptResponse.create_error(
             message=message,
             exception=exception,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

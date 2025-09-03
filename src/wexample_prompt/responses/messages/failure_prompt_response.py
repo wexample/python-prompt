@@ -25,12 +25,16 @@ class FailurePromptResponse(AbstractMessageResponse):
         cls: FailurePromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
+        symbol: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> FailurePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
-            text=message, color=color or TerminalColor.RED, verbosity=verbosity
+            text=message,
+            color=color or TerminalColor.RED,
+            symbol=symbol,
+            verbosity=verbosity
         )
 
     @classmethod

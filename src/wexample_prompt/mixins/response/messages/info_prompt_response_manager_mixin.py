@@ -20,6 +20,7 @@ class InfoPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> InfoPromptResponse:
         from wexample_prompt.responses.messages.info_prompt_response import (
@@ -28,6 +29,7 @@ class InfoPromptResponseManagerMixin:
 
         response = InfoPromptResponse.create_info(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

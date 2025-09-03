@@ -20,6 +20,7 @@ class WarningPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> WarningPromptResponse:
         from wexample_prompt.responses.messages.warning_prompt_response import (
@@ -28,6 +29,7 @@ class WarningPromptResponseManagerMixin:
 
         response = WarningPromptResponse.create_warning(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

@@ -23,12 +23,16 @@ class TaskPromptResponse(AbstractMessageResponse):
         cls: TaskPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
+        symbol: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> TaskPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
-            text=message, color=color or TerminalColor.MAGENTA, verbosity=verbosity
+            text=message,
+            color=color or TerminalColor.MAGENTA,
+            symbol=symbol,
+            verbosity=verbosity
         )
 
     @classmethod

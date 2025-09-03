@@ -20,6 +20,7 @@ class SuccessPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> SuccessPromptResponse:
         from wexample_prompt.responses.messages.success_prompt_response import (
@@ -28,6 +29,7 @@ class SuccessPromptResponseManagerMixin:
 
         response = SuccessPromptResponse.create_success(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

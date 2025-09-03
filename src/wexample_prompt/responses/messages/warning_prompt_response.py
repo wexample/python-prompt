@@ -25,12 +25,16 @@ class WarningPromptResponse(AbstractMessageResponse):
         cls: WarningPromptResponse,
         message: LineMessage,
         color: TerminalColor | None = None,
+        symbol: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> WarningPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         return cls._create_symbol_message(
-            text=message, color=color or TerminalColor.YELLOW, verbosity=verbosity
+            text=message,
+            color=color or TerminalColor.YELLOW,
+            symbol=symbol,
+            verbosity=verbosity
         )
 
     @classmethod

@@ -20,6 +20,7 @@ class FailurePromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> FailurePromptResponse:
         from wexample_prompt.responses.messages.failure_prompt_response import (
@@ -28,6 +29,7 @@ class FailurePromptResponseManagerMixin:
 
         response = FailurePromptResponse.create_failure(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

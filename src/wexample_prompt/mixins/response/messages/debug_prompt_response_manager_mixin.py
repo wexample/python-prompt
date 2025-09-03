@@ -29,10 +29,10 @@ class DebugPromptResponseManagerMixin:
 
         response = DebugPromptResponse.create_debug(
             message=message,
+            symbol=symbol,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
-            symbol=symbol,
         )
 
         return self.print_response(
