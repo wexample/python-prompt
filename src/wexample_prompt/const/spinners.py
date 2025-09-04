@@ -104,7 +104,7 @@ TRIANGLE_FRAMES: list[str] = ["◢", "◣", "◤", "◥"]
 SQUARE_FRAMES: list[str] = ["▖", "▘", "▝", "▗"]
 
 # Circle dots
-CIRCLE_DOTS_FRAMES: list[str] = ["◡", "⊙", "◠", "●"]
+CIRCLE_QUADRANT_FRAMES: list[str] = ["◐", "◓", "◑", "◒", ]
 
 # Dot pulse
 DOT_PULSE_FRAMES: list[str] = ["∙    ", "∙∙   ", "∙∙∙  ", "∙∙∙∙ ", "∙∙∙∙∙", "     "]
