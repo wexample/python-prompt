@@ -14,12 +14,18 @@ if TYPE_CHECKING:
 
 class StdoutOutputHandler(AbstractOutputHandler):
     def print(
-        self,
-        response: AbstractPromptResponse,
-        context: PromptContext | None = None,
+            self,
+            response: AbstractPromptResponse,
+            context: PromptContext | None = None,
     ) -> Any:
         rendered_response = response.render(context=context)
         if rendered_response:
             print(rendered_response, file=sys.stdout, end="\n")
 
         return rendered_response
+
+    def erase(
+            self,
+            response: AbstractPromptResponse,
+    ) -> Any:
+        print(response.render_erase())

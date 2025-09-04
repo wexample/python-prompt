@@ -20,3 +20,10 @@ class AbstractOutputHandler(ExtendedBaseModel):
         context: PromptContext | None = None,
     ) -> Any:
         self._raise_not_implemented_error()
+
+    @abstractmethod
+    def erase(
+            self,
+            response: AbstractPromptResponse,
+    ) -> Any:
+        self._raise_not_implemented_error()

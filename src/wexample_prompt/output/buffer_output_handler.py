@@ -61,3 +61,9 @@ class BufferOutputHandler(AbstractOutputHandler):
             self.append_rendered(rendered_response)
 
         return rendered_response
+
+    def erase(
+            self,
+            response: AbstractPromptResponse,
+    ) -> Any:
+        pass

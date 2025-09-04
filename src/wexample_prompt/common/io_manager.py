@@ -251,6 +251,12 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
+    def erase_response(
+        self,
+        response: AbstractPromptResponse,
+    ) -> None:
+        self.output.erase(response=response)
+
     def print_response(
         self,
         response: AbstractPromptResponse,

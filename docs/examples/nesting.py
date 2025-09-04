@@ -19,5 +19,7 @@ if __name__ == "__main__":
         for sym in frames:
             if time.time() - start >= total:
                 break
-            io.info('Loading...', symbol=sym)
+            response = io.info('Loading...', symbol=sym)
+            io.erase_response(response=response)
+
             time.sleep(delay)
