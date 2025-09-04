@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import sys
 import shutil
+import sys
 from typing import TYPE_CHECKING, Any
 
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_helpers.helpers.ansi import ansi_display_width
+from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -16,9 +16,9 @@ if TYPE_CHECKING:
 
 class StdoutOutputHandler(AbstractOutputHandler):
     def print(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> Any:
         rendered_response = response.render(context=context)
         if rendered_response:
@@ -30,8 +30,8 @@ class StdoutOutputHandler(AbstractOutputHandler):
         return rendered_response
 
     def erase(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> Any:
         sys.stdout.write(self._render_erase(response))
         sys.stdout.flush()

@@ -23,7 +23,7 @@ class AbstractOutputHandler(ExtendedBaseModel):
 
     @abstractmethod
     def erase(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> Any:
         self._raise_not_implemented_error()

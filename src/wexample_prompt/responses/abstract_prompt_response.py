@@ -4,7 +4,6 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING
 
 from pydantic import Field
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
@@ -43,18 +42,18 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def _create(
-            cls: AbstractPromptResponse,
-            lines: list[PromptResponseLine],
-            **kwargs,
+        cls: AbstractPromptResponse,
+        lines: list[PromptResponseLine],
+        **kwargs,
     ) -> AbstractPromptResponse:
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
 
     def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
         return (
-                self.verbosity is None
-                or context.verbosity is None
-                or self.verbosity <= context.verbosity
+            self.verbosity is None
+            or context.verbosity is None
+            or self.verbosity <= context.verbosity
         )
 
     @classmethod
@@ -64,9 +63,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def rebuild_context_for_kwargs(
-            cls,
-            parent_kwargs: Kwargs,
-            context: PromptContext | None = None,
+        cls,
+        parent_kwargs: Kwargs,
+        context: PromptContext | None = None,
     ) -> PromptContext:
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
