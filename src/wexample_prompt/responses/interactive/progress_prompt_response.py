@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
-
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -79,13 +78,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_progress(
-            cls,
-            total: int = 100,
-            current: float | int | str = 0,
-            width: int | None = None,
-            label: str | None = None,
-            color: TerminalColor | None = None,
-            verbosity: VerbosityLevel | None = None,
+        cls,
+        total: int = 100,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        color: TerminalColor | None = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
         if total <= 0:
             raise ValueError("Total must be greater than 0")

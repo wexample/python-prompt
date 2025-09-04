@@ -34,7 +34,7 @@ class WarningPromptResponse(AbstractMessageResponse):
             text=message,
             color=color or TerminalColor.YELLOW,
             symbol=symbol,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod

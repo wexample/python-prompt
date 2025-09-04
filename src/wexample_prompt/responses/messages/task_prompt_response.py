@@ -32,7 +32,7 @@ class TaskPromptResponse(AbstractMessageResponse):
             text=message,
             color=color or TerminalColor.MAGENTA,
             symbol=symbol,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod

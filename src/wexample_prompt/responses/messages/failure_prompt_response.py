@@ -34,7 +34,7 @@ class FailurePromptResponse(AbstractMessageResponse):
             text=message,
             color=color or TerminalColor.RED,
             symbol=symbol,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod

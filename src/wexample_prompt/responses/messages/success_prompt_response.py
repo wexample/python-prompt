@@ -32,7 +32,7 @@ class SuccessPromptResponse(AbstractMessageResponse):
             text=message,
             color=color or TerminalColor.GREEN,
             symbol=symbol,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod

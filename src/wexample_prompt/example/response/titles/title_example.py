@@ -17,6 +17,4 @@ class TitleExample(AbstractResponseExample):
         )
 
     def example_extended(self) -> None:
-        self._class_with_methods.title(
-            text=self.get_test_message() + " (class method)"
-        )
+        self._class_with_methods.title(text=self.get_test_message() + " (class method)")

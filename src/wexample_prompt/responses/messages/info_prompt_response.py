@@ -32,7 +32,7 @@ class InfoPromptResponse(AbstractMessageResponse):
             text=message,
             color=color or TerminalColor.BLUE,
             symbol=symbol,
-            verbosity=verbosity
+            verbosity=verbosity,
         )
 
     @classmethod
