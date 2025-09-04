@@ -137,7 +137,7 @@ SPINNER_PRESETS: dict[str, list[str]] = {
     "clock": CLOCK_FRAMES,
     "triangle": TRIANGLE_FRAMES,
     "square": SQUARE_FRAMES,
-    "circle_dots": CIRCLE_DOTS_FRAMES,
+    "circle_dots": CIRCLE_QUADRANT_FRAMES,
     "dot_pulse": DOT_PULSE_FRAMES,
     "ascii_wave": ASCII_WAVE_FRAMES,
 }
