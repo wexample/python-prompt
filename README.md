@@ -2,7 +2,7 @@
 
 Helper for your tty interactions
 
-Version: 0.0.48
+Version: 0.0.49
 
 ## Requirements
 
@@ -14,7 +14,7 @@ Version: 0.0.48
 - inquirerpy
 - pydantic>=2,<3
 - readchar
-- wexample-helpers==0.0.66
+- wexample-helpers==0.0.67
 
 ## Installation
 
