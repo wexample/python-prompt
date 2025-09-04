@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import threading
+import time
 
 from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
 
@@ -16,20 +17,42 @@ class Spinner:
         if not self.frames:
             self.frames = list(DEFAULT_SPINNER_FRAMES)
         self._idx: int = 0
+        # Last time (monotonic seconds) at which the spinner advanced.
+        # None means uninitialized; the first call to next() sets it and returns current frame.
+        self._last_time: float | None = None
 
     def next(self) -> str:
         if not self.frames:
             return ""
-        ch = self.frames[self._idx]
-        self._idx = (self._idx + 1) % len(self.frames)
-        return ch
+
+        now = time.monotonic()
+
+        # Initialize last_time on the first call, but do not advance immediately.
+        if self._last_time is None:
+            self._last_time = now
+            return self.frames[self._idx]
+
+        # Compute how many whole seconds have elapsed since we last advanced.
+        elapsed = now - self._last_time
+        steps = int(elapsed // 1)
+
+        if steps > 0:
+            self._idx = (self._idx + steps) % len(self.frames)
+            # Move last_time forward by the number of whole seconds consumed
+            # to keep sub-second remainder for smooth, time-based stepping.
+            self._last_time += steps
+
+        return self.frames[self._idx]
 
     def reset(self) -> None:
         self._idx = 0
+        self._last_time = None
 
     def set_frames(self, frames: list[str]) -> None:
         self.frames = list(frames) if frames else list(DEFAULT_SPINNER_FRAMES)
         self._idx = 0
+        # Reset timing so a new frame set starts fresh.
+        self._last_time = None
 
 
 class SpinnerPool:
