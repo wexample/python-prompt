@@ -6,6 +6,7 @@ from typing import Any, ClassVar
 
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.common.color_manager import ColorManager
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
@@ -157,22 +158,36 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # with padding, drop padding entirely for the question block.
         from wexample_helpers.helpers.ansi import ansi_display_width
         q_pad = "  "
-        for t_chk in question_texts:
-            if ansi_display_width(t_chk) + len(q_pad) > box_width:
+        # Account for the visible width of the '? ' prefix on the first line
+        prefix_width = 2  # visible width of '? '
+        for idx_chk, t_chk in enumerate(question_texts):
+            extra = prefix_width if idx_chk == 0 else 0
+            if ansi_display_width(t_chk) + len(q_pad) + extra > box_width:
                 q_pad = ""
                 break
-        for t in question_texts:
-            self.lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(
-                            text=f"{q_pad}{t}",
-                            color=TerminalColor.LIGHT_WHITE,
-                            styles=[TextStyle.BOLD],
-                        ),
-                    ]
+        for idx, t in enumerate(question_texts):
+            segs: list[PromptResponseSegment] = []
+            # Left padding (if any)
+            if q_pad:
+                segs.append(PromptResponseSegment(text=q_pad, color=TerminalColor.RESET))
+            # Blue question mark only on the first line
+            if idx == 0:
+                segs.append(
+                    PromptResponseSegment(
+                        text=ColorManager.colorize(text="?", color=TerminalColor.BLUE),
+                        color=TerminalColor.RESET,
+                    )
+                )
+                segs.append(PromptResponseSegment(text=" ", color=TerminalColor.RESET))
+            # The question text itself
+            segs.append(
+                PromptResponseSegment(
+                    text=t,
+                    color=TerminalColor.LIGHT_WHITE,
+                    styles=[TextStyle.BOLD],
                 )
             )
+            self.lines.append(PromptResponseLine(segments=segs))
         # empty line
         self.lines.append(
             PromptResponseLine(
