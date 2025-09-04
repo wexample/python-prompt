@@ -24,11 +24,35 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
             print(f"\033[{printed_lines}F\033[J", end="", flush=True)
 
     def _print_render(self, context) -> int:
+        """Render the content and return the number of terminal rows consumed.
+
+        Counts visual rows by considering terminal width and visible text width
+        (ANSI stripped). This ensures _partial_clear erases the correct height
+        even when lines wrap.
+        """
+        import shutil
+        from wexample_helpers.helpers.ansi import ansi_display_width
+
         rendered = super().render(context=context)
         if rendered is None:
             return 0
         print(rendered, flush=True)
-        return rendered.count("\n") + 1
+
+        # Determine columns from context or fallback to terminal/env
+        try:
+            cols = int(getattr(context, "get_width", lambda: 0)()) or shutil.get_terminal_size().columns
+        except Exception:
+            cols = 80
+        cols = max(1, cols)
+
+        rows = 0
+        for line in rendered.split("\n"):
+            width = ansi_display_width(line)
+            if width <= 0:
+                rows += 1
+            else:
+                rows += (width + cols - 1) // cols  # ceil(width/cols)
+        return rows
 
     @staticmethod
     def _read_key() -> str:
