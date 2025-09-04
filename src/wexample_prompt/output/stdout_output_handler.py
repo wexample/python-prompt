@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import sys
+import shutil
 from typing import TYPE_CHECKING, Any
 
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+from wexample_helpers.helpers.ansi import ansi_display_width
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -35,17 +37,27 @@ class StdoutOutputHandler(AbstractOutputHandler):
         sys.stdout.flush()
 
     def _render_erase(self, response: AbstractPromptResponse) -> str:
-        if not response.rendered_content:
+        content = response.rendered_content
+        if not content:
             return ""
-        lines = self._rendered_content.split("\n")
-        parts = []
-        # Move cursor up one line to reach the last printed line,
-        # because printing typically ended with a trailing newline.
+
+        # Compute how many visual rows were used, accounting for wrapping.
+        cols = max(1, shutil.get_terminal_size(fallback=(80, 24)).columns)
+        lines = content.split("\n")
+
+        total_rows = 0
+        for line in lines:
+            w = ansi_display_width(line)
+            rows = max(1, (w + cols - 1) // cols)
+            total_rows += rows
+
+        parts: list[str] = []
+        # Move cursor up from the trailing newline printed by print().
         parts.append("\x1b[F")
-        for i in range(len(lines)):
-            parts.append("\r\x1b[K")  # CR + Clear to end of line
-            if i < len(lines) - 1:
-                parts.append("\x1b[F")  # Cursor up one line
+        for i in range(total_rows):
+            parts.append("\r\x1b[2K")  # Clear entire line
+            if i < total_rows - 1:
+                parts.append("\x1b[1A")  # Move up one visual row
 
         parts.append("\r")
         return "".join(parts)
