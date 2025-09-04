@@ -20,3 +20,17 @@ if __name__ == "__main__":
         response = io.info('Loading...', symbol=sym)
         time.sleep(delay)
         io.erase_response(response=response)
+
+    # Custom frames example: use emojis for a fun spinner.
+    io.separator()
+    custom_key = "fun"
+    custom_frames = ["🚀", "💣", "😱", "💥", "✨"]
+    SpinnerPool.set_frames(custom_frames, key=custom_key)
+    start = time.time()
+    total = 3.0
+    delay = 0.12
+    while time.time() - start < total:
+        sym = SpinnerPool.next(custom_key)
+        response = io.info('Custom loading...', symbol=sym)
+        time.sleep(delay)
+        io.erase_response(response=response)
