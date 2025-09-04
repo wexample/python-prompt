@@ -20,7 +20,10 @@ class StdoutOutputHandler(AbstractOutputHandler):
     ) -> Any:
         rendered_response = response.render(context=context)
         if rendered_response:
-            print(rendered_response, file=sys.stdout, end="\n")
+            # Equivalent of print
+            # Use stdout directly for consistency with erase()
+            sys.stdout.write(rendered_response + "\n")
+            sys.stdout.flush()
 
         return rendered_response
 
@@ -28,4 +31,5 @@ class StdoutOutputHandler(AbstractOutputHandler):
             self,
             response: AbstractPromptResponse,
     ) -> Any:
-        print(response.render_erase())
+        sys.stdout.write(response.render_erase())
+        sys.stdout.flush()

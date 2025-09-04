@@ -20,6 +20,5 @@ if __name__ == "__main__":
             if time.time() - start >= total:
                 break
             response = io.info('Loading...', symbol=sym)
-            io.erase_response(response=response)
-
             time.sleep(delay)
+            io.erase_response(response=response)
