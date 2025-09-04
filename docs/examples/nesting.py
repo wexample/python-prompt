@@ -8,10 +8,11 @@ if __name__ == "__main__":
 
     from wexample_prompt.common.io_manager import IoManager
     import time
+    from wexample_helpers.const.spinners import BRAILLE_SPINNER_FRAMES as SPINNER_FRAMES
     io = IoManager()
     io.separator()
 
-    frames = ["⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"]
+    frames = SPINNER_FRAMES
     start = time.time()
     total = 5.0  # seconds
     delay = 0.05  # 50 ms between frames
