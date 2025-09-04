@@ -71,6 +71,13 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         return ConfirmExample
 
+    # Internal helper to create a full-width separator line using a given character
+    @staticmethod
+    def _separator(ch: str, width: int, color: TerminalColor = TerminalColor.WHITE) -> PromptResponseLine:
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text=(ch * width), color=color)]
+        )
+
     @classmethod
     def create_confirm(
         cls,
@@ -135,13 +142,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         # Compose a boxed layout using lines and segments
         self.lines = []
-        top_border = "━" * box_width  # light/heavy horizontal line
         # top border
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text=top_border, color=TerminalColor.WHITE)]
-            )
-        )
+        self.lines.append(self._separator("━", box_width, TerminalColor.WHITE))
 
         # Question lines LEFT-ALIGNED, no truncation. Let terminal wrapping do its job.
         # Left padding rule: use two spaces by default, but if any line would wrap
@@ -188,12 +190,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
         # Separator line between question and options (different char)
-        sep = "·" * box_width
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text=sep, color=TerminalColor.WHITE)]
-            )
-        )
+        self.lines.append(self._separator("·", box_width, TerminalColor.WHITE))
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
         # Apply the same left padding rule: two spaces if it fits on one line; otherwise none.
         option_segments: list[PromptResponseSegment] = []
@@ -224,12 +221,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines.append(PromptResponseLine(segments=option_segments))
 
         # bottom border (thicker look using lower half block)
-        bottom_border = "▄" * box_width
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text=bottom_border, color=TerminalColor.WHITE)]
-            )
-        )
+        self.lines.append(self._separator("▄", box_width, TerminalColor.WHITE))
 
     def render(self, context: PromptContext | None = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
