@@ -57,7 +57,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
         )
 
         # Build response explicitly to ensure the callback is wired
-        def _cb_once(resp: ScreenPromptResponse):
+        def _cb_once(resp: ScreenPromptResponse) -> None:
             resp.clear()
             resp.print(self._test_message)
             resp.close()
@@ -100,7 +100,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
         steps = {"n": 0}
 
-        def _cb(resp: ScreenPromptResponse):
+        def _cb(resp: ScreenPromptResponse) -> None:
             resp.clear()
             resp.print(f"step {steps['n']}")
             steps["n"] += 1
@@ -122,7 +122,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
         clears = {"count": 0, "last": None}
 
-        def _cb(resp: ScreenPromptResponse):
+        def _cb(resp: ScreenPromptResponse) -> None:
             # Draw two lines then request close on first pass
             resp.clear()
             resp.print("line A")
