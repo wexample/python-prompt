@@ -73,7 +73,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     # Internal helper to create a full-width separator line using a given character
     @staticmethod
-    def _separator(ch: str, width: int, color: TerminalColor = TerminalColor.WHITE) -> PromptResponseLine:
+    def _separator(
+        ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
+    ) -> PromptResponseLine:
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=(ch * width), color=color)]
         )
