@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import threading
-from typing import Dict, List, Optional
 
 from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
 
@@ -12,8 +11,8 @@ class Spinner:
     Not thread-safe; guard with external lock when used via SpinnerPool.
     """
 
-    def __init__(self, frames: Optional[List[str]] = None) -> None:
-        self.frames: List[str] = list(frames or DEFAULT_SPINNER_FRAMES)
+    def __init__(self, frames: list[str] | None = None) -> None:
+        self.frames: list[str] = list(frames or DEFAULT_SPINNER_FRAMES)
         if not self.frames:
             self.frames = list(DEFAULT_SPINNER_FRAMES)
         self._idx: int = 0
@@ -28,7 +27,7 @@ class Spinner:
     def reset(self) -> None:
         self._idx = 0
 
-    def set_frames(self, frames: List[str]) -> None:
+    def set_frames(self, frames: list[str]) -> None:
         self.frames = list(frames) if frames else list(DEFAULT_SPINNER_FRAMES)
         self._idx = 0
 
@@ -43,7 +42,7 @@ class SpinnerPool:
     """
 
     _lock = threading.RLock()
-    _spinners: Dict[str, Spinner] = {}
+    _spinners: dict[str, Spinner] = {}
 
     @classmethod
     def get(cls, key: str = "default") -> Spinner:
@@ -65,6 +64,6 @@ class SpinnerPool:
             cls.get(key).reset()
 
     @classmethod
-    def set_frames(cls, frames: List[str], key: str = "default") -> None:
+    def set_frames(cls, frames: list[str], key: str = "default") -> None:
         with cls._lock:
             cls.get(key).set_frames(frames)

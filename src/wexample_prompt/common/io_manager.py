@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from pydantic import Field, PrivateAttr
-
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
@@ -122,7 +121,7 @@ class IoManager(
     output: AbstractOutputHandler | None = Field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-                    "by default print to stdout",
+        "by default print to stdout",
     )
     default_context_verbosity: VerbosityLevel = Field(
         default=VerbosityLevel.DEFAULT,
@@ -260,6 +259,7 @@ class IoManager(
 
     def create_context(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
+
         context = PromptContext.create_if_none(context=context)
 
         context.verbosity = (
@@ -272,13 +272,12 @@ class IoManager(
         return context
 
     def print_response(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         self.output.print(
-            response=response,
-            context=self.create_context(context=context)
+            response=response, context=self.create_context(context=context)
         )
 
         return response

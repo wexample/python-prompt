@@ -31,6 +31,7 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
         even when lines wrap.
         """
         import shutil
+
         from wexample_helpers.helpers.ansi import ansi_display_width
 
         rendered = super().render(context=context)
@@ -40,7 +41,10 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
 
         # Determine columns from context or fallback to terminal/env
         try:
-            cols = int(getattr(context, "get_width", lambda: 0)()) or shutil.get_terminal_size().columns
+            cols = (
+                int(getattr(context, "get_width", lambda: 0)())
+                or shutil.get_terminal_size().columns
+            )
         except Exception:
             cols = 80
         cols = max(1, cols)

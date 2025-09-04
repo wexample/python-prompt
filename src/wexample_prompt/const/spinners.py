@@ -8,7 +8,14 @@ ASCII-friendly presets as well. You can trim this list later.
 
 # Braille-style spinner (smooth, compact, good Unicode support in modern terminals)
 BRAILLE_SPINNER_FRAMES: list[str] = [
-    "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾",
+    "⣷",
+    "⣯",
+    "⣟",
+    "⡿",
+    "⢿",
+    "⣻",
+    "⣽",
+    "⣾",
 ]
 
 # ASCII pipes
@@ -36,7 +43,20 @@ BLOCK_SHADES_FRAMES: list[str] = ["░", "▒", "▓", "█", "▓", "▒"]
 
 # Growing bar (horizontal)
 BAR_FRAMES: list[str] = [
-    "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃", "▂",
+    "▁",
+    "▂",
+    "▃",
+    "▄",
+    "▅",
+    "▆",
+    "▇",
+    "█",
+    "▇",
+    "▆",
+    "▅",
+    "▄",
+    "▃",
+    "▂",
 ]
 
 # Vertical growth
@@ -47,7 +67,14 @@ CLASSIC_CIRCLE_FRAMES: list[str] = ["◴", "◷", "◶", "◵"]
 
 # Bouncing ball
 BOUNCE_FRAMES: list[str] = [
-    "⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈",
+    "⠁",
+    "⠂",
+    "⠄",
+    "⡀",
+    "⢀",
+    "⠠",
+    "⠐",
+    "⠈",
 ]
 
 # Simple toggles
@@ -55,7 +82,20 @@ TOGGLE_FRAMES: list[str] = ["⊶", "⊷"]
 TOGGLE_SQUARE_FRAMES: list[str] = ["▮", "▯"]
 
 # Clock
-CLOCK_FRAMES: list[str] = ["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"]
+CLOCK_FRAMES: list[str] = [
+    "🕛",
+    "🕐",
+    "🕑",
+    "🕒",
+    "🕓",
+    "🕔",
+    "🕕",
+    "🕖",
+    "🕗",
+    "🕘",
+    "🕙",
+    "🕚",
+]
 
 # Triangle
 TRIANGLE_FRAMES: list[str] = ["◢", "◣", "◤", "◥"]
