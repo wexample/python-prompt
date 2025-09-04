@@ -194,14 +194,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
         # Apply the same left padding rule: two spaces if it fits on one line; otherwise none.
         option_segments: list[PromptResponseSegment] = []
-        raw_options = " ".join([f"[{k}: {label}]" for k, _, label in parts])
+        raw_options = " ".join([f"〔{k}: {label}〕" for k, _, label in parts])
         o_pad = "  " if ansi_display_width(raw_options) + 2 <= box_width else ""
         if o_pad:
             option_segments.append(
                 PromptResponseSegment(text=o_pad, color=TerminalColor.RESET)
             )
         for idx, (k, v, label) in enumerate(parts):
-            text = f"[{k}: {label}]"
+            text = f"〔{k}: {label}〕"
             if self.default_value is not None and v == self.default_value:
                 option_segments.append(
                     PromptResponseSegment(
@@ -222,6 +222,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         # bottom border (thicker look using lower half block)
         self.lines.append(self._separator("▄", box_width, TerminalColor.WHITE))
+        self.lines.append(self._separator("░", box_width, TerminalColor.WHITE))
 
     def render(self, context: PromptContext | None = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
