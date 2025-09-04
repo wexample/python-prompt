@@ -62,16 +62,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The answer of the question, in order to make the response non interactive",
     )
-    # Horizontal border character used to draw top/bottom lines
-    border_char: str = Field(
-        default="━",
-        description="Character used to draw horizontal borders (repeated to context width).",
-    )
-    # Separator character used to draw a line between question and options
-    separator_char: str = Field(
-        default="·",
-        description="Character used to draw the separator line before options (repeated to context width).",
-    )
 
     @classmethod
     def get_example_class(cls) -> type:
@@ -145,11 +135,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         # Compose a boxed layout using lines and segments
         self.lines = []
-        horiz = self.border_char * box_width
+        top_border = "━" * box_width  # light/heavy horizontal line
         # top border
         self.lines.append(
             PromptResponseLine(
-                segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]
+                segments=[PromptResponseSegment(text=top_border, color=TerminalColor.WHITE)]
             )
         )
 
@@ -198,7 +188,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
         # Separator line between question and options (different char)
-        sep = self.separator_char * box_width
+        sep = "·" * box_width
         self.lines.append(
             PromptResponseLine(
                 segments=[PromptResponseSegment(text=sep, color=TerminalColor.WHITE)]
@@ -233,10 +223,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 )
         self.lines.append(PromptResponseLine(segments=option_segments))
 
-        # bottom border
+        # bottom border (thicker look using lower half block)
+        bottom_border = "▄" * box_width
         self.lines.append(
             PromptResponseLine(
-                segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]
+                segments=[PromptResponseSegment(text=bottom_border, color=TerminalColor.WHITE)]
             )
         )
 
