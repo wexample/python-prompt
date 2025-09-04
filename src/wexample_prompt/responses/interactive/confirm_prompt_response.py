@@ -61,6 +61,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The answer of the question, in order to make the response non interactive",
     )
+    # Horizontal border character used to draw top/bottom lines
+    border_char: str = Field(
+        default="╌",
+        description="Character used to draw horizontal borders (repeated to context width).",
+    )
 
     @classmethod
     def get_example_class(cls) -> type:
@@ -134,7 +139,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         # Compose a boxed layout using lines and segments
         self.lines = []
-        horiz = "-" * box_width
+        horiz = self.border_char * box_width
         # top border
         self.lines.append(
             PromptResponseLine(
@@ -143,12 +148,20 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
         
         # Question lines LEFT-ALIGNED, no truncation. Let terminal wrapping do its job.
+        # Left padding rule: use two spaces by default, but if any line would wrap
+        # with padding, drop padding entirely for the question block.
+        from wexample_helpers.helpers.ansi import ansi_display_width
+        q_pad = "  "
+        for t_chk in question_texts:
+            if ansi_display_width(t_chk) + len(q_pad) > box_width:
+                q_pad = ""
+                break
         for t in question_texts:
             self.lines.append(
                 PromptResponseLine(
                     segments=[
                         PromptResponseSegment(
-                            text=t,
+                            text=f"{q_pad}{t}",
                             color=TerminalColor.LIGHT_WHITE,
                             styles=[TextStyle.BOLD],
                         ),
@@ -162,7 +175,12 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             )
         )
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
+        # Apply the same left padding rule: two spaces if it fits on one line; otherwise none.
         option_segments: list[PromptResponseSegment] = []
+        raw_options = " ".join([f"[{k}: {label}]" for k, _, label in parts])
+        o_pad = "  " if ansi_display_width(raw_options) + 2 <= box_width else ""
+        if o_pad:
+            option_segments.append(PromptResponseSegment(text=o_pad, color=TerminalColor.RESET))
         for idx, (k, v, label) in enumerate(parts):
             text = f"[{k}: {label}]"
             if self.default_value is not None and v == self.default_value:
