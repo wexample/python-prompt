@@ -95,19 +95,3 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
         self._rendered_content = "\n".join(line.render(context) for line in self.lines)
         return self._rendered_content
-
-    def render_erase(self) -> str:
-        if not self._rendered_content:
-            return ""
-        lines = self._rendered_content.split("\n")
-        parts = []
-        # Move cursor up one line to reach the last printed line,
-        # because printing typically ended with a trailing newline.
-        parts.append("\x1b[F")
-        for i in range(len(lines)):
-            parts.append("\r\x1b[K")  # CR + Clear to end of line
-            if i < len(lines) - 1:
-                parts.append("\x1b[F")  # Cursor up one line
-
-        parts.append("\r")
-        return "".join(parts)

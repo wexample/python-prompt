@@ -31,5 +31,21 @@ class StdoutOutputHandler(AbstractOutputHandler):
             self,
             response: AbstractPromptResponse,
     ) -> Any:
-        sys.stdout.write(response.render_erase())
+        sys.stdout.write(self._render_erase(response))
         sys.stdout.flush()
+
+    def _render_erase(self, response: AbstractPromptResponse) -> str:
+        if not response.rendered_content:
+            return ""
+        lines = self._rendered_content.split("\n")
+        parts = []
+        # Move cursor up one line to reach the last printed line,
+        # because printing typically ended with a trailing newline.
+        parts.append("\x1b[F")
+        for i in range(len(lines)):
+            parts.append("\r\x1b[K")  # CR + Clear to end of line
+            if i < len(lines) - 1:
+                parts.append("\x1b[F")  # Cursor up one line
+
+        parts.append("\r")
+        return "".join(parts)
