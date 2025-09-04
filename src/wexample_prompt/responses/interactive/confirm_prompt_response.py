@@ -141,12 +141,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 segments=[PromptResponseSegment(text=horiz, color=TerminalColor.WHITE)]
             )
         )
-        # empty line
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
-            )
-        )
+        
         # Question lines LEFT-ALIGNED, no truncation. Let terminal wrapping do its job.
         for t in question_texts:
             self.lines.append(
@@ -187,12 +182,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                     PromptResponseSegment(text=" ", color=TerminalColor.WHITE)
                 )
         self.lines.append(PromptResponseLine(segments=option_segments))
-        # empty line
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
-            )
-        )
+        
         # bottom border
         self.lines.append(
             PromptResponseLine(
