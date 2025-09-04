@@ -63,8 +63,13 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     )
     # Horizontal border character used to draw top/bottom lines
     border_char: str = Field(
-        default="╌",
+        default="━",
         description="Character used to draw horizontal borders (repeated to context width).",
+    )
+    # Separator character used to draw a line between question and options
+    separator_char: str = Field(
+        default="·",
+        description="Character used to draw the separator line before options (repeated to context width).",
     )
 
     @classmethod
@@ -172,6 +177,13 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines.append(
             PromptResponseLine(
                 segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
+            )
+        )
+        # Separator line between question and options (different char)
+        sep = self.separator_char * box_width
+        self.lines.append(
+            PromptResponseLine(
+                segments=[PromptResponseSegment(text=sep, color=TerminalColor.WHITE)]
             )
         )
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
