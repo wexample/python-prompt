@@ -1,9 +1,10 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_helpers.const.types import Kwargs
 """Tests for ListPromptResponse."""
 
 from __future__ import annotations
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -13,9 +14,7 @@ class TestListPromptResponse(AbstractPromptResponseTest):
     """Test cases for ListPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
         return ListPromptResponse
 

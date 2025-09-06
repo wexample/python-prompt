@@ -1,9 +1,10 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_helpers.const.types import Kwargs
 """Tests for ConfirmPromptResponse (interactive)."""
 
 from __future__ import annotations
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -13,9 +14,7 @@ class TestConfirmPromptResponse(AbstractPromptResponseTest):
     """Test cases for ConfirmPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.interactive.confirm_prompt_response import (
-            ConfirmPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
         return ConfirmPromptResponse
 
@@ -49,9 +48,7 @@ class TestConfirmPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, "[n: No]")
 
     def test_multiline_question_does_not_crash_and_renders_all_lines(self) -> None:
-        from wexample_prompt.responses.interactive.confirm_prompt_response import (
-            ConfirmPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
         question = "Proceed?\nThis will modify files"
         response = ConfirmPromptResponse.create_confirm(

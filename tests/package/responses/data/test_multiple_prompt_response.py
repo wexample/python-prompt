@@ -1,10 +1,10 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_helpers.const.types import Kwargs
 """Test multiple prompt response."""
 
 from __future__ import annotations
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -18,14 +18,13 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         return 1
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 
         return MultiplePromptResponse
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
         kwargs = kwargs or {}
         message = kwargs.get("message", self._test_message)
@@ -47,9 +46,7 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         pass
 
     def test_empty_responses(self) -> None:
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
 
         rendered = MultiplePromptResponse.create_multiple(responses=[]).render()
         assert rendered is None
@@ -60,17 +57,15 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
 
     def test_multiple_responses_join(self) -> None:
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+        from wexample_prompt.common.prompt_context import PromptContext
 
         responses = [
             LogPromptResponse.create_log(message="First"),
             LogPromptResponse.create_log(message="Second"),
             LogPromptResponse.create_log(message="Last"),
         ]
-        from wexample_prompt.common.prompt_context import PromptContext
 
         rendered = MultiplePromptResponse.create_multiple(responses=responses).render(
             context=PromptContext(colorized=False)
@@ -78,11 +73,9 @@ class TestMultiplePromptResponse(AbstractPromptResponseTest):
         assert rendered == "First\nSecond\nLast"
 
     def test_append_and_extend(self) -> None:
-        from wexample_prompt.common.prompt_context import PromptContext
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+        from wexample_prompt.common.prompt_context import PromptContext
 
         mr = MultiplePromptResponse.create_multiple(
             responses=[LogPromptResponse.create_log(message="Initial")]

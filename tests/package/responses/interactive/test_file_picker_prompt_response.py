@@ -1,11 +1,10 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_helpers.const.types import Kwargs
 """Tests for FilePickerPromptResponse (interactive)."""
 
 from __future__ import annotations
-
-from unittest import mock
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -15,9 +14,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for FilePickerPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
-            FilePickerPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
 
         return FilePickerPromptResponse
 
@@ -51,9 +48,8 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, "↑/↓ to navigate")
 
     def test_lists_dirs_and_files_separately_then_merges(self) -> None:
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
-            FilePickerPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
+        from unittest import mock
 
         with mock.patch(
             "os.listdir", return_value=["dir1", "file1", "dir2", "file2"]
@@ -74,9 +70,7 @@ class TestFilePickerPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(response.rendered_content, "file2")
 
     def test_no_abort_option(self) -> None:
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
-            FilePickerPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
 
         # Build using the same defaults as _create_test_kwargs, but without abort option
         response = FilePickerPromptResponse.create_file_picker(
