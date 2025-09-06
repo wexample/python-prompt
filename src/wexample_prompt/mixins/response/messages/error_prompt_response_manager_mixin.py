@@ -23,7 +23,9 @@ class ErrorPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
-        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
 
         response = ErrorPromptResponse.create_error(
             message=message,

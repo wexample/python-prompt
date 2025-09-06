@@ -11,7 +11,9 @@ class DebugExample(AbstractResponseExample):
         self.io.debug(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import (
+            DebugPromptResponse,
+        )
         return DebugPromptResponse.create_debug(
             message=self.get_test_message(),
         )

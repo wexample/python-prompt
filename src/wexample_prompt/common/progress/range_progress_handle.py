@@ -43,7 +43,9 @@ class RangeProgressHandle(ExtendedBaseModel):
         color: TerminalColor | None = None,
         auto_render: bool = True,
     ) -> str | None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
         if current is not None:
 
             normalized = ProgressPromptResponse._normalize_value(self.total, current)
@@ -62,7 +64,9 @@ class RangeProgressHandle(ExtendedBaseModel):
         step: float | int | str | None = None,
         **kwargs,
     ) -> str | None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         step_norm = ProgressPromptResponse._normalize_value(self.total, step)
         cur_child = self._child_current()

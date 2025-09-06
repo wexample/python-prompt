@@ -30,7 +30,9 @@ class ProgressPromptResponseManagerMixin:
         print: bool = True,
         **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         response = ProgressPromptResponse.create_progress(
             total=total,

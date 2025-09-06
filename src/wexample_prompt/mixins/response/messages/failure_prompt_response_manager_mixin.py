@@ -23,7 +23,9 @@ class FailurePromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> FailurePromptResponse:
-        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import (
+            FailurePromptResponse,
+        )
 
         response = FailurePromptResponse.create_failure(
             message=message,

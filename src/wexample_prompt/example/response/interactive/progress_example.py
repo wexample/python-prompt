@@ -27,7 +27,9 @@ class ProgressExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using the response class directly."""
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
         return ProgressPromptResponse.create_progress(
             total=5,
             current=3,

@@ -15,8 +15,10 @@ class ClassIndentationLevelTwo(WithIoMethods):
         )
 
     def print_deep_log_two(self) -> None:
-        from wexample_prompt.testing.resources.classes.class_indenation_level_three import ClassIndentationLevelThree
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
+        from wexample_prompt.testing.resources.classes.class_indenation_level_three import (
+            ClassIndentationLevelThree,
+        )
 
         self.log(message="test deep log two", context=self.io_context)
 

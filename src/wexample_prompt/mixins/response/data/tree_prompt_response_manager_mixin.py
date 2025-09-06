@@ -23,7 +23,9 @@ class TreePromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> TreePromptResponse:
-        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+        from wexample_prompt.responses.data.tree_prompt_response import (
+            TreePromptResponse,
+        )
 
         response = TreePromptResponse.create_tree(
             data=data,

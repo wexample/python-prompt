@@ -11,7 +11,9 @@ class TaskExample(AbstractResponseExample):
         self.io.task(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import (
+            TaskPromptResponse,
+        )
         return TaskPromptResponse.create_task(
             message=self.get_test_message(),
         )

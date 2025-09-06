@@ -38,6 +38,8 @@ class SuccessPromptResponse(AbstractMessageResponse):
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
         """Get the example class for success messages."""
-        from wexample_prompt.example.response.messages.success_example import SuccessExample
+        from wexample_prompt.example.response.messages.success_example import (
+            SuccessExample,
+        )
 
         return SuccessExample

@@ -38,7 +38,9 @@ class FilePickerPromptResponse(ChoicePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.file_picker_example import FilePickerExample
+        from wexample_prompt.example.response.interactive.file_picker_example import (
+            FilePickerExample,
+        )
 
         return FilePickerExample
 

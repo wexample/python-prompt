@@ -16,7 +16,9 @@ class ListExample(AbstractResponseExample):
         self.io.list(items=self.get_test_items())
 
     def example_class(self):
-        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
         return ListPromptResponse.create_list(
             items=self.get_test_items(),
         )

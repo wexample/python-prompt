@@ -30,7 +30,9 @@ class ChoicePromptResponseManagerMixin:
         predefined_answer: Any = None,
         **kwargs: Kwargs,
     ) -> ChoicePromptResponse:
-        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
 
         response = ChoicePromptResponse.create_choice(
             question=question,

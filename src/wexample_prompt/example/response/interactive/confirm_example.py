@@ -10,7 +10,9 @@ class ConfirmExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Use the response class directly."""
-        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
         return ConfirmPromptResponse.create_confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
@@ -20,7 +22,9 @@ class ConfirmExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         """Use IoManager mixin method."""
-        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
         self.io.confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
@@ -30,7 +34,9 @@ class ConfirmExample(AbstractResponseExample):
 
     def example_extended(self) -> None:
         """Use extended context with _class_with_methods."""
-        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
         self._class_with_methods.confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,

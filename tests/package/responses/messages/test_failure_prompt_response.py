@@ -18,7 +18,9 @@ class TestFailurePromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for FailurePromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import (
+            FailurePromptResponse,
+        )
 
         return FailurePromptResponse
 

@@ -40,6 +40,8 @@ class WarningPromptResponse(AbstractMessageResponse):
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
         """Get the example class for warning messages."""
-        from wexample_prompt.example.response.messages.warning_example import WarningExample
+        from wexample_prompt.example.response.messages.warning_example import (
+            WarningExample,
+        )
 
         return WarningExample

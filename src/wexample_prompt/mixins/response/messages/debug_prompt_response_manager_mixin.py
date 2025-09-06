@@ -23,7 +23,9 @@ class DebugPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> DebugPromptResponse:
-        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import (
+            DebugPromptResponse,
+        )
 
         response = DebugPromptResponse.create_debug(
             message=message,

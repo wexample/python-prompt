@@ -39,6 +39,8 @@ class FailurePromptResponse(AbstractMessageResponse):
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.messages.failure_example import FailureExample
+        from wexample_prompt.example.response.messages.failure_example import (
+            FailureExample,
+        )
 
         return FailureExample

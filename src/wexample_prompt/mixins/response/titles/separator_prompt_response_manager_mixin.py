@@ -23,7 +23,9 @@ class SeparatorPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
+        )
 
         response = SeparatorPromptResponse.create_separator(
             label=label,

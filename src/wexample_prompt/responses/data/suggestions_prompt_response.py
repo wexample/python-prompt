@@ -16,7 +16,9 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.suggestions_example import SuggestionsExample
+        from wexample_prompt.example.response.data.suggestions_example import (
+            SuggestionsExample,
+        )
 
         return SuggestionsExample
 
@@ -29,8 +31,8 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> SuggestionsPromptResponse:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_prompt.enums.text_style import TextStyle
         from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
 
         # Build lines independent of context
         lines: list[PromptResponseLine] = []

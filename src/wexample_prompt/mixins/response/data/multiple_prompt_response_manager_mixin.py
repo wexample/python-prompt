@@ -28,7 +28,9 @@ class MultiplePromptResponseManagerMixin:
         **kwargs,
     ) -> MultiplePromptResponse:
         """Create a multiple prompt response."""
-        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import (
+            MultiplePromptResponse,
+        )
 
         response = MultiplePromptResponse.create_multiple(
             responses=responses,

@@ -23,7 +23,9 @@ class TaskPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> TaskPromptResponse:
-        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import (
+            TaskPromptResponse,
+        )
 
         response = TaskPromptResponse.create_task(
             message=message,

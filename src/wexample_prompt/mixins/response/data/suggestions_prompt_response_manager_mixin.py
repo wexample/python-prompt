@@ -28,7 +28,9 @@ class SuggestionsPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> SuggestionsPromptResponse:
-        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
 
         response = SuggestionsPromptResponse.create_suggestions(
             message=message,

@@ -18,7 +18,9 @@ class TestListPromptResponse(AbstractPromptResponseTest):
     """Test cases for ListPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
 
         return ListPromptResponse
 

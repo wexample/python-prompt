@@ -23,7 +23,9 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.multiple_example import MultipleExample
+        from wexample_prompt.example.response.data.multiple_example import (
+            MultipleExample,
+        )
 
         return MultipleExample
 

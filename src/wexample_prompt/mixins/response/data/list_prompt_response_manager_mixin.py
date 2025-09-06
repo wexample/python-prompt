@@ -22,7 +22,9 @@ class ListPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ListPromptResponse:
-        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
 
         response = ListPromptResponse.create_list(
             items=items,

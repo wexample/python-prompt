@@ -11,7 +11,9 @@ class FailureExample(AbstractResponseExample):
         self.io.failure(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import (
+            FailurePromptResponse,
+        )
         return FailurePromptResponse.create_failure(
             message=self.get_test_message(),
         )

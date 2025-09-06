@@ -65,8 +65,8 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Application initialized")
 
     def test_single_indentation(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         message = "Indented message"
         response = LogPromptResponse.create_log(message=message)
@@ -76,8 +76,8 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         assert rendered.startswith("  ")
 
     def test_multiple_indentation_levels(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         messages = [
             (0, "Root level"),
             (1, "First indent"),

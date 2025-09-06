@@ -28,7 +28,9 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.properties_example import PropertiesExample
+        from wexample_prompt.example.response.data.properties_example import (
+            PropertiesExample,
+        )
 
         return PropertiesExample
 

@@ -26,7 +26,9 @@ class SubtitlePromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
 
         response = SubtitlePromptResponse.create_subtitle(
             text=text,

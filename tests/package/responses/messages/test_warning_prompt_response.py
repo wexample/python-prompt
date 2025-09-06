@@ -18,7 +18,9 @@ class TestWarningPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for WarningPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import (
+            WarningPromptResponse,
+        )
 
         return WarningPromptResponse
 

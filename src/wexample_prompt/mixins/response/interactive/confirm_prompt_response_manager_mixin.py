@@ -30,7 +30,9 @@ class ConfirmPromptResponseManagerMixin:
         predefined_answer: Any = None,
         **kwargs: Any,
     ) -> ConfirmPromptResponse:
-        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
 
         response = ConfirmPromptResponse.create_confirm(
             question=question,

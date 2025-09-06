@@ -28,7 +28,9 @@ class ScreenPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> ScreenPromptResponse:
-        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import (
+            ScreenPromptResponse,
+        )
 
         response = ScreenPromptResponse.create_screen(
             callback=callback,

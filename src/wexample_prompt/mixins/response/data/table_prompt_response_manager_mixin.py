@@ -25,7 +25,9 @@ class TablePromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> TablePromptResponse:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         response = TablePromptResponse.create_table(
             data=data,

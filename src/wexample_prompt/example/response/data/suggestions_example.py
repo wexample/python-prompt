@@ -9,7 +9,9 @@ class SuggestionsExample(AbstractResponseExample):
     """Example for suggestions response."""
 
     def get_example(self) -> str:
-        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
         message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
@@ -25,7 +27,9 @@ class SuggestionsExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
-        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
         message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",

@@ -23,7 +23,9 @@ class WarningPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> WarningPromptResponse:
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import (
+            WarningPromptResponse,
+        )
 
         response = WarningPromptResponse.create_warning(
             message=message,

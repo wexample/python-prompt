@@ -18,7 +18,9 @@ class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     """Test cases for SuggestionsPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
 
         return SuggestionsPromptResponse
 

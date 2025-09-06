@@ -9,7 +9,9 @@ class TableExample(AbstractResponseExample):
     """Example for table response."""
 
     def get_example(self) -> str:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
         headers = ["Name", "Age", "City"]
         data = [
             ["John", "30", "New York"],
@@ -26,7 +28,9 @@ class TableExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
         headers = ["Name", "Age", "City"]
         data = [
             ["John", "30", "New York"],

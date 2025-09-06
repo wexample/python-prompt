@@ -65,9 +65,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.confirm_example import (
-            ConfirmExample,
-        )
+        from wexample_prompt.example.response.interactive.confirm_example import ConfirmExample
 
         return ConfirmExample
 
@@ -122,11 +120,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: PromptContext) -> None:
-        from wexample_helpers.helpers.ansi import ansi_display_width
         from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+        from wexample_helpers.helpers.ansi import ansi_display_width
+        from wexample_prompt.enums.terminal_color import TerminalColor
 
         # No centering/truncation: allow natural terminal wrapping.
         # Compute box width: clamp to terminal/context width so it is NEVER exceeded.

@@ -11,7 +11,9 @@ class WarningExample(AbstractResponseExample):
         self.io.warning(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import (
+            WarningPromptResponse,
+        )
         return WarningPromptResponse.create_warning(
             message=self.get_test_message(),
         )

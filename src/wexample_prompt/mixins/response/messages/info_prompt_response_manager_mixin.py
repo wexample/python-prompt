@@ -23,7 +23,9 @@ class InfoPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> InfoPromptResponse:
-        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import (
+            InfoPromptResponse,
+        )
 
         response = InfoPromptResponse.create_info(
             message=message,

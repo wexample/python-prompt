@@ -36,7 +36,9 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.progress_example import ProgressExample
+        from wexample_prompt.example.response.interactive.progress_example import (
+            ProgressExample,
+        )
 
         return ProgressExample
 
@@ -126,9 +128,9 @@ class ProgressPromptResponse(AbstractPromptResponse):
         return context
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_helpers.helpers.ansi import ansi_strip
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_helpers.helpers.ansi import ansi_strip
         context = self.init_handle(context=context)
 
         # Progress values

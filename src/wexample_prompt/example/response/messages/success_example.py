@@ -11,7 +11,9 @@ class SuccessExample(AbstractResponseExample):
         self.io.success(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import (
+            SuccessPromptResponse,
+        )
         return SuccessPromptResponse.create_success(
             message=self.get_test_message(),
         )

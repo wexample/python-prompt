@@ -11,7 +11,9 @@ class ErrorExample(AbstractResponseExample):
         self.io.error(message=self.get_test_message())
 
     def example_class(self):
-        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
         return ErrorPromptResponse.create_error(
             message=self.get_test_message(),
         )

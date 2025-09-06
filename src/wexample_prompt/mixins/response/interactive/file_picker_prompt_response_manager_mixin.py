@@ -33,7 +33,9 @@ class FilePickerPromptResponseManagerMixin:
         predefined_answer: Any = None,
         **kwargs: Kwargs,
     ) -> FilePickerPromptResponse:
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
+            FilePickerPromptResponse,
+        )
 
         response = FilePickerPromptResponse.create_file_picker(
             question=question,

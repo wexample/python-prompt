@@ -23,7 +23,9 @@ class SuccessPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> SuccessPromptResponse:
-        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import (
+            SuccessPromptResponse,
+        )
 
         response = SuccessPromptResponse.create_success(
             message=message,

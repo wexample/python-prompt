@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 
 class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import (
+            DebugPromptResponse,
+        )
 
         return DebugPromptResponse
 

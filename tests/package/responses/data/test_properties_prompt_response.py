@@ -18,7 +18,9 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
     """Test cases for PropertiesPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
 
         return PropertiesPromptResponse
 
@@ -37,7 +39,9 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         return 5
 
     def test_empty_properties(self) -> None:
-        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
 
         response = PropertiesPromptResponse.create_properties(properties={})
         rendered = response.render()
@@ -55,7 +59,9 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_specific_format(rendered)
 
     def test_nested_properties_rendering(self) -> None:
-        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
         nested = {
             "personal": {"name": "John Doe", "age": 30},
             "contact": {"email": "john@example.com", "phone": "123-456-7890"},
@@ -80,7 +86,9 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_specific_format(rendered)
 
     def test_custom_nested_indent(self) -> None:
-        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
         nested = {"level0": {"level1": {"key": "value"}}}
 
         response = PropertiesPromptResponse.create_properties(

@@ -18,7 +18,9 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
     """Test cases for TablePromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         return TablePromptResponse
 
@@ -45,7 +47,9 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         return 9
 
     def test_create_table_without_headers(self) -> None:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         response = TablePromptResponse.create_table(
             data=[
@@ -59,14 +63,18 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "New York")
 
     def test_empty_table(self) -> None:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         response = TablePromptResponse.create_table(data=[])
         rendered = response.render()
         assert rendered.strip() == ""
 
     def test_single_column(self) -> None:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         data = [["Row 1"], ["Row 2"]]
         headers = ["Header"]
@@ -77,7 +85,9 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Row 2")
 
     def test_column_alignment(self) -> None:
-        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
 
         response = TablePromptResponse.create_table(
             data=[

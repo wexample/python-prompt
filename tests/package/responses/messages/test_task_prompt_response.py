@@ -18,7 +18,9 @@ class TestTaskPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for TaskPromptResponse."""
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import (
+            TaskPromptResponse,
+        )
 
         return TaskPromptResponse
 

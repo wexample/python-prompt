@@ -27,7 +27,9 @@ class TitlePromptResponseManagerMixin:
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.common.io_manager import IoManager
-        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
+        )
 
         response = TitlePromptResponse.create_title(
             text=text,
