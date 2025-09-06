@@ -27,6 +27,7 @@ class TestPromptResponseLine:
     def test_create_from_string_splits_multiline(self) -> None:
         """Multi-line input should be split into distinct PromptResponseLine without embedded newlines."""
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         text = "Line A\nLine B\nLine C"
         lines = PromptResponseLine.create_from_string(text)
@@ -42,6 +43,7 @@ class TestPromptResponseLine:
     def test_wrapping_is_per_line_not_across_lines(self) -> None:
         """Wrapping width must reset for each logical line produced by create_from_string."""
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
         text = "AAAAAA\nBBBBBB"
         lines = PromptResponseLine.create_from_string(text)

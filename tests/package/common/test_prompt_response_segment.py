@@ -1,6 +1,4 @@
 from __future__ import annotations
-from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
 
 
 class TestPromptResponseSegment:
@@ -19,6 +17,8 @@ class TestPromptResponseSegment:
     def test_render_with_styles_and_colorized(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
         segment = PromptResponseSegment(
             text="Hello",
             color=TerminalColor.GREEN,
@@ -36,6 +36,8 @@ class TestPromptResponseSegment:
     def test_render_without_colorized(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
         segment = PromptResponseSegment(
             text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD]
         )
@@ -47,6 +49,8 @@ class TestPromptResponseSegment:
     def test_render_wrap_preserves_styles(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
         segment = PromptResponseSegment(
             text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC]
         )

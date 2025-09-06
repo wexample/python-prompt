@@ -1,10 +1,10 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+    from wexample_helpers.const.types import Kwargs
 """Tests for LogPromptResponse."""
 
 from __future__ import annotations
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -62,6 +62,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
 
     def test_single_indentation(self) -> None:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.common.prompt_context import PromptContext
 
         message = "Indented message"
         response = LogPromptResponse.create_log(message=message)
@@ -71,6 +72,8 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         assert rendered.startswith("  ")
 
     def test_multiple_indentation_levels(self) -> None:
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.common.prompt_context import PromptContext
         messages = [
             (0, "Root level"),
             (1, "First indent"),
@@ -78,9 +81,6 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
             (3, "Third indent"),
             (1, "Back to first"),
         ]
-
-        # Create response with multiple lines at different indentation levels
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         for indent, message in messages:
             response = LogPromptResponse.create_log(message=message)
