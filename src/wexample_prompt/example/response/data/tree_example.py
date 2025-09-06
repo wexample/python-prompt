@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
 
 
 class TreeExample(AbstractResponseExample):
     """Example for tree response."""
 
     def get_example(self) -> str:
+        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
         data = {
             "root": {
                 "folder1": {
@@ -31,6 +31,7 @@ class TreeExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
+        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
         data = {
             "root": {
                 "folder1": {

@@ -5,9 +5,6 @@ from __future__ import annotations
 import time
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.interactive.progress_prompt_response import (
-    ProgressPromptResponse,
-)
 
 
 def step1() -> None:
@@ -30,6 +27,7 @@ class ProgressExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using the response class directly."""
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         return ProgressPromptResponse.create_progress(
             total=5,
             current=3,

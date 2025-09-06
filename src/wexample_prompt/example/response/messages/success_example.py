@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.success_prompt_response import (
-    SuccessPromptResponse,
-)
 
 
 class SuccessExample(AbstractResponseExample):
@@ -14,6 +11,7 @@ class SuccessExample(AbstractResponseExample):
         self.io.success(message=self.get_test_message())
 
     def example_class(self):
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
         return SuccessPromptResponse.create_success(
             message=self.get_test_message(),
         )

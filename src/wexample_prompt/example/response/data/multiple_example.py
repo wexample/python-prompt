@@ -5,11 +5,6 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
-from wexample_prompt.responses.data.multiple_prompt_response import (
-    MultiplePromptResponse,
-)
-from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
 
 class MultipleExample(AbstractResponseExample):
@@ -17,6 +12,9 @@ class MultipleExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using the class directly."""
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
         responses = [
             LogPromptResponse.create_log("First response"),
             ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
@@ -28,6 +26,8 @@ class MultipleExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         """Example using the IoManager."""
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         responses = [
             LogPromptResponse.create_log("First response"),
             ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
@@ -37,6 +37,8 @@ class MultipleExample(AbstractResponseExample):
 
     def example_extended(self) -> None:
         """Example using PromptContext."""
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         responses = [
             LogPromptResponse.create_log("First response"),
             ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
@@ -70,6 +72,7 @@ class MultipleExample(AbstractResponseExample):
 
     def simple_multiple(self) -> MultiplePromptResponse | None:
         """Show a simple multiple response example."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         responses = [
             LogPromptResponse.create_log("First message"),
             LogPromptResponse.create_log("Second message"),
@@ -79,6 +82,8 @@ class MultipleExample(AbstractResponseExample):
 
     def mixed_types(self) -> MultiplePromptResponse | None:
         """Show different response types together."""
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         responses = [
             LogPromptResponse.create_log("Log response"),
             ListPromptResponse.create_list(
@@ -90,6 +95,9 @@ class MultipleExample(AbstractResponseExample):
 
     def dynamic_multiple(self) -> MultiplePromptResponse | None:
         """Show building responses dynamically."""
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
         response = MultiplePromptResponse.create_multiple(
             responses=[LogPromptResponse.create_log("Initial response")],
             context=self.io.create_context(),

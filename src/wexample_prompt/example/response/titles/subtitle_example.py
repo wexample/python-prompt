@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.titles.subtitle_prompt_response import (
-    SubtitlePromptResponse,
-)
 
 
 class SubtitleExample(AbstractResponseExample):
@@ -14,6 +11,7 @@ class SubtitleExample(AbstractResponseExample):
         self.io.subtitle(message=self.get_test_message())
 
     def example_class(self):
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
         return SubtitlePromptResponse.create_subtitle(
             text=self.get_test_message() + " (from response)"
         )

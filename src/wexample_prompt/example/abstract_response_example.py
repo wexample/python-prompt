@@ -17,9 +17,7 @@ class AbstractResponseExample(WithIoManager, ExtendedBaseModel):
     _class_with_methods: ExampleClassWithMethods | None = None
 
     def __init__(self, io: IoManager | None = None, **kwargs) -> None:
-        from wexample_prompt.example.example_class_with_methods import (
-            ExampleClassWithMethods,
-        )
+        from wexample_prompt.example.example_class_with_methods import ExampleClassWithMethods
 
         ExtendedBaseModel.__init__(self, **kwargs)
         WithIoManager.__init__(self, io=io)

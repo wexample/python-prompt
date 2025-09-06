@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
 
 
 class ErrorExample(AbstractResponseExample):
@@ -12,6 +11,7 @@ class ErrorExample(AbstractResponseExample):
         self.io.error(message=self.get_test_message())
 
     def example_class(self):
+        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
         return ErrorPromptResponse.create_error(
             message=self.get_test_message(),
         )

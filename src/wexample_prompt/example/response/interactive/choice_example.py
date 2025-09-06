@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.interactive.choice_prompt_response import (
-    ChoicePromptResponse,
-)
 
 
 class ChoiceExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
+        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
         return ChoicePromptResponse.create_choice(
             question="Select an option:",
             choices={

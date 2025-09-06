@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
 
 
 class ListExample(AbstractResponseExample):
@@ -17,6 +16,7 @@ class ListExample(AbstractResponseExample):
         self.io.list(items=self.get_test_items())
 
     def example_class(self):
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
         return ListPromptResponse.create_list(
             items=self.get_test_items(),
         )

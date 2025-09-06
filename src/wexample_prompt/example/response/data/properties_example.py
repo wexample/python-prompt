@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.properties_prompt_response import (
-    PropertiesPromptResponse,
-)
 
 
 class PropertiesExample(AbstractResponseExample):
     """Example for properties response."""
 
     def get_example(self) -> str:
+        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
         properties = {
             "name": "John Doe",
             "age": 30,
@@ -29,6 +27,7 @@ class PropertiesExample(AbstractResponseExample):
 
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
+        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
         properties = {
             "name": "John Doe",
             "age": 30,
