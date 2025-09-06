@@ -122,8 +122,8 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
 
     def test_handle_updates_standalone_and_finish(self) -> None:
         """Standalone usage: create, render, then update via handle and finish."""
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
         # Create standalone response
         resp = ProgressPromptResponse.create_progress(

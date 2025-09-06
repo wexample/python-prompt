@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
-from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -13,6 +11,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.data.properties_prompt_response import (
         PropertiesPromptResponse,
     )
+    from wexample_helpers.const.types import Kwargs
 
 
 class PropertiesPromptResponseManagerMixin:
@@ -27,9 +26,7 @@ class PropertiesPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> PropertiesPromptResponse:
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
+        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
 
         response = PropertiesPromptResponse.create_properties(
             properties=properties,

@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -14,6 +12,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.progress_prompt_response import (
         ProgressPromptResponse,
     )
+    from wexample_helpers.const.types import Kwargs
 
 
 class ProgressPromptResponseManagerMixin:
@@ -30,9 +29,7 @@ class ProgressPromptResponseManagerMixin:
         print: bool = True,
         **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
-        from wexample_prompt.responses.interactive.progress_prompt_response import (
-            ProgressPromptResponse,
-        )
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
 
         response = ProgressPromptResponse.create_progress(
             total=total,

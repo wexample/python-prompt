@@ -28,8 +28,8 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> SuggestionsPromptResponse:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+        from wexample_prompt.enums.terminal_color import TerminalColor
         # Build lines independent of context
         lines: list[PromptResponseLine] = []
         # Top spacer
