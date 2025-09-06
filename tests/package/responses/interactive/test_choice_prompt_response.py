@@ -1,10 +1,14 @@
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
     from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 """Tests for ChoicePromptResponse (interactive)."""
 
 from __future__ import annotations
+
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )

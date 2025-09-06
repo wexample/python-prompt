@@ -1,10 +1,14 @@
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
-    from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
     from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 """Tests for ProgressPromptResponse (interactive)."""
 
 from __future__ import annotations
+
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
@@ -18,7 +22,9 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         pass
 
     def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         return ProgressPromptResponse
 
@@ -32,7 +38,10 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         return kwargs
 
     def _assert_specific_format(self, rendered: str) -> None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
+
         # Should contain percentage and progress characters
         self._assert_contains_text(rendered, "%")
 
@@ -55,7 +64,9 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         assert lines[0].strip().endswith("%")
 
     def test_create_progress_renders_expected_percentage(self) -> None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         response = ProgressPromptResponse.create_progress(
             total=10, current=5, width=20, label=self._test_message
@@ -64,8 +75,10 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "50%")
 
     def test_invalid_values_raise(self) -> None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         import pytest
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         with pytest.raises(ValueError):
             ProgressPromptResponse.create_progress(total=0, current=0)
@@ -73,7 +86,9 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
             ProgressPromptResponse.create_progress(total=10, current=1, width=0)
 
     def test_custom_style(self) -> None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         old_fill = ProgressPromptResponse.FILL_CHAR
         old_empty = ProgressPromptResponse.EMPTY_CHAR
@@ -86,7 +101,9 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
             ProgressPromptResponse.set_style(fill_char=old_fill, empty_char=old_empty)
 
     def test_caps_at_100_percent_and_full_bar(self) -> None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         resp = self._create_test_response(total=10, current=20, width=10, label=None)
         rendered = resp.render()
@@ -123,7 +140,9 @@ class TestProgressPromptResponse(AbstractPromptResponseTest):
     def test_handle_updates_standalone_and_finish(self) -> None:
         """Standalone usage: create, render, then update via handle and finish."""
         from wexample_prompt.enums.terminal_color import TerminalColor
-        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
 
         # Create standalone response
         resp = ProgressPromptResponse.create_progress(

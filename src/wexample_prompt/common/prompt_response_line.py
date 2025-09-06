@@ -9,9 +9,9 @@ from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 if TYPE_CHECKING:
-    from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.const.types import LineMessage
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class PromptResponseLine(ExtendedBaseModel):

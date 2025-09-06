@@ -48,6 +48,7 @@ class TreePromptResponse(AbstractPromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         if not self.data:
             return ""
 
@@ -64,6 +65,7 @@ class TreePromptResponse(AbstractPromptResponse):
         self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         items = list(data.items())
         for i, (key, value) in enumerate(items):
             is_last = i == len(items) - 1

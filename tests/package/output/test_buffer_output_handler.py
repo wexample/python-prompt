@@ -1,12 +1,14 @@
 """Tests for BufferOutputHandler."""
 
 from __future__ import annotations
+
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestBufferOutputHandler(AbstractPromptTest):
     def test_print_buffers_response_and_returns_rendered(self) -> None:
         from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+
         # Switch IoManager to buffer output handler
         self._io.output = BufferOutputHandler()
 

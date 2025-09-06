@@ -1,7 +1,10 @@
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
@@ -39,10 +42,12 @@ class WithIoManager:
 
     def _init_io_manager(self) -> None:
         from wexample_prompt.common.io_manager import IoManager
+
         self.io = IoManager()
 
     def _create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
+
         defaults = {
             "parent_context": self._io_parent_context,
             "indentation": self.get_io_context_indentation(),

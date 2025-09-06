@@ -4,9 +4,6 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from pydantic import Field
-from wexample_prompt.common.io_manager import IoManager
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
@@ -76,10 +73,11 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         self._closed = True
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+        from time import sleep
+
         from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.common.prompt_context import PromptContext
-        from time import sleep
+        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
         # Wait first rendering to build nested io manager.
         if self._io_buffer is None:
@@ -130,6 +128,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     def _render_buffer(self) -> None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         # Consume buffered output as a single string, split into lines
         rendered = self._io_buffer.flush()
         # Normalize to lines
@@ -140,7 +139,9 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import ChoiceExample
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
 
         # Reuse any example class infra; a dedicated Screen example can be added later.
         return ChoiceExample

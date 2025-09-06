@@ -5,12 +5,14 @@ class TestPromptResponseSegment:
     def test_create_basic_segment(self) -> None:
         """Test creating a basic text segment without styling."""
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segment = PromptResponseSegment(text="Hello")
         assert segment.text == "Hello"
 
     def test_empty_text(self) -> None:
         """Test that empty text is allowed."""
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segment = PromptResponseSegment(text="")
         assert segment.text == ""
 
@@ -19,6 +21,7 @@ class TestPromptResponseSegment:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="Hello",
             color=TerminalColor.GREEN,
@@ -38,6 +41,7 @@ class TestPromptResponseSegment:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD]
         )
@@ -51,6 +55,7 @@ class TestPromptResponseSegment:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC]
         )

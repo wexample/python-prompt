@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
 from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
 
@@ -97,6 +97,7 @@ class PromptContext(ExtendedBaseModel):
 
     def render_indentation(self) -> str:
         from wexample_prompt.common.color_manager import ColorManager
+
         indentation = self.render_indentation_text()
 
         indentation_color = self.get_indentation_color()

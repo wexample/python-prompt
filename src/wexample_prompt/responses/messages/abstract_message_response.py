@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
     from wexample_prompt.enums.terminal_color import TerminalColor
@@ -23,6 +24,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
         """Create a message with a symbol"""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         # Determine effective symbol (explicit > class default)
         effective_symbol = symbol if symbol is not None else cls.SYMBOL
 

@@ -42,6 +42,7 @@ class PromptResponseSegment(ExtendedBaseModel):
         - remainder_segment: a new PromptResponseSegment with the leftover RAW text and same color, or None
         """
         from wexample_prompt.common.color_manager import ColorManager
+
         # Split the RAW text by visible width first (no ANSI involved yet)
         fit_raw, remainder_raw = self._split_by_visible_width(
             self.text, line_remaining_width

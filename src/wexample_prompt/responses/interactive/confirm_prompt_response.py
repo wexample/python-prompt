@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from pydantic import Field
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -12,7 +12,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
@@ -65,7 +65,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.confirm_example import ConfirmExample
+        from wexample_prompt.example.response.interactive.confirm_example import (
+            ConfirmExample,
+        )
 
         return ConfirmExample
 
@@ -75,7 +77,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
     ) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.enums.terminal_color import TerminalColor
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=(ch * width), color=color)]
         )
@@ -121,13 +122,13 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: PromptContext) -> None:
+        from wexample_helpers.helpers.ansi import ansi_display_width
         from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.enums.text_style import TextStyle
-        from wexample_helpers.helpers.ansi import ansi_display_width
         from wexample_prompt.enums.terminal_color import TerminalColor
-        # No centering/truncation: allow natural terminal wrapping.
+        from wexample_prompt.enums.text_style import TextStyle
 
+        # No centering/truncation: allow natural terminal wrapping.
         # Compute box width: clamp to terminal/context width so it is NEVER exceeded.
         term_width = context.get_width()
 

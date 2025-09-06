@@ -4,7 +4,6 @@ import shutil
 import sys
 from typing import TYPE_CHECKING, Any
 
-from wexample_helpers.helpers.ansi import ansi_display_width
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
@@ -38,6 +37,7 @@ class StdoutOutputHandler(AbstractOutputHandler):
 
     def _render_erase(self, response: AbstractPromptResponse) -> str:
         from wexample_helpers.helpers.ansi import ansi_display_width
+
         content = response.rendered_content
         if not content:
             return ""

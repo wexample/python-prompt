@@ -10,7 +10,9 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
 class ListPromptResponse(AbstractMessageResponse):
@@ -25,6 +27,7 @@ class ListPromptResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ListPromptResponse:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         lines: list[PromptResponseLine] = []
 
         for item in items:

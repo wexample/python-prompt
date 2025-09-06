@@ -6,17 +6,18 @@ class TestPromptResponseLine:
         """Test creating a basic line with single segment."""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segment = PromptResponseSegment(text="Hello")
         line = PromptResponseLine(segments=[segment])
         assert len(line.segments) == 1
         assert line.segments[0].text == "Hello"
 
     def test_line_to_string(self) -> None:
-
         """Test converting line to string."""
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segments = [
             PromptResponseSegment(text="Hello"),
             PromptResponseSegment(text=" World"),

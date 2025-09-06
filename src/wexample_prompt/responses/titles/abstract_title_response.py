@@ -47,6 +47,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel = None,
     ) -> AbstractTitleResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
+
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",
             color=color,

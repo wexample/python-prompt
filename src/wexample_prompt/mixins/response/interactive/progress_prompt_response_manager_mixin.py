@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
+    from wexample_helpers.const.types import Kwargs
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
     from wexample_prompt.responses.interactive.progress_prompt_response import (
         ProgressPromptResponse,
     )
-    from wexample_helpers.const.types import Kwargs
 
 
 class ProgressPromptResponseManagerMixin:

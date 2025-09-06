@@ -12,11 +12,11 @@ from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
+    from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-    from wexample_helpers.const.types import Kwargs
-    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
@@ -68,6 +68,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         context: PromptContext | None = None,
     ) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
+
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
             return context or PromptContext.create_from_kwargs({})

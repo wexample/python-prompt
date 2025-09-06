@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from colorama import init
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
-from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.enums.text_style import TextStyle
 
@@ -24,6 +26,7 @@ class ColorManager:
         styles: list[TextStyle] | None = None,
     ) -> str:
         from colorama import Style
+
         # Backward compatibility: if caller passes single style via `style`
         # (which historically reused TerminalColor entries BOLD/DIM),
         # we still honor it. New code should use `styles` and/or `bg`.
@@ -45,6 +48,7 @@ class ColorManager:
     def get_style_ansi(cls, style: TextStyle) -> str:
         """Map TextStyle to ANSI code without reset."""
         from wexample_prompt.enums.text_style import TextStyle
+
         style_codes = {
             TextStyle.BOLD: "\u001b[1m",
             TextStyle.ITALIC: "\u001b[3m",

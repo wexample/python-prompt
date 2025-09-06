@@ -1,6 +1,9 @@
 from __future__ import annotations
-from wexample_prompt.mixins.with_io_manager import WithIoManager
+
 from typing import TYPE_CHECKING
+
+from wexample_prompt.mixins.with_io_manager import WithIoManager
+
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
 

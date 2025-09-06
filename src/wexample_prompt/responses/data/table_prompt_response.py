@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 """Table response for displaying data in a formatted table layout."""
@@ -45,6 +46,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         if not self.data and not self.headers:
             return ""
 
@@ -107,6 +109,7 @@ class TablePromptResponse(AbstractPromptResponse):
         row: list[Any], widths: list[int]
     ) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
@@ -116,6 +119,7 @@ class TablePromptResponse(AbstractPromptResponse):
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         return PromptResponseLine(
             segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
         )
