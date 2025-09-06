@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
@@ -12,6 +9,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.debug_prompt_response import (
         DebugPromptResponse,
     )
+    from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.const.types import LineMessage
 
 
 class DebugPromptResponseManagerMixin:
@@ -23,9 +22,7 @@ class DebugPromptResponseManagerMixin:
         symbol: str | None = None,
         **kwargs: Kwargs,
     ) -> DebugPromptResponse:
-        from wexample_prompt.responses.messages.debug_prompt_response import (
-            DebugPromptResponse,
-        )
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
         response = DebugPromptResponse.create_debug(
             message=message,
