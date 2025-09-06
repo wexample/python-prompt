@@ -8,8 +8,6 @@ from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -17,6 +15,8 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
+    from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
@@ -67,6 +67,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
         parent_kwargs: Kwargs,
         context: PromptContext | None = None,
     ) -> PromptContext:
+        from wexample_prompt.common.prompt_context import PromptContext
         if not parent_kwargs:
             # Keep same context as we don't see a reason to recreate one.
             return context or PromptContext.create_from_kwargs({})
@@ -86,6 +87,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the complete response."""
+        from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
 

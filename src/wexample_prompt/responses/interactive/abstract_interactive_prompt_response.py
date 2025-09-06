@@ -30,9 +30,8 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
         (ANSI stripped). This ensures _partial_clear erases the correct height
         even when lines wrap.
         """
-        import shutil
-
         from wexample_helpers.helpers.ansi import ansi_display_width
+        import shutil
 
         rendered = super().render(context=context)
         if rendered is None:

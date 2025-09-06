@@ -5,15 +5,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 class ProgressPromptResponse(AbstractPromptResponse):
@@ -39,9 +36,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.progress_example import (
-            ProgressExample,
-        )
+        from wexample_prompt.example.response.interactive.progress_example import ProgressExample
 
         return ProgressExample
 
@@ -86,6 +81,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
+        from wexample_prompt.enums.terminal_color import TerminalColor
         if total <= 0:
             raise ValueError("Total must be greater than 0")
         if width is not None and width < 1:
@@ -111,6 +107,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     def init_handle(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
+        from wexample_prompt.common.prompt_context import PromptContext
 
         # Normalize context
         context = PromptContext.create_if_none(context=context)
@@ -129,6 +126,9 @@ class ProgressPromptResponse(AbstractPromptResponse):
         return context
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_helpers.helpers.ansi import ansi_strip
         context = self.init_handle(context=context)
 
         # Progress values
@@ -137,7 +137,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
         # Compute available content width (context width minus indentation)
         indent_text = context.render_indentation()
-        from wexample_helpers.helpers.ansi import ansi_strip
 
         visible_indent = len(ansi_strip(indent_text))
         total_width = self.width or context.get_width()

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -24,9 +23,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.multiple_example import (
-            MultipleExample,
-        )
+        from wexample_prompt.example.response.data.multiple_example import MultipleExample
 
         return MultipleExample
 
@@ -58,6 +55,7 @@ class MultiplePromptResponse(AbstractPromptResponse):
         Returns:
             The concatenated rendered string, skipping None parts.
         """
+        from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
 

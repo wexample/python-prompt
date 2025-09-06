@@ -3,13 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 from wexample_prompt.responses.titles.abstract_title_response import (
     AbstractTitleResponse,
 )
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
 class TitlePromptResponse(AbstractTitleResponse):

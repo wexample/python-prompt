@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
 
 
 class DebugExample(AbstractResponseExample):
@@ -12,6 +11,7 @@ class DebugExample(AbstractResponseExample):
         self.io.debug(message=self.get_test_message())
 
     def example_class(self):
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
         return DebugPromptResponse.create_debug(
             message=self.get_test_message(),
         )

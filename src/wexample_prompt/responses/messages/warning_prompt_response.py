@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
-
-from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
@@ -13,6 +11,7 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
+    from wexample_prompt.const.types import LineMessage
 
 
 class WarningPromptResponse(AbstractMessageResponse):
@@ -40,8 +39,6 @@ class WarningPromptResponse(AbstractMessageResponse):
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
         """Get the example class for warning messages."""
-        from wexample_prompt.example.response.messages.warning_example import (
-            WarningExample,
-        )
+        from wexample_prompt.example.response.messages.warning_example import WarningExample
 
         return WarningExample

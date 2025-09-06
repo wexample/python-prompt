@@ -7,7 +7,6 @@ from typing import Any
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -48,6 +47,7 @@ class TreePromptResponse(AbstractPromptResponse):
         )
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         if not self.data:
             return ""
 
@@ -63,6 +63,7 @@ class TreePromptResponse(AbstractPromptResponse):
     def _build_tree(
         self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         items = list(data.items())
         for i, (key, value) in enumerate(items):
             is_last = i == len(items) - 1

@@ -3,9 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -30,9 +28,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.properties_example import (
-            PropertiesExample,
-        )
+        from wexample_prompt.example.response.data.properties_example import PropertiesExample
 
         return PropertiesExample
 
@@ -54,6 +50,8 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         if not self.properties:
             return ""
 
@@ -138,6 +136,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=f"{'-' * width}")]
         )

@@ -65,9 +65,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.confirm_example import (
-            ConfirmExample,
-        )
+        from wexample_prompt.example.response.interactive.confirm_example import ConfirmExample
 
         return ConfirmExample
 
@@ -76,6 +74,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def _separator(
         ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
     ) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.enums.terminal_color import TerminalColor
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=(ch * width), color=color)]
         )
@@ -121,6 +121,11 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         )
 
     def _build_lines(self, context: PromptContext) -> None:
+        from wexample_prompt.common.color_manager import ColorManager
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
+        from wexample_helpers.helpers.ansi import ansi_display_width
         # No centering/truncation: allow natural terminal wrapping.
 
         # Compute box width: clamp to terminal/context width so it is NEVER exceeded.
@@ -146,11 +151,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         self.lines = []
         # top border
         self.lines.append(self._separator("━", box_width, TerminalColor.WHITE))
-
-        # Question lines LEFT-ALIGNED, no truncation. Let terminal wrapping do its job.
-        # Left padding rule: use two spaces by default, but if any line would wrap
-        # with padding, drop padding entirely for the question block.
-        from wexample_helpers.helpers.ansi import ansi_display_width
 
         q_pad = "  "
         # Account for the visible width of the '? ' prefix on the first line

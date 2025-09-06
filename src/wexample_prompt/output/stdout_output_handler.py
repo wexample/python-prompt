@@ -37,6 +37,7 @@ class StdoutOutputHandler(AbstractOutputHandler):
         sys.stdout.flush()
 
     def _render_erase(self, response: AbstractPromptResponse) -> str:
+        from wexample_helpers.helpers.ansi import ansi_display_width
         content = response.rendered_content
         if not content:
             return ""

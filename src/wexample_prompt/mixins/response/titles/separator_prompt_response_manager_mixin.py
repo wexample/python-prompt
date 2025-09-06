@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 
 if TYPE_CHECKING:
@@ -11,6 +9,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
+    from wexample_helpers.const.types import Kwargs
 
 
 class SeparatorPromptResponseManagerMixin:
@@ -23,9 +22,7 @@ class SeparatorPromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.responses.titles.separator_prompt_response import (
-            SeparatorPromptResponse,
-        )
+        from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
 
         response = SeparatorPromptResponse.create_separator(
             label=label,

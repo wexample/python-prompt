@@ -3,8 +3,6 @@ from __future__ import annotations
 import threading
 import time
 
-from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
-
 
 class Spinner:
     """Simple cyclic spinner.
@@ -13,6 +11,7 @@ class Spinner:
     """
 
     def __init__(self, frames: list[str] | None = None, interval: float = 0.2) -> None:
+        from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
         self.frames: list[str] = list(frames or DEFAULT_SPINNER_FRAMES)
         if not self.frames:
             self.frames = list(DEFAULT_SPINNER_FRAMES)
@@ -54,6 +53,7 @@ class Spinner:
         self._last_time = None
 
     def set_frames(self, frames: list[str]) -> None:
+        from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
         self.frames = list(frames) if frames else list(DEFAULT_SPINNER_FRAMES)
         self._idx = 0
         # Reset timing so a new frame set starts fresh.

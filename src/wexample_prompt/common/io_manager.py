@@ -154,71 +154,29 @@ class IoManager(
 
     @classmethod
     def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
-        from wexample_prompt.responses.data.suggestions_prompt_response import (
-            SuggestionsPromptResponse,
-        )
-        from wexample_prompt.responses.data.table_prompt_response import (
-            TablePromptResponse,
-        )
-        from wexample_prompt.responses.data.tree_prompt_response import (
-            TreePromptResponse,
-        )
+        from wexample_prompt.responses.interactive.choice_prompt_response import ChoicePromptResponse
+        from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+        from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
-        from wexample_prompt.responses.interactive.choice_prompt_response import (
-            ChoicePromptResponse,
-        )
-        from wexample_prompt.responses.interactive.confirm_prompt_response import (
-            ConfirmPromptResponse,
-        )
-        from wexample_prompt.responses.interactive.file_picker_prompt_response import (
-            FilePickerPromptResponse,
-        )
-        from wexample_prompt.responses.interactive.progress_prompt_response import (
-            ProgressPromptResponse,
-        )
-        from wexample_prompt.responses.interactive.screen_prompt_response import (
-            ScreenPromptResponse,
-        )
+        from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+        from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+        from wexample_prompt.responses.interactive.file_picker_prompt_response import FilePickerPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-        from wexample_prompt.responses.messages.debug_prompt_response import (
-            DebugPromptResponse,
-        )
-        from wexample_prompt.responses.messages.error_prompt_response import (
-            ErrorPromptResponse,
-        )
-        from wexample_prompt.responses.messages.failure_prompt_response import (
-            FailurePromptResponse,
-        )
-        from wexample_prompt.responses.messages.info_prompt_response import (
-            InfoPromptResponse,
-        )
-        from wexample_prompt.responses.messages.success_prompt_response import (
-            SuccessPromptResponse,
-        )
-        from wexample_prompt.responses.messages.task_prompt_response import (
-            TaskPromptResponse,
-        )
-        from wexample_prompt.responses.messages.warning_prompt_response import (
-            WarningPromptResponse,
-        )
-        from wexample_prompt.responses.titles.separator_prompt_response import (
-            SeparatorPromptResponse,
-        )
-        from wexample_prompt.responses.titles.subtitle_prompt_response import (
-            SubtitlePromptResponse,
-        )
-        from wexample_prompt.responses.titles.title_prompt_response import (
-            TitlePromptResponse,
-        )
+        from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+        from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
+        from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+        from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
+        from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+        from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
+        from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
+        from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
+        from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
+        from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
 
         return [
             # Basics

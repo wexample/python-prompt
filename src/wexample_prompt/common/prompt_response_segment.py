@@ -41,6 +41,7 @@ class PromptResponseSegment(ExtendedBaseModel):
         - rendered_fit: the rendered string (possibly colorized) that fits in the remaining width
         - remainder_segment: a new PromptResponseSegment with the leftover RAW text and same color, or None
         """
+        from wexample_prompt.common.color_manager import ColorManager
         # Split the RAW text by visible width first (no ANSI involved yet)
         fit_raw, remainder_raw = self._split_by_visible_width(
             self.text, line_remaining_width
@@ -49,7 +50,6 @@ class PromptResponseSegment(ExtendedBaseModel):
         # Apply styles and color if allowed by context (single reset at the end)
         rendered_fit = fit_raw
         if context.colorized and fit_raw:
-            from wexample_prompt.common.color_manager import ColorManager
 
             prefix = ColorManager.build_prefix(color=self.color, styles=self.styles)
             if prefix:

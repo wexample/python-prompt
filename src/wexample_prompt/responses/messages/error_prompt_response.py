@@ -33,11 +33,11 @@ class ErrorPromptResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ErrorPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_helpers.helpers.error import error_format
 
         # Build content: if there's an exception, create a red header line (symbol + message)
         # and append the formatted trace as raw lines (no added color) so its own formatting stays intact.
         if exception is not None:
-            from wexample_helpers.helpers.error import error_format
             from wexample_prompt.common.prompt_response_line import PromptResponseLine
             from wexample_prompt.common.prompt_response_segment import (
                 PromptResponseSegment,

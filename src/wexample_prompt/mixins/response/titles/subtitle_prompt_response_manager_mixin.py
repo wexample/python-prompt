@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.const.types import LineMessage
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
@@ -13,6 +10,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
+    from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.const.types import LineMessage
 
 
 class SubtitlePromptResponseManagerMixin:
@@ -26,9 +25,7 @@ class SubtitlePromptResponseManagerMixin:
         context: PromptContext | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.responses.titles.subtitle_prompt_response import (
-            SubtitlePromptResponse,
-        )
+        from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
 
         response = SubtitlePromptResponse.create_subtitle(
             text=text,

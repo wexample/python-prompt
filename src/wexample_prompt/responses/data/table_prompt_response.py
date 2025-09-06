@@ -1,3 +1,6 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 """Table response for displaying data in a formatted table layout."""
 
 from __future__ import annotations
@@ -7,7 +10,6 @@ from typing import Any
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -42,6 +44,7 @@ class TablePromptResponse(AbstractPromptResponse):
         )
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         if not self.data and not self.headers:
             return ""
 
@@ -103,6 +106,7 @@ class TablePromptResponse(AbstractPromptResponse):
     def _create_row_segments(
         row: list[Any], widths: list[int]
     ) -> list[PromptResponseSegment]:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
@@ -111,6 +115,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         return PromptResponseLine(
             segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
         )

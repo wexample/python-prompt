@@ -3,9 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from pydantic import Field
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
@@ -13,6 +11,7 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class AbstractTitleResponse(AbstractMessageResponse):
@@ -47,6 +46,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         width: int | None = None,
         verbosity: VerbosityLevel = None,
     ) -> AbstractTitleResponse:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",
             color=color,
