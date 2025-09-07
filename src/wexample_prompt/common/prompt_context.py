@@ -13,11 +13,10 @@ if TYPE_CHECKING:
 
 
 class PromptContext(ExtendedBaseModel):
+    """Context for rendering responses, including terminal information."""
     DEFAULT_COLORIZED: ClassVar[bool] = True
     DEFAULT_VERBOSITY: ClassVar[VerbosityLevel] = VerbosityLevel.DEFAULT
     DEFAULT_WIDTH: ClassVar[int] = 80
-
-    """Context for rendering responses, including terminal information."""
     colorized: bool | None = Field(
         default=True, description="Allow to return avoid coloration special characters"
     )
