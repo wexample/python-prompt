@@ -13,6 +13,7 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
+
         return ConfirmPromptResponse.create_confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
@@ -25,6 +26,7 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
+
         self.io.confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
@@ -37,6 +39,7 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
+
         self._class_with_methods.confirm(
             question="Proceed?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,

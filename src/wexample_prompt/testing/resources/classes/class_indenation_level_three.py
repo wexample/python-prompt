@@ -21,6 +21,7 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
 
     def get_io_context_indentation_color(self) -> TerminalColor | None:
         from wexample_prompt.enums.terminal_color import TerminalColor
+
         return TerminalColor.BLUE
 
     def print_deep_log_three(self) -> None:

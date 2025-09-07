@@ -14,6 +14,7 @@ class ErrorExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,
         )
+
         return ErrorPromptResponse.create_error(
             message=self.get_test_message(),
         )

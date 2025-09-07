@@ -19,6 +19,7 @@ class ListExample(AbstractResponseExample):
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
+
         return ListPromptResponse.create_list(
             items=self.get_test_items(),
         )

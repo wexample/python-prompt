@@ -9,6 +9,7 @@ class ChoiceExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.choice_prompt_response import (
             ChoicePromptResponse,
         )
+
         return ChoicePromptResponse.create_choice(
             question="Select an option:",
             choices={

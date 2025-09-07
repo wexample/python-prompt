@@ -14,6 +14,7 @@ class DebugExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.debug_prompt_response import (
             DebugPromptResponse,
         )
+
         return DebugPromptResponse.create_debug(
             message=self.get_test_message(),
         )

@@ -12,6 +12,7 @@ class SuggestionsExample(AbstractResponseExample):
         from wexample_prompt.responses.data.suggestions_prompt_response import (
             SuggestionsPromptResponse,
         )
+
         message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
@@ -30,6 +31,7 @@ class SuggestionsExample(AbstractResponseExample):
         from wexample_prompt.responses.data.suggestions_prompt_response import (
             SuggestionsPromptResponse,
         )
+
         message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",

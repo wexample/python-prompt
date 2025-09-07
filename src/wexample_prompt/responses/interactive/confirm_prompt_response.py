@@ -77,6 +77,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
     ) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
+
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=(ch * width), color=color)]
         )

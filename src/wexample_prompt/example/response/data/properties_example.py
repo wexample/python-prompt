@@ -12,6 +12,7 @@ class PropertiesExample(AbstractResponseExample):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
+
         properties = {
             "name": "John Doe",
             "age": 30,
@@ -32,6 +33,7 @@ class PropertiesExample(AbstractResponseExample):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
+
         properties = {
             "name": "John Doe",
             "age": 30,

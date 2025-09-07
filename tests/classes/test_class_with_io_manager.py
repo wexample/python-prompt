@@ -50,5 +50,6 @@ class TestIoManager(AbstractPromptTest):
 
     def assertClassInstanceSucceeded(self, class_type: type) -> None:
         from wexample_prompt.common.io_manager import IoManager
+
         instance = class_type(io=self._io)
         assert isinstance(instance.io, IoManager)

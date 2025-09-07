@@ -12,6 +12,7 @@ class TableExample(AbstractResponseExample):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         headers = ["Name", "Age", "City"]
         data = [
             ["John", "30", "New York"],
@@ -31,6 +32,7 @@ class TableExample(AbstractResponseExample):
         from wexample_prompt.responses.data.table_prompt_response import (
             TablePromptResponse,
         )
+
         headers = ["Name", "Age", "City"]
         data = [
             ["John", "30", "New York"],

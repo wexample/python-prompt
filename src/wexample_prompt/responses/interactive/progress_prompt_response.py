@@ -84,6 +84,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
+
         if total <= 0:
             raise ValueError("Total must be greater than 0")
         if width is not None and width < 1:
@@ -131,6 +132,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         from wexample_helpers.helpers.ansi import ansi_strip
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         context = self.init_handle(context=context)
 
         # Progress values

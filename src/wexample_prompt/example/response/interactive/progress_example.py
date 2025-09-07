@@ -30,6 +30,7 @@ class ProgressExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         return ProgressPromptResponse.create_progress(
             total=5,
             current=3,

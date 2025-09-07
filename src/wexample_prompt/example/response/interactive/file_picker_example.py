@@ -13,6 +13,7 @@ class FilePickerExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
         )
+
         return FilePickerPromptResponse.create_file_picker(
             question="Select a file:",
             base_dir=None,  # Will use current working directory

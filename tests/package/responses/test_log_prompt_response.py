@@ -78,6 +78,7 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
     def test_multiple_indentation_levels(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
         messages = [
             (0, "Root level"),
             (1, "First indent"),

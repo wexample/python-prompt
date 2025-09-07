@@ -14,6 +14,7 @@ class InfoExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,
         )
+
         return InfoPromptResponse.create_info(
             message=self.get_test_message(),
         )

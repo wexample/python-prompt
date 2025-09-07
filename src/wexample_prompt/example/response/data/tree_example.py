@@ -12,6 +12,7 @@ class TreeExample(AbstractResponseExample):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         data = {
             "root": {
                 "folder1": {
@@ -36,6 +37,7 @@ class TreeExample(AbstractResponseExample):
         from wexample_prompt.responses.data.tree_prompt_response import (
             TreePromptResponse,
         )
+
         data = {
             "root": {
                 "folder1": {

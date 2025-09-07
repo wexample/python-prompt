@@ -54,6 +54,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         """Render the properties into lines using the provided context width."""
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         if not self.properties:
             return ""
 
@@ -139,6 +140,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         return PromptResponseLine(
             segments=[PromptResponseSegment(text=f"{'-' * width}")]
         )

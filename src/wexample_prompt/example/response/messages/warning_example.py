@@ -14,6 +14,7 @@ class WarningExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.warning_prompt_response import (
             WarningPromptResponse,
         )
+
         return WarningPromptResponse.create_warning(
             message=self.get_test_message(),
         )

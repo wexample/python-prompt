@@ -14,6 +14,7 @@ class TitleExample(AbstractResponseExample):
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,
         )
+
         return TitlePromptResponse.create_title(
             text=self.get_test_message() + " (from response)"
         )

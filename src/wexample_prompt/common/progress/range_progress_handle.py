@@ -46,6 +46,7 @@ class RangeProgressHandle(ExtendedBaseModel):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         if current is not None:
 
             normalized = ProgressPromptResponse._normalize_value(self.total, current)

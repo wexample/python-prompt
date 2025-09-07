@@ -14,6 +14,7 @@ class FailureExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.failure_prompt_response import (
             FailurePromptResponse,
         )
+
         return FailurePromptResponse.create_failure(
             message=self.get_test_message(),
         )

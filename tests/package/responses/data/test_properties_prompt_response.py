@@ -62,6 +62,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
+
         nested = {
             "personal": {"name": "John Doe", "age": 30},
             "contact": {"email": "john@example.com", "phone": "123-456-7890"},
@@ -89,6 +90,7 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
         )
+
         nested = {"level0": {"level1": {"key": "value"}}}
 
         response = PropertiesPromptResponse.create_properties(

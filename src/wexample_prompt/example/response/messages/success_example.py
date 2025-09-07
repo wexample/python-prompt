@@ -14,6 +14,7 @@ class SuccessExample(AbstractResponseExample):
         from wexample_prompt.responses.messages.success_prompt_response import (
             SuccessPromptResponse,
         )
+
         return SuccessPromptResponse.create_success(
             message=self.get_test_message(),
         )
