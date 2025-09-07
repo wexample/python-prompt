@@ -1,7 +1,4 @@
 from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from wexample_prompt.const.types import LineMessage
 """Response for displaying and handling file picker prompts."""
 
 from __future__ import annotations
@@ -15,6 +12,8 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import (
     ChoicePromptResponse,
 )
+if TYPE_CHECKING:
+    from wexample_prompt.const.types import LineMessage
 
 
 class FilePickerPromptResponse(ChoicePromptResponse):

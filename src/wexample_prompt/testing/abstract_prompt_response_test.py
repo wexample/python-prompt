@@ -1,17 +1,17 @@
+"""Base class for testing prompt responses."""
+
+from __future__ import annotations
+
+from abc import abstractmethod
 from typing import TYPE_CHECKING
+
+from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
-"""Base class for testing prompt responses."""
-
-from __future__ import annotations
-
-from abc import abstractmethod
-
-from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class AbstractPromptResponseTest(AbstractPromptTest):
@@ -21,7 +21,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Return the expected number of lines in the rendered response."""
 
     def _assert_common_response_structure(
-        self, response: AbstractPromptResponse
+            self, response: AbstractPromptResponse
     ) -> None:
         """Assert common structure for rendered responses."""
         lines = response.rendered_content.split("\n")
@@ -52,7 +52,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         pass
 
     def _create_test_response(
-        self, response_kwargs: Kwargs | None = None, **kwargs
+            self, response_kwargs: Kwargs | None = None, **kwargs
     ) -> AbstractPromptResponse:
         """Create a response using the class: LogPromptResponse.create_log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
@@ -63,7 +63,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         return getattr(response_class, method_name)(**kwargs)
 
     def _create_test_response_from_method(
-        self, response_kwargs: Kwargs | None = None, **kwargs
+            self, response_kwargs: Kwargs | None = None, **kwargs
     ) -> AbstractPromptResponse:
         """Create a response using io manager: self._io.log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
@@ -125,10 +125,10 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         )
 
     def _test_verbosity(
-        self,
-        quiet_required: AbstractPromptResponse,
-        default_required: AbstractPromptResponse,
-        maximum_required: AbstractPromptResponse,
+            self,
+            quiet_required: AbstractPromptResponse,
+            default_required: AbstractPromptResponse,
+            maximum_required: AbstractPromptResponse,
     ) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
