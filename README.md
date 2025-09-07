@@ -10,6 +10,8 @@ Version: 0.0.49
 
 ## Dependencies
 
+- attrs>=23.1.0
+- cattrs>=23.1.0
 - colorama
 - inquirerpy
 - pydantic>=2,<3

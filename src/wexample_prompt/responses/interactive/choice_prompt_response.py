@@ -59,8 +59,9 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
-        from wexample_prompt.enums.choice import ChoiceValue
         from collections.abc import Mapping
+
+        from wexample_prompt.enums.choice import ChoiceValue
 
         # Build question lines from LineMessage, apply styles/colors on segments
         question_lines = PromptResponseLine.create_from_string(question, color=color)
@@ -109,12 +110,12 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
-        from wexample_prompt.enums.choice import ChoiceValue
+        import readchar
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_prompt.enums.text_style import TextStyle
-        import readchar
+        from wexample_prompt.enums.choice import ChoiceValue
         from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
 
         context = PromptContext.create_if_none(context=context)
 
@@ -243,6 +244,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import ChoiceExample
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
 
         return ChoiceExample

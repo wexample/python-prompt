@@ -73,10 +73,11 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         self._closed = True
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+        from time import sleep
+
         from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.common.prompt_context import PromptContext
-        from time import sleep
+        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
         # Wait first rendering to build nested io manager.
         if self._io_buffer is None:
@@ -138,7 +139,9 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import ChoiceExample
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
 
         # Reuse any example class infra; a dedicated Screen example can be added later.
         return ChoiceExample
