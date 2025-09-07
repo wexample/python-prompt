@@ -1,10 +1,9 @@
-from __future__ import annotations
-
 """Spinner frame presets for terminal UIs.
 
 Note: Not all terminals render every Unicode glyph identically. Keep a few
 ASCII-friendly presets as well. You can trim this list later.
 """
+from __future__ import annotations
 
 # Braille-style spinner (smooth, compact, good Unicode support in modern terminals)
 BRAILLE_SPINNER_FRAMES: list[str] = [
