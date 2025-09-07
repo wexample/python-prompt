@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING
 """Tests for TreePromptResponse."""
+from typing import TYPE_CHECKING
 
 from __future__ import annotations
 

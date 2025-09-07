@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING
 """Response for displaying and handling file picker prompts."""
+from typing import TYPE_CHECKING
 
 from __future__ import annotations
 

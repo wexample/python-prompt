@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING
 """Test multiple prompt response."""
+from typing import TYPE_CHECKING
 
 from __future__ import annotations
 

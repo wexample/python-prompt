@@ -1,5 +1,5 @@
-from typing import TYPE_CHECKING
 """Table response for displaying data in a formatted table layout."""
+from typing import TYPE_CHECKING
 
 from __future__ import annotations
 
