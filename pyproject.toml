@@ -60,9 +60,6 @@ addopts = "-p wexample_helpers.testing.plugin.runtest_makereport"
 distribution = true
 
 [tool.pdm.build]
-includes = [
-    'src/wexample_prompt/*',
-]
 package-dir = "src"
 
 [[tool.pdm.build.packages]]
