@@ -26,14 +26,14 @@ class SeparatorPromptResponse(AbstractMessageResponse):
     label: str | None = Field(
         default=None, description="A label to display on the separator right"
     )
-    width: int | None = Field(
-        default=None, description="A fixed width, use context width if not provided"
+    separator_response_label: PromptResponseSegment | None = Field(
+        default=None, description="The label displayed at the right"
     )
     separator_response_segment: PromptResponseSegment = Field(
         description="The line segment used by render process"
     )
-    separator_response_label: PromptResponseSegment | None = Field(
-        default=None, description="The label displayed at the right"
+    width: int | None = Field(
+        default=None, description="A fixed width, use context width if not provided"
     )
 
     @classmethod

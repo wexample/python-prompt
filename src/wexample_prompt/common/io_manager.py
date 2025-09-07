@@ -117,12 +117,6 @@ class IoManager(
     WithIndentation,
     ExtendedBaseModel,
 ):
-    _terminal_width: int = PrivateAttr(default=None)
-    output: AbstractOutputHandler | None = Field(
-        default=None,
-        description="Manages what to do with the generated output (print, or store), "
-        "by default print to stdout",
-    )
     default_context_verbosity: VerbosityLevel = Field(
         default=VerbosityLevel.DEFAULT,
         description="The overall verbosity level used in contexts.",
@@ -131,6 +125,12 @@ class IoManager(
         default=VerbosityLevel.DEFAULT,
         description="The default verbosity for every generated message.",
     )
+    output: AbstractOutputHandler | None = Field(
+        default=None,
+        description="Manages what to do with the generated output (print, or store), "
+        "by default print to stdout",
+    )
+    _terminal_width: int = PrivateAttr(default=None)
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

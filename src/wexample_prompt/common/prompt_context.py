@@ -20,21 +20,25 @@ class PromptContext(ExtendedBaseModel):
     colorized: bool | None = Field(
         default=True, description="Allow to return avoid coloration special characters"
     )
-    parent_context: PromptContext | None = Field(
-        default=None, description="A parent context"
+    formatting: bool | None = Field(
+        default=False,
+        description="Format lines on rendering, should be disabled when passing raw text",
     )
     indentation: int | None = Field(default=0, description="Base indentation level")
+    indentation_background_color: TerminalBgColor | None = Field(
+        default=None, description="The indentation part background color"
+    )
     indentation_character: str | None = Field(
         default=" ", description="The character used for indentation"
     )
     indentation_color: TerminalColor | None = Field(
         default=None, description="The indentation part color"
     )
-    indentation_background_color: TerminalBgColor | None = Field(
-        default=None, description="The indentation part background color"
-    )
     indentation_length: int | None = Field(
         default=2, description="Number of characters to repeat for one indentation"
+    )
+    parent_context: PromptContext | None = Field(
+        default=None, description="A parent context"
     )
     verbosity: VerbosityLevel | None = Field(
         default=None,
@@ -43,10 +47,6 @@ class PromptContext(ExtendedBaseModel):
     width: int | None = Field(
         default=None,
         description="Context with, basically the terminal with including indentation",
-    )
-    formatting: bool | None = Field(
-        default=False,
-        description="Format lines on rendering, should be disabled when passing raw text",
     )
 
     @classmethod

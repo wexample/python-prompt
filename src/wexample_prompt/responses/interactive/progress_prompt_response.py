@@ -19,18 +19,18 @@ class ProgressPromptResponse(AbstractPromptResponse):
     # Style characters
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"
-
-    # Instance fields
-    total: int = Field(description="Total number of items (must be > 0)")
-    current: int = Field(description="Current progress (must be >= 0)")
-    width: int | None = Field(
-        default=None, description="Width of the progress bar in characters"
+    color: TerminalColor | None = Field(
+        default=None, description="Optional color applied to the bar"
     )
+    current: int = Field(description="Current progress (must be >= 0)")
     label: str | None = Field(
         default=None, description="Optional label displayed before the bar"
     )
-    color: TerminalColor | None = Field(
-        default=None, description="Optional color applied to the bar"
+
+    # Instance fields
+    total: int = Field(description="Total number of items (must be > 0)")
+    width: int | None = Field(
+        default=None, description="Width of the progress bar in characters"
     )
     _handle: ProgressHandle | None = None
 

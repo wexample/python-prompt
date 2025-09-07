@@ -14,16 +14,16 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     The visual width adapts to the provided render context. Lines are generated during
     render, so the response remains context-agnostic until displayed.
     """
+    nested_indent: int = Field(
+        default=2,
+        description="Indentation inside the properties list, when rendering sub list of items",
+    )
 
     properties: dict[str, Any] = Field(
         default_factory=dict, description="The list of properties to display"
     )
     title: str | None = Field(
         default=None, description="The title of the properties list"
-    )
-    nested_indent: int = Field(
-        default=2,
-        description="Indentation inside the properties list, when rendering sub list of items",
     )
 
     @classmethod

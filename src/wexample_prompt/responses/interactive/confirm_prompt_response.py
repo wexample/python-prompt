@@ -39,6 +39,21 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         "y": ("continue", "Continue"),
         "n": ("cancel", "Cancel"),
     }
+    allow_abort: bool = Field(
+        default=True, description="ESC/q aborts and returns None when allowed."
+    )
+    default_value: str | None = Field(
+        default=None, description="The value to return when quitting"
+    )
+    # Map pressed key -> (value, label)
+    options: dict[str, tuple[str, str]] = Field(
+        default_factory=dict,
+        description="Keyboard shortcuts mapping to (return value, display label)",
+    )
+    predefined_answer: Any = Field(
+        default=None,
+        description="The answer of the question, in order to make the response non interactive",
+    )
 
     question: LineMessage = Field(
         default="Please confirm:", description="The question to ask to the user"
@@ -46,21 +61,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     width: int | None = Field(
         default=None,
         description="Total width of the box (in characters). If None, uses context width or content width.",
-    )
-    # Map pressed key -> (value, label)
-    options: dict[str, tuple[str, str]] = Field(
-        default_factory=dict,
-        description="Keyboard shortcuts mapping to (return value, display label)",
-    )
-    default_value: str | None = Field(
-        default=None, description="The value to return when quitting"
-    )
-    allow_abort: bool = Field(
-        default=True, description="ESC/q aborts and returns None when allowed."
-    )
-    predefined_answer: Any = Field(
-        default=None,
-        description="The answer of the question, in order to make the response non interactive",
     )
 
     @classmethod

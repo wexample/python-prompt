@@ -13,19 +13,19 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 class TreePromptResponse(AbstractPromptResponse):
     """Response for displaying hierarchical data in a tree structure."""
-
-    data: dict[str, Any] = Field(description="The data to display")
     branch_style: str = Field(
         default="├", description="The character used to render branch"
     )
+    dash_style: str = Field(
+        default="──", description="The character used to render dash"
+    )
+
+    data: dict[str, Any] = Field(description="The data to display")
     leaf_style: str = Field(
         default="└", description="The character used to render leaf"
     )
     pipe_style: str = Field(
         default="│", description="The character used to render pipe"
-    )
-    dash_style: str = Field(
-        default="──", description="The character used to render dash"
     )
 
     @classmethod

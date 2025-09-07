@@ -21,20 +21,20 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
     DEFAULT_PREFIX: ClassVar[str] = "❯"
     DEFAULT_CHARACTER: ClassVar[str] = "⫻"
+    character: str | None = Field(
+        default=DEFAULT_CHARACTER,
+        description="Character used to fill the remaining line",
+    )
+    fill_segment: PromptResponseSegment = Field(
+        description="The trailing fill characters segment"
+    )
 
     prefix_segment: PromptResponseSegment = Field(
         description="The prefix segment displayed before the title text"
     )
     text_segment: PromptResponseSegment = Field(description="The title text segment")
-    fill_segment: PromptResponseSegment = Field(
-        description="The trailing fill characters segment"
-    )
     width: int | None = Field(
         default=None, description="Optional fixed width; if not set uses context width"
-    )
-    character: str | None = Field(
-        default=DEFAULT_CHARACTER,
-        description="Character used to fill the remaining line",
     )
 
     @classmethod

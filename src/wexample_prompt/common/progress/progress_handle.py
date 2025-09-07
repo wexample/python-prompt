@@ -20,10 +20,6 @@ class ProgressHandle(ExtendedBaseModel):
     Can directly control a root response or map a child range onto a parent handle.
     Supports arbitrary nesting (child of child, etc.).
     """
-
-    response: ProgressPromptResponse = Field(
-        description="The associated progress response (root response)."
-    )
     context: PromptContext = Field(
         description="The rendering context used by the response."
     )
@@ -34,13 +30,17 @@ class ProgressHandle(ExtendedBaseModel):
         default=None,
         description="Parent handle if this handle controls a sub-range of another handle.",
     )
+    range_end: int | None = Field(
+        default=None,
+        description="Exclusive end position on the parent response for this sub-range (absolute units).",
+    )
     range_start: int | None = Field(
         default=None,
         description="Inclusive start position on the parent response for this sub-range (absolute units).",
     )
-    range_end: int | None = Field(
-        default=None,
-        description="Exclusive end position on the parent response for this sub-range (absolute units).",
+
+    response: ProgressPromptResponse = Field(
+        description="The associated progress response (root response)."
     )
 
     # --- Internal helpers ---

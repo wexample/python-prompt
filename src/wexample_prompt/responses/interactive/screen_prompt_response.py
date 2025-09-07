@@ -36,8 +36,8 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     )
 
     _closed: bool = False
-    _reload_requested: bool = False
     _io_buffer: BufferOutputHandler | None = None
+    _reload_requested: bool = False
 
     def __init__(self, **kwargs) -> None:
         AbstractInteractivePromptResponse.__init__(self, **kwargs)

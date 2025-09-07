@@ -2,8 +2,8 @@ from __future__ import annotations
 
 
 class WithIndentation:
-    _indentation: int = 0
     _indent_string: str = "  "
+    _indentation: int = 0
 
     def indentation_up(self, number: int = 1) -> None:
         self._indentation += number

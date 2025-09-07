@@ -13,8 +13,6 @@ if TYPE_CHECKING:
 
 class PromptResponseSegment(ExtendedBaseModel):
     """A segment of text with optional styling."""
-
-    text: str = Field(description="The content of the segment")
     color: TerminalColor | None = Field(
         default=None,
         description="The color to apply to segment on rendering, if allowed by context",
@@ -23,6 +21,8 @@ class PromptResponseSegment(ExtendedBaseModel):
         default_factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
+
+    text: str = Field(description="The content of the segment")
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)

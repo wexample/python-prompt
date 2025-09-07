@@ -35,15 +35,15 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default_factory=dict,
         description="Additional kwargs forwarded to inquirer.select",
     )
+    predefined_answer: Any = Field(
+        default=None,
+        description="The answer of the question, in order to make the response non interactive",
+    )
     question: LineMessage = Field(
         default=None, description="Question text shown to the user"
     )
     question_lines: list[PromptResponseLine] = Field(
         description="Rendered question lines"
-    )
-    predefined_answer: Any = Field(
-        default=None,
-        description="The answer of the question, in order to make the response non interactive",
     )
 
     @classmethod
