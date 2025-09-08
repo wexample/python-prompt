@@ -35,9 +35,8 @@ class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
         assert (
             "⫻" not in rendered
         )  # default character should not appear when custom set
-
+    
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
-
     def test_renders_message_and_format(self) -> None:
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,

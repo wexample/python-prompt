@@ -12,9 +12,8 @@ class AbstractPromptMessageResponseTest(AbstractPromptResponseTest):
         """All message responses should correctly render multi-line messages."""
         response = self._create_test_response({"message": self._test_message_multiline})
         self._asset_response_render_is_multiline(response)
-
+    
     # Common tests for all message-type responses
-
     def test_single_line_by_default(self) -> None:
         """Message responses are typically single-line; if expected is 1, ensure no extra newlines."""
         response = self._create_test_response({"message": self._test_message})

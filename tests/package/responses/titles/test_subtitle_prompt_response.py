@@ -33,9 +33,8 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
         self._assert_contains_text(rendered, ".")
         assert "-" not in rendered  # ensure default from legacy not used
-
+    
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
-
     def test_renders_message_and_format(self) -> None:
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
             SubtitlePromptResponse,
