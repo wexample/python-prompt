@@ -53,7 +53,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="The answer of the question, in order to make the response non interactive",
     )
-
     question: LineMessage = Field(
         default="Please confirm:", description="The question to ask to the user"
     )

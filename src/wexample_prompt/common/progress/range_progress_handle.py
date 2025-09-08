@@ -19,7 +19,6 @@ class RangeProgressHandle(ExtendedBaseModel):
     end: int = Field(
         description="Exclusive end position (start + total) of the mapped range on the parent"
     )
-
     parent: ProgressHandle = Field(
         description="The parent progress handle that this range controls"
     )

@@ -27,7 +27,6 @@ class AbstractTitleResponse(AbstractMessageResponse):
     fill_segment: PromptResponseSegment = Field(
         description="The trailing fill characters segment"
     )
-
     prefix_segment: PromptResponseSegment = Field(
         description="The prefix segment displayed before the title text"
     )

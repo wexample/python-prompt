@@ -33,7 +33,6 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         default=False,
         description="If True, clears printed block when finishing (close).",
     )
-
     _closed: bool = False
     _io_buffer: BufferOutputHandler | None = None
     _reload_requested: bool = False

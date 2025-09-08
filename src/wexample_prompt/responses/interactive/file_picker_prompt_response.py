@@ -28,7 +28,6 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         default=False,
         description="If True, include '..' as a selectable entry at the top; otherwise hide it.",
     )
-
     base_dir: str = Field(
         description="Base directory to browse from; defaults to current working directory if not provided"
     )

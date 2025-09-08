@@ -18,7 +18,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         default=2,
         description="Indentation inside the properties list, when rendering sub list of items",
     )
-
     properties: dict[str, Any] = Field(
         default_factory=dict, description="The list of properties to display"
     )

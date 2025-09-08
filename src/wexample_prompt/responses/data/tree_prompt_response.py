@@ -19,7 +19,6 @@ class TreePromptResponse(AbstractPromptResponse):
     dash_style: str = Field(
         default="──", description="The character used to render dash"
     )
-
     data: dict[str, Any] = Field(description="The data to display")
     leaf_style: str = Field(
         default="└", description="The character used to render leaf"

@@ -21,7 +21,6 @@ class PromptResponseSegment(ExtendedBaseModel):
         default_factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
-
     text: str = Field(description="The content of the segment")
 
     def __init__(self, **kwargs) -> None:

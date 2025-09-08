@@ -38,7 +38,6 @@ class ProgressHandle(ExtendedBaseModel):
         default=None,
         description="Inclusive start position on the parent response for this sub-range (absolute units).",
     )
-
     response: ProgressPromptResponse = Field(
         description="The associated progress response (root response)."
     )

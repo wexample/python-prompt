@@ -18,7 +18,6 @@ class TerminalColor(Enum):
     MAGENTA = Fore.MAGENTA
     CYAN = Fore.CYAN
     WHITE = Fore.WHITE
-
     # Light/Bright colors
     LIGHT_BLACK = Fore.LIGHTBLACK_EX
     LIGHT_RED = Fore.LIGHTRED_EX
@@ -28,11 +27,9 @@ class TerminalColor(Enum):
     LIGHT_MAGENTA = Fore.LIGHTMAGENTA_EX
     LIGHT_CYAN = Fore.LIGHTCYAN_EX
     LIGHT_WHITE = Fore.LIGHTWHITE_EX
-
     # Special
     DEFAULT = Fore.RESET
     RESET = Style.RESET_ALL
-
     # Text styles
     BOLD = Style.BRIGHT
     DIM = Style.DIM

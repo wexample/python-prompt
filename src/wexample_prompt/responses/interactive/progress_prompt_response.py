@@ -25,7 +25,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
     label: str | None = Field(
         default=None, description="Optional label displayed before the bar"
     )
-
     # Instance fields
     total: int = Field(description="Total number of items (must be > 0)")
     width: int | None = Field(
