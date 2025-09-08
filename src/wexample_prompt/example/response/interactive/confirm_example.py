@@ -7,7 +7,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class ConfirmExample(AbstractResponseExample):
     """Example usage of confirmation dialog responses."""
-
     def example_class(self, indentation: int | None = None):
         """Use the response class directly."""
         from wexample_prompt.responses.interactive.confirm_prompt_response import (

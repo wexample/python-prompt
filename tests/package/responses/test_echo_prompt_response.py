@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class TestEchoPromptResponse(AbstractPromptResponseTest):
-
     def get_expected_lines(self) -> int:
         return 1  # Echo messages are single line by default
 

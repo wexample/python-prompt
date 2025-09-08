@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class AbstractPromptResponseTest(AbstractPromptTest):
-
     @abstractmethod
     def get_expected_lines(self) -> int:
         """Return the expected number of lines in the rendered response."""

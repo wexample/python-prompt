@@ -22,7 +22,6 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided
     callback, allowing the callback to draw text lines, sleep, and request reload/close.
     """
-
     callback: Callable[[ScreenPromptResponse], Any] = Field(
         description="Function called repeatedly with this response instance to draw and control flow.",
     )

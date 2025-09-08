@@ -13,7 +13,6 @@ if TYPE_CHECKING:
 
 
 class AbstractOutputHandler(ExtendedBaseModel):
-
     @abstractmethod
     def erase(
         self,

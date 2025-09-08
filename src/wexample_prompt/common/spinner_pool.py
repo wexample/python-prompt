@@ -9,7 +9,6 @@ class Spinner:
 
     Not thread-safe; guard with external lock when used via SpinnerPool.
     """
-
     def __init__(self, frames: list[str] | None = None, interval: float = 0.2) -> None:
         from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
 
@@ -75,7 +74,6 @@ class SpinnerPool:
         sym = SpinnerPool.next()  # default spinner
         sym = SpinnerPool.next("fs-build")  # named spinner, independent cycle
     """
-
     _lock = threading.RLock()
     _spinners: dict[str, Spinner] = {}
 

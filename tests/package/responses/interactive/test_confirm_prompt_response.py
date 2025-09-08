@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestConfirmPromptResponse(AbstractPromptResponseTest):
     """Test cases for ConfirmPromptResponse."""
-
     def get_expected_lines(self) -> int:
         # Box layout: top border + empty + question + empty + options + empty + bottom border
         return 7

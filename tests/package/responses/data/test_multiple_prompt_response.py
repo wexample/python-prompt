@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestMultiplePromptResponse(AbstractPromptResponseTest):
     """Test multiple prompt response."""
-
     def get_expected_lines(self) -> int:
         # Default case builds a single LogPromptResponse
         return 1

@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestSuggestionsPromptResponse(AbstractPromptResponseTest):
     """Test cases for SuggestionsPromptResponse."""
-
     def get_expected_lines(self) -> int:
         # Empty lines (2) + message (1) + 3 suggestions
         return 6

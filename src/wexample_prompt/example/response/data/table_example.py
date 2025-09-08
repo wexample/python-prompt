@@ -7,7 +7,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class TableExample(AbstractResponseExample):
     """Example for table response."""
-
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         from wexample_prompt.responses.data.table_prompt_response import (

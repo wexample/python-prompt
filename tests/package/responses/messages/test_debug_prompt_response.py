@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
-
     def get_expected_lines(self) -> int:
         return 1  # Debug messages are single line
 

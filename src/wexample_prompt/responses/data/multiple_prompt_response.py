@@ -15,7 +15,6 @@ class MultiplePromptResponse(AbstractPromptResponse):
     Attributes:
         responses: List of prompt responses to be rendered together.
     """
-
     responses: list[AbstractPromptResponse] = Field(
         default_factory=list,
         description="List of prompt responses to be rendered together",

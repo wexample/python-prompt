@@ -4,7 +4,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 
 class SubtitleExample(AbstractResponseExample):
-
     def example_class(self):
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
             SubtitlePromptResponse,

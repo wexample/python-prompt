@@ -7,7 +7,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class FilePickerExample(AbstractResponseExample):
     """Example usage of FilePickerPromptResponse."""
-
     def example_class(self, indentation: int | None = None):
         """Example using the class directly."""
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (

@@ -4,7 +4,6 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestIoManager(AbstractPromptTest):
-
     def assertClassHasNoneManager(self, class_type: type) -> None:
         instance = class_type()
         assert instance.io is None

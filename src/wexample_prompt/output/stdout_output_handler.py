@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class StdoutOutputHandler(AbstractOutputHandler):
-
     def erase(
         self,
         response: AbstractPromptResponse,

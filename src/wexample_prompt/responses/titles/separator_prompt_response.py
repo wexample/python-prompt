@@ -19,7 +19,6 @@ if TYPE_CHECKING:
 
 class SeparatorPromptResponse(AbstractMessageResponse):
     """Response for log messages."""
-
     DEFAULT_CHARACTER: ClassVar[str] = "~"
     character: str | None = Field(
         default=DEFAULT_CHARACTER, description="The character to repeat"

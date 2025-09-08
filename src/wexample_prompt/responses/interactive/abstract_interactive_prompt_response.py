@@ -11,7 +11,6 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
     """Base for interactive responses with common terminal helpers."""
-
     reset_on_finish: bool = Field(
         default=False,
         description="If True, clears the prompt block from the terminal after a selection or abort.",

@@ -16,7 +16,6 @@ class RangeProgressHandle(ExtendedBaseModel):
     It maps the child range [0..total] to the parent range [start..end].
     Percentages provided to update/advance are relative to this child range.
     """
-
     end: int = Field(
         description="Exclusive end position (start + total) of the mapped range on the parent"
     )

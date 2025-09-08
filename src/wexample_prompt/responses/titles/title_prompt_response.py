@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 
 class TitlePromptResponse(AbstractTitleResponse):
-
     @classmethod
     def create_title(
         cls: TitlePromptResponse,

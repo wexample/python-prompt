@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class PropertiesPromptResponseManagerMixin:
     """Mixin for IoManager to handle properties responses."""
-
     def properties(
         self: IoManager,
         properties: dict[str, Any],

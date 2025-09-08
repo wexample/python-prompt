@@ -9,7 +9,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class MultipleExample(AbstractResponseExample):
     """Example usage of MultiplePromptResponse."""
-
     def dynamic_multiple(self) -> MultiplePromptResponse | None:
         """Show building responses dynamically."""
         from wexample_prompt.responses.data.list_prompt_response import (

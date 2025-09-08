@@ -9,7 +9,6 @@ from colorama import Back
 
 class TerminalBgColor(Enum):
     """Terminal background color codes using colorama constants."""
-
     # Standard background colors
     BLACK = Back.BLACK
     RED = Back.RED
