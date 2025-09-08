@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 class TablePromptResponseManagerMixin:
     """Mixin for IoManager to handle table responses."""
-
     def table(
         self: IoManager,
         data: list[list[Any]],

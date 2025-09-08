@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class ConfirmPromptResponseManagerMixin:
     """Mixin class for managing confirmation dialog prompt responses."""
-
     def confirm(
         self: IoManager,
         question: LineMessage = "Please confirm:",

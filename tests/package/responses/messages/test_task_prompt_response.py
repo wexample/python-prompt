@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestTaskPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for TaskPromptResponse."""
-
     def get_expected_lines(self) -> int:
         return 1  # Task messages are single line
 

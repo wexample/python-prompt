@@ -9,7 +9,6 @@ class WithIoMethods(WithIoManager):
     """
     Allow class to provide Io methods like .log(), .title() etc.
     """
-
     def __getattr__(self, name: str) -> Any:
         io_response = self._get_io_methods(name)
         return io_response if io_response is not None else super().__getattr__(name)

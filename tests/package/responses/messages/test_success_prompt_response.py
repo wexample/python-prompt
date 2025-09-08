@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestSuccessPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for SuccessPromptResponse."""
-
     def get_expected_lines(self) -> int:
         return 1  # Success messages are single line
 

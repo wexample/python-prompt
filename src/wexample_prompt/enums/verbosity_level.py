@@ -12,7 +12,6 @@ class VerbosityLevel(IntEnum):
         MEDIUM (2): Show additional information and details
         MAXIMUM (3): Show all possible information including debug messages
     """
-
     QUIET = 0
     DEFAULT = 1
     MEDIUM = 2

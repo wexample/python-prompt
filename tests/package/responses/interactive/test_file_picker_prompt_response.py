@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestFilePickerPromptResponse(AbstractPromptResponseTest):
     """Test cases for FilePickerPromptResponse."""
-
     def get_expected_lines(self) -> int:
         # Minimal default: question + parent (..) + (no files/dirs due to failure) + abort
         # But render builds from merged dict (at least parent), plus abort.

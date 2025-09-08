@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class WarningPromptResponse(AbstractMessageResponse):
     """Response for warning messages."""
-
     SYMBOL: ClassVar[str] = "⚠"
 
     @classmethod

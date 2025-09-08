@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class ListPromptResponse(AbstractMessageResponse):
     """Display items as a bulleted list, supporting nested indentation via leading spaces."""
-
     @classmethod
     def create_list(
         cls,

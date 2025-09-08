@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
-
     def get_expected_lines(self) -> int:
         return 1  # Log messages are single line
 

@@ -24,7 +24,6 @@ def step3() -> None:
 
 class ProgressExample(AbstractResponseExample):
     """Example usage of progress responses."""
-
     def example_class(self, indentation: int | None = None):
         """Example using the response class directly."""
         from wexample_prompt.responses.interactive.progress_prompt_response import (

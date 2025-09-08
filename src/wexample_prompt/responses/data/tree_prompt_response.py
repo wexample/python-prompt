@@ -13,7 +13,6 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 class TreePromptResponse(AbstractPromptResponse):
     """Response for displaying hierarchical data in a tree structure."""
-
     branch_style: str = Field(
         default="├", description="The character used to render branch"
     )

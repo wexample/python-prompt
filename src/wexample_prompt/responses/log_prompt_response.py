@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 class LogPromptResponse(AbstractPromptResponse):
     """Response for log messages."""
-
     @classmethod
     def create_log(
         cls: LogPromptResponse,

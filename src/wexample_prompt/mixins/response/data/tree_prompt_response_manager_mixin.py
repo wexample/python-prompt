@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 class TreePromptResponseManagerMixin:
     """Mixin for IoManager to handle tree responses."""
-
     def tree(
         self: IoManager,
         data: dict[str, Any],

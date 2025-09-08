@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 class TablePromptResponse(AbstractPromptResponse):
     """Response for displaying data in a table layout with borders and formatting."""
-
     data: list[list[Any]] = Field(
         description="Table body rows: list of rows, each row a list of cell values"
     )

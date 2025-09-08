@@ -21,7 +21,6 @@ if TYPE_CHECKING:
 
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
     """Abstract base class for all prompt responses."""
-
     lines: list[PromptResponseLine] = Field(
         default_factory=list,
         description="The list of lines of the response content",

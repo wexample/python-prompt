@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""
-
     abort_option: bool | str | None = Field(
         default=None,
         description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label).",

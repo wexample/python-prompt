@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 class ColorManager:
     """Manages color application and terminal capabilities."""
-
     # Initialize colorama when class is loaded
     init()
 
