@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 class PromptResponseSegment(ExtendedBaseModel):
     """A segment of text with optional styling."""
+
     color: TerminalColor | None = Field(
         default=None,
         description="The color to apply to segment on rendering, if allowed by context",

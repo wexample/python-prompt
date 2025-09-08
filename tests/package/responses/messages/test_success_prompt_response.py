@@ -1,4 +1,5 @@
 """Tests for SuccessPromptResponse."""
+
 from typing import TYPE_CHECKING
 
 from __future__ import annotations
@@ -6,6 +7,7 @@ from __future__ import annotations
 from wexample_prompt.testing.abstract_prompt_message_response_test import (
     AbstractPromptMessageResponseTest,
 )
+
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
     from wexample_prompt.responses.abstract_prompt_response import (

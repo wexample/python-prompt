@@ -3,6 +3,7 @@
 Note: Not all terminals render every Unicode glyph identically. Keep a few
 ASCII-friendly presets as well. You can trim this list later.
 """
+
 from __future__ import annotations
 
 # filestate: python-constant-sort

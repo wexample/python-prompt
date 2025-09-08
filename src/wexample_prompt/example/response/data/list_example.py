@@ -19,6 +19,7 @@ class ListExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.list(items=self.get_test_items())
+
     def get_test_items(self) -> list[str]:
         return [
             "Item A",

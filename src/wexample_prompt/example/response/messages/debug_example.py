@@ -19,5 +19,6 @@ class DebugExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.debug(message=self.get_test_message())
+
     def get_test_message(self) -> str:
         return "Test debug message"

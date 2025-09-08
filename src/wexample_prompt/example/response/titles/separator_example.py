@@ -14,5 +14,6 @@ class SeparatorExample(AbstractResponseExample):
 
     def example_extended(self) -> None:
         self._class_with_methods.separator(label="Class method")
+
     def example_manager(self) -> None:
         self.io.separator()

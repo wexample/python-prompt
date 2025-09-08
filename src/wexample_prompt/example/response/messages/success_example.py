@@ -19,5 +19,6 @@ class SuccessExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.success(message=self.get_test_message())
+
     def get_test_message(self) -> str:
         return "Test success message"

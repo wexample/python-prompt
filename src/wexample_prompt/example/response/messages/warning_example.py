@@ -19,5 +19,6 @@ class WarningExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.warning(message=self.get_test_message())
+
     def get_test_message(self) -> str:
         return "Test warning message"

@@ -53,6 +53,7 @@ class TestEchoPromptResponse(AbstractPromptResponseTest):
         kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
         return kwargs
+
     def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 

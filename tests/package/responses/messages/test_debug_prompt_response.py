@@ -34,6 +34,7 @@ class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
         kwargs = kwargs or {}
         kwargs.setdefault("message", self._test_message)
         return kwargs
+
     def _get_response_class(self) -> type[AbstractPromptResponse]:
         from wexample_prompt.responses.messages.debug_prompt_response import (
             DebugPromptResponse,

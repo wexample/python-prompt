@@ -20,6 +20,7 @@ class ProgressHandle(ExtendedBaseModel):
     Can directly control a root response or map a child range onto a parent handle.
     Supports arbitrary nesting (child of child, etc.).
     """
+
     context: PromptContext = Field(
         description="The rendering context used by the response."
     )

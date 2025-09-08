@@ -22,6 +22,7 @@ class AbstractPromptTest(unittest.TestCase, ABC):
     2. IoManager integration
     3. PromptContext implementation
     """
+
     _io: IoManager
 
     _test_message: str = "Test message"

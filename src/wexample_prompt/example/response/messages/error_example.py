@@ -19,5 +19,6 @@ class ErrorExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.error(message=self.get_test_message())
+
     def get_test_message(self) -> str:
         return "Test error message"

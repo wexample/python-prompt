@@ -17,5 +17,6 @@ class EchoExample(AbstractResponseExample):
 
     def example_manager(self) -> None:
         self.io.echo(message=self.get_test_message())
+
     def get_test_message(self) -> str:
         return "Test echo message"

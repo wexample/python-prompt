@@ -21,6 +21,7 @@ class StdoutOutputHandler(AbstractOutputHandler):
     ) -> Any:
         sys.stdout.write(self._render_erase(response))
         sys.stdout.flush()
+
     def print(
         self,
         response: AbstractPromptResponse,

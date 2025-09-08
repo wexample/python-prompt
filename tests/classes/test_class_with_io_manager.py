@@ -18,6 +18,7 @@ class TestIoManager(AbstractPromptTest):
     def assertMissingArgumentError(self, class_type: type) -> None:
         with self.assertRaises(TypeError):
             class_type()
+
     def test_instantiate_class(self) -> None:
         from wexample_prompt.testing.resources.classes.class_with_io_manager import (
             ClassWithIoManager,
