@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestListPromptResponse(AbstractPromptResponseTest):
     """Test cases for ListPromptResponse."""
+
     def get_expected_lines(self) -> int:
         return 1  # Single list item
 

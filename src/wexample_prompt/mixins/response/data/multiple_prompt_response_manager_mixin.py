@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 class MultiplePromptResponseManagerMixin:
     """Mixin for managing multiple prompt responses in IoManager."""
+
     def multiple(
         self: IoManager,
         responses: list[AbstractPromptResponse],

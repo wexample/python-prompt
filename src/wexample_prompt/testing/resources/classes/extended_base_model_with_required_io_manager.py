@@ -8,6 +8,7 @@ class ExtendedBaseModelWithRequiredIoManager(WithRequiredIoManager, ExtendedBase
     """
     A Pydantic class with an io manager.
     """
+
     def __init__(self, **kwargs) -> None:
         ExtendedBaseModel.__init__(self, **kwargs)
         WithRequiredIoManager.__init__(self, **kwargs)

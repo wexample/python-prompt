@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 class EchoPromptResponse(AbstractPromptResponse):
     """A basic response with no style"""
+
     @classmethod
     def create_echo(
         cls: EchoPromptResponse,

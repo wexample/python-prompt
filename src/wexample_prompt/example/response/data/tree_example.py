@@ -7,6 +7,7 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class TreeExample(AbstractResponseExample):
     """Example for tree response."""
+
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         from wexample_prompt.responses.data.tree_prompt_response import (

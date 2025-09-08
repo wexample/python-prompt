@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 class SuggestionsPromptResponse(AbstractPromptResponse):
     """Display a list of suggestions with an introductory message."""
+
     @classmethod
     def create_suggestions(
         cls,

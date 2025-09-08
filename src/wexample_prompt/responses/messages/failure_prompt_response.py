@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class FailurePromptResponse(AbstractMessageResponse):
     """Response for failure messages."""
+
     SYMBOL: ClassVar[str] = "❌"
 
     @classmethod

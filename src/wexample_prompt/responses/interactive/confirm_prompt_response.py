@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     """Confirmation dialog with a boxed layout and keyboard shortcuts."""
+
     # Preset mappings (key -> (value, label))
     MAPPING_PRESET_YES_NO: ClassVar[dict[str, tuple[str, str]]] = {
         "y": ("yes", "Yes"),

@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 class FilePickerPromptResponseManagerMixin:
     """Mixin class for managing file picker prompt responses."""
+
     def file_picker(
         self: IoManager,
         question: LineMessage = "Select a file:",

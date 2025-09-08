@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for SubtitlePromptResponse rendering and options."""
+
     def get_expected_lines(self) -> int:
         # Subtitles render with an empty line before and after
         return 1
@@ -33,7 +34,7 @@ class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
         self._assert_contains_text(rendered, self._test_message)
         self._assert_contains_text(rendered, ".")
         assert "-" not in rendered  # ensure default from legacy not used
-    
+
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
     def test_renders_message_and_format(self) -> None:
         from wexample_prompt.responses.titles.subtitle_prompt_response import (

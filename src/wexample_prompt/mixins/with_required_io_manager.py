@@ -10,6 +10,7 @@ if TYPE_CHECKING:
 
 class WithRequiredIoManager(WithIoManager):
     """Mixin that requires an IoManager instance."""
+
     def __init__(
         self,
         io: IoManager,

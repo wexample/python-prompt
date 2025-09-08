@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 class PromptContext(ExtendedBaseModel):
     """Context for rendering responses, including terminal information."""
+
     DEFAULT_COLORIZED: ClassVar[bool] = True
     DEFAULT_VERBOSITY: ClassVar[VerbosityLevel] = VerbosityLevel.DEFAULT
     DEFAULT_WIDTH: ClassVar[int] = 80

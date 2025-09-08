@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestProgressPromptResponse(AbstractPromptResponseTest):
     """Focused tests for ProgressPromptResponse core rendering and validation."""
+
     def get_expected_lines(self) -> int:
         # Progress bar is single line
         return 1

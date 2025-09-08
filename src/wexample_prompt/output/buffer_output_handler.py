@@ -17,6 +17,7 @@ class BufferOutputHandler(AbstractOutputHandler):
     - Stores the original response objects in `buffer` (preserving legacy behavior).
     - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
     """
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self._buffer_responses: list[AbstractPromptResponse] = []

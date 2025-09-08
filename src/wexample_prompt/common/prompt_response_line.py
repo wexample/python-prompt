@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 
 class PromptResponseLine(ExtendedBaseModel):
     """A line of text composed of one or more segments with optional styling and layout."""
+
     segments: list[PromptResponseSegment] = Field(
         default_factory=list, description="List of text segments that constitute a line"
     )

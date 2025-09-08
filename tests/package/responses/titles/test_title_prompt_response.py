@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for TitlePromptResponse rendering and options."""
+
     def get_expected_lines(self) -> int:
         # Titles render with an empty line before and after
         return 1
@@ -35,7 +36,7 @@ class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
         assert (
             "⫻" not in rendered
         )  # default character should not appear when custom set
-    
+
     # Keep default common structure from AbstractPromptResponseTest (expects blank lines)
     def test_renders_message_and_format(self) -> None:
         from wexample_prompt.responses.titles.title_prompt_response import (

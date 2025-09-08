@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 class ProgressPromptResponse(AbstractPromptResponse):
     """Response for displaying progress bars."""
+
     # Style characters
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"

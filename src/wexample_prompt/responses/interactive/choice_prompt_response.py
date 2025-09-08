@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Display a list of choices and get a user selection."""
+
     choices: list[Choice] = Field(
         default_factory=list,
         description="List of choices",
