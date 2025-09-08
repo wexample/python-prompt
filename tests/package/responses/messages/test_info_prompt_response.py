@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestInfoPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for InfoPromptResponse."""
+
     def get_expected_lines(self) -> int:
         return 1  # Info messages are single line
 

@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestTablePromptResponse(AbstractPromptResponseTest):
     """Test cases for TablePromptResponse."""
+
     def get_expected_lines(self) -> int:
         # Empty lines (2) + title (1) + header (1) + 2 separators + 3 data rows
         return 9

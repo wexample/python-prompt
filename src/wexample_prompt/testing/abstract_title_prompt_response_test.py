@@ -11,6 +11,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 
 class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
     """Base class for testing title prompt responses."""
+
     def get_expected_lines(self) -> int:
         """Return the expected number of lines in the rendered response."""
         return 3  # Title messages have empty lines before and after

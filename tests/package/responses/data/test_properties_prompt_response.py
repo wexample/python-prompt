@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestPropertiesPromptResponse(AbstractPromptResponseTest):
     """Test cases for PropertiesPromptResponse."""
+
     def get_expected_lines(self) -> int:
         # Boxed properties typically render with top/bottom borders and content
         return 5

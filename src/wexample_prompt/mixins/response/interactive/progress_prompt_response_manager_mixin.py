@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 class ProgressPromptResponseManagerMixin:
     """Mixin class for managing progress prompt responses."""
+
     def progress(
         self: IoManager,
         total: int = 100,

@@ -9,6 +9,7 @@ from colorama import Fore, Style
 
 class TerminalColor(Enum):
     """Terminal color and style codes using colorama constants."""
+
     # Standard colors
     BLACK = Fore.BLACK
     RED = Fore.RED

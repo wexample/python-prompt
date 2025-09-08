@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestTitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for TitlePromptResponse rendering and options."""
+
     def get_expected_lines(self) -> int:
         # Titles render with an empty line before and after
         return 1

@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestSubtitlePromptResponse(AbstractTitlePromptResponseTest):
     """Focused tests for SubtitlePromptResponse rendering and options."""
+
     def get_expected_lines(self) -> int:
         # Subtitles render with an empty line before and after
         return 1

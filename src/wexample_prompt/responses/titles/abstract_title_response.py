@@ -18,6 +18,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
     """Base class for title-like responses that render:
     "❯ <text> ⫻⫻⫻⫻⫻⫻⫻⫻⫻⫻" with configurable fill character and width.
     """
+
     DEFAULT_PREFIX: ClassVar[str] = "❯"
     DEFAULT_CHARACTER: ClassVar[str] = "⫻"
     character: str | None = Field(

@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestTreePromptResponse(AbstractPromptResponseTest):
     """Test cases for TreePromptResponse."""
+
     def get_expected_lines(self) -> int:
         # Empty lines (1) + root (1) + folder1 (5 files) + folder2 (3 file) + test text (1) + empty (2)
         return 13

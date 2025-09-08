@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestWarningPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for WarningPromptResponse."""
+
     def get_expected_lines(self) -> int:
         return 1  # Warning messages are single line
 

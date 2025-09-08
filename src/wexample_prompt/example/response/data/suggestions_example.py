@@ -7,6 +7,7 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 class SuggestionsExample(AbstractResponseExample):
     """Example for suggestions response."""
+
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         from wexample_prompt.responses.data.suggestions_prompt_response import (

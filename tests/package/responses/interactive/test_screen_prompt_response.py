@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestScreenPromptResponse(AbstractPromptResponseTest):
     """Focused tests for ScreenPromptResponse core behavior with callback."""
+
     def get_expected_lines(self) -> int:
         return 1
 

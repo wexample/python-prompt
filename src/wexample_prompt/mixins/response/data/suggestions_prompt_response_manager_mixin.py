@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 
 class SuggestionsPromptResponseManagerMixin:
     """Mixin for IoManager to handle suggestions responses."""
+
     def suggestions(
         self: IoManager,
         message: LineMessage,

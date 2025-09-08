@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 class TestChoicePromptResponse(AbstractPromptResponseTest):
     """Test cases for ChoicePromptResponse."""
+
     def get_expected_lines(self) -> int:
         # By default: question (1) + 2 choices + abort (1)
         return 5
