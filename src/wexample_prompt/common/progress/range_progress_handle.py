@@ -28,13 +28,24 @@ class RangeProgressHandle(ExtendedBaseModel):
     )
     total: int = Field(description="Total size of the child range (end - start)")
 
+    def advance(
+        self,
+        step: float | int | str | None = None,
+        **kwargs,
+    ) -> str | None:
+        from wexample_prompt.responses.interactive.progress_prompt_response import (
+            ProgressPromptResponse,
+        )
+
+        step_norm = ProgressPromptResponse._normalize_value(self.total, step)
+        cur_child = self._child_current()
+        return self.update(current=cur_child + step_norm, **kwargs)
+
+    def finish(self, **kwargs) -> str | None:
+        return self.parent.update(current=self.end, **kwargs)
+
     def render(self) -> str:
         return self.parent.render()
-
-    def _child_current(self) -> int:
-        # Current child value derived from parent's current
-        cur = max(self.start, min(self.end, self.parent.response.current))
-        return max(0, min(self.total, cur - self.start))
 
     def update(
         self,
@@ -60,18 +71,7 @@ class RangeProgressHandle(ExtendedBaseModel):
                 current=None, label=label, color=color, auto_render=auto_render
             )
 
-    def advance(
-        self,
-        step: float | int | str | None = None,
-        **kwargs,
-    ) -> str | None:
-        from wexample_prompt.responses.interactive.progress_prompt_response import (
-            ProgressPromptResponse,
-        )
-
-        step_norm = ProgressPromptResponse._normalize_value(self.total, step)
-        cur_child = self._child_current()
-        return self.update(current=cur_child + step_norm, **kwargs)
-
-    def finish(self, **kwargs) -> str | None:
-        return self.parent.update(current=self.end, **kwargs)
+    def _child_current(self) -> int:
+        # Current child value derived from parent's current
+        cur = max(self.start, min(self.end, self.parent.response.current))
+        return max(0, min(self.total, cur - self.start))

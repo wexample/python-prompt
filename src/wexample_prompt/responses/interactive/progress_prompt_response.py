@@ -35,6 +35,35 @@ class ProgressPromptResponse(AbstractPromptResponse):
     _handle: ProgressHandle | None = None
 
     @classmethod
+    def create_progress(
+        cls,
+        total: int = 100,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        color: TerminalColor | None = None,
+        verbosity: VerbosityLevel | None = None,
+    ) -> ProgressPromptResponse:
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        if total <= 0:
+            raise ValueError("Total must be greater than 0")
+        if width is not None and width < 1:
+            raise ValueError("Width must be at least 1")
+
+        norm_current = cls._normalize_value(total, current)
+
+        return cls(
+            lines=[],
+            total=total,
+            current=norm_current,
+            width=width,
+            label=label,
+            color=color or TerminalColor.BLUE,
+            verbosity=verbosity,
+        )
+
+    @classmethod
     def get_example_class(cls) -> type:
         from wexample_prompt.example.response.interactive.progress_example import (
             ProgressExample,
@@ -72,35 +101,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
                 return max(0, min(total, val))
         # int path
         return max(0, min(total, int(current)))
-
-    @classmethod
-    def create_progress(
-        cls,
-        total: int = 100,
-        current: float | int | str = 0,
-        width: int | None = None,
-        label: str | None = None,
-        color: TerminalColor | None = None,
-        verbosity: VerbosityLevel | None = None,
-    ) -> ProgressPromptResponse:
-        from wexample_prompt.enums.terminal_color import TerminalColor
-
-        if total <= 0:
-            raise ValueError("Total must be greater than 0")
-        if width is not None and width < 1:
-            raise ValueError("Width must be at least 1")
-
-        norm_current = cls._normalize_value(total, current)
-
-        return cls(
-            lines=[],
-            total=total,
-            current=norm_current,
-            width=width,
-            label=label,
-            color=color or TerminalColor.BLUE,
-            verbosity=verbosity,
-        )
 
     def get_handle(self) -> ProgressHandle:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle

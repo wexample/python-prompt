@@ -16,42 +16,8 @@ if TYPE_CHECKING:
 class TestLogPromptResponse(AbstractPromptResponseTest):
     """Test cases for LogPromptResponse."""
 
-    def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        return LogPromptResponse
-
-    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
-        kwargs = kwargs or {}
-        kwargs.setdefault("message", self._test_message)
-        return kwargs
-
-    def _assert_specific_format(self, rendered: str) -> None:
-        # Log messages have no specific format to check
-        pass
-
     def get_expected_lines(self) -> int:
         return 1  # Log messages are single line
-
-    def test_multiline_log(self) -> None:
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        message = "Line 1\nLine 2"
-        response = LogPromptResponse.create_log(message=message)
-        rendered = response.render()
-
-        self._assert_contains_text(rendered, "Line 1")
-        self._assert_contains_text(rendered, "Line 2")
-
-    def test_log_with_timestamp(self) -> None:
-        timestamp = "2025-01-04 12:00:00"
-        message = f"[{timestamp}] System started"
-
-        response = self._create_test_response(message=message)
-        rendered = response.render()
-
-        self._assert_contains_text(rendered, timestamp)
-        self._assert_contains_text(rendered, "System started")
 
     def test_log_with_level(self) -> None:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
@@ -63,16 +29,25 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "[INFO]")
         self._assert_contains_text(rendered, "Application initialized")
 
-    def test_single_indentation(self) -> None:
-        from wexample_prompt.common.prompt_context import PromptContext
+    def test_log_with_timestamp(self) -> None:
+        timestamp = "2025-01-04 12:00:00"
+        message = f"[{timestamp}] System started"
+
+        response = self._create_test_response(message=message)
+        rendered = response.render()
+
+        self._assert_contains_text(rendered, timestamp)
+        self._assert_contains_text(rendered, "System started")
+
+    def test_multiline_log(self) -> None:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
-        message = "Indented message"
+        message = "Line 1\nLine 2"
         response = LogPromptResponse.create_log(message=message)
-        rendered = response.render(context=PromptContext(indentation=2))
+        rendered = response.render()
 
-        # Should have 2 spaces of indentation
-        assert rendered.startswith("  ")
+        self._assert_contains_text(rendered, "Line 1")
+        self._assert_contains_text(rendered, "Line 2")
 
     def test_multiple_indentation_levels(self) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
@@ -90,3 +65,28 @@ class TestLogPromptResponse(AbstractPromptResponseTest):
             response = LogPromptResponse.create_log(message=message)
             rendered = response.render(context=PromptContext(indentation=indent))
             assert rendered.startswith("  " * indent)
+
+    def test_single_indentation(self) -> None:
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        message = "Indented message"
+        response = LogPromptResponse.create_log(message=message)
+        rendered = response.render(context=PromptContext(indentation=2))
+
+        # Should have 2 spaces of indentation
+        assert rendered.startswith("  ")
+
+    def _assert_specific_format(self, rendered: str) -> None:
+        # Log messages have no specific format to check
+        pass
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
+        kwargs.setdefault("message", self._test_message)
+        return kwargs
+
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        return LogPromptResponse

@@ -4,11 +4,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 
 class SuccessExample(AbstractResponseExample):
-    def get_test_message(self) -> str:
-        return "Test success message"
-
-    def example_manager(self) -> None:
-        self.io.success(message=self.get_test_message())
 
     def example_class(self):
         from wexample_prompt.responses.messages.success_prompt_response import (
@@ -21,3 +16,8 @@ class SuccessExample(AbstractResponseExample):
 
     def example_extended(self) -> None:
         self._class_with_methods.success(message=self.get_test_message())
+
+    def example_manager(self) -> None:
+        self.io.success(message=self.get_test_message())
+    def get_test_message(self) -> str:
+        return "Test success message"

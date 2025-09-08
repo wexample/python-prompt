@@ -10,104 +10,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class MultipleExample(AbstractResponseExample):
     """Example usage of MultiplePromptResponse."""
 
-    def example_class(self, indentation: int | None = None):
-        """Example using the class directly."""
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.data.multiple_prompt_response import (
-            MultiplePromptResponse,
-        )
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log("First response"),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
-            LogPromptResponse.create_log("Last response"),
-        ]
-        return MultiplePromptResponse.create_multiple(
-            responses=responses,
-        )
-
-    def example_manager(self) -> None:
-        """Example using the IoManager."""
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log("First response"),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
-            LogPromptResponse.create_log("Last response"),
-        ]
-        self.io.multiple(responses=responses)
-
-    def example_extended(self) -> None:
-        """Example using PromptContext."""
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log("First response"),
-            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
-            LogPromptResponse.create_log("Last response"),
-        ]
-        self._class_with_methods.multiple(responses=responses)
-
-    def get_examples(self) -> list[dict[str, Any]]:
-        """Get list of examples.
-
-        Returns:
-            List[Dict[str, Any]]: List of example configurations
-        """
-        return [
-            {
-                "title": "Simple Multiple",
-                "description": "Display multiple responses in sequence",
-                "callback": self.simple_multiple,
-            },
-            {
-                "title": "Mixed Types",
-                "description": "Display different types of responses together",
-                "callback": self.mixed_types,
-            },
-            {
-                "title": "Dynamic Multiple",
-                "description": "Build multiple responses dynamically",
-                "callback": self.dynamic_multiple,
-            },
-        ]
-
-    def simple_multiple(self) -> MultiplePromptResponse | None:
-        """Show a simple multiple response example."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log("First message"),
-            LogPromptResponse.create_log("Second message"),
-            LogPromptResponse.create_log("Third message"),
-        ]
-        return self.io.multiple(responses=responses)
-
-    def mixed_types(self) -> MultiplePromptResponse | None:
-        """Show different response types together."""
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log("Log response"),
-            ListPromptResponse.create_list(
-                items=["List item 1", "List item 2"],
-            ),
-            LogPromptResponse.create_log("Another log response"),
-        ]
-        return self.io.multiple(responses=responses)
-
     def dynamic_multiple(self) -> MultiplePromptResponse | None:
         """Show building responses dynamically."""
         from wexample_prompt.responses.data.list_prompt_response import (
@@ -135,3 +37,101 @@ class MultipleExample(AbstractResponseExample):
         )
 
         return response
+
+    def example_class(self, indentation: int | None = None):
+        """Example using the class directly."""
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.data.multiple_prompt_response import (
+            MultiplePromptResponse,
+        )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log("First response"),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
+            LogPromptResponse.create_log("Last response"),
+        ]
+        return MultiplePromptResponse.create_multiple(
+            responses=responses,
+        )
+
+    def example_extended(self) -> None:
+        """Example using PromptContext."""
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log("First response"),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
+            LogPromptResponse.create_log("Last response"),
+        ]
+        self._class_with_methods.multiple(responses=responses)
+
+    def example_manager(self) -> None:
+        """Example using the IoManager."""
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log("First response"),
+            ListPromptResponse.create_list(items=["Item 1", "Item 2"]),
+            LogPromptResponse.create_log("Last response"),
+        ]
+        self.io.multiple(responses=responses)
+
+    def get_examples(self) -> list[dict[str, Any]]:
+        """Get list of examples.
+
+        Returns:
+            List[Dict[str, Any]]: List of example configurations
+        """
+        return [
+            {
+                "title": "Simple Multiple",
+                "description": "Display multiple responses in sequence",
+                "callback": self.simple_multiple,
+            },
+            {
+                "title": "Mixed Types",
+                "description": "Display different types of responses together",
+                "callback": self.mixed_types,
+            },
+            {
+                "title": "Dynamic Multiple",
+                "description": "Build multiple responses dynamically",
+                "callback": self.dynamic_multiple,
+            },
+        ]
+
+    def mixed_types(self) -> MultiplePromptResponse | None:
+        """Show different response types together."""
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log("Log response"),
+            ListPromptResponse.create_list(
+                items=["List item 1", "List item 2"],
+            ),
+            LogPromptResponse.create_log("Another log response"),
+        ]
+        return self.io.multiple(responses=responses)
+
+    def simple_multiple(self) -> MultiplePromptResponse | None:
+        """Show a simple multiple response example."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log("First message"),
+            LogPromptResponse.create_log("Second message"),
+            LogPromptResponse.create_log("Third message"),
+        ]
+        return self.io.multiple(responses=responses)

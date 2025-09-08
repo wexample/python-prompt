@@ -56,18 +56,6 @@ class PromptContext(ExtendedBaseModel):
         )
 
     @classmethod
-    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
-        return {
-            "indentation": context.indentation,
-            "indentation_character": context.indentation_character,
-            "indentation_color": context.indentation_color,
-            "indentation_background_color": context.indentation_background_color,
-            "indentation_length": context.indentation_length,
-            "verbosity": context.verbosity,
-            "width": context.width,
-        }
-
-    @classmethod
     def create_from_parent_context_and_kwargs(
         cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
@@ -86,13 +74,57 @@ class PromptContext(ExtendedBaseModel):
         """
         return context or PromptContext()
 
-    def render_indentation_text(self) -> str:
-        output = ""
-        if self.parent_context:
-            output = self.parent_context.render_indentation_text()
+    @classmethod
+    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
+        return {
+            "indentation": context.indentation,
+            "indentation_character": context.indentation_character,
+            "indentation_color": context.indentation_color,
+            "indentation_background_color": context.indentation_background_color,
+            "indentation_length": context.indentation_length,
+            "verbosity": context.verbosity,
+            "width": context.width,
+        }
 
-        """Get the current indentation string."""
-        return output + self.render_indentation_part()
+    def get_indentation(self) -> int:
+        if self.indentation is None:
+            if self.parent_context:
+                return 1
+            else:
+                return 0
+
+        return self.indentation
+
+    def get_indentation_background_color(self) -> TerminalBgColor | None:
+        if self.indentation_background_color is None:
+            if self.parent_context:
+                return self.parent_context.get_indentation_background_color()
+            else:
+                return None
+
+        return self.indentation_background_color
+
+    def get_indentation_character(self) -> str:
+        if self.indentation_character is None:
+            if self.parent_context:
+                return self.parent_context.get_indentation_character()
+            else:
+                return " "
+
+        return self.indentation_character
+
+    def get_indentation_color(self) -> TerminalColor | None:
+        if self.indentation_color is None:
+            if self.parent_context:
+                return self.parent_context.get_indentation_color()
+            else:
+                return None
+
+        return self.indentation_color
+
+    def get_width(self) -> int:
+        # None width allowed to let know that no fixed width has been specified before using it.
+        return self.width or PromptContext.DEFAULT_WIDTH
 
     def render_indentation(self) -> str:
         from wexample_prompt.common.color_manager import ColorManager
@@ -116,42 +148,10 @@ class PromptContext(ExtendedBaseModel):
             self.get_indentation() * self.indentation_length
         )
 
-    def get_width(self) -> int:
-        # None width allowed to let know that no fixed width has been specified before using it.
-        return self.width or PromptContext.DEFAULT_WIDTH
+    def render_indentation_text(self) -> str:
+        output = ""
+        if self.parent_context:
+            output = self.parent_context.render_indentation_text()
 
-    def get_indentation(self) -> int:
-        if self.indentation is None:
-            if self.parent_context:
-                return 1
-            else:
-                return 0
-
-        return self.indentation
-
-    def get_indentation_color(self) -> TerminalColor | None:
-        if self.indentation_color is None:
-            if self.parent_context:
-                return self.parent_context.get_indentation_color()
-            else:
-                return None
-
-        return self.indentation_color
-
-    def get_indentation_background_color(self) -> TerminalBgColor | None:
-        if self.indentation_background_color is None:
-            if self.parent_context:
-                return self.parent_context.get_indentation_background_color()
-            else:
-                return None
-
-        return self.indentation_background_color
-
-    def get_indentation_character(self) -> str:
-        if self.indentation_character is None:
-            if self.parent_context:
-                return self.parent_context.get_indentation_character()
-            else:
-                return " "
-
-        return self.indentation_character
+        """Get the current indentation string."""
+        return output + self.render_indentation_part()

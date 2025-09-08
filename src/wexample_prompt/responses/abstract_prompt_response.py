@@ -32,29 +32,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
     )
     _rendered_content: str | None = None
 
-    @property
-    def rendered_content(self) -> str | None:
-        return self._rendered_content
-
     @classmethod
     def get_class_name_suffix(cls) -> str | None:
         return "PromptResponse"
-
-    @classmethod
-    def _create(
-        cls: AbstractPromptResponse,
-        lines: list[PromptResponseLine],
-        **kwargs,
-    ) -> AbstractPromptResponse:
-        """Create a new response with the given lines."""
-        return cls(lines=lines, **kwargs)
-
-    def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
-        return (
-            self.verbosity is None
-            or context.verbosity is None
-            or self.verbosity <= context.verbosity
-        )
 
     @classmethod
     @abstractmethod
@@ -83,8 +63,18 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
             kwargs=parent_kwargs,
         )
 
-    def reset(self) -> None:
-        self._rendered_content = None
+    @classmethod
+    def _create(
+        cls: AbstractPromptResponse,
+        lines: list[PromptResponseLine],
+        **kwargs,
+    ) -> AbstractPromptResponse:
+        """Create a new response with the given lines."""
+        return cls(lines=lines, **kwargs)
+
+    @property
+    def rendered_content(self) -> str | None:
+        return self._rendered_content
 
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the complete response."""
@@ -97,3 +87,13 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
         self._rendered_content = "\n".join(line.render(context) for line in self.lines)
         return self._rendered_content
+
+    def reset(self) -> None:
+        self._rendered_content = None
+
+    def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
+        return (
+            self.verbosity is None
+            or context.verbosity is None
+            or self.verbosity <= context.verbosity
+        )

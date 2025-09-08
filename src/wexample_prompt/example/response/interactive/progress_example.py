@@ -37,17 +37,17 @@ class ProgressExample(AbstractResponseExample):
             label="Processing",
         )
 
-    def example_manager(self) -> None:
-        """Example using the IoManager."""
-        self.io.progress(
+    def example_extended(self) -> None:
+        """Example using a context class."""
+        self._class_with_methods.progress(
             total=5,
             current=3,
             label="Processing",
         )
 
-    def example_extended(self) -> None:
-        """Example using a context class."""
-        self._class_with_methods.progress(
+    def example_manager(self) -> None:
+        """Example using the IoManager."""
+        self.io.progress(
             total=5,
             current=3,
             label="Processing",

@@ -12,19 +12,6 @@ class TestPromptResponseLine:
         assert len(line.segments) == 1
         assert line.segments[0].text == "Hello"
 
-    def test_line_to_string(self) -> None:
-        """Test converting line to string."""
-        from wexample_prompt.common.prompt_context import PromptContext
-        from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-
-        segments = [
-            PromptResponseSegment(text="Hello"),
-            PromptResponseSegment(text=" World"),
-        ]
-        line = PromptResponseLine(segments=segments)
-        assert line.render(context=PromptContext()) == "Hello World"
-
     def test_create_from_string_splits_multiline(self) -> None:
         """Multi-line input should be split into distinct PromptResponseLine without embedded newlines."""
         from wexample_prompt.common.prompt_context import PromptContext
@@ -40,6 +27,19 @@ class TestPromptResponseLine:
         for ln in lines:
             for seg in ln.segments:
                 assert "\n" not in seg.text
+
+    def test_line_to_string(self) -> None:
+        """Test converting line to string."""
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        segments = [
+            PromptResponseSegment(text="Hello"),
+            PromptResponseSegment(text=" World"),
+        ]
+        line = PromptResponseLine(segments=segments)
+        assert line.render(context=PromptContext()) == "Hello World"
 
     def test_wrapping_is_per_line_not_across_lines(self) -> None:
         """Wrapping width must reset for each logical line produced by create_from_string."""

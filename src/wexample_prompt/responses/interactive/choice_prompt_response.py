@@ -108,6 +108,14 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             predefined_answer=predefined_answer,
         )
 
+    @classmethod
+    def get_example_class(cls) -> type[AbstractResponseExample]:
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
+
+        return ChoiceExample
+
     def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
@@ -241,11 +249,3 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     self._partial_clear(printed_lines)
                 self._answer = None
                 return
-
-    @classmethod
-    def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import (
-            ChoiceExample,
-        )
-
-        return ChoiceExample

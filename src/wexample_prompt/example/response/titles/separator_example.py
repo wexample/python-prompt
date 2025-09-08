@@ -4,8 +4,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 
 class SeparatorExample(AbstractResponseExample):
-    def example_manager(self) -> None:
-        self.io.separator()
 
     def example_class(self):
         from wexample_prompt.responses.titles.separator_prompt_response import (
@@ -16,3 +14,5 @@ class SeparatorExample(AbstractResponseExample):
 
     def example_extended(self) -> None:
         self._class_with_methods.separator(label="Class method")
+    def example_manager(self) -> None:
+        self.io.separator()

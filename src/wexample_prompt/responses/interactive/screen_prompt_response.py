@@ -59,18 +59,27 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             verbosity=verbosity,
         )
 
+    @classmethod
+    def get_example_class(cls) -> type[AbstractResponseExample]:
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
+
+        # Reuse any example class infra; a dedicated Screen example can be added later.
+        return ChoiceExample
+
     # Drawing helpers for the callback
     def clear(self) -> None:
         self.lines = []
+
+    def close(self) -> None:
+        self._closed = True
 
     def print(self, text: str) -> None:
         self._io_buffer.append_rendered(str(text))
 
     def reload(self) -> None:
         self._reload_requested = True
-
-    def close(self) -> None:
-        self._closed = True
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from time import sleep
@@ -136,12 +145,3 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             self.lines.append(
                 PromptResponseLine(segments=[PromptResponseSegment(text=raw_line)])
             )
-
-    @classmethod
-    def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import (
-            ChoiceExample,
-        )
-
-        # Reuse any example class infra; a dedicated Screen example can be added later.
-        return ChoiceExample

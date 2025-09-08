@@ -29,12 +29,6 @@ class TreePromptResponse(AbstractPromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.tree_example import TreeExample
-
-        return TreeExample
-
-    @classmethod
     def create_tree(
         cls,
         data: dict[str, Any],
@@ -45,6 +39,12 @@ class TreePromptResponse(AbstractPromptResponse):
             data=data,
             verbosity=verbosity,
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.tree_example import TreeExample
+
+        return TreeExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

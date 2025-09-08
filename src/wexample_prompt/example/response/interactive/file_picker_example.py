@@ -20,12 +20,12 @@ class FilePickerExample(AbstractResponseExample):
             predefined_answer="some_file",
         )
 
-    def example_manager(self) -> None:
-        """Example using the IoManager."""
-        self.io.file_picker(question="Select a file:", predefined_answer="some_file")
-
     def example_extended(self) -> None:
         """Example using PromptContext."""
         self._class_with_methods.file_picker(
             question="Select a file:", predefined_answer="some_file"
         )
+
+    def example_manager(self) -> None:
+        """Example using the IoManager."""
+        self.io.file_picker(question="Select a file:", predefined_answer="some_file")

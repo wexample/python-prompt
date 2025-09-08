@@ -68,15 +68,6 @@ class PromptResponseLine(ExtendedBaseModel):
 
         return self._render_wrapped(context, indentation, max_content_width)
 
-    def _render_no_formatting(self, context: PromptContext, indentation: str) -> str:
-        """Render all segments on a single line, without wrapping."""
-        rendered_segments = []
-        for seg in self.segments:
-            # Provide a very large remaining width to avoid splitting segments
-            rendered, _ = seg.render(context, line_remaining_width=10**9)
-            rendered_segments.append(rendered)
-        return f"{indentation}{''.join(rendered_segments)}"
-
     def _compute_max_content_width(
         self, context: PromptContext, indentation: str
     ) -> int | None:
@@ -86,6 +77,15 @@ class PromptResponseLine(ExtendedBaseModel):
             if context.width
             else None
         )
+
+    def _render_no_formatting(self, context: PromptContext, indentation: str) -> str:
+        """Render all segments on a single line, without wrapping."""
+        rendered_segments = []
+        for seg in self.segments:
+            # Provide a very large remaining width to avoid splitting segments
+            rendered, _ = seg.render(context, line_remaining_width=10**9)
+            rendered_segments.append(rendered)
+        return f"{indentation}{''.join(rendered_segments)}"
 
     def _render_unbounded(self, context: PromptContext, indentation: str) -> str:
         """Render without width restriction (no wrapping)."""

@@ -18,12 +18,6 @@ class ErrorPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "❌"
 
     @classmethod
-    def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.messages.error_example import ErrorExample
-
-        return ErrorExample
-
-    @classmethod
     def create_error(
         cls: ErrorPromptResponse,
         message: str | None = None,
@@ -82,3 +76,9 @@ class ErrorPromptResponse(AbstractMessageResponse):
             return cls._create_symbol_message(
                 text=text, color=(color or TerminalColor.RED), verbosity=verbosity
             )
+
+    @classmethod
+    def get_example_class(cls) -> type[AbstractResponseExample]:
+        from wexample_prompt.example.response.messages.error_example import ErrorExample
+
+        return ErrorExample

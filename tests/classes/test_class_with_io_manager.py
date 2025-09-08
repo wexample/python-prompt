@@ -4,6 +4,20 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestIoManager(AbstractPromptTest):
+
+    def assertClassHasNoneManager(self, class_type: type) -> None:
+        instance = class_type()
+        assert instance.io is None
+
+    def assertClassInstanceSucceeded(self, class_type: type) -> None:
+        from wexample_prompt.common.io_manager import IoManager
+
+        instance = class_type(io=self._io)
+        assert isinstance(instance.io, IoManager)
+
+    def assertMissingArgumentError(self, class_type: type) -> None:
+        with self.assertRaises(TypeError):
+            class_type()
     def test_instantiate_class(self) -> None:
         from wexample_prompt.testing.resources.classes.class_with_io_manager import (
             ClassWithIoManager,
@@ -39,17 +53,3 @@ class TestIoManager(AbstractPromptTest):
 
         self.assertMissingArgumentError(ExtendedBaseModelWithRequiredIoManager)
         self.assertClassInstanceSucceeded(ExtendedBaseModelWithRequiredIoManager)
-
-    def assertClassHasNoneManager(self, class_type: type) -> None:
-        instance = class_type()
-        assert instance.io is None
-
-    def assertMissingArgumentError(self, class_type: type) -> None:
-        with self.assertRaises(TypeError):
-            class_type()
-
-    def assertClassInstanceSucceeded(self, class_type: type) -> None:
-        from wexample_prompt.common.io_manager import IoManager
-
-        instance = class_type(io=self._io)
-        assert isinstance(instance.io, IoManager)

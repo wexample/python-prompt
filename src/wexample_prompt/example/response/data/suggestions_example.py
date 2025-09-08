@@ -8,24 +8,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class SuggestionsExample(AbstractResponseExample):
     """Example for suggestions response."""
 
-    def get_example(self) -> str:
-        from wexample_prompt.responses.data.suggestions_prompt_response import (
-            SuggestionsPromptResponse,
-        )
-
-        message = "Here are some useful commands"
-        suggestions = [
-            "command1 --arg value",
-            "command2",
-            "command3 --flag",
-        ]
-        response = SuggestionsPromptResponse.create_suggestions(
-            message=message,
-            suggestions=suggestions,
-            context=self.io.create_context(),
-        )
-        return response.render()
-
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         from wexample_prompt.responses.data.suggestions_prompt_response import (
@@ -43,6 +25,19 @@ class SuggestionsExample(AbstractResponseExample):
             suggestions=suggestions,
         )
 
+    def example_extended(self) -> None:
+        """Example using context."""
+        message = "Here are some useful commands"
+        suggestions = [
+            "command1 --arg value",
+            "command2",
+            "command3 --flag",
+        ]
+        self._class_with_methods.suggestions(
+            message=message,
+            suggestions=suggestions,
+        )
+
     def example_manager(self) -> None:
         """Example using IoManager directly."""
         message = "Here are some useful commands"
@@ -56,15 +51,20 @@ class SuggestionsExample(AbstractResponseExample):
             suggestions=suggestions,
         )
 
-    def example_extended(self) -> None:
-        """Example using context."""
+    def get_example(self) -> str:
+        from wexample_prompt.responses.data.suggestions_prompt_response import (
+            SuggestionsPromptResponse,
+        )
+
         message = "Here are some useful commands"
         suggestions = [
             "command1 --arg value",
             "command2",
             "command3 --flag",
         ]
-        self._class_with_methods.suggestions(
+        response = SuggestionsPromptResponse.create_suggestions(
             message=message,
             suggestions=suggestions,
+            context=self.io.create_context(),
         )
+        return response.render()

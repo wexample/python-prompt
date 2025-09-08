@@ -43,26 +43,6 @@ class ProgressHandle(ExtendedBaseModel):
         description="The associated progress response (root response)."
     )
 
-    # --- Internal helpers ---
-    def _is_child(self) -> bool:
-        return (
-            self.parent is not None
-            and self.range_start is not None
-            and self.range_end is not None
-        )
-
-    def _effective_total(self) -> int:
-        if self._is_child():
-            return max(0, int(self.range_end - self.range_start))  # type: ignore[arg-type]
-        return self.response.total
-
-    def _child_current(self) -> int:
-        # Derive child-relative current from parent's absolute current
-        if not self._is_child():
-            return self.response.current
-        cur = max(self.range_start, min(self.range_end, self.response.current))  # type: ignore[arg-type]
-        return max(0, min(self._effective_total(), cur - int(self.range_start)))  # type: ignore[arg-type]
-
     # --- Public properties ---
     @property
     def total(self) -> int:
@@ -107,6 +87,77 @@ class ProgressHandle(ExtendedBaseModel):
             # Clamp current to new total
             if self.response.current > new_total:
                 self.response.current = new_total
+
+    def advance(self, step: float | int | str | None = None, **kwargs) -> str | None:
+        """Increment progress by a number of steps and optionally render."""
+        if self._is_child():
+            step_norm = ProgressPromptResponse._normalize_value(
+                self._effective_total(), step
+            )
+            cur_child = self._child_current()
+            return self.update(current=cur_child + step_norm, **kwargs)
+        else:
+            step_val = ProgressPromptResponse._normalize_value(
+                self.response.total, step
+            )
+            return self.update(
+                current=max(0, self.response.current + step_val), **kwargs
+            )
+
+    # --- Sub-range API ---
+    def create_range_handle(
+        self,
+        *,
+        to: int | None = None,
+        from_: int | None = None,
+        total: int | None = None,
+        to_step: int | None = None,
+    ) -> ProgressHandle:
+        """Create a child handle that controls only a sub-range of this handle.
+
+        Rules:
+        - If from_ is None, it defaults to the current parent progress.
+        - You can specify one of:
+          - `total` (explicit size of the child range), or
+          - `to` (absolute end bound on the parent; child size = to - from_), or
+          - `to_step` (relative size from the start, i.e. child size = to_step).
+          If multiple are provided, `total` takes precedence, then `to`, then `to_step`.
+        - The sub-range maps child's [0..child_total] onto parent's [from_..end].
+        """
+        start = from_ if from_ is not None else self.response.current
+        if total is None and to is None and to_step is None:
+            raise ValueError(
+                "create_range_handle requires one of 'total', 'to', or 'to_step'"
+            )
+        if total is None:
+            if to is not None:
+                total = int(to - start)  # type: ignore[arg-type]
+            else:
+                total = int(to_step)  # type: ignore[arg-type]
+        if total < 0:
+            raise ValueError("Sub-range total must be >= 0")
+        end = start + total
+        # Clamp to parent bounds
+        start = max(0, min(self.response.total, start))
+        end = max(0, min(self.response.total, end))
+        if end < start:
+            start, end = end, start
+        # Create child handle sharing the same response/context/output
+        return ProgressHandle(
+            response=self.response,
+            context=self.context,
+            output=self.output,
+            parent=self,
+            range_start=start,
+            range_end=end,
+        )
+
+    def finish(self, **kwargs) -> str | None:
+        if self._is_child():
+            # Set absolute end on shared response
+            self.response.current = int(self.range_end)  # type: ignore[arg-type]
+            return self.update(current=None, **kwargs)
+        return self.update(current=self.response.total, **kwargs)
 
     def render(self) -> str:
         """Render once using the stored context and optional output handler."""
@@ -184,73 +235,22 @@ class ProgressHandle(ExtendedBaseModel):
                 return self.render()
             return None
 
-    def advance(self, step: float | int | str | None = None, **kwargs) -> str | None:
-        """Increment progress by a number of steps and optionally render."""
+    def _child_current(self) -> int:
+        # Derive child-relative current from parent's absolute current
+        if not self._is_child():
+            return self.response.current
+        cur = max(self.range_start, min(self.range_end, self.response.current))  # type: ignore[arg-type]
+        return max(0, min(self._effective_total(), cur - int(self.range_start)))  # type: ignore[arg-type]
+
+    def _effective_total(self) -> int:
         if self._is_child():
-            step_norm = ProgressPromptResponse._normalize_value(
-                self._effective_total(), step
-            )
-            cur_child = self._child_current()
-            return self.update(current=cur_child + step_norm, **kwargs)
-        else:
-            step_val = ProgressPromptResponse._normalize_value(
-                self.response.total, step
-            )
-            return self.update(
-                current=max(0, self.response.current + step_val), **kwargs
-            )
+            return max(0, int(self.range_end - self.range_start))  # type: ignore[arg-type]
+        return self.response.total
 
-    def finish(self, **kwargs) -> str | None:
-        if self._is_child():
-            # Set absolute end on shared response
-            self.response.current = int(self.range_end)  # type: ignore[arg-type]
-            return self.update(current=None, **kwargs)
-        return self.update(current=self.response.total, **kwargs)
-
-    # --- Sub-range API ---
-    def create_range_handle(
-        self,
-        *,
-        to: int | None = None,
-        from_: int | None = None,
-        total: int | None = None,
-        to_step: int | None = None,
-    ) -> ProgressHandle:
-        """Create a child handle that controls only a sub-range of this handle.
-
-        Rules:
-        - If from_ is None, it defaults to the current parent progress.
-        - You can specify one of:
-          - `total` (explicit size of the child range), or
-          - `to` (absolute end bound on the parent; child size = to - from_), or
-          - `to_step` (relative size from the start, i.e. child size = to_step).
-          If multiple are provided, `total` takes precedence, then `to`, then `to_step`.
-        - The sub-range maps child's [0..child_total] onto parent's [from_..end].
-        """
-        start = from_ if from_ is not None else self.response.current
-        if total is None and to is None and to_step is None:
-            raise ValueError(
-                "create_range_handle requires one of 'total', 'to', or 'to_step'"
-            )
-        if total is None:
-            if to is not None:
-                total = int(to - start)  # type: ignore[arg-type]
-            else:
-                total = int(to_step)  # type: ignore[arg-type]
-        if total < 0:
-            raise ValueError("Sub-range total must be >= 0")
-        end = start + total
-        # Clamp to parent bounds
-        start = max(0, min(self.response.total, start))
-        end = max(0, min(self.response.total, end))
-        if end < start:
-            start, end = end, start
-        # Create child handle sharing the same response/context/output
-        return ProgressHandle(
-            response=self.response,
-            context=self.context,
-            output=self.output,
-            parent=self,
-            range_start=start,
-            range_end=end,
+    # --- Internal helpers ---
+    def _is_child(self) -> bool:
+        return (
+            self.parent is not None
+            and self.range_start is not None
+            and self.range_end is not None
         )

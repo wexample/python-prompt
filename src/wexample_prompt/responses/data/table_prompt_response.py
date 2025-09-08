@@ -26,12 +26,6 @@ class TablePromptResponse(AbstractPromptResponse):
     title: str | None = Field(default=None, description="Optional table title")
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.table_example import TableExample
-
-        return TableExample
-
-    @classmethod
     def create_table(
         cls,
         data: list[list[Any]],
@@ -42,6 +36,44 @@ class TablePromptResponse(AbstractPromptResponse):
         return cls(
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.table_example import TableExample
+
+        return TableExample
+
+    @staticmethod
+    def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
+        if not rows:
+            return []
+        num_columns = max(len(row) for row in rows)
+        max_widths = [0] * num_columns
+        for row in rows:
+            for i in range(num_columns):
+                cell = str(row[i]) if i < len(row) else ""
+                max_widths[i] = max(max_widths[i], len(cell))
+        return max_widths
+
+    @staticmethod
+    def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
+        )
+
+    @staticmethod
+    def _create_row_segments(
+        row: list[Any], widths: list[int]
+    ) -> list[PromptResponseSegment]:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        segments = [PromptResponseSegment(text="|")]
+        for i in range(len(widths)):
+            cell = str(row[i]) if i < len(row) else ""
+            segments.append(PromptResponseSegment(text=f" {cell:<{widths[i]}} |"))
+        return segments
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -90,35 +122,3 @@ class TablePromptResponse(AbstractPromptResponse):
 
         self.lines = lines
         return super().render(context=context)
-
-    @staticmethod
-    def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
-        if not rows:
-            return []
-        num_columns = max(len(row) for row in rows)
-        max_widths = [0] * num_columns
-        for row in rows:
-            for i in range(num_columns):
-                cell = str(row[i]) if i < len(row) else ""
-                max_widths[i] = max(max_widths[i], len(cell))
-        return max_widths
-
-    @staticmethod
-    def _create_row_segments(
-        row: list[Any], widths: list[int]
-    ) -> list[PromptResponseSegment]:
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-
-        segments = [PromptResponseSegment(text="|")]
-        for i in range(len(widths)):
-            cell = str(row[i]) if i < len(row) else ""
-            segments.append(PromptResponseSegment(text=f" {cell:<{widths[i]}} |"))
-        return segments
-
-    @staticmethod
-    def _create_border_line(width: int) -> PromptResponseLine:
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-
-        return PromptResponseLine(
-            segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
-        )

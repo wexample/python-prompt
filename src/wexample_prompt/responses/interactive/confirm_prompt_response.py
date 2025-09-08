@@ -64,25 +64,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.confirm_example import (
-            ConfirmExample,
-        )
-
-        return ConfirmExample
-
-    # Internal helper to create a full-width separator line using a given character
-    @staticmethod
-    def _separator(
-        ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
-    ) -> PromptResponseLine:
-        from wexample_prompt.common.prompt_response_line import PromptResponseLine
-
-        return PromptResponseLine(
-            segments=[PromptResponseSegment(text=(ch * width), color=color)]
-        )
-
-    @classmethod
     def create_confirm(
         cls,
         question: LineMessage = "Please confirm:",
@@ -111,6 +92,25 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             # allow_abort is True by default; ESC/q return None
         )
 
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.interactive.confirm_example import (
+            ConfirmExample,
+        )
+
+        return ConfirmExample
+
+    # Internal helper to create a full-width separator line using a given character
+    @staticmethod
+    def _separator(
+        ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
+    ) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text=(ch * width), color=color)]
+        )
+
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
         return (
@@ -121,6 +121,71 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             or self._answer == "ok"
             or self._answer == "continue"
         )
+
+    def render(self, context: PromptContext | None = None) -> None:
+        from wexample_prompt.common.prompt_context import PromptContext
+
+        context = PromptContext.create_if_none(context=context)
+
+        printed = 0
+        # render once per frame until a valid key or injected answer
+        while True:
+            self._partial_clear(printed)
+            self._build_lines(context=context)
+            printed = self._print_render(context=context)
+
+            if self.predefined_answer is not None:
+                if self.reset_on_finish and printed > 0:
+                    self._partial_clear(printed)
+                self._answer = str(self.predefined_answer)
+                return
+
+            key = self._read_key()
+            # Support left/right arrows to cycle the current default selection among options
+            # Arrow sequences typically are: left='\x1b[D', right='\x1b[C'
+            if key in ("\x1b[C", "\x1b[D"):
+                items = list(
+                    self.options.items()
+                )  # [(k, (value, label)), ...] preserving insertion order
+                if items:
+                    # Determine current index from default_value
+                    current_idx = None
+                    if self.default_value is not None:
+                        for i, (_k, (v, _label)) in enumerate(items):
+                            if v == self.default_value:
+                                current_idx = i
+                                break
+                    if key == "\x1b[C":  # right
+                        if current_idx is None:
+                            new_idx = 0
+                        else:
+                            new_idx = (current_idx + 1) % len(items)
+                    else:  # left
+                        if current_idx is None:
+                            new_idx = len(items) - 1
+                        else:
+                            new_idx = (current_idx - 1) % len(items)
+                    # Update the default_value to new selection, will re-render highlighted next iteration
+                    self.default_value = items[new_idx][1][0]
+                # Continue to next loop to re-render with updated highlight
+                continue
+            # normalize single-char keys for mapping
+            if key in self.options:
+                value, _ = self.options[key]
+                if self.reset_on_finish and printed > 0:
+                    self._partial_clear(printed)
+                self._answer = value
+                return
+            elif key in ("\r", "\n") and self.default_value is not None:
+                if self.reset_on_finish and printed > 0:
+                    self._partial_clear(printed)
+                self._answer = self.default_value
+                return
+            elif key in ("\x1b", "q", "Q") and self.allow_abort:
+                if self.reset_on_finish and printed > 0:
+                    self._partial_clear(printed)
+                self._answer = None
+                return
 
     def _build_lines(self, context: PromptContext) -> None:
         from wexample_helpers.helpers.ansi import ansi_display_width
@@ -227,68 +292,3 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # bottom border (thicker look using lower half block)
         self.lines.append(self._separator("▄", box_width, TerminalColor.WHITE))
         self.lines.append(self._separator("░", box_width, TerminalColor.WHITE))
-
-    def render(self, context: PromptContext | None = None) -> None:
-        from wexample_prompt.common.prompt_context import PromptContext
-
-        context = PromptContext.create_if_none(context=context)
-
-        printed = 0
-        # render once per frame until a valid key or injected answer
-        while True:
-            self._partial_clear(printed)
-            self._build_lines(context=context)
-            printed = self._print_render(context=context)
-
-            if self.predefined_answer is not None:
-                if self.reset_on_finish and printed > 0:
-                    self._partial_clear(printed)
-                self._answer = str(self.predefined_answer)
-                return
-
-            key = self._read_key()
-            # Support left/right arrows to cycle the current default selection among options
-            # Arrow sequences typically are: left='\x1b[D', right='\x1b[C'
-            if key in ("\x1b[C", "\x1b[D"):
-                items = list(
-                    self.options.items()
-                )  # [(k, (value, label)), ...] preserving insertion order
-                if items:
-                    # Determine current index from default_value
-                    current_idx = None
-                    if self.default_value is not None:
-                        for i, (_k, (v, _label)) in enumerate(items):
-                            if v == self.default_value:
-                                current_idx = i
-                                break
-                    if key == "\x1b[C":  # right
-                        if current_idx is None:
-                            new_idx = 0
-                        else:
-                            new_idx = (current_idx + 1) % len(items)
-                    else:  # left
-                        if current_idx is None:
-                            new_idx = len(items) - 1
-                        else:
-                            new_idx = (current_idx - 1) % len(items)
-                    # Update the default_value to new selection, will re-render highlighted next iteration
-                    self.default_value = items[new_idx][1][0]
-                # Continue to next loop to re-render with updated highlight
-                continue
-            # normalize single-char keys for mapping
-            if key in self.options:
-                value, _ = self.options[key]
-                if self.reset_on_finish and printed > 0:
-                    self._partial_clear(printed)
-                self._answer = value
-                return
-            elif key in ("\r", "\n") and self.default_value is not None:
-                if self.reset_on_finish and printed > 0:
-                    self._partial_clear(printed)
-                self._answer = self.default_value
-                return
-            elif key in ("\x1b", "q", "Q") and self.allow_abort:
-                if self.reset_on_finish and printed > 0:
-                    self._partial_clear(printed)
-                self._answer = None
-                return

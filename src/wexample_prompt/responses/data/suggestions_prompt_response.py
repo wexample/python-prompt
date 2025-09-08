@@ -14,14 +14,6 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
     """Display a list of suggestions with an introductory message."""
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.suggestions_example import (
-            SuggestionsExample,
-        )
-
-        return SuggestionsExample
-
-    @classmethod
     def create_suggestions(
         cls,
         message: LineMessage,
@@ -72,3 +64,11 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
             lines=lines,
             verbosity=verbosity,
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.suggestions_example import (
+            SuggestionsExample,
+        )
+
+        return SuggestionsExample

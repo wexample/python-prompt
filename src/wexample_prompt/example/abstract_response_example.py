@@ -32,9 +32,9 @@ class AbstractResponseExample(WithIoManager, ExtendedBaseModel):
         pass
 
     @abstractmethod
-    def example_manager(self) -> None:
+    def example_extended(self) -> None:
         pass
 
     @abstractmethod
-    def example_extended(self) -> None:
+    def example_manager(self) -> None:
         pass

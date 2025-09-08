@@ -14,21 +14,6 @@ if TYPE_CHECKING:
 
 
 class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
-    def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.debug_prompt_response import (
-            DebugPromptResponse,
-        )
-
-        return DebugPromptResponse
-
-    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
-        kwargs = kwargs or {}
-        kwargs.setdefault("message", self._test_message)
-        return kwargs
-
-    def _assert_specific_format(self, rendered: str) -> None:
-        # Debug messages should include the debug symbol
-        self._assert_contains_text(rendered, "🔍")
 
     def get_expected_lines(self) -> int:
         return 1  # Debug messages are single line
@@ -40,3 +25,18 @@ class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
                 {"message": self._test_message_multiline}
             )
         )
+
+    def _assert_specific_format(self, rendered: str) -> None:
+        # Debug messages should include the debug symbol
+        self._assert_contains_text(rendered, "🔍")
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
+        kwargs.setdefault("message", self._test_message)
+        return kwargs
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
+        from wexample_prompt.responses.messages.debug_prompt_response import (
+            DebugPromptResponse,
+        )
+
+        return DebugPromptResponse

@@ -8,25 +8,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class TableExample(AbstractResponseExample):
     """Example for table response."""
 
-    def get_example(self) -> str:
-        from wexample_prompt.responses.data.table_prompt_response import (
-            TablePromptResponse,
-        )
-
-        headers = ["Name", "Age", "City"]
-        data = [
-            ["John", "30", "New York"],
-            ["Jane", "25", "San Francisco"],
-            ["Bob", "35", "Chicago"],
-        ]
-        response = TablePromptResponse.create_table(
-            data=data,
-            headers=headers,
-            title="Employee List",
-            context=self.io.create_context(),
-        )
-        return response.render()
-
     def example_class(self, indentation: int | None = None):
         """Example using class with context."""
         from wexample_prompt.responses.data.table_prompt_response import (
@@ -40,6 +21,20 @@ class TableExample(AbstractResponseExample):
             ["Bob", "35", "Chicago"],
         ]
         return TablePromptResponse.create_table(
+            data=data,
+            headers=headers,
+            title="Employee List",
+        )
+
+    def example_extended(self) -> None:
+        """Example using context."""
+        headers = ["Name", "Age", "City"]
+        data = [
+            ["John", "30", "New York"],
+            ["Jane", "25", "San Francisco"],
+            ["Bob", "35", "Chicago"],
+        ]
+        self._class_with_methods.table(
             data=data,
             headers=headers,
             title="Employee List",
@@ -59,16 +54,21 @@ class TableExample(AbstractResponseExample):
             title="Employee List",
         )
 
-    def example_extended(self) -> None:
-        """Example using context."""
+    def get_example(self) -> str:
+        from wexample_prompt.responses.data.table_prompt_response import (
+            TablePromptResponse,
+        )
+
         headers = ["Name", "Age", "City"]
         data = [
             ["John", "30", "New York"],
             ["Jane", "25", "San Francisco"],
             ["Bob", "35", "Chicago"],
         ]
-        self._class_with_methods.table(
+        response = TablePromptResponse.create_table(
             data=data,
             headers=headers,
             title="Employee List",
+            context=self.io.create_context(),
         )
+        return response.render()

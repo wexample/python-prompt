@@ -136,22 +136,6 @@ class IoManager(
         super().__init__(**kwargs)
         self._init_output()
 
-    @property
-    def terminal_width(self, reload: bool = False) -> int:
-        if reload or self._terminal_width is None:
-            import shutil
-
-            self._terminal_width = shutil.get_terminal_size().columns
-
-        return self._terminal_width
-
-    def _init_output(self) -> None:
-        from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
-
-        self.output = (
-            self.output if (self.output is not None) else StdoutOutputHandler()
-        )
-
     @classmethod
     def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
         from wexample_prompt.responses.data.list_prompt_response import (
@@ -251,11 +235,14 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
-    def erase_response(
-        self,
-        response: AbstractPromptResponse,
-    ) -> None:
-        self.output.erase(response=response)
+    @property
+    def terminal_width(self, reload: bool = False) -> int:
+        if reload or self._terminal_width is None:
+            import shutil
+
+            self._terminal_width = shutil.get_terminal_size().columns
+
+        return self._terminal_width
 
     def create_context(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
@@ -271,6 +258,12 @@ class IoManager(
         context.width = context.width or self.terminal_width
         return context
 
+    def erase_response(
+        self,
+        response: AbstractPromptResponse,
+    ) -> None:
+        self.output.erase(response=response)
+
     def print_response(
         self,
         response: AbstractPromptResponse,
@@ -281,3 +274,10 @@ class IoManager(
         )
 
         return response
+
+    def _init_output(self) -> None:
+        from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
+
+        self.output = (
+            self.output if (self.output is not None) else StdoutOutputHandler()
+        )

@@ -36,14 +36,6 @@ class FilePickerPromptResponse(ChoicePromptResponse):
     )
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.file_picker_example import (
-            FilePickerExample,
-        )
-
-        return FilePickerExample
-
-    @classmethod
     def create_file_picker(
         cls,
         base_dir: str | None = None,
@@ -105,3 +97,11 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.interactive.file_picker_example import (
+            FilePickerExample,
+        )
+
+        return FilePickerExample

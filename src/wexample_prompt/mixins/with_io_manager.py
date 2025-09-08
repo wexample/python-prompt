@@ -40,10 +40,25 @@ class WithIoManager:
         # any dynamic overrides provided by subclass getters.
         return self._create_io_context()
 
-    def _init_io_manager(self) -> None:
-        from wexample_prompt.common.io_manager import IoManager
+    def get_io_context_colorized(self) -> bool | None:
+        return None
 
-        self.io = IoManager()
+    def get_io_context_indentation(self) -> int:
+        if self._io_parent_context:
+            return self._io_parent_context.indentation + 1
+        return 0
+
+    def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
+        return None
+
+    def get_io_context_indentation_character(self) -> str | None:
+        return None
+
+    def get_io_context_indentation_color(self) -> TerminalColor | None:
+        return None
+
+    def get_io_context_indentation_width(self) -> int | None:
+        return None
 
     def _create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
@@ -80,22 +95,7 @@ class WithIoManager:
             kwargs=defaults,
         )
 
-    def get_io_context_colorized(self) -> bool | None:
-        return None
+    def _init_io_manager(self) -> None:
+        from wexample_prompt.common.io_manager import IoManager
 
-    def get_io_context_indentation(self) -> int:
-        if self._io_parent_context:
-            return self._io_parent_context.indentation + 1
-        return 0
-
-    def get_io_context_indentation_character(self) -> str | None:
-        return None
-
-    def get_io_context_indentation_color(self) -> TerminalColor | None:
-        return None
-
-    def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
-        return None
-
-    def get_io_context_indentation_width(self) -> int | None:
-        return None
+        self.io = IoManager()

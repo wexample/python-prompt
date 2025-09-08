@@ -14,6 +14,13 @@ if TYPE_CHECKING:
 
 
 class StdoutOutputHandler(AbstractOutputHandler):
+
+    def erase(
+        self,
+        response: AbstractPromptResponse,
+    ) -> Any:
+        sys.stdout.write(self._render_erase(response))
+        sys.stdout.flush()
     def print(
         self,
         response: AbstractPromptResponse,
@@ -27,13 +34,6 @@ class StdoutOutputHandler(AbstractOutputHandler):
             sys.stdout.flush()
 
         return rendered_response
-
-    def erase(
-        self,
-        response: AbstractPromptResponse,
-    ) -> Any:
-        sys.stdout.write(self._render_erase(response))
-        sys.stdout.flush()
 
     def _render_erase(self, response: AbstractPromptResponse) -> str:
         from wexample_helpers.helpers.ansi import ansi_display_width

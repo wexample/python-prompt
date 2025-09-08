@@ -23,6 +23,15 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
         if printed_lines > 0:
             print(f"\033[{printed_lines}F\033[J", end="", flush=True)
 
+    @staticmethod
+    def _read_key() -> str:
+        import readchar
+
+        return readchar.readkey()
+
+    def get_answer(self) -> Any:
+        return self._answer
+
     def _print_render(self, context) -> int:
         """Render the content and return the number of terminal rows consumed.
 
@@ -57,12 +66,3 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
             else:
                 rows += (width + cols - 1) // cols  # ceil(width/cols)
         return rows
-
-    @staticmethod
-    def _read_key() -> str:
-        import readchar
-
-        return readchar.readkey()
-
-    def get_answer(self) -> Any:
-        return self._answer

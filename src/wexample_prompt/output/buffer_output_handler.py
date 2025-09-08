@@ -24,10 +24,6 @@ class BufferOutputHandler(AbstractOutputHandler):
         self._buffer_rendered: list[str | None] = []
 
     @property
-    def responses(self) -> list[AbstractPromptResponse]:
-        return self._buffer_responses
-
-    @property
     def rendered(self) -> list[str | None]:
         return self._buffer_rendered
 
@@ -35,12 +31,22 @@ class BufferOutputHandler(AbstractOutputHandler):
     def rendered_str(self) -> str:
         return "".join([str(s) for s in self._buffer_rendered])
 
+    @property
+    def responses(self) -> list[AbstractPromptResponse]:
+        return self._buffer_responses
+
     def append_rendered(self, text: str) -> None:
         self._buffer_rendered.append(text)
 
     def clear(self) -> None:
         self._buffer_responses = []
         self._buffer_rendered = []
+
+    def erase(
+        self,
+        response: AbstractPromptResponse,
+    ) -> Any:
+        pass
 
     def flush(self) -> list[str | None]:
         rendered = self.rendered
@@ -61,9 +67,3 @@ class BufferOutputHandler(AbstractOutputHandler):
             self.append_rendered(rendered_response)
 
         return rendered_response
-
-    def erase(
-        self,
-        response: AbstractPromptResponse,
-    ) -> Any:
-        pass

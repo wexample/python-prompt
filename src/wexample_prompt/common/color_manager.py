@@ -17,6 +17,23 @@ class ColorManager:
     init()
 
     @classmethod
+    def build_prefix(
+        cls,
+        color: TerminalColor | None = None,
+        bg: TerminalBgColor | None = None,
+        styles: list[TextStyle] | None = None,
+    ) -> str:
+        """Build ANSI prefix combining color and a list of TextStyle entries."""
+        prefix = ""
+        if color:
+            prefix += str(color)
+        if bg:
+            prefix += str(bg)
+        if styles:
+            prefix += "".join(cls.get_style_ansi(s) for s in styles)
+        return prefix
+
+    @classmethod
     def colorize(
         cls,
         text: str,
@@ -59,20 +76,3 @@ class ColorManager:
             TextStyle.HIDDEN: "\u001b[8m",
         }
         return style_codes.get(style, "")
-
-    @classmethod
-    def build_prefix(
-        cls,
-        color: TerminalColor | None = None,
-        bg: TerminalBgColor | None = None,
-        styles: list[TextStyle] | None = None,
-    ) -> str:
-        """Build ANSI prefix combining color and a list of TextStyle entries."""
-        prefix = ""
-        if color:
-            prefix += str(color)
-        if bg:
-            prefix += str(bg)
-        if styles:
-            prefix += "".join(cls.get_style_ansi(s) for s in styles)
-        return prefix
