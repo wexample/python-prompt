@@ -1,8 +1,8 @@
 """Tests for ChoicePromptResponse (interactive)."""
 
-from typing import TYPE_CHECKING
-
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,

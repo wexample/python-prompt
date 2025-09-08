@@ -1,11 +1,9 @@
 """Response for displaying and handling file picker prompts."""
 
-from typing import TYPE_CHECKING
-
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import Field
 from wexample_prompt.enums.choice import FilePickerMode

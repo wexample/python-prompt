@@ -1,8 +1,8 @@
 """Tests for WarningPromptResponse."""
 
-from typing import TYPE_CHECKING
-
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from wexample_prompt.testing.abstract_prompt_message_response_test import (
     AbstractPromptMessageResponseTest,

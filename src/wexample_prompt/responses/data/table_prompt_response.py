@@ -1,10 +1,8 @@
 """Table response for displaying data in a formatted table layout."""
 
-from typing import TYPE_CHECKING
-
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pydantic import Field
 from wexample_prompt.common.prompt_context import PromptContext

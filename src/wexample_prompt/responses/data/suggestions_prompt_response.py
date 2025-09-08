@@ -1,8 +1,8 @@
 """Response for displaying suggestions with optional descriptions."""
 
-from typing import TYPE_CHECKING
-
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
