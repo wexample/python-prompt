@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Mapping, Callable, Any
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+import attrs
+
+from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
+from wexample_helpers.enums.field_visibility import FieldVisibility
+from wexample_helpers.helpers.variable import copy_shallow
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -18,15 +21,18 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
 
+from wexample_helpers.decorator.base_class import base_class
 
-class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel):
+
+@base_class
+class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
     """Abstract base class for all prompt responses."""
 
-    lines: list[PromptResponseLine] = Field(
-        default_factory=list,
+    lines: list[PromptResponseLine] = public_field(
+        factory=list,
         description="The list of lines of the response content",
     )
-    verbosity: VerbosityLevel | None = Field(
+    verbosity: VerbosityLevel | None = public_field(
         default=None,
         description="The context verbosity, saying which response to render or not",
     )
@@ -43,9 +49,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def rebuild_context_for_kwargs(
-        cls,
-        parent_kwargs: Kwargs,
-        context: PromptContext | None = None,
+            cls,
+            parent_kwargs: Kwargs,
+            context: PromptContext | None = None,
     ) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
@@ -65,9 +71,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     @classmethod
     def _create(
-        cls: AbstractPromptResponse,
-        lines: list[PromptResponseLine],
-        **kwargs,
+            cls: AbstractPromptResponse,
+            lines: list[PromptResponseLine],
+            **kwargs,
     ) -> AbstractPromptResponse:
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
@@ -93,7 +99,40 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin, ExtendedBaseModel
 
     def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
         return (
-            self.verbosity is None
-            or context.verbosity is None
-            or self.verbosity <= context.verbosity
+                self.verbosity is None
+                or context.verbosity is None
+                or self.verbosity <= context.verbosity
         )
+
+    def _clone_export(
+            self,
+            *,
+            shallow: bool = False,
+            per_field_copy: Optional[Mapping[str, Callable[[Any], Any]]] = None,
+    ) -> dict:
+        out = {}
+        for a in attrs.fields(self.__class__):
+            if not a.init:
+                continue
+            vis = a.metadata.get("visibility")
+            if vis is not None and vis != FieldVisibility.PUBLIC.value:
+                continue
+            if a.name.startswith("_"):
+                continue
+
+            val = getattr(self, a.name)
+            init_name = getattr(a, "alias", None) or a.name
+
+            if per_field_copy and init_name in per_field_copy:
+                out[init_name] = per_field_copy[init_name](val)
+            elif shallow:
+                out[init_name] = copy_shallow(val)
+            else:
+                out[init_name] = val
+        return out
+
+    def clone(self, **overrides) -> AbstractPromptResponse:
+        """Clone this response and all its child objects safely."""
+        payload = self._clone_export()
+        payload.update(overrides)
+        return self.__class__(**payload)

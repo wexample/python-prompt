@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.base_class import BaseClass
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 from wexample_prompt.responses.interactive.progress_prompt_response import (
@@ -14,32 +14,34 @@ if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class ProgressHandle(ExtendedBaseModel):
+from wexample_helpers.decorator.base_class import base_class
+@base_class
+class ProgressHandle(BaseClass):
     """Stateful progress handle.
 
     Can directly control a root response or map a child range onto a parent handle.
     Supports arbitrary nesting (child of child, etc.).
     """
 
-    context: PromptContext = Field(
+    context: PromptContext = public_field(
         description="The rendering context used by the response."
     )
-    output: AbstractOutputHandler | None = Field(
+    output: AbstractOutputHandler | None = public_field(
         default=None, description="Optional output handler when used via IoManager."
     )
-    parent: ProgressHandle | None = Field(
+    parent: ProgressHandle | None = public_field(
         default=None,
         description="Parent handle if this handle controls a sub-range of another handle.",
     )
-    range_end: int | None = Field(
+    range_end: int | None = public_field(
         default=None,
         description="Exclusive end position on the parent response for this sub-range (absolute units).",
     )
-    range_start: int | None = Field(
+    range_start: int | None = public_field(
         default=None,
         description="Inclusive start position on the parent response for this sub-range (absolute units).",
     )
-    response: ProgressPromptResponse = Field(
+    response: ProgressPromptResponse = public_field(
         description="The associated progress response (root response)."
     )
 

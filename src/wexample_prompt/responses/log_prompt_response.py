@@ -12,16 +12,19 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class LogPromptResponse(AbstractPromptResponse):
     """Response for log messages."""
 
     @classmethod
     def create_log(
-        cls: LogPromptResponse,
-        message: LineMessage,
-        color: TerminalColor = None,
-        verbosity: VerbosityLevel | None = None,
+            cls: LogPromptResponse,
+            message: LineMessage,
+            color: TerminalColor = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> LogPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.enums.terminal_color import TerminalColor

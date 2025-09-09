@@ -2,19 +2,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
-    from wexample_prompt.mixins.with_io_manager import WithIoManager
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
-
-class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
-    def __init__(self, parent_io_handler: WithIoManager, **kwargs) -> None:
-        ExtendedBaseModel.__init__(self, **kwargs)
-        WithIoMethods.__init__(
-            self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
-        )
+from wexample_helpers.decorator.base_class import base_class
+@base_class
+class ClassIndentationLevelThree(WithIoMethods, BaseClass):
 
     def get_io_context_indentation_character(self) -> str | None:
         return "·"
@@ -44,7 +40,6 @@ class ClassIndentationLevelThree(WithIoMethods, ExtendedBaseModel):
 
         self.separator(
             label="Text width management",
-            color=TerminalColor.MAGENTA,
             context=self.io_context,
         )
 

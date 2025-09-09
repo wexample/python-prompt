@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+from wexample_helpers.classes.base_class import BaseClass
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 from wexample_helpers.decorator.base_class import base_class
 @base_class
-class ClassWithIoManager(WithIoManager):
+class ExtendedBaseClassWithIoManager(WithIoManager, BaseClass):
     """
-    The minimal class with an io manager.
+    A Pydantic class with an io manager.
     """

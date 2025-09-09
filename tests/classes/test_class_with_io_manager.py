@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
-
 class TestIoManager(AbstractPromptTest):
     def assertClassHasNoneManager(self, class_type: type) -> None:
         instance = class_type()
@@ -38,18 +37,18 @@ class TestIoManager(AbstractPromptTest):
         self.assertMissingArgumentError(class_type=ClassWithRequiredIoManager)
         self.assertClassInstanceSucceeded(class_type=ClassWithRequiredIoManager)
 
-    def test_instantiate_extended_base_model(self) -> None:
-        from wexample_prompt.testing.resources.classes.extended_base_model_with_io_manager import (
-            ExtendedBaseModelWithIoManager,
+    def test_instantiate_base_class(self) -> None:
+        from wexample_prompt.testing.resources.classes.base_class_with_io_manager import (
+            ExtendedBaseClassWithIoManager,
         )
 
-        self.assertClassHasNoneManager(ExtendedBaseModelWithIoManager)
-        self.assertClassInstanceSucceeded(ExtendedBaseModelWithIoManager)
+        self.assertClassHasNoneManager(ExtendedBaseClassWithIoManager)
+        self.assertClassInstanceSucceeded(ExtendedBaseClassWithIoManager)
 
-    def test_instantiate_extended_base_model_required(self) -> None:
-        from wexample_prompt.testing.resources.classes.extended_base_model_with_required_io_manager import (
-            ExtendedBaseModelWithRequiredIoManager,
+    def test_instantiate_base_class_required(self) -> None:
+        from wexample_prompt.testing.resources.classes.base_class_with_required_io_manager import (
+            BaseClassWithRequiredIoManager,
         )
 
-        self.assertMissingArgumentError(ExtendedBaseModelWithRequiredIoManager)
-        self.assertClassInstanceSucceeded(ExtendedBaseModelWithRequiredIoManager)
+        self.assertMissingArgumentError(BaseClassWithRequiredIoManager)
+        self.assertClassInstanceSucceeded(BaseClassWithRequiredIoManager)

@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import Field, public_field
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import (
@@ -15,22 +15,23 @@ from wexample_prompt.responses.interactive.choice_prompt_response import (
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""
 
-    abort_option: bool | str | None = Field(
+    abort_option: bool | str | None = public_field(
         default=None,
         description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label).",
     )
-    allow_parent_selection: bool = Field(
+    allow_parent_selection: bool = public_field(
         default=False,
         description="If True, include '..' as a selectable entry at the top; otherwise hide it.",
     )
-    base_dir: str = Field(
+    base_dir: str = public_field(
         description="Base directory to browse from; defaults to current working directory if not provided"
     )
-    mode: FilePickerMode = Field(
+    mode: FilePickerMode = public_field(
         default=FilePickerMode.BOTH,
         description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection.",
     )

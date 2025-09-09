@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
@@ -17,7 +17,10 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     """Confirmation dialog with a boxed layout and keyboard shortcuts."""
 
@@ -39,39 +42,39 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         "y": ("continue", "Continue"),
         "n": ("cancel", "Cancel"),
     }
-    allow_abort: bool = Field(
+    allow_abort: bool = public_field(
         default=True, description="ESC/q aborts and returns None when allowed."
     )
-    default_value: str | None = Field(
+    default_value: str | None = public_field(
         default=None, description="The value to return when quitting"
     )
     # Map pressed key -> (value, label)
-    options: dict[str, tuple[str, str]] = Field(
-        default_factory=dict,
+    options: dict[str, tuple[str, str]] = public_field(
+        factory=dict,
         description="Keyboard shortcuts mapping to (return value, display label)",
     )
-    predefined_answer: Any = Field(
+    predefined_answer: Any = public_field(
         default=None,
         description="The answer of the question, in order to make the response non interactive",
     )
-    question: LineMessage = Field(
+    question: LineMessage = public_field(
         default="Please confirm:", description="The question to ask to the user"
     )
-    width: int | None = Field(
+    width: int | None = public_field(
         default=None,
         description="Total width of the box (in characters). If None, uses context width or content width.",
     )
 
     @classmethod
     def create_confirm(
-        cls,
-        question: LineMessage = "Please confirm:",
-        choices: dict[str, tuple[str, str]] | None = None,
-        default: str | None = None,
-        width: int | None = None,
-        predefined_answer: Any = None,
-        reset_on_finish: bool = False,
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            question: LineMessage = "Please confirm:",
+            choices: dict[str, tuple[str, str]] | None = None,
+            default: str | None = None,
+            width: int | None = None,
+            predefined_answer: Any = None,
+            reset_on_finish: bool = False,
+            verbosity: VerbosityLevel | None = None,
     ) -> ConfirmPromptResponse:
         """Create a confirmation dialog with explicit key mappings.
 
@@ -102,7 +105,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     # Internal helper to create a full-width separator line using a given character
     @staticmethod
     def _separator(
-        ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
+            ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
     ) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -113,12 +116,12 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
         return (
-            self._answer == True
-            or self._answer == 1
-            or self._answer == "yes"
-            or self._answer == "yes_all"
-            or self._answer == "ok"
-            or self._answer == "continue"
+                self._answer == True
+                or self._answer == 1
+                or self._answer == "yes"
+                or self._answer == "yes_all"
+                or self._answer == "ok"
+                or self._answer == "continue"
         )
 
     def render(self, context: PromptContext | None = None) -> None:

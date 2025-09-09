@@ -2,17 +2,19 @@
 
 from __future__ import annotations
 
-from abc import ABC
 from typing import Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.const.types import Kwargs
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
-class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
+@base_class
+class AbstractInteractivePromptResponse(AbstractPromptResponse):
     """Base for interactive responses with common terminal helpers."""
 
-    reset_on_finish: bool = Field(
+    reset_on_finish: bool = public_field(
         default=False,
         description="If True, clears the prompt block from the terminal after a selection or abort.",
     )
@@ -51,8 +53,8 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse, ABC):
         # Determine columns from context or fallback to terminal/env
         try:
             cols = (
-                int(getattr(context, "get_width", lambda: 0)())
-                or shutil.get_terminal_size().columns
+                    int(getattr(context, "get_width", lambda: 0)())
+                    or shutil.get_terminal_size().columns
             )
         except Exception:
             cols = 80

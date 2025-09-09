@@ -1,7 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -10,29 +13,20 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 
-class WithIoManager:
-    _io: IoManager | None = None
-    _io_parent_context: PromptContext | None = None
+@base_class
+class WithIoManager(BaseClass):
+    io: Optional[IoManager] = public_field(
+        default=None,
+        description="The optional IO manager that could be shared with a parent."
+    )
+    parent_io_handler: Optional[WithIoManager] = public_field(
+        default=None,
+        description="A parent class that may share its IO and context (ex shared verbosity or indentation level)."
+    )
 
-    def __init__(
-        self,
-        io: IoManager | None = None,
-        parent_io_handler: WithIoManager | None = None,
-    ) -> None:
-        if parent_io_handler and isinstance(parent_io_handler, WithIoManager):
-            self._io_parent_context = parent_io_handler.io_context
-            self.io = parent_io_handler.io
-        else:
-            self.io = io
-
-    @property
-    def io(self) -> IoManager | None:
-        return self._io
-
-    @io.setter
-    def io(self, manager: IoManager) -> None:
-        """Set the IoManager instance."""
-        self._io = manager
+    def __attrs_post_init__(self) -> None:
+        if self.parent_io_handler and self.parent_io_handler.io:
+            self.io = self.parent_io_handler.io
 
     @property
     def io_context(self) -> PromptContext:
@@ -44,8 +38,8 @@ class WithIoManager:
         return None
 
     def get_io_context_indentation(self) -> int:
-        if self._io_parent_context:
-            return self._io_parent_context.indentation + 1
+        if self.parent_io_handler is not None:
+            return self.parent_io_handler.io_context.indentation + 1
         return 0
 
     def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
@@ -63,37 +57,37 @@ class WithIoManager:
     def _create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
+        parent_context = self.parent_io_handler.io_context if self.parent_io_handler else None
+
         defaults = {
-            "parent_context": self._io_parent_context,
+            "parent_context": parent_context,
             "indentation": self.get_io_context_indentation(),
             "indentation_character": self.get_io_context_indentation_character(),
             "indentation_color": self.get_io_context_indentation_color(),
             "indentation_background_color": self.get_io_context_indentation_background_color(),
             "colorized": self.get_io_context_colorized()
-            or (
-                self._io_parent_context.colorized
-                if self._io_parent_context is not None
-                else PromptContext.DEFAULT_COLORIZED
-            ),
+                         or (
+                             parent_context.colorized
+                             if parent_context is not None
+                             else PromptContext.DEFAULT_COLORIZED
+                         ),
             "verbosity": (
-                self._io_parent_context.verbosity
-                if self._io_parent_context is not None
+                parent_context.verbosity
+                if parent_context is not None
                 else PromptContext.DEFAULT_VERBOSITY
             ),
             "width": self.get_io_context_indentation_width()
-            or (
-                self._io_parent_context.width
-                if self._io_parent_context is not None
-                else None
-            )
-            or (self._io.terminal_width if self._io else None),
+                     or (
+                         parent_context.width
+                         if parent_context is not None
+                         else None
+                     )
+                     or (self.io.terminal_width if self.io else None),
         }
 
         defaults.update(kwargs)
 
-        return PromptContext.create_from_kwargs(
-            kwargs=defaults,
-        )
+        return PromptContext.create_from_kwargs(kwargs=defaults)
 
     def _init_io_manager(self) -> None:
         from wexample_prompt.common.io_manager import IoManager

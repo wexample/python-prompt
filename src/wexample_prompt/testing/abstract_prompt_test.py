@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import unittest
-from abc import ABC
 from typing import TYPE_CHECKING
 
 from wexample_prompt.common.io_manager import IoManager
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     )
 
 
-class AbstractPromptTest(unittest.TestCase, ABC):
+class AbstractPromptTest(unittest.TestCase):
     """Base class for testing prompt responses.
 
     This class provides common functionality for testing prompt responses at three levels:
@@ -36,12 +35,12 @@ class AbstractPromptTest(unittest.TestCase, ABC):
         self.assertIn(text, rendered)
 
     def _assert_rendered_lines_count(
-        self, response: AbstractPromptResponse, lines_count: int
+            self, response: AbstractPromptResponse, lines_count: int
     ) -> None:
         assert len(response.rendered_content.split("\n")) == lines_count
 
     def _asset_response_render_is_multiline(
-        self, response: AbstractPromptResponse
+            self, response: AbstractPromptResponse
     ) -> None:
         rendered = response.render()
         self._assert_contains_text(rendered, "Line 1")

@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 if TYPE_CHECKING:
@@ -12,20 +12,18 @@ if TYPE_CHECKING:
         ExampleClassWithMethods,
     )
 
-
-class AbstractResponseExample(WithIoManager, ExtendedBaseModel):
+from wexample_helpers.decorator.base_class import base_class
+@base_class
+class AbstractResponseExample(WithIoManager, BaseClass):
     _class_with_methods: ExampleClassWithMethods | None = None
 
-    def __init__(self, io: IoManager | None = None, **kwargs) -> None:
+    def __attrs_post_init__(self, io: IoManager | None = None, **kwargs) -> None:
         from wexample_prompt.example.example_class_with_methods import (
             ExampleClassWithMethods,
         )
 
-        ExtendedBaseModel.__init__(self, **kwargs)
-        WithIoManager.__init__(self, io=io)
-
         self._init_io_manager()
-        self._class_with_methods = ExampleClassWithMethods(io=self._io)
+        self._class_with_methods = ExampleClassWithMethods(io=self.io)
 
     @abstractmethod
     def example_class(self) -> None:

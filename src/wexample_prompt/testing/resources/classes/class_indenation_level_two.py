@@ -7,13 +7,9 @@ from wexample_prompt.mixins.with_io_methods import WithIoMethods
 if TYPE_CHECKING:
     from wexample_prompt.mixins.with_io_manager import WithIoManager
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class ClassIndentationLevelTwo(WithIoMethods):
-    def __init__(self, parent_io_handler: WithIoManager) -> None:
-        WithIoMethods.__init__(
-            self, io=parent_io_handler.io, parent_io_handler=parent_io_handler
-        )
-
     def print_deep_log_two(self) -> None:
         from wexample_prompt.enums.verbosity_level import VerbosityLevel
         from wexample_prompt.testing.resources.classes.class_indenation_level_three import (

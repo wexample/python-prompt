@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
+@base_class
 class ListExample(AbstractResponseExample):
     def example_class(self):
         from wexample_prompt.responses.data.list_prompt_response import (

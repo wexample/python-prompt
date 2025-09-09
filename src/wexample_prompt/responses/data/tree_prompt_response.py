@@ -4,35 +4,38 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.const.types import Kwargs
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
+@base_class
 class TreePromptResponse(AbstractPromptResponse):
     """Response for displaying hierarchical data in a tree structure."""
 
-    branch_style: str = Field(
+    branch_style: str = public_field(
         default="├", description="The character used to render branch"
     )
-    dash_style: str = Field(
+    dash_style: str = public_field(
         default="──", description="The character used to render dash"
     )
-    data: dict[str, Any] = Field(description="The data to display")
-    leaf_style: str = Field(
+    data: dict[str, Any] = public_field(description="The data to display")
+    leaf_style: str = public_field(
         default="└", description="The character used to render leaf"
     )
-    pipe_style: str = Field(
+    pipe_style: str = public_field(
         default="│", description="The character used to render pipe"
     )
 
     @classmethod
     def create_tree(
-        cls,
-        data: dict[str, Any],
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            data: dict[str, Any],
+            verbosity: VerbosityLevel | None = None,
     ) -> TreePromptResponse:
         return cls(
             lines=[],
@@ -62,7 +65,7 @@ class TreePromptResponse(AbstractPromptResponse):
         return super().render(context=context)
 
     def _build_tree(
-        self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
+            self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 

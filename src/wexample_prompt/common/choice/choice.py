@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.choice import ChoiceValue
 
 
-class Choice(ExtendedBaseModel):
-    line: PromptResponseLine = Field(description="The line that renders the choice")
-    title: str = Field(description="The title of the choice")
-    value: str | int | ChoiceValue = Field(description="The value of the choice")
+@base_class
+class Choice(BaseClass):
+    line: PromptResponseLine = public_field(description="The line that renders the choice")
+    title: str = public_field(description="The title of the choice")
+    value: str | int | ChoiceValue = public_field(description="The value of the choice")

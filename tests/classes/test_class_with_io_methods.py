@@ -12,10 +12,10 @@ class TestIoManager(AbstractPromptTest):
         instance = ClassWithIoMethods(io=self._io)
         assert instance.log(message="test instantiate class") is not None
 
-    def test_instantiate_extended_base_model(self) -> None:
-        from wexample_prompt.testing.resources.classes.extended_base_model_with_io_methods import (
-            ExtendedBaseModelWithIoMethods,
+    def test_instantiate_base_class(self) -> None:
+        from wexample_prompt.testing.resources.classes.base_class_with_io_methods import (
+            BaseClassWithIoMethods,
         )
 
-        instance = ExtendedBaseModelWithIoMethods(io=self._io)
+        instance = BaseClassWithIoMethods(io=self._io)
         assert instance.log(message="test instantiate base model") is not None

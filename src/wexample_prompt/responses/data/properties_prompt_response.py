@@ -2,27 +2,28 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class PropertiesPromptResponse(AbstractPromptResponse):
     """Render a dictionary of properties as a formatted block, with optional title.
 
     The visual width adapts to the provided render context. Lines are generated during
     render, so the response remains context-agnostic until displayed.
     """
-
-    nested_indent: int = Field(
+    nested_indent: int = public_field(
         default=2,
         description="Indentation inside the properties list, when rendering sub list of items",
     )
-    properties: dict[str, Any] = Field(
-        default_factory=dict, description="The list of properties to display"
+    properties: dict[str, Any] = public_field(
+        factory=dict, description="The list of properties to display"
     )
-    title: str | None = Field(
+    title: str | None = public_field(
         default=None, description="The title of the properties list"
     )
 

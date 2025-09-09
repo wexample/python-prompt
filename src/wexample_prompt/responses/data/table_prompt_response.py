@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -13,25 +14,28 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class TablePromptResponse(AbstractPromptResponse):
     """Response for displaying data in a table layout with borders and formatting."""
 
-    data: list[list[Any]] = Field(
+    data: list[list[Any]] = public_field(
         description="Table body rows: list of rows, each row a list of cell values"
     )
-    headers: list[str] | None = Field(
+    headers: list[str] | None = public_field(
         default=None, description="Optional list of column headers"
     )
-    title: str | None = Field(default=None, description="Optional table title")
+    title: str | None = public_field(default=None, description="Optional table title")
 
     @classmethod
     def create_table(
-        cls,
-        data: list[list[Any]],
-        headers: list[str] | None = None,
-        title: str | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            data: list[list[Any]],
+            headers: list[str] | None = None,
+            title: str | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> TablePromptResponse:
         return cls(
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity
@@ -65,7 +69,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_row_segments(
-        row: list[Any], widths: list[int]
+            row: list[Any], widths: list[int]
     ) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
@@ -100,7 +104,7 @@ class TablePromptResponse(AbstractPromptResponse):
                     PromptResponseSegment(text=f" {self.title} "),
                     PromptResponseSegment(
                         text="-" * (total_width - title_padding - len(self.title) - 2)
-                        + "+"
+                             + "+"
                     ),
                 ]
             )

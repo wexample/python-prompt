@@ -13,7 +13,8 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class ErrorPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "❌"
 
@@ -65,7 +66,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
             # Trace lines: preserve helper formatting (may include ANSI), no extra color
             formatted = error_format(exception)
             lines.extend(PromptResponseLine.create_from_string(formatted.splitlines()))
-            return cls._create(lines=lines, symbol=symbol, verbosity=verbosity)
+            return cls._create(lines=lines, verbosity=verbosity)
 
         else:
             text = (

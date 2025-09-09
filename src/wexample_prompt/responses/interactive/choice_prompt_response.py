@@ -3,7 +3,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.const.types import Kwargs
 from wexample_prompt.common.choice.choice import Choice
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.const.types import LineMessage
@@ -19,44 +20,47 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Display a list of choices and get a user selection."""
 
-    choices: list[Choice] = Field(
-        default_factory=list,
+    choices: list[Choice] = public_field(
+        factory=list,
         description="List of choices",
     )
-    default: Any | None = Field(
+    default: Any | None = public_field(
         default=None,
         description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
-    inquirer_kwargs: dict[str, Any] = Field(
-        default_factory=dict,
+    inquirer_kwargs: dict[str, Any] = public_field(
+        factory=dict,
         description="Additional kwargs forwarded to inquirer.select",
     )
-    predefined_answer: Any = Field(
+    predefined_answer: Any = public_field(
         default=None,
         description="The answer of the question, in order to make the response non interactive",
     )
-    question: LineMessage = Field(
+    question: LineMessage = public_field(
         default=None, description="Question text shown to the user"
     )
-    question_lines: list[PromptResponseLine] = Field(
+    question_lines: list[PromptResponseLine] = public_field(
         description="Rendered question lines"
     )
 
     @classmethod
     def create_choice(
-        cls,
-        question: LineMessage,
-        choices: list[Any] | Mapping[Any, Any],
-        default: Any | None = None,
-        abort: bool | str | None = None,
-        color: TerminalColor | None = None,
-        reset_on_finish: bool = False,
-        predefined_answer: Any = None,
-        verbosity: VerbosityLevel | None = None,
+            cls,
+            question: LineMessage,
+            choices: list[Any] | Mapping[Any, Any],
+            default: Any | None = None,
+            abort: bool | str | None = None,
+            color: TerminalColor | None = None,
+            reset_on_finish: bool = False,
+            predefined_answer: Any = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
         from collections.abc import Mapping
@@ -216,6 +220,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 ]
             )
             self.lines.append(controls_line)
+
 
             # Render and print this frame
             printed_lines = self._print_render(context=context)

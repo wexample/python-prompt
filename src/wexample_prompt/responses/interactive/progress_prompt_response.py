@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from pydantic import Field
+from wexample_helpers.classes.field import Field, public_field
+
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -12,23 +14,24 @@ if TYPE_CHECKING:
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
     from wexample_prompt.common.prompt_context import PromptContext
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class ProgressPromptResponse(AbstractPromptResponse):
     """Response for displaying progress bars."""
 
     # Style characters
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"
-    color: TerminalColor | None = Field(
+    color: TerminalColor | None = public_field(
         default=None, description="Optional color applied to the bar"
     )
-    current: int = Field(description="Current progress (must be >= 0)")
-    label: str | None = Field(
+    current: int = public_field(description="Current progress (must be >= 0)")
+    label: str | None = public_field(
         default=None, description="Optional label displayed before the bar"
     )
     # Instance fields
-    total: int = Field(description="Total number of items (must be > 0)")
-    width: int | None = Field(
+    total: int = public_field(description="Total number of items (must be > 0)")
+    width: int | None = public_field(
         default=None, description="Width of the progress bar in characters"
     )
     _handle: ProgressHandle | None = None

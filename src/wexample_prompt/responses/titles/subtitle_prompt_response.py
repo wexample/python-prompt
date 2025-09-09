@@ -13,7 +13,8 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class SubtitlePromptResponse(AbstractTitleResponse):
     DEFAULT_PREFIX = "  ❯"
 

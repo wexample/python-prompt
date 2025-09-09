@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
+from wexample_helpers.classes.field import Field, public_field
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
@@ -17,30 +17,27 @@ if TYPE_CHECKING:
     )
     from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided
     callback, allowing the callback to draw text lines, sleep, and request reload/close.
     """
 
-    callback: Callable[[ScreenPromptResponse], Any] = Field(
+    callback: Callable[[ScreenPromptResponse], Any] = public_field(
         description="Function called repeatedly with this response instance to draw and control flow.",
     )
-    height: int = Field(
+    height: int = public_field(
         default=30,
         description="Approx height in lines reserved for this response block.",
     )
-    reset_on_finish: bool = Field(
+    reset_on_finish: bool = public_field(
         default=False,
         description="If True, clears printed block when finishing (close).",
     )
     _closed: bool = False
     _io_buffer: BufferOutputHandler | None = None
     _reload_requested: bool = False
-
-    def __init__(self, **kwargs) -> None:
-        AbstractInteractivePromptResponse.__init__(self, **kwargs)
-        WithIoMethods.__init__(self)
 
     @classmethod
     def create_screen(
@@ -89,7 +86,6 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
         # Wait first rendering to build nested io manager.
         if self._io_buffer is None:
-
             self._io_buffer = BufferOutputHandler()
             self.io = IoManager(output=self._io_buffer)
 

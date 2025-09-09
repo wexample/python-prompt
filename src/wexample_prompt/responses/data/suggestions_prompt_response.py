@@ -11,7 +11,8 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
 
-
+from wexample_helpers.decorator.base_class import base_class
+@base_class
 class SuggestionsPromptResponse(AbstractPromptResponse):
     """Display a list of suggestions with an introductory message."""
 

@@ -2,25 +2,47 @@ from __future__ import annotations
 
 import threading
 import time
+from typing import Any, ClassVar
+
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 
 
-class Spinner:
+@base_class
+class Spinner(BaseClass):
     """Simple cyclic spinner.
 
     Not thread-safe; guard with external lock when used via SpinnerPool.
     """
+    frames: list[str] | None = public_field(
+        default=None,
+        description="Number of animation frames.",
+    )
+    interval: float = public_field(
+        default=0.2,
+        description="Duration of one interval in seconds.",
+    )
+    _interval: float = private_field(
+        default=0.2,
+        description="Computed duration of one interval in seconds.",
+    )
+    _last_time: float = private_field(
+        default=None,
+        description="Last time (monotonic seconds) at which the spinner advanced."
+                    "None means uninitialized; the first call to next() sets it and returns current frame.",
+    )
 
-    def __init__(self, frames: list[str] | None = None, interval: float = 0.2) -> None:
+    def __attrs_post_init__(self) -> None:
         from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
 
-        self.frames: list[str] = list(frames or DEFAULT_SPINNER_FRAMES)
+        self.frames: list[str] = list(self.frames or DEFAULT_SPINNER_FRAMES)
         if not self.frames:
             self.frames = list(DEFAULT_SPINNER_FRAMES)
         self._idx: int = 0
         # Minimum time between frame advances (seconds).
-        self._interval: float = max(0.0, float(interval)) or 0.2
-        # Last time (monotonic seconds) at which the spinner advanced.
-        # None means uninitialized; the first call to next() sets it and returns current frame.
+        self._interval: float = max(0.0, float(self.interval)) or 0.2
         self._last_time: float | None = None
 
     def next(self) -> str:
@@ -67,17 +89,12 @@ class Spinner:
         # Keep current phase; do not reset _last_time to avoid visible jump.
 
 
-class SpinnerPool:
-    """Thread-safe pool for per-key spinners.
+@base_class
+class SpinnerPool(BaseClass):
+    """Thread-safe pool for per-key spinners."""
 
-    Usage:
-        from wexample_prompt.common.spinner_pool import SpinnerPool
-        sym = SpinnerPool.next()  # default spinner
-        sym = SpinnerPool.next("fs-build")  # named spinner, independent cycle
-    """
-
-    _lock = threading.RLock()
-    _spinners: dict[str, Spinner] = {}
+    _lock: ClassVar[Any] = threading.RLock()
+    _spinners: ClassVar[dict[str, Spinner]] = {}
 
     @classmethod
     def get(cls, key: str = "default") -> Spinner:

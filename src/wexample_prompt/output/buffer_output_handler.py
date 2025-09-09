@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from wexample_helpers.classes.private_field import private_field
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
@@ -10,18 +11,24 @@ if TYPE_CHECKING:
         AbstractPromptResponse,
     )
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class BufferOutputHandler(AbstractOutputHandler):
     """Output handler that buffers responses instead of writing to stdout.
 
     - Stores the original response objects in `buffer` (preserving legacy behavior).
     - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
     """
-
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-        self._buffer_responses: list[AbstractPromptResponse] = []
-        self._buffer_rendered: list[str | None] = []
+    _buffer_responses: list["AbstractPromptResponse"] = private_field(
+        factory=list,
+        description="Original response objects buffered in order.",
+    )
+    _buffer_rendered: list[str | None] = private_field(
+        factory=list,
+        description="Rendered strings for buffered responses (None if not rendered).",
+    )
 
     @property
     def rendered(self) -> list[str | None]:
@@ -43,8 +50,8 @@ class BufferOutputHandler(AbstractOutputHandler):
         self._buffer_rendered = []
 
     def erase(
-        self,
-        response: AbstractPromptResponse,
+            self,
+            response: AbstractPromptResponse,
     ) -> Any:
         pass
 
@@ -54,9 +61,9 @@ class BufferOutputHandler(AbstractOutputHandler):
         return rendered
 
     def print(
-        self,
-        response: AbstractPromptResponse,
-        context: PromptContext | None = None,
+            self,
+            response: AbstractPromptResponse,
+            context: PromptContext | None = None,
     ) -> Any:
         # Preserve legacy: store the response object
         self._buffer_responses.append(response)

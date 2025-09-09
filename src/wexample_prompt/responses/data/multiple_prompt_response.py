@@ -1,10 +1,14 @@
 from __future__ import annotations
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.const.types import Kwargs
+from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 
+@base_class
 class MultiplePromptResponse(AbstractPromptResponse):
     """A response that groups multiple responses and renders them in sequence.
 
@@ -16,25 +20,24 @@ class MultiplePromptResponse(AbstractPromptResponse):
         responses: List of prompt responses to be rendered together.
     """
 
-    responses: list[AbstractPromptResponse] = Field(
-        default_factory=list,
+    responses: list[AbstractPromptResponse] = public_field(
+        factory=list,
         description="List of prompt responses to be rendered together",
     )
 
     @classmethod
     def create_multiple(
-        cls,
-        responses: list[AbstractPromptResponse] | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls: type[MultiplePromptResponse],
+            responses: list[AbstractPromptResponse] | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> MultiplePromptResponse:
         """Create a new MultiplePromptResponse from a list of responses."""
-        if responses is None:
-            responses = []
+        responses = responses or []
 
         # Work on deep copies to avoid mutating shared instances across calls.
         cloned_responses: list[AbstractPromptResponse] = []
         for response in responses:
-            cloned = response.model_copy(deep=True)
+            cloned = response.clone()
             cloned.verbosity = verbosity
             cloned_responses.append(cloned)
 
@@ -52,14 +55,14 @@ class MultiplePromptResponse(AbstractPromptResponse):
         return MultipleExample
 
     def append_response(
-        self, response: AbstractPromptResponse
+            self, response: AbstractPromptResponse
     ) -> MultiplePromptResponse:
         """Append a single response and return self for chaining."""
         self.responses.append(response)
         return self
 
     def extend_responses(
-        self, responses: list[AbstractPromptResponse]
+            self, responses: list[AbstractPromptResponse]
     ) -> MultiplePromptResponse:
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)

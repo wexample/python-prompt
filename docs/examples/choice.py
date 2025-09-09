@@ -39,7 +39,7 @@ if __name__ == "__main__":
             "maybe": "Maybe",
             "yes": "Yes",
         },
-        answer="Yes"
+        predefined_answer="Yes"
     ).get_answer()
 
     demo_io.separator("Files selection")

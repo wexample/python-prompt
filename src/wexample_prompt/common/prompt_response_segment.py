@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
@@ -11,29 +12,30 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 
-class PromptResponseSegment(ExtendedBaseModel):
+@base_class
+class PromptResponseSegment(BaseClass):
     """A segment of text with optional styling."""
 
-    color: TerminalColor | None = Field(
+    color: TerminalColor | None = public_field(
         default=None,
         description="The color to apply to segment on rendering, if allowed by context",
     )
-    styles: list[TextStyle] = Field(
-        default_factory=list,
+    styles: list[TextStyle] = public_field(
+        factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
-    text: str = Field(description="The content of the segment")
+    text: str = public_field(
+        description="The content of the segment"
+    )
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
+    def __attrs_post_init__(self) -> None:
         if "\n" in self.text:
             raise ValueError(
                 "Segment should not contain line breaks; use separate line objects instead"
             )
 
     def render(
-        self, context: PromptContext, line_remaining_width: int
+            self, context: PromptContext, line_remaining_width: int
     ) -> tuple[str, PromptResponseSegment | None]:
         """Render the segment respecting the remaining width for the current line.
 

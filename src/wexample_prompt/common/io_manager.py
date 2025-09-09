@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field, PrivateAttr
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.classes.private_field import PrivateField, private_field
+from wexample_helpers.helpers.debug import debug_trace_and_die
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
@@ -83,7 +85,10 @@ if TYPE_CHECKING:
         AbstractPromptResponse,
     )
 
+from wexample_helpers.decorator.base_class import base_class
 
+
+@base_class
 class IoManager(
     # Basics
     EchoPromptResponseManagerMixin,
@@ -115,25 +120,27 @@ class IoManager(
     ConfirmPromptResponseManagerMixin,
     # Parent classes
     WithIndentation,
-    ExtendedBaseModel,
+    BaseClass,
 ):
-    default_context_verbosity: VerbosityLevel = Field(
+    default_context_verbosity: VerbosityLevel = public_field(
         default=VerbosityLevel.DEFAULT,
         description="The overall verbosity level used in contexts.",
     )
-    default_response_verbosity: VerbosityLevel = Field(
+    default_response_verbosity: VerbosityLevel = public_field(
         default=VerbosityLevel.DEFAULT,
         description="The default verbosity for every generated message.",
     )
-    output: AbstractOutputHandler | None = Field(
+    output: AbstractOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-        "by default print to stdout",
+                    "by default print to stdout",
     )
-    _terminal_width: int = PrivateAttr(default=None)
+    _terminal_width: int = private_field(
+        default=None,
+        description="The terminal with cached value."
+    )
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+    def __attrs_post_init__(self) -> None:
         self._init_output()
 
     @classmethod
@@ -259,15 +266,15 @@ class IoManager(
         return context
 
     def erase_response(
-        self,
-        response: AbstractPromptResponse,
+            self,
+            response: AbstractPromptResponse,
     ) -> None:
         self.output.erase(response=response)
 
     def print_response(
-        self,
-        response: AbstractPromptResponse,
-        context: PromptContext | None = None,
+            self,
+            response: AbstractPromptResponse,
+            context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         self.output.print(
             response=response, context=self.create_context(context=context)
@@ -277,7 +284,6 @@ class IoManager(
 
     def _init_output(self) -> None:
         from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
-
         self.output = (
             self.output if (self.output is not None) else StdoutOutputHandler()
         )

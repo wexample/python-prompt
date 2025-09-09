@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
@@ -17,34 +18,35 @@ if TYPE_CHECKING:
     )
 
 
+@base_class
 class SeparatorPromptResponse(AbstractMessageResponse):
     """Response for log messages."""
 
     DEFAULT_CHARACTER: ClassVar[str] = "~"
-    character: str | None = Field(
+    character: str | None = public_field(
         default=DEFAULT_CHARACTER, description="The character to repeat"
     )
-    label: str | None = Field(
+    label: str | None = public_field(
         default=None, description="A label to display on the separator right"
     )
-    separator_response_label: PromptResponseSegment | None = Field(
+    separator_response_label: PromptResponseSegment | None = public_field(
         default=None, description="The label displayed at the right"
     )
-    separator_response_segment: PromptResponseSegment = Field(
+    separator_response_segment: PromptResponseSegment = public_field(
         description="The line segment used by render process"
     )
-    width: int | None = Field(
+    width: int | None = public_field(
         default=None, description="A fixed width, use context width if not provided"
     )
 
     @classmethod
     def create_separator(
-        cls: SeparatorPromptResponse,
-        label: str | None = None,
-        width: int | None = None,
-        color: TerminalColor = None,
-        character: str | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls: SeparatorPromptResponse,
+            label: str | None = None,
+            width: int | None = None,
+            color: TerminalColor = None,
+            character: str | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
