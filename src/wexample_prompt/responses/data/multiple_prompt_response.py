@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from wexample_helpers.classes.field import public_field
-from wexample_helpers.const.types import Kwargs
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel

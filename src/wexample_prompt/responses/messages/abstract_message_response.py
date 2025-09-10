@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class AbstractMessageResponse(AbstractPromptResponse):
     # Symbol to display before the message, override in subclasses

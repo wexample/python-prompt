@@ -16,14 +16,14 @@ if TYPE_CHECKING:
 
 class ErrorPromptResponseManagerMixin:
     def error(
-            self: IoManager,
-            message: str | None = None,
-            exception: BaseException | None = None,
-            verbosity: VerbosityLevel | None = None,
-            context: PromptContext | None = None,
-            symbol: str | None = None,
-            fatal: bool = False,
-            **kwargs: Kwargs,
+        self: IoManager,
+        message: str | None = None,
+        exception: BaseException | None = None,
+        verbosity: VerbosityLevel | None = None,
+        context: PromptContext | None = None,
+        symbol: str | None = None,
+        fatal: bool = False,
+        **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,

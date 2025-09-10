@@ -23,13 +23,16 @@ class WithIoMethods(WithIoManager):
             return super().__getattr__(name)
         except AttributeError:
             # If super() doesn't have __getattr__, raise AttributeError for the original attribute
-            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+            raise AttributeError(
+                f"'{self.__class__.__name__}' object has no attribute '{name}'"
+            )
 
     def _get_io_methods(self, name: str) -> Any:
         if hasattr(self.io, name):
             attr = getattr(self.io, name)
 
             if callable(attr):
+
                 def wrapper(*args, **kwargs):
                     kwargs["context"] = self.io_context
                     return attr(*args, **kwargs)

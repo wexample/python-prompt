@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""

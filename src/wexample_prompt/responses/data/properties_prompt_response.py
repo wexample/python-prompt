@@ -4,11 +4,12 @@ from typing import Any
 
 from wexample_helpers.classes.field import Field, public_field
 from wexample_helpers.const.types import Kwargs
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
-from wexample_helpers.decorator.base_class import base_class
+
 @base_class
 class PropertiesPromptResponse(AbstractPromptResponse):
     """Render a dictionary of properties as a formatted block, with optional title.

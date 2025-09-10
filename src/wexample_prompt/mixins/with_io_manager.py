@@ -15,11 +15,11 @@ if TYPE_CHECKING:
 
 @base_class
 class WithIoManager(BaseClass):
-    io: Optional[IoManager] = public_field(
+    io: IoManager | None = public_field(
         default=None,
         description="The optional IO manager that could be shared with a parent."
     )
-    parent_io_handler: Optional[WithIoManager] = public_field(
+    parent_io_handler: WithIoManager | None = public_field(
         default=None,
         description="A parent class that may share its IO and context (ex shared verbosity or indentation level)."
     )

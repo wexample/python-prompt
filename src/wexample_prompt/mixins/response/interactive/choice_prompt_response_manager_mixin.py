@@ -49,7 +49,6 @@ class ChoicePromptResponseManagerMixin:
         return self.print_response(
             response=response,
             context=ChoicePromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs
+                context=context, parent_kwargs=kwargs
             ),
         )

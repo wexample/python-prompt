@@ -18,6 +18,8 @@ if TYPE_CHECKING:
     from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided

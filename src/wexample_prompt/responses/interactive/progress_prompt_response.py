@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import Field, public_field
-
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
@@ -15,6 +14,8 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class ProgressPromptResponse(AbstractPromptResponse):
     """Response for displaying progress bars."""
