@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from typing import TYPE_CHECKING
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -15,13 +16,14 @@ if TYPE_CHECKING:
 
 class ErrorPromptResponseManagerMixin:
     def error(
-        self: IoManager,
-        message: str | None = None,
-        exception: BaseException | None = None,
-        verbosity: VerbosityLevel | None = None,
-        context: PromptContext | None = None,
-        symbol: str | None = None,
-        **kwargs: Kwargs,
+            self: IoManager,
+            message: str | None = None,
+            exception: BaseException | None = None,
+            verbosity: VerbosityLevel | None = None,
+            context: PromptContext | None = None,
+            symbol: str | None = None,
+            fatal: bool = False,
+            **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,
@@ -36,9 +38,14 @@ class ErrorPromptResponseManagerMixin:
             ),
         )
 
-        return self.print_response(
+        printed_response = self.print_response(
             response=response,
             context=ErrorPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
         )
+
+        if fatal:
+            sys.exit(1)
+
+        return printed_response

@@ -6,7 +6,9 @@ from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
-from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+from wexample_prompt.responses.data.multiple_prompt_response import (
+    MultiplePromptResponse,
+)
 
 
 @base_class

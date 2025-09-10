@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.base_class import BaseClass
-from wexample_helpers.classes.field import Field, public_field
-from wexample_helpers.classes.private_field import PrivateField, private_field
-from wexample_helpers.helpers.debug import debug_trace_and_die
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,

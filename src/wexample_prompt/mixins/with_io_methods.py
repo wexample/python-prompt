@@ -12,10 +12,6 @@ class WithIoMethods(WithIoManager):
     Allow class to provide Io methods like .log(), .title() etc.
     """
 
-    def __init__(self, *args, **kwargs):
-        # Forward all arguments to parent class
-        super().__init__(*args, **kwargs)
-
     def __getattr__(self, name: str) -> Any:
         io_response = self._get_io_methods(name)
         if io_response is not None:

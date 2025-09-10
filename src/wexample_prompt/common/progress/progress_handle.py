@@ -10,11 +10,10 @@ from wexample_prompt.responses.interactive.progress_prompt_response import (
     ProgressPromptResponse,
 )
 
-if TYPE_CHECKING:
-    from wexample_prompt.enums.terminal_color import TerminalColor
-
 
 from wexample_helpers.decorator.base_class import base_class
+if TYPE_CHECKING:
+    from wexample_prompt.enums.terminal_color import TerminalColor
 @base_class
 class ProgressHandle(BaseClass):
     """Stateful progress handle.

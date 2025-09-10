@@ -25,6 +25,8 @@ class WithIoManager(BaseClass):
     )
 
     def __attrs_post_init__(self) -> None:
+        self._execute_super_attrs_post_init_if_exists()
+
         if self.parent_io_handler and self.parent_io_handler.io:
             self.io = self.parent_io_handler.io
 

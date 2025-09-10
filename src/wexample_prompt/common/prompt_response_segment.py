@@ -24,9 +24,7 @@ class PromptResponseSegment(BaseClass):
         factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
-    text: str = public_field(
-        description="The content of the segment"
-    )
+    text: str = public_field(description="The content of the segment")
 
     def __attrs_post_init__(self) -> None:
         if "\n" in self.text:
@@ -35,7 +33,7 @@ class PromptResponseSegment(BaseClass):
             )
 
     def render(
-            self, context: PromptContext, line_remaining_width: int
+        self, context: PromptContext, line_remaining_width: int
     ) -> tuple[str, PromptResponseSegment | None]:
         """Render the segment respecting the remaining width for the current line.
 

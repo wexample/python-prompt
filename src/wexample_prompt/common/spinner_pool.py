@@ -16,6 +16,7 @@ class Spinner(BaseClass):
 
     Not thread-safe; guard with external lock when used via SpinnerPool.
     """
+
     frames: list[str] | None = public_field(
         default=None,
         description="Number of animation frames.",
@@ -31,7 +32,7 @@ class Spinner(BaseClass):
     _last_time: float = private_field(
         default=None,
         description="Last time (monotonic seconds) at which the spinner advanced."
-                    "None means uninitialized; the first call to next() sets it and returns current frame.",
+        "None means uninitialized; the first call to next() sets it and returns current frame.",
     )
 
     def __attrs_post_init__(self) -> None:
