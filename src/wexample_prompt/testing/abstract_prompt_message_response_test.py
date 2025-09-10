@@ -9,6 +9,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 
 class AbstractPromptMessageResponseTest(AbstractPromptResponseTest):
     __test__ = False  # Prevent pytest from discovering this abstract class
+
     def test_multiline_message_is_rendered(self) -> None:
         """All message responses should correctly render multi-line messages."""
         response = self._create_test_response({"message": self._test_message_multiline})

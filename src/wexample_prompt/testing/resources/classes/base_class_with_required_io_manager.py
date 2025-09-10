@@ -7,4 +7,3 @@ class BaseClassWithRequiredIoManager(WithRequiredIoManager):
     """
     A Pydantic class with an io manager.
     """
-    pass

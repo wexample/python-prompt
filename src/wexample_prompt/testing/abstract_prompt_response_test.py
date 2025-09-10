@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class AbstractPromptResponseTest(AbstractPromptTest):
     __test__ = False  # Prevent pytest from discovering this abstract class
-    
+
     @abstractmethod
     def get_expected_lines(self) -> int:
         """Return the expected number of lines in the rendered response."""
@@ -138,9 +138,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         """Create a response using the class: LogPromptResponse.create_log(...)"""
         kwargs = response_kwargs or self._create_test_kwargs(kwargs=kwargs)
         response_class = self._get_response_class()
-        method_name = (
-            f"create_{response_class.get_snake_short_class_name()}"
-        )
+        method_name = f"create_{response_class.get_snake_short_class_name()}"
         return getattr(response_class, method_name)(**kwargs)
 
     def _create_test_response_from_method(
