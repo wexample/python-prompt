@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Optional, Mapping, Callable, Any
+from typing import TYPE_CHECKING, Any, Callable, Mapping, Optional
 
 import attrs
-
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,

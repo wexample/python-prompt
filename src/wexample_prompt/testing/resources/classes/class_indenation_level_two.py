@@ -8,6 +8,8 @@ if TYPE_CHECKING:
     from wexample_prompt.mixins.with_io_manager import WithIoManager
 
 from wexample_helpers.decorator.base_class import base_class
+
+
 @base_class
 class ClassIndentationLevelTwo(WithIoMethods):
     def print_deep_log_two(self) -> None:
