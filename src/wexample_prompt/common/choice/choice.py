@@ -9,6 +9,8 @@ from wexample_prompt.enums.choice import ChoiceValue
 
 @base_class
 class Choice(BaseClass):
-    line: PromptResponseLine = public_field(description="The line that renders the choice")
+    line: PromptResponseLine = public_field(
+        description="The line that renders the choice"
+    )
     title: str = public_field(description="The title of the choice")
     value: str | int | ChoiceValue = public_field(description="The value of the choice")

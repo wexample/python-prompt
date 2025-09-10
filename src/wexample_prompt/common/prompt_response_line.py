@@ -25,7 +25,7 @@ class PromptResponseLine(BaseClass):
 
     @classmethod
     def create_from_string(
-            cls, text: LineMessage, color: TerminalColor | None = None
+        cls, text: LineMessage, color: TerminalColor | None = None
     ) -> list[PromptResponseLine]:
         """
         Create a line from a single text string.
@@ -71,7 +71,7 @@ class PromptResponseLine(BaseClass):
         return self._render_wrapped(context, indentation, max_content_width)
 
     def _compute_max_content_width(
-            self, context: PromptContext, indentation: str
+        self, context: PromptContext, indentation: str
     ) -> int | None:
         """Compute the maximum visible width available for content on a line, or None if unbounded."""
         return (
@@ -85,7 +85,7 @@ class PromptResponseLine(BaseClass):
         rendered_segments = []
         for seg in self.segments:
             # Provide a very large remaining width to avoid splitting segments
-            rendered, _ = seg.render(context, line_remaining_width=10 ** 9)
+            rendered, _ = seg.render(context, line_remaining_width=10**9)
             rendered_segments.append(rendered)
         return f"{indentation}{''.join(rendered_segments)}"
 
@@ -93,12 +93,12 @@ class PromptResponseLine(BaseClass):
         """Render without width restriction (no wrapping)."""
         rendered_segments = []
         for seg in self.segments:
-            rendered, _ = seg.render(context, line_remaining_width=10 ** 9)
+            rendered, _ = seg.render(context, line_remaining_width=10**9)
             rendered_segments.append(rendered)
         return f"{indentation}{''.join(rendered_segments)}"
 
     def _render_wrapped(
-            self, context: PromptContext, indentation: str, max_content_width: int
+        self, context: PromptContext, indentation: str, max_content_width: int
     ) -> str:
         """Render with wrapping according to max_content_width."""
         lines: list[str] = []
@@ -141,4 +141,3 @@ class PromptResponseLine(BaseClass):
         from wexample_helpers.helpers.ansi import ansi_strip
 
         return len(ansi_strip(s))
-

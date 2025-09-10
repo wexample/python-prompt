@@ -29,9 +29,9 @@ class RangeProgressHandle(BaseClass):
     total: int = public_field(description="Total size of the child range (end - start)")
 
     def advance(
-            self,
-            step: float | int | str | None = None,
-            **kwargs,
+        self,
+        step: float | int | str | None = None,
+        **kwargs,
     ) -> str | None:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
@@ -48,11 +48,11 @@ class RangeProgressHandle(BaseClass):
         return self.parent.render()
 
     def update(
-            self,
-            current: float | int | str | None = None,
-            label: str | None = None,
-            color: TerminalColor | None = None,
-            auto_render: bool = True,
+        self,
+        current: float | int | str | None = None,
+        label: str | None = None,
+        color: TerminalColor | None = None,
+        auto_render: bool = True,
     ) -> str | None:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,

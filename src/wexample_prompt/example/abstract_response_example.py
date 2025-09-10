@@ -6,13 +6,12 @@ from typing import TYPE_CHECKING
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_prompt.mixins.with_io_manager import WithIoManager
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.example.example_class_with_methods import (
         ExampleClassWithMethods,
     )
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

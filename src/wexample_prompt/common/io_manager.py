@@ -78,13 +78,12 @@ from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin 
 from wexample_prompt.mixins.with_indentation import WithIndentation
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
