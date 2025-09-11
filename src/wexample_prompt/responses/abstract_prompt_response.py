@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Callable, Mapping, Optional
+from typing import TYPE_CHECKING, Any, Optional
+from collections.abc import Callable, Mapping
 
 import attrs
 from wexample_helpers.classes.field import public_field
@@ -105,7 +106,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
             self,
             *,
             shallow: bool = False,
-            per_field_copy: Optional[Mapping[str, Callable[[Any], Any]]] = None,
+            per_field_copy: Mapping[str, Callable[[Any], Any]] | None = None,
     ) -> dict:
         out = {}
         for a in attrs.fields(self.__class__):

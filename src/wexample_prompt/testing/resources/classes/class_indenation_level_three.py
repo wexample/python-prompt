@@ -12,7 +12,6 @@ if TYPE_CHECKING:
 
 @base_class
 class ClassIndentationLevelThree(WithIoMethods, BaseClass):
-
     def get_io_context_indentation_character(self) -> str | None:
         return "·"
 

@@ -20,6 +20,7 @@ class BufferOutputHandler(AbstractOutputHandler):
     - Stores the original response objects in `buffer` (preserving legacy behavior).
     - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
     """
+
     _buffer_rendered: list[str | None] = private_field(
         factory=list,
         description="Rendered strings for buffered responses (None if not rendered).",
@@ -49,8 +50,8 @@ class BufferOutputHandler(AbstractOutputHandler):
         self._buffer_rendered = []
 
     def erase(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> Any:
         pass
 
@@ -60,9 +61,9 @@ class BufferOutputHandler(AbstractOutputHandler):
         return rendered
 
     def print(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> Any:
         # Preserve legacy: store the response object
         self._buffer_responses.append(response)

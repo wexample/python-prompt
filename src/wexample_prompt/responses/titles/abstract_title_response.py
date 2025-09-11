@@ -33,19 +33,21 @@ class AbstractTitleResponse(AbstractMessageResponse):
     prefix_segment: PromptResponseSegment = public_field(
         description="The prefix segment displayed before the title text"
     )
-    text_segment: PromptResponseSegment = public_field(description="The title text segment")
+    text_segment: PromptResponseSegment = public_field(
+        description="The title text segment"
+    )
     width: int | None = public_field(
         default=None, description="Optional fixed width; if not set uses context width"
     )
 
     @classmethod
     def _create_title(
-            cls,
-            text: str,
-            color: TerminalColor | None = None,
-            character: str | None = None,
-            width: int | None = None,
-            verbosity: VerbosityLevel = None,
+        cls,
+        text: str,
+        color: TerminalColor | None = None,
+        character: str | None = None,
+        width: int | None = None,
+        verbosity: VerbosityLevel = None,
     ) -> AbstractTitleResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -94,7 +96,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         remaining -= len(self.prefix_segment.text)
         remaining -= len(self.text_segment.text)
         self.fill_segment.text = max(0, remaining) * (
-                self.character or self.DEFAULT_CHARACTER
+            self.character or self.DEFAULT_CHARACTER
         )
 
         return super().render(context=context)
