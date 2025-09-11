@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Optional
 from collections.abc import Callable, Mapping
+from typing import TYPE_CHECKING, Any, Optional
 
 import attrs
 from wexample_helpers.classes.field import public_field
