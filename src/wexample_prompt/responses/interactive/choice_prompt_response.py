@@ -50,15 +50,15 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def create_choice(
-            cls,
-            question: LineMessage,
-            choices: list[Any] | Mapping[Any, Any],
-            default: Any | None = None,
-            abort: bool | str | None = None,
-            color: TerminalColor | None = None,
-            reset_on_finish: bool = False,
-            predefined_answer: Any = None,
-            verbosity: VerbosityLevel | None = None,
+        cls,
+        question: LineMessage,
+        choices: list[Any] | Mapping[Any, Any],
+        default: Any | None = None,
+        abort: bool | str | None = None,
+        color: TerminalColor | None = None,
+        reset_on_finish: bool = False,
+        predefined_answer: Any = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
         from collections.abc import Mapping
@@ -218,7 +218,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 ]
             )
             self.lines.append(controls_line)
-
 
             # Render and print this frame
             printed_lines = self._print_render(context=context)

@@ -24,7 +24,7 @@ class BufferOutputHandler(AbstractOutputHandler):
         factory=list,
         description="Rendered strings for buffered responses (None if not rendered).",
     )
-    _buffer_responses: list["AbstractPromptResponse"] = private_field(
+    _buffer_responses: list[AbstractPromptResponse] = private_field(
         factory=list,
         description="Original response objects buffered in order.",
     )

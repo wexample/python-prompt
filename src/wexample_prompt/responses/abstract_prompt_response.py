@@ -80,6 +80,12 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
     def rendered_content(self) -> str | None:
         return self._rendered_content
 
+    def clone(self, **overrides) -> AbstractPromptResponse:
+        """Clone this response and all its child objects safely."""
+        payload = self._clone_export()
+        payload.update(overrides)
+        return self.__class__(**payload)
+
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the complete response."""
         from wexample_prompt.common.prompt_context import PromptContext
@@ -94,13 +100,6 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
 
     def reset(self) -> None:
         self._rendered_content = None
-
-    def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
-        return (
-                self.verbosity is None
-                or context.verbosity is None
-                or self.verbosity <= context.verbosity
-        )
 
     def _clone_export(
             self,
@@ -129,8 +128,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
                 out[init_name] = val
         return out
 
-    def clone(self, **overrides) -> AbstractPromptResponse:
-        """Clone this response and all its child objects safely."""
-        payload = self._clone_export()
-        payload.update(overrides)
-        return self.__class__(**payload)
+    def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
+        return (
+                self.verbosity is None
+                or context.verbosity is None
+                or self.verbosity <= context.verbosity
+        )

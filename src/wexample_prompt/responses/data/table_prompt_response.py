@@ -29,11 +29,11 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_table(
-            cls,
-            data: list[list[Any]],
-            headers: list[str] | None = None,
-            title: str | None = None,
-            verbosity: VerbosityLevel | None = None,
+        cls,
+        data: list[list[Any]],
+        headers: list[str] | None = None,
+        title: str | None = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> TablePromptResponse:
         return cls(
             lines=[], data=data, headers=headers, title=title, verbosity=verbosity
@@ -67,7 +67,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_row_segments(
-            row: list[Any], widths: list[int]
+        row: list[Any], widths: list[int]
     ) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
@@ -102,7 +102,7 @@ class TablePromptResponse(AbstractPromptResponse):
                     PromptResponseSegment(text=f" {self.title} "),
                     PromptResponseSegment(
                         text="-" * (total_width - title_padding - len(self.title) - 2)
-                             + "+"
+                        + "+"
                     ),
                 ]
             )
