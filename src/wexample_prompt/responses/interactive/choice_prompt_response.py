@@ -13,13 +13,12 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
     AbstractInteractivePromptResponse,
 )
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

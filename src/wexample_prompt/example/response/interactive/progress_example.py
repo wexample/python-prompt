@@ -21,7 +21,6 @@ def step3() -> None:
     """Third step: Cleanup."""
     time.sleep(0.2)
 
-
 from wexample_helpers.decorator.base_class import base_class
 
 

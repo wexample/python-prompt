@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.classes.field import public_field
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,

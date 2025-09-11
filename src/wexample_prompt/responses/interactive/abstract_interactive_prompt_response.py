@@ -52,8 +52,8 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse):
         # Determine columns from context or fallback to terminal/env
         try:
             cols = (
-                    int(getattr(context, "get_width", lambda: 0)())
-                    or shutil.get_terminal_size().columns
+                int(getattr(context, "get_width", lambda: 0)())
+                or shutil.get_terminal_size().columns
             )
         except Exception:
             cols = 80

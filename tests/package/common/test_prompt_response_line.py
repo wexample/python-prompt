@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 
-
 class TestPromptResponseLine:
     def test_create_basic_line(self) -> None:
         """Test creating a basic line with single segment."""

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
-from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.classes.field import public_field
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (

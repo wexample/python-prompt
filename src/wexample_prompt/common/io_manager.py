@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
@@ -78,7 +79,6 @@ from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin 
 from wexample_prompt.mixins.with_indentation import WithIndentation
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
-from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.responses.abstract_prompt_response import (

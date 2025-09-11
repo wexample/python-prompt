@@ -7,13 +7,12 @@ from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

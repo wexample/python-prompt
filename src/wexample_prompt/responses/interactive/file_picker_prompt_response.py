@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Any
 
-from wexample_helpers.classes.field import Field, public_field
+from wexample_helpers.classes.field import public_field
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import (

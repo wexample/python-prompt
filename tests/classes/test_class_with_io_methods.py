@@ -4,7 +4,6 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestIoManager(AbstractPromptTest):
-
     def test_instantiate_base_class(self) -> None:
         from wexample_prompt.testing.resources.classes.base_class_with_io_methods import (
             BaseClassWithIoMethods,

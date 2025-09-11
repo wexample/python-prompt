@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 
-
 class TestPromptResponseSegment:
     def test_create_basic_segment(self) -> None:
         """Test creating a basic text segment without styling."""

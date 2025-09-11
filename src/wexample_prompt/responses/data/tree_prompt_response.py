@@ -32,9 +32,9 @@ class TreePromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_tree(
-            cls,
-            data: dict[str, Any],
-            verbosity: VerbosityLevel | None = None,
+        cls,
+        data: dict[str, Any],
+        verbosity: VerbosityLevel | None = None,
     ) -> TreePromptResponse:
         return cls(
             lines=[],
@@ -64,7 +64,7 @@ class TreePromptResponse(AbstractPromptResponse):
         return super().render(context=context)
 
     def _build_tree(
-            self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
+        self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 

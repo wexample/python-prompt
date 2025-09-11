@@ -12,6 +12,7 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
 
+
 @base_class
 class PromptContext(BaseClass):
     """Context for rendering responses, including terminal information."""
@@ -27,28 +28,22 @@ class PromptContext(BaseClass):
         description="Format lines on rendering, should be disabled when passing raw text",
     )
     indentation: int | None = public_field(
-        default=0,
-        description="Base indentation level"
+        default=0, description="Base indentation level"
     )
     indentation_background_color: TerminalBgColor | None = public_field(
-        default=None,
-        description="The indentation part background color"
+        default=None, description="The indentation part background color"
     )
     indentation_character: str | None = public_field(
-        default=" ",
-        description="The character used for indentation"
+        default=" ", description="The character used for indentation"
     )
     indentation_color: TerminalColor | None = public_field(
-        default=None,
-        description="The indentation part color"
+        default=None, description="The indentation part color"
     )
     indentation_length: int | None = public_field(
-        default=2,
-        description="Number of characters to repeat for one indentation"
+        default=2, description="Number of characters to repeat for one indentation"
     )
     parent_context: PromptContext | None = public_field(
-        default=None,
-        description="A parent context"
+        default=None, description="A parent context"
     )
     verbosity: VerbosityLevel = public_field(
         default=VerbosityLevel.DEFAULT,
@@ -67,7 +62,7 @@ class PromptContext(BaseClass):
 
     @classmethod
     def create_from_parent_context_and_kwargs(
-            cls, kwargs: Kwargs, parent_context: PromptContext | None = None
+        cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
         if parent_context:
             kwargs["parent_context"] = parent_context
@@ -154,7 +149,7 @@ class PromptContext(BaseClass):
 
     def render_indentation_part(self) -> str:
         return self.get_indentation_character() * (
-                self.get_indentation() * self.indentation_length
+            self.get_indentation() * self.indentation_length
         )
 
     def render_indentation_text(self) -> str:

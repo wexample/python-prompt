@@ -11,6 +11,7 @@ from wexample_prompt.testing.abstract_prompt_response_test import (
 
 class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
     """Base class for testing title prompt responses."""
+
     __test__ = False  # Prevent pytest from discovering this abstract class
 
     def get_expected_lines(self) -> int:

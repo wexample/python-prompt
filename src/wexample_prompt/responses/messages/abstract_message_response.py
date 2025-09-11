@@ -4,11 +4,10 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
     from wexample_prompt.enums.terminal_color import TerminalColor
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

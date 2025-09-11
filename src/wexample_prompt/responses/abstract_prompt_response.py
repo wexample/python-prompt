@@ -13,14 +13,13 @@ from wexample_helpers.helpers.variable import copy_shallow
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

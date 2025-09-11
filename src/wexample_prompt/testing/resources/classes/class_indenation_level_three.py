@@ -24,7 +24,6 @@ class ClassIndentationLevelThree(WithIoMethods, BaseClass):
 
     def print_deep_log_three(self) -> None:
         from wexample_helpers.helpers.string import string_generate_lorem_ipsum
-        from wexample_prompt.enums.terminal_color import TerminalColor
 
         self.io.log(message="test deep three LOG", context=self.io_context)
 

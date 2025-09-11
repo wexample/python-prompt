@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
-    from wexample_prompt.mixins.with_io_manager import WithIoManager
+    pass
 
 from wexample_helpers.decorator.base_class import base_class
 
