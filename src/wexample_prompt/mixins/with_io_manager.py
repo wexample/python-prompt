@@ -17,11 +17,11 @@ if TYPE_CHECKING:
 class WithIoManager(BaseClass):
     io: IoManager | None = public_field(
         default=None,
-        description="The optional IO manager that could be shared with a parent."
+        description="The optional IO manager that could be shared with a parent.",
     )
     parent_io_handler: WithIoManager | None = public_field(
         default=None,
-        description="A parent class that may share its IO and context (ex shared verbosity or indentation level)."
+        description="A parent class that may share its IO and context (ex shared verbosity or indentation level).",
     )
 
     def __attrs_post_init__(self) -> None:
@@ -59,7 +59,9 @@ class WithIoManager(BaseClass):
     def _create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
-        parent_context = self.parent_io_handler.io_context if self.parent_io_handler else None
+        parent_context = (
+            self.parent_io_handler.io_context if self.parent_io_handler else None
+        )
 
         defaults = {
             "parent_context": parent_context,
@@ -68,23 +70,19 @@ class WithIoManager(BaseClass):
             "indentation_color": self.get_io_context_indentation_color(),
             "indentation_background_color": self.get_io_context_indentation_background_color(),
             "colorized": self.get_io_context_colorized()
-                         or (
-                             parent_context.colorized
-                             if parent_context is not None
-                             else PromptContext.DEFAULT_COLORIZED
-                         ),
+            or (
+                parent_context.colorized
+                if parent_context is not None
+                else PromptContext.DEFAULT_COLORIZED
+            ),
             "verbosity": (
                 parent_context.verbosity
                 if parent_context is not None
                 else PromptContext.DEFAULT_VERBOSITY
             ),
             "width": self.get_io_context_indentation_width()
-                     or (
-                         parent_context.width
-                         if parent_context is not None
-                         else None
-                     )
-                     or (self.io.terminal_width if self.io else None),
+            or (parent_context.width if parent_context is not None else None)
+            or (self.io.terminal_width if self.io else None),
         }
 
         defaults.update(kwargs)

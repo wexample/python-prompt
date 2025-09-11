@@ -17,15 +17,15 @@ if TYPE_CHECKING:
 class AbstractOutputHandler(BaseClass):
     @abstractmethod
     def erase(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> Any:
         self._raise_not_implemented_error()
 
     @abstractmethod
     def print(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> Any:
         self._raise_not_implemented_error()

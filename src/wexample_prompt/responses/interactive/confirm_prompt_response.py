@@ -66,14 +66,14 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     @classmethod
     def create_confirm(
-            cls,
-            question: LineMessage = "Please confirm:",
-            choices: dict[str, tuple[str, str]] | None = None,
-            default: str | None = None,
-            width: int | None = None,
-            predefined_answer: Any = None,
-            reset_on_finish: bool = False,
-            verbosity: VerbosityLevel | None = None,
+        cls,
+        question: LineMessage = "Please confirm:",
+        choices: dict[str, tuple[str, str]] | None = None,
+        default: str | None = None,
+        width: int | None = None,
+        predefined_answer: Any = None,
+        reset_on_finish: bool = False,
+        verbosity: VerbosityLevel | None = None,
     ) -> ConfirmPromptResponse:
         """Create a confirmation dialog with explicit key mappings.
 
@@ -104,7 +104,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     # Internal helper to create a full-width separator line using a given character
     @staticmethod
     def _separator(
-            ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
+        ch: str, width: int, color: TerminalColor = TerminalColor.WHITE
     ) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
@@ -115,12 +115,12 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
         return (
-                self._answer == True
-                or self._answer == 1
-                or self._answer == "yes"
-                or self._answer == "yes_all"
-                or self._answer == "ok"
-                or self._answer == "continue"
+            self._answer == True
+            or self._answer == 1
+            or self._answer == "yes"
+            or self._answer == "yes_all"
+            or self._answer == "ok"
+            or self._answer == "continue"
         )
 
     def render(self, context: PromptContext | None = None) -> None:

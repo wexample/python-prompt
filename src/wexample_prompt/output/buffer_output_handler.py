@@ -20,13 +20,13 @@ class BufferOutputHandler(AbstractOutputHandler):
     - Stores the original response objects in `buffer` (preserving legacy behavior).
     - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
     """
-    _buffer_responses: list["AbstractPromptResponse"] = private_field(
-        factory=list,
-        description="Original response objects buffered in order.",
-    )
     _buffer_rendered: list[str | None] = private_field(
         factory=list,
         description="Rendered strings for buffered responses (None if not rendered).",
+    )
+    _buffer_responses: list["AbstractPromptResponse"] = private_field(
+        factory=list,
+        description="Original response objects buffered in order.",
     )
 
     @property

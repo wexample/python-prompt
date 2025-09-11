@@ -12,10 +12,9 @@ from wexample_prompt.responses.interactive.choice_prompt_response import (
     ChoicePromptResponse,
 )
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

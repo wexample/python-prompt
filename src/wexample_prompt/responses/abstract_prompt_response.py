@@ -8,12 +8,12 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
 )
+from wexample_helpers.decorator.base_class import base_class
 from wexample_helpers.enums.field_visibility import FieldVisibility
 from wexample_helpers.helpers.variable import copy_shallow
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
-from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
     from wexample_prompt.common.prompt_context import PromptContext

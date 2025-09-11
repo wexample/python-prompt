@@ -9,11 +9,10 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+from wexample_helpers.decorator.base_class import base_class
 if TYPE_CHECKING:
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
     from wexample_prompt.common.prompt_context import PromptContext
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class

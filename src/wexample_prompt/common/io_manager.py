@@ -131,11 +131,10 @@ class IoManager(
     output: AbstractOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-                    "by default print to stdout",
+        "by default print to stdout",
     )
     _terminal_width: int = private_field(
-        default=None,
-        description="The terminal with cached value."
+        default=None, description="The terminal with cached value."
     )
 
     def __attrs_post_init__(self) -> None:
@@ -264,15 +263,15 @@ class IoManager(
         return context
 
     def erase_response(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> None:
         self.output.erase(response=response)
 
     def print_response(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         self.output.print(
             response=response, context=self.create_context(context=context)
@@ -282,6 +281,7 @@ class IoManager(
 
     def _init_output(self) -> None:
         from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
+
         self.output = (
             self.output if (self.output is not None) else StdoutOutputHandler()
         )

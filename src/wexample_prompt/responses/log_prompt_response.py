@@ -20,10 +20,10 @@ class LogPromptResponse(AbstractPromptResponse):
 
     @classmethod
     def create_log(
-            cls: LogPromptResponse,
-            message: LineMessage,
-            color: TerminalColor = None,
-            verbosity: VerbosityLevel | None = None,
+        cls: LogPromptResponse,
+        message: LineMessage,
+        color: TerminalColor = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> LogPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.enums.terminal_color import TerminalColor

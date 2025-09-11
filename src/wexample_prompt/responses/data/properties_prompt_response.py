@@ -16,6 +16,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     The visual width adapts to the provided render context. Lines are generated during
     render, so the response remains context-agnostic until displayed.
     """
+
     nested_indent: int = public_field(
         default=2,
         description="Indentation inside the properties list, when rendering sub list of items",
