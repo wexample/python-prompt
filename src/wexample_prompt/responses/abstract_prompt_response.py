@@ -48,9 +48,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
 
     @classmethod
     def rebuild_context_for_kwargs(
-            cls,
-            parent_kwargs: Kwargs,
-            context: PromptContext | None = None,
+        cls,
+        parent_kwargs: Kwargs,
+        context: PromptContext | None = None,
     ) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
@@ -70,9 +70,9 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
 
     @classmethod
     def _create(
-            cls: AbstractPromptResponse,
-            lines: list[PromptResponseLine],
-            **kwargs,
+        cls: AbstractPromptResponse,
+        lines: list[PromptResponseLine],
+        **kwargs,
     ) -> AbstractPromptResponse:
         """Create a new response with the given lines."""
         return cls(lines=lines, **kwargs)
@@ -103,10 +103,10 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
         self._rendered_content = None
 
     def _clone_export(
-            self,
-            *,
-            shallow: bool = False,
-            per_field_copy: Mapping[str, Callable[[Any], Any]] | None = None,
+        self,
+        *,
+        shallow: bool = False,
+        per_field_copy: Mapping[str, Callable[[Any], Any]] | None = None,
     ) -> dict:
         out = {}
         for a in attrs.fields(self.__class__):
@@ -131,7 +131,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
 
     def _verbosity_context_allows_display(self, context: PromptContext) -> bool:
         return (
-                self.verbosity is None
-                or context.verbosity is None
-                or self.verbosity <= context.verbosity
+            self.verbosity is None
+            or context.verbosity is None
+            or self.verbosity <= context.verbosity
         )
