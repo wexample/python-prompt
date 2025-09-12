@@ -11,6 +11,9 @@ from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
+    from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
+    from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class

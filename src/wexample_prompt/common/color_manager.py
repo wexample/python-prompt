@@ -8,6 +8,8 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.text_style import TextStyle
+    from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class ColorManager:

@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.debug_prompt_response import (
         DebugPromptResponse,
     )
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class DebugPromptResponseManagerMixin:

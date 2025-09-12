@@ -17,6 +17,8 @@ if TYPE_CHECKING:
         AbstractResponseExample,
     )
     from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+    from collections.abc import Callable
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class

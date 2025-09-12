@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.common.choice.choice import Choice
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -19,6 +17,10 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
+    from wexample_prompt.common.choice.choice import Choice
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -61,9 +63,10 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
-        from collections.abc import Mapping
-
+        from wexample_prompt.common.choice.choice import Choice
         from wexample_prompt.enums.choice import ChoiceValue
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from collections.abc import Mapping
 
         # Build question lines from LineMessage, apply styles/colors on segments
         question_lines = PromptResponseLine.create_from_string(question, color=color)
@@ -120,12 +123,13 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
     def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
-        import readchar
-        from wexample_prompt.common.prompt_context import PromptContext
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.choice import ChoiceValue
-        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.text_style import TextStyle
+        import readchar
+        from wexample_prompt.enums.terminal_color import TerminalColor
 
         context = PromptContext.create_if_none(context=context)
 

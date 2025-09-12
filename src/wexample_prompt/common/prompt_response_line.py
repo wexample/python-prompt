@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.const.types import LineMessage
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 
 @base_class
@@ -30,6 +30,7 @@ class PromptResponseLine(BaseClass):
         """
         Create a line from a single text string.
         """
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         # Normalize input to a list of raw lines without newline characters
         raw_lines: list[str] = []
         if isinstance(text, str):

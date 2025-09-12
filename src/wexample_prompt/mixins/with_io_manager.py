@@ -11,6 +11,8 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
+    from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 @base_class

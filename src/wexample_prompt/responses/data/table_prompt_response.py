@@ -7,12 +7,14 @@ from typing import TYPE_CHECKING, Any
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -59,6 +61,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         return PromptResponseLine(
@@ -78,6 +81,7 @@ class TablePromptResponse(AbstractPromptResponse):
         return segments
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         if not self.data and not self.headers:

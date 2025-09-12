@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class

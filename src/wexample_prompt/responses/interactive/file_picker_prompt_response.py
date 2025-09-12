@@ -15,6 +15,7 @@ from wexample_prompt.responses.interactive.choice_prompt_response import (
 
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class

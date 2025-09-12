@@ -13,6 +13,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.data.properties_prompt_response import (
         PropertiesPromptResponse,
     )
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class PropertiesPromptResponseManagerMixin:

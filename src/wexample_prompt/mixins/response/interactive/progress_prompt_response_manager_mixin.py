@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.progress_prompt_response import (
         ProgressPromptResponse,
     )
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class ProgressPromptResponseManagerMixin:

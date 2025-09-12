@@ -8,6 +8,7 @@ from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
 
 class RangeProgressHandle(BaseClass):

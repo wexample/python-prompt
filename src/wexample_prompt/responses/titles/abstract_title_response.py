@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
@@ -13,6 +12,7 @@ if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
 
 @base_class
@@ -50,6 +50,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel = None,
     ) -> AbstractTitleResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         prefix = PromptResponseSegment(
             text=f"{cls.DEFAULT_PREFIX} ",

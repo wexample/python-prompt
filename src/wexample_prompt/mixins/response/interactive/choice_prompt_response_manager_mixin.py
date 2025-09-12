@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.interactive.choice_prompt_response import (
         ChoicePromptResponse,
     )
+    from collections.abc import Mapping
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class ChoicePromptResponseManagerMixin:

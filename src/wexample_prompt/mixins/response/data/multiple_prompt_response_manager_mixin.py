@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.data.multiple_prompt_response import (
         MultiplePromptResponse,
     )
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class MultiplePromptResponseManagerMixin:

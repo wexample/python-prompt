@@ -4,9 +4,12 @@ from typing import Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -54,6 +57,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     @staticmethod
     def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         return PromptResponseLine(
@@ -85,6 +89,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         if not self.properties:

@@ -7,12 +7,12 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
-from wexample_prompt.responses.interactive.progress_prompt_response import (
-    ProgressPromptResponse,
-)
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+    from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+    from wexample_prompt.common.prompt_context import PromptContext
 
 
 @base_class
@@ -92,6 +92,7 @@ class ProgressHandle(BaseClass):
 
     def advance(self, step: float | int | str | None = None, **kwargs) -> str | None:
         """Increment progress by a number of steps and optionally render."""
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         if self._is_child():
             step_norm = ProgressPromptResponse._normalize_value(
                 self._effective_total(), step
@@ -181,6 +182,7 @@ class ProgressHandle(BaseClass):
         If this handle is a child, `current` is interpreted relative to the child range
         and mapped to the parent's absolute scale.
         """
+        from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
         if self._is_child():
             # Dynamic range adjustments first so that current mapping uses latest bounds
             if total is not None:

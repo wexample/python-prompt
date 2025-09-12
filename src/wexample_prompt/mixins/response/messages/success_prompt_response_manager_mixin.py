@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from wexample_prompt.responses.messages.success_prompt_response import (
         SuccessPromptResponse,
     )
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 class SuccessPromptResponseManagerMixin:

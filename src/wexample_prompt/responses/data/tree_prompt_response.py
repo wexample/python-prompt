@@ -7,9 +7,13 @@ from typing import Any
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -49,6 +53,7 @@ class TreePromptResponse(AbstractPromptResponse):
         return TreeExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         if not self.data:
@@ -66,6 +71,7 @@ class TreePromptResponse(AbstractPromptResponse):
     def _build_tree(
         self, data: dict[str, Any], prefix: str, lines: list[PromptResponseLine]
     ) -> None:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         items = list(data.items())

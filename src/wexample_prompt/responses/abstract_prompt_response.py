@@ -4,7 +4,6 @@ from collections.abc import Callable, Mapping
 from typing import TYPE_CHECKING, Any
 
 import attrs
-
 from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (

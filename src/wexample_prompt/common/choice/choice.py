@@ -5,6 +5,10 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.choice import ChoiceValue
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from wexample_prompt.enums.choice import ChoiceValue
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
 
 
 @base_class
