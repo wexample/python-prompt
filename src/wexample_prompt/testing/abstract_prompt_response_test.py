@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING
 
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 if TYPE_CHECKING:
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class AbstractPromptResponseTest(AbstractPromptTest):
     __test__ = False  # Prevent pytest from discovering this abstract class
 
-    @abstractmethod
+    @abstract_method
     def get_expected_lines(self) -> int:
         """Return the expected number of lines in the rendered response."""
 
@@ -125,7 +125,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
             text
         ), f"Unexpected ANSI escape sequences found in: {text!r}"
 
-    @abstractmethod
+    @abstract_method
     def _assert_specific_format(self, rendered: str) -> None:
         """Assert format specific to this response type."""
 
@@ -149,7 +149,7 @@ class AbstractPromptResponseTest(AbstractPromptTest):
         method_name = self._get_response_class().get_snake_short_class_name()
         return getattr(self._io, method_name)(**kwargs)
 
-    @abstractmethod
+    @abstract_method
     def _get_response_class(self) -> type[AbstractPromptResponse]:
         pass
 

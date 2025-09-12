@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from collections.abc import Callable, Mapping
 from typing import TYPE_CHECKING, Any
 
 import attrs
+
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin import (
     HasSnakeShortClassNameClassMixin,
@@ -42,7 +43,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
         return "PromptResponse"
 
     @classmethod
-    @abstractmethod
+    @abstract_method
     def get_example_class(cls) -> type[AbstractResponseExample]:
         cls._raise_not_implemented_error()
 

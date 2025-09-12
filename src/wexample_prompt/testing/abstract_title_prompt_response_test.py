@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-from abc import ABC
-
 from wexample_prompt.testing.abstract_prompt_response_test import (
     AbstractPromptResponseTest,
 )
 
 
-class AbstractTitlePromptResponseTest(AbstractPromptResponseTest, ABC):
+class AbstractTitlePromptResponseTest(AbstractPromptResponseTest):
     """Base class for testing title prompt responses."""
 
     __test__ = False  # Prevent pytest from discovering this abstract class

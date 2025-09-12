@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.decorator.base_class import base_class
 
@@ -15,14 +15,14 @@ if TYPE_CHECKING:
 
 @base_class
 class AbstractOutputHandler(BaseClass):
-    @abstractmethod
+    @abstract_method
     def erase(
         self,
         response: AbstractPromptResponse,
     ) -> Any:
         self._raise_not_implemented_error()
 
-    @abstractmethod
+    @abstract_method
     def print(
         self,
         response: AbstractPromptResponse,

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from abc import abstractmethod
 from typing import TYPE_CHECKING
 
+from wexample_helpers.classes.abstract_method import abstract_method
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.mixins.with_io_manager import WithIoManager
@@ -26,14 +26,14 @@ class AbstractResponseExample(WithIoManager, BaseClass):
         self._init_io_manager()
         self._class_with_methods = ExampleClassWithMethods(io=self.io)
 
-    @abstractmethod
+    @abstract_method
     def example_class(self) -> None:
         pass
 
-    @abstractmethod
+    @abstract_method
     def example_extended(self) -> None:
         pass
 
-    @abstractmethod
+    @abstract_method
     def example_manager(self) -> None:
         pass
