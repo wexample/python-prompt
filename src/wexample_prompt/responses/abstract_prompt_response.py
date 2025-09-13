@@ -10,8 +10,6 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
     HasSnakeShortClassNameClassMixin,
 )
 from wexample_helpers.decorator.base_class import base_class
-from wexample_helpers.enums.field_visibility import FieldVisibility
-from wexample_helpers.helpers.variable import copy_shallow
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
@@ -108,6 +106,8 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
         shallow: bool = False,
         per_field_copy: Mapping[str, Callable[[Any], Any]] | None = None,
     ) -> dict:
+        from wexample_helpers.enums.field_visibility import FieldVisibility
+        from wexample_helpers.helpers.variable import copy_shallow
         out = {}
         for a in attrs.fields(self.__class__):
             if not a.init:
