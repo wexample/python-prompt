@@ -12,13 +12,14 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
     from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
-    from collections.abc import Callable
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
