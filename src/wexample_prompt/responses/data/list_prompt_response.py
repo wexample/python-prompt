@@ -13,7 +13,6 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-    from wexample_prompt.common.prompt_response_line import PromptResponseLine
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
