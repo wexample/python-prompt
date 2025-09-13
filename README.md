@@ -2,7 +2,7 @@
 
 Helper for your tty interactions
 
-Version: 0.0.49
+Version: 0.0.50
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Version: 0.0.49
 - colorama
 - inquirerpy
 - readchar
-- wexample-helpers==0.0.67
+- wexample-helpers==0.0.68
 
 ## Installation
 
