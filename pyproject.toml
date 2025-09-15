@@ -21,7 +21,7 @@ dependencies = [
     "colorama",
     "inquirerpy",
     "readchar",
-    "wexample-helpers==0.0.69",
+    "wexample-helpers==0.0.70",
 ]
 
 [project.readme]
