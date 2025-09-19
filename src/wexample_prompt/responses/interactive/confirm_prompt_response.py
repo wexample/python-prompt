@@ -296,6 +296,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def _empty_line(self) -> None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         self.lines.append(
             PromptResponseLine(
                 segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
