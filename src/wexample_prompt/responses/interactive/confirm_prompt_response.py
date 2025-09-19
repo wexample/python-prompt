@@ -206,7 +206,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         parts: list[tuple[str, str, str]] = []  # (key, value, label)
         for k, (v, label) in self.options.items():
             parts.append((k, v, label))
-        options_text = " / ".join([f"[{k}: {label}]" for k, _, label in parts])
 
         # Determine question lines. We do NOT adapt the box width to content; we
         # strictly use the terminal/context width as the fixed width.
@@ -220,6 +219,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         # Compose a boxed layout using lines and segments
         self.lines = []
+        self._empty_line()
         # top border
         self.lines.append(self._separator("━", box_width, TerminalColor.WHITE))
 
@@ -256,12 +256,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 )
             )
             self.lines.append(PromptResponseLine(segments=segs))
-        # empty line
-        self.lines.append(
-            PromptResponseLine(
-                segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
-            )
-        )
+
         # Separator line between question and options (different char)
         self.lines.append(self._separator("·", box_width, TerminalColor.WHITE))
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
@@ -296,3 +291,13 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # bottom border (thicker look using lower half block)
         self.lines.append(self._separator("▄", box_width, TerminalColor.WHITE))
         self.lines.append(self._separator("░", box_width, TerminalColor.WHITE))
+        self._empty_line()
+
+    def _empty_line(self) -> None:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        self.lines.append(
+            PromptResponseLine(
+                segments=[PromptResponseSegment(text="", color=TerminalColor.RESET)]
+            )
+        )
