@@ -108,6 +108,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
     ) -> dict:
         from wexample_helpers.enums.field_visibility import FieldVisibility
         from wexample_helpers.helpers.variable import copy_shallow
+
         out = {}
         for a in attrs.fields(self.__class__):
             if not a.init:

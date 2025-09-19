@@ -28,6 +28,7 @@ class AbstractPromptTest(unittest.TestCase):
     def setUp(self) -> None:
         """Set up common test fixtures."""
         from wexample_prompt.common.io_manager import IoManager
+
         self._io = IoManager()
 
     def _assert_contains_text(self, rendered: str, text: str) -> None:

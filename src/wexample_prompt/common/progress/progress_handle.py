@@ -97,6 +97,7 @@ class ProgressHandle(BaseClass):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         if self._is_child():
             step_norm = ProgressPromptResponse._normalize_value(
                 self._effective_total(), step
@@ -189,6 +190,7 @@ class ProgressHandle(BaseClass):
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
         )
+
         if self._is_child():
             # Dynamic range adjustments first so that current mapping uses latest bounds
             if total is not None:
