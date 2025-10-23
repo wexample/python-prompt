@@ -27,7 +27,7 @@ class WithIoMethods(WithIoManager):
     def _get_io_methods(self, name: str) -> Any:
         if self.io is None:
             raise RuntimeError(
-                f"{self.__class__.__name__} requires an 'io' manager, but none was provided."
+                f"{self.__class__.__name__} is trying to execute '{name}', but no 'io' manager was provided."
             )
 
         if hasattr(self.io, name):
