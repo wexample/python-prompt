@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
@@ -30,6 +31,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ErrorPromptResponse:
         from wexample_helpers.helpers.error import error_format
+
         from wexample_prompt.enums.terminal_color import TerminalColor
 
         # Build content: if there's an exception, create a red header line (symbol + message)
