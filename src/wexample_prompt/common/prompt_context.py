@@ -84,18 +84,6 @@ class PromptContext(BaseClass):
         """
         return context or PromptContext()
 
-    @classmethod
-    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
-        return {
-            "indentation": context.indentation,
-            "indentation_character": context.indentation_character,
-            "indentation_color": context.indentation_color,
-            "indentation_background_color": context.indentation_background_color,
-            "indentation_length": context.indentation_length,
-            "verbosity": context.verbosity,
-            "width": context.width,
-        }
-
     def get_indentation(self) -> int:
         if self.indentation is None:
             if self.parent_context:
