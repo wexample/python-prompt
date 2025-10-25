@@ -2,11 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_helpers.classes.base_class import BaseClass
-from wexample_helpers.classes.field import public_field
-from wexample_helpers.classes.private_field import private_field
-from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
@@ -78,7 +73,11 @@ from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin 
     TitlePromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.with_indentation import WithIndentation
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -134,7 +133,7 @@ class IoManager(
     output: AbstractOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-        "by default print to stdout",
+                    "by default print to stdout",
     )
     _terminal_width: int = private_field(
         default=None, description="The terminal with cached value."
@@ -243,12 +242,15 @@ class IoManager(
         ]
 
     @property
-    def terminal_width(self, reload: bool = False) -> int:
-        if reload or self._terminal_width is None:
-            import shutil
+    def terminal_width(self) -> int:
+        if self._terminal_width is None:
+            self.reload_terminal_width()
+        return self._terminal_width
 
-            self._terminal_width = shutil.get_terminal_size().columns
+    def reload_terminal_width(self) -> int:
+        import shutil
 
+        self._terminal_width = shutil.get_terminal_size().columns
         return self._terminal_width
 
     def create_context(self, context: PromptContext | None = None) -> PromptContext:
@@ -262,19 +264,20 @@ class IoManager(
             else self.default_context_verbosity
         )
         context.indentation = context.indentation or self.indentation
-        context.width = context.width or self.terminal_width
+        context.indentation_length = context.indentation_length or self.indentation_length
+        context.width = context.width or (self.terminal_width - context.calc_indentation_char_length())
         return context
 
     def erase_response(
-        self,
-        response: AbstractPromptResponse,
+            self,
+            response: AbstractPromptResponse,
     ) -> None:
         self.output.erase(response=response)
 
     def print_response(
-        self,
-        response: AbstractPromptResponse,
-        context: PromptContext | None = None,
+            self,
+            response: AbstractPromptResponse,
+            context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         self.output.print(
             response=response, context=self.create_context(context=context)

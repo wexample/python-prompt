@@ -154,8 +154,11 @@ class PromptContext(BaseClass):
 
     def render_indentation_part(self) -> str:
         return self.get_indentation_character() * (
-            self.get_indentation() * self.indentation_length
+            self.calc_indentation_char_length()
         )
+
+    def calc_indentation_char_length(self) -> int:
+        return self.get_indentation() * self.indentation_length
 
     def render_indentation_text(self) -> str:
         output = ""
