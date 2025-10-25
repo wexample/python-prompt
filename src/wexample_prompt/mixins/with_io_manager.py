@@ -30,31 +30,13 @@ class WithIoManager(BaseClass):
         if self.parent_io_handler and self.parent_io_handler.io:
             self.io = self.parent_io_handler.io
 
-    def get_io_context_colorized(self) -> bool | None:
-        return None
-
-    def get_io_context_indentation(self) -> int:
-        if self.parent_io_handler is not None:
-            return self.parent_io_handler.indentation + 1
-        return 0
-
-    def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
-        return None
-
-    def get_io_context_indentation_character(self) -> str | None:
-        return None
-
-    def get_io_context_indentation_color(self) -> TerminalColor | None:
-        return None
-
-    def get_io_context_indentation_width(self) -> int | None:
-        return None
-
     def create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
         parent_context = (
-            self.parent_io_handler.create_io_context() if self.parent_io_handler else None
+            self.parent_io_handler.create_io_context()
+            if self.parent_io_handler
+            else None
         )
 
         defaults = {
@@ -82,6 +64,26 @@ class WithIoManager(BaseClass):
         defaults.update(kwargs)
 
         return PromptContext.create_from_kwargs(kwargs=defaults)
+
+    def get_io_context_colorized(self) -> bool | None:
+        return None
+
+    def get_io_context_indentation(self) -> int:
+        if self.parent_io_handler is not None:
+            return self.parent_io_handler.indentation + 1
+        return 0
+
+    def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
+        return None
+
+    def get_io_context_indentation_character(self) -> str | None:
+        return None
+
+    def get_io_context_indentation_color(self) -> TerminalColor | None:
+        return None
+
+    def get_io_context_indentation_width(self) -> int | None:
+        return None
 
     def _init_io_manager(self) -> IoManager:
         from wexample_prompt.common.io_manager import IoManager
