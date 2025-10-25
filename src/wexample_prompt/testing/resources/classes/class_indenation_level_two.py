@@ -18,11 +18,12 @@ class ClassIndentationLevelTwo(WithIoMethods):
             ClassIndentationLevelThree,
         )
 
-        self.log(message="test deep log two", context=self.io_context)
+        io_context = self.create_io_context()
+        self.log(message="test deep log two", context=io_context)
 
         self.log(
             message="test deep log two",
-            context=self._create_io_context(colorized=False),
+            context=self.create_io_context(colorized=False),
         )
 
         level_three = ClassIndentationLevelThree(parent_io_handler=self)
@@ -30,11 +31,11 @@ class ClassIndentationLevelTwo(WithIoMethods):
         level_three.print_deep_log_three()
 
         self.separator("Try class level three in quiet mode")
-        self.io_context.verbosity = VerbosityLevel.QUIET
+        io_context.verbosity = VerbosityLevel.QUIET
 
         level_three = ClassIndentationLevelThree(parent_io_handler=self)
 
         level_three.print_deep_log_three()
 
-        self.io_context.verbosity = VerbosityLevel.DEFAULT
+        io_context.verbosity = VerbosityLevel.DEFAULT
         self.separator("Quiet end")

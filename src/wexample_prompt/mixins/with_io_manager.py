@@ -6,9 +6,6 @@ from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
-from wexample_prompt.enums.terminal_color import TerminalColor
-
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
@@ -33,18 +30,12 @@ class WithIoManager(BaseClass):
         if self.parent_io_handler and self.parent_io_handler.io:
             self.io = self.parent_io_handler.io
 
-    @property
-    def io_context(self) -> PromptContext:
-        # Compute context on-demand to avoid stale state and to honor
-        # any dynamic overrides provided by subclass getters.
-        return self._create_io_context()
-
     def get_io_context_colorized(self) -> bool | None:
         return None
 
     def get_io_context_indentation(self) -> int:
         if self.parent_io_handler is not None:
-            return self.parent_io_handler.io_context.indentation + 1
+            return self.parent_io_handler.indentation + 1
         return 0
 
     def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
@@ -59,11 +50,11 @@ class WithIoManager(BaseClass):
     def get_io_context_indentation_width(self) -> int | None:
         return None
 
-    def _create_io_context(self, **kwargs) -> PromptContext:
+    def create_io_context(self, **kwargs) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
         parent_context = (
-            self.parent_io_handler.io_context if self.parent_io_handler else None
+            self.parent_io_handler.create_io_context() if self.parent_io_handler else None
         )
 
         defaults = {

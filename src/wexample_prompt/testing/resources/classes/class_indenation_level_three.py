@@ -24,7 +24,7 @@ class ClassIndentationLevelThree(WithIoMethods, BaseClass):
     def print_deep_log_three(self) -> None:
         from wexample_helpers.helpers.string import string_generate_lorem_ipsum
 
-        self.io.log(message="test deep three LOG", context=self.io_context)
+        self.io.log(message="test deep three LOG", context=self.create_io_context())
 
         self.log(
             message="test deep three LOG (shortcut)",
@@ -32,23 +32,24 @@ class ClassIndentationLevelThree(WithIoMethods, BaseClass):
 
         self.log(
             message="test deep three LOG (no color)",
-            context=self._create_io_context(),
+            context=self.create_io_context(),
             colorized=False,
         )
 
-        self.io_context.width = 100
+        io_context = self.create_io_context()
+        io_context.width = 100
 
         self.separator(
             label="Text width management",
-            context=self.io_context,
+            context=io_context,
         )
 
-        self.io.log(string_generate_lorem_ipsum(1000), context=self.io_context)
+        self.io.log(string_generate_lorem_ipsum(1000), context=io_context)
 
-        self.log(string_generate_lorem_ipsum(200), context=self.io_context, width=60)
+        self.log(string_generate_lorem_ipsum(200), context=io_context, width=60)
 
         self.separator(width=60)
 
-        self.echo(message="test deep three ECHO", context=self._create_io_context())
+        self.echo(message="test deep three ECHO", context=self.create_io_context())
 
-        self.echo(string_generate_lorem_ipsum(200), context=self.io_context, width=60)
+        self.echo(string_generate_lorem_ipsum(200), context=io_context, width=60)
