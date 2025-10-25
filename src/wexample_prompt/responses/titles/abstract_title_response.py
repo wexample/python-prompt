@@ -85,6 +85,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         )
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wcwidth import wcwidth
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
@@ -95,8 +96,8 @@ class AbstractTitleResponse(AbstractMessageResponse):
         # Compute remaining space after prefix + text and indentation
         remaining = width - len(context.render_indentation_text())
 
-        remaining -= len(self.prefix_segment.text)
-        remaining -= len(self.text_segment.text)
+        remaining -= wcwidth(self.prefix_segment.text)
+        remaining -= wcwidth(self.text_segment.text)
         self.fill_segment.text = max(0, remaining) * (
             self.character or self.DEFAULT_CHARACTER
         )
