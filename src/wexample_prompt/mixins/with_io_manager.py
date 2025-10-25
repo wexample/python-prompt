@@ -92,7 +92,8 @@ class WithIoManager(BaseClass):
 
         return PromptContext.create_from_kwargs(kwargs=defaults)
 
-    def _init_io_manager(self) -> None:
+    def _init_io_manager(self) -> IoManager:
         from wexample_prompt.common.io_manager import IoManager
 
         self.io = IoManager()
+        return self.io
