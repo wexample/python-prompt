@@ -133,7 +133,7 @@ class IoManager(
     output: AbstractOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
-                    "by default print to stdout",
+        "by default print to stdout",
     )
     _terminal_width: int = private_field(
         default=None, description="The terminal with cached value."
@@ -247,12 +247,6 @@ class IoManager(
             self.reload_terminal_width()
         return self._terminal_width
 
-    def reload_terminal_width(self) -> int:
-        import shutil
-
-        self._terminal_width = shutil.get_terminal_size().columns
-        return self._terminal_width
-
     def create_context(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
@@ -264,26 +258,36 @@ class IoManager(
             else self.default_context_verbosity
         )
         context.indentation = context.indentation or self.indentation
-        context.indentation_length = context.indentation_length or self.indentation_length
-        context.width = context.width or (self.terminal_width - context.calc_indentation_char_length())
+        context.indentation_length = (
+            context.indentation_length or self.indentation_length
+        )
+        context.width = context.width or (
+            self.terminal_width - context.calc_indentation_char_length()
+        )
         return context
 
     def erase_response(
-            self,
-            response: AbstractPromptResponse,
+        self,
+        response: AbstractPromptResponse,
     ) -> None:
         self.output.erase(response=response)
 
     def print_response(
-            self,
-            response: AbstractPromptResponse,
-            context: PromptContext | None = None,
+        self,
+        response: AbstractPromptResponse,
+        context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
         self.output.print(
             response=response, context=self.create_context(context=context)
         )
 
         return response
+
+    def reload_terminal_width(self) -> int:
+        import shutil
+
+        self._terminal_width = shutil.get_terminal_size().columns
+        return self._terminal_width
 
     def _init_output(self) -> None:
         from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler

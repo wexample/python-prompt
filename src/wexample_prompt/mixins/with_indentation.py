@@ -6,11 +6,10 @@ from wexample_helpers.decorator.base_class import base_class
 
 @base_class
 class WithIndentation:
-    _indentation: int = 0
     indentation_length: int | None = public_field(
-        default=2,
-        description="Number of characters to repeat for one indentation"
+        default=2, description="Number of characters to repeat for one indentation"
     )
+    _indentation: int = 0
 
     @property
     def indentation(self) -> int:
