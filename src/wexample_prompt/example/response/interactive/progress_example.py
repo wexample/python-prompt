@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import time
 
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
@@ -20,9 +22,6 @@ def step2() -> None:
 def step3() -> None:
     """Third step: Cleanup."""
     time.sleep(0.2)
-
-
-from wexample_helpers.decorator.base_class import base_class
 
 
 @base_class
