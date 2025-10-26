@@ -86,6 +86,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wcwidth import wcswidth
+
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
