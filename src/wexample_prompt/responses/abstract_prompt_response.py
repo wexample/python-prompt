@@ -10,13 +10,11 @@ from wexample_helpers.classes.mixin.has_snake_short_class_name_class_mixin impor
     HasSnakeShortClassNameClassMixin,
 )
 from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.common.prompt_response_line import PromptResponseLine
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
-
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
