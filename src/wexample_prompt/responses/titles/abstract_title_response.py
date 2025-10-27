@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
@@ -85,6 +86,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wcwidth import wcswidth
+
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
