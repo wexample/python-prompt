@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-prompt"
-version = "0.0.52"
+version = "0.0.53"
 description = "Helper for your tty interactions"
 authors = [
     { name = "weeger", email = "contact@wexample.com" },
@@ -21,8 +21,8 @@ dependencies = [
     "colorama",
     "inquirerpy",
     "readchar",
+    "wcwidth",
     "wexample-helpers==0.0.71",
-    "wcwidth"
 ]
 
 [project.readme]
@@ -38,14 +38,14 @@ homepage = "https://github.com/wexample/python-prompt"
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-cov",
 ]
 [tool.setuptools.packages.find]
 where = [
     ".",
 ]
-include = [
-    "wexample_prompt*",
-]
+include = ["*"]
+exclude = ["wexample_prompt.testing*"]
 
 [tool.setuptools.package-dir]
 "" = "."
