@@ -5,7 +5,6 @@ import sys
 from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:

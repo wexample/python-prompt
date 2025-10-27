@@ -5,14 +5,12 @@ from typing import TYPE_CHECKING, ClassVar
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
-
     from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
