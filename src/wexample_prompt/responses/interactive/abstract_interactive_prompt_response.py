@@ -6,6 +6,7 @@ from typing import Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 

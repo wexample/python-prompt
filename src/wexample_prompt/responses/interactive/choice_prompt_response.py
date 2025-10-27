@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -125,6 +126,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
     def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
+
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
