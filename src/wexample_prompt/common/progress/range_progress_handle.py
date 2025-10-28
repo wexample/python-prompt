@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
+
 from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
 if TYPE_CHECKING:
