@@ -4,16 +4,16 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
+    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 class SeparatorPromptResponse(AbstractMessageResponse):
     """Response for log messages."""
 
-    DEFAULT_CHARACTER: ClassVar[str] = "~"
+    DEFAULT_CHARACTER: ClassVar[str] = "-"
     character: str | None = public_field(
         default=DEFAULT_CHARACTER, description="The character to repeat"
     )
@@ -42,12 +42,12 @@ class SeparatorPromptResponse(AbstractMessageResponse):
 
     @classmethod
     def create_separator(
-        cls: SeparatorPromptResponse,
-        label: str | None = None,
-        width: int | None = None,
-        color: TerminalColor = None,
-        character: str | None = None,
-        verbosity: VerbosityLevel | None = None,
+            cls: SeparatorPromptResponse,
+            label: str | None = None,
+            width: int | None = None,
+            color: TerminalColor | None = None,
+            character: str | None = None,
+            verbosity: VerbosityLevel | None = None,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
