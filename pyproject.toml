@@ -6,15 +6,9 @@ build-backend = "pdm.backend"
 name = "wexample-prompt"
 version = "0.0.54"
 description = "Helper for your tty interactions"
-authors = [
-    { name = "weeger", email = "contact@wexample.com" },
-]
+authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent"]
 dependencies = [
     "attrs>=23.1.0",
     "cattrs>=23.1.0",
@@ -40,6 +34,7 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+
 [tool.setuptools.packages.find]
 where = [
     ".",

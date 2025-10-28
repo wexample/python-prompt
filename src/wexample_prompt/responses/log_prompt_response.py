@@ -24,7 +24,7 @@ class LogPromptResponse(AbstractPromptResponse):
     def create_log(
         cls: LogPromptResponse,
         message: LineMessage,
-            color: TerminalColor | None = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> LogPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
