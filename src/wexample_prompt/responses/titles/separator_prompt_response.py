@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
