@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-
 from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -193,7 +192,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     def _build_lines(self, context: PromptContext) -> None:
         from wexample_helpers.helpers.ansi import ansi_display_width
-
         from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
