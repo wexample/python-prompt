@@ -19,7 +19,9 @@ if TYPE_CHECKING:
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
-    from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+    from wexample_prompt.output.prompt_buffer_output_handler import (
+        PromptBufferOutputHandler,
+    )
 
 
 @base_class
@@ -40,7 +42,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         description="If True, clears printed block when finishing (close).",
     )
     _closed: bool = False
-    _io_buffer: BufferOutputHandler | None = None
+    _io_buffer: PromptBufferOutputHandler | None = None
     _reload_requested: bool = False
 
     @classmethod
@@ -86,11 +88,13 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
         from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.common.prompt_context import PromptContext
-        from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
+        from wexample_prompt.output.prompt_buffer_output_handler import (
+            PromptBufferOutputHandler,
+        )
 
         # Wait first rendering to build nested io manager.
         if self._io_buffer is None:
-            self._io_buffer = BufferOutputHandler()
+            self._io_buffer = PromptBufferOutputHandler()
             self.io = IoManager(output=self._io_buffer)
 
         context = PromptContext.create_if_none(context=context)

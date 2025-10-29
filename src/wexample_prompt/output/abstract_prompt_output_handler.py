@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class AbstractOutputHandler(BaseClass):
+class AbstractPromptOutputHandler(BaseClass):
     @abstract_method
     def erase(
         self,

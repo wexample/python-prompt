@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+from wexample_prompt.output.abstract_prompt_output_handler import (
+    AbstractPromptOutputHandler,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -14,11 +16,11 @@ if TYPE_CHECKING:
 
 
 @base_class
-class BufferOutputHandler(AbstractOutputHandler):
+class PromptBufferOutputHandler(AbstractPromptOutputHandler):
     """Output handler that buffers responses instead of writing to stdout.
 
     - Stores the original response objects in `buffer` (preserving legacy behavior).
-    - Returns the rendered string (aligned with current handlers like StdoutOutputHandler).
+    - Returns the rendered string (aligned with current handlers like PromptStdoutOutputHandler).
     """
 
     _buffer_rendered: list[str | None] = private_field(

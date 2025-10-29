@@ -6,12 +6,16 @@ from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+from wexample_prompt.output.abstract_prompt_output_handler import (
+    AbstractPromptOutputHandler,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+    from wexample_prompt.output.abstract_prompt_output_handler import (
+        AbstractPromptOutputHandler,
+    )
     from wexample_prompt.responses.interactive.progress_prompt_response import (
         ProgressPromptResponse,
     )
@@ -28,7 +32,7 @@ class ProgressHandle(BaseClass):
     context: PromptContext = public_field(
         description="The rendering context used by the response."
     )
-    output: AbstractOutputHandler | None = public_field(
+    output: AbstractPromptOutputHandler | None = public_field(
         default=None, description="Optional output handler when used via IoManager."
     )
     parent: ProgressHandle | None = public_field(

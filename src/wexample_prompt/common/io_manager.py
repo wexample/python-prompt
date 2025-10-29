@@ -81,7 +81,9 @@ from wexample_prompt.mixins.with_indentation import WithIndentation
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
-    from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+    from wexample_prompt.output.abstract_prompt_output_handler import (
+        AbstractPromptOutputHandler,
+    )
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
@@ -129,7 +131,7 @@ class IoManager(
         default=VerbosityLevel.DEFAULT,
         description="The default verbosity for every generated message.",
     )
-    output: AbstractOutputHandler = public_field(
+    output: AbstractPromptOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
         "by default print to stdout",
@@ -289,8 +291,10 @@ class IoManager(
         return self._terminal_width
 
     def _init_output(self) -> None:
-        from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
+        from wexample_prompt.output.prompt_stdout_output_handler import (
+            PromptStdoutOutputHandler,
+        )
 
         self.output = (
-            self.output if (self.output is not None) else StdoutOutputHandler()
+            self.output if (self.output is not None) else PromptStdoutOutputHandler()
         )

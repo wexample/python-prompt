@@ -5,7 +5,9 @@ import sys
 from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
+from wexample_prompt.output.abstract_prompt_output_handler import (
+    AbstractPromptOutputHandler,
+)
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
@@ -15,7 +17,7 @@ if TYPE_CHECKING:
 
 
 @base_class
-class StdoutOutputHandler(AbstractOutputHandler):
+class PromptStdoutOutputHandler(AbstractPromptOutputHandler):
     def erase(
         self,
         response: AbstractPromptResponse,
