@@ -47,7 +47,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
             )
 
             # First line: symbol + header in red
-            effective_symbol = cls.SYMBOL
+            effective_symbol = symbol or cls.SYMBOL
             header_segments: list[PromptResponseSegment] = []
             if effective_symbol:
                 header_segments.append(
