@@ -278,6 +278,10 @@ class IoManager(
         response: AbstractPromptResponse,
         context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
+        # Quiet mode.
+        if response.verbosity == VerbosityLevel.QUIET:
+            return response
+
         self.output.print(
             response=response, context=self.create_context(context=context)
         )
