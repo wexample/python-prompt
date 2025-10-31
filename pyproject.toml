@@ -16,7 +16,7 @@ dependencies = [
     "inquirerpy",
     "readchar",
     "wcwidth",
-    "wexample-helpers==0.0.74",
+    "wexample-helpers==0.0.75",
 ]
 
 [project.readme]
