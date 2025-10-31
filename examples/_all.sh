@@ -8,5 +8,5 @@
 .venv/bin/python3 examples/nesting.py
 .venv/bin/python3 examples/progress.py
 .venv/bin/python3 examples/screen.py
-.venv/bin/python3 examples/types.py
+.venv/bin/python3 examples/all_types.py
 .venv/bin/pytest

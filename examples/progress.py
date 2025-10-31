@@ -126,6 +126,36 @@ def section_dynamic_resize_sub_progress(io: IoManager) -> None:
     root.finish(color=TerminalColor.RED, label="Global: finished")
 
 
+def section_virtual_subdivisions(io: IoManager) -> None:
+    io.separator('Virtual subdivisions (3 main items, 6 substeps each)')
+    # Simulate processing 3 main items, each subdivided into 6 substeps
+    # Total should reach 100% after all items are processed
+    response = io.progress(label='Processing items', total=3)
+    root = response.get_handle()
+
+    for item_idx in range(3):  # 3 main items
+        # Reserve 1 unit on parent bar starting from current position
+        # from_ is omitted so it defaults to current parent position
+        # virtual_total=6 means we can count 6 steps that map to 1 parent unit
+        sub = root.create_range_handle(
+            to_step=1,  # Reserve 1 unit on parent from current position
+            virtual_total=6  # Virtual total: 6 substeps within 1 parent unit
+        )
+        
+        for step in range(1, 7):
+            sleep(0.05)
+            sub.advance(
+                step=1,
+                label=f"Item {item_idx + 1}/3, substep {step}/6"
+            )
+        
+        # Finish the sub-range to move parent to the end of this range
+        sub.finish()
+    
+    # Finish the root to reach 100%
+    root.finish(label="All items complete", color=TerminalColor.GREEN)
+
+
 if __name__ == "__main__":
     io = IoManager()
     section_using_io_manager(io)
@@ -134,3 +164,4 @@ if __name__ == "__main__":
     section_sub_progress(io)
     section_nested_sub_progress(io)
     section_dynamic_resize_sub_progress(io)
+    section_virtual_subdivisions(io)
