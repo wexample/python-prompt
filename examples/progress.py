@@ -134,12 +134,14 @@ def section_virtual_subdivisions(io: IoManager) -> None:
     root = response.get_handle()
 
     for item_idx in range(3):  # 3 main items
+        root.context.indentation += 1
         # Reserve 1 unit on parent bar starting from current position
         # from_ is omitted so it defaults to current parent position
         # virtual_total=6 means we can count 6 steps that map to 1 parent unit
         sub = root.create_range_handle(
             to_step=1,  # Reserve 1 unit on parent from current position
-            virtual_total=6  # Virtual total: 6 substeps within 1 parent unit
+            virtual_total=6,  # Virtual total: 6 substeps within 1 parent unit
+            # indentation=10
         )
         
         for step in range(1, 7):
@@ -151,6 +153,7 @@ def section_virtual_subdivisions(io: IoManager) -> None:
         
         # Finish the sub-range to move parent to the end of this range
         sub.finish()
+        root.context.indentation -= 1
     
     # Finish the root to reach 100%
     root.finish(label="All items complete", color=TerminalColor.GREEN)
