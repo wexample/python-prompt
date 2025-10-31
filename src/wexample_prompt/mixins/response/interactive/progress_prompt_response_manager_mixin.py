@@ -8,6 +8,7 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
+
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
     from wexample_prompt.common.prompt_context import PromptContext
@@ -21,16 +22,16 @@ class ProgressPromptResponseManagerMixin:
     """Mixin class for managing progress prompt responses."""
 
     def progress(
-            self: IoManager,
-            total: int = 100,
-            current: float | int | str = 0,
-            width: int | None = None,
-            label: str | None = None,
-            verbosity: VerbosityLevel | None = None,
-            context: PromptContext | None = None,
-            print_response: bool = True,
-            color: TerminalColor | None = None,
-            **kwargs: Kwargs,
+        self: IoManager,
+        total: int = 100,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        verbosity: VerbosityLevel | None = None,
+        context: PromptContext | None = None,
+        print_response: bool = True,
+        color: TerminalColor | None = None,
+        **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
@@ -65,7 +66,7 @@ class ProgressPromptResponseManagerMixin:
         return response
 
     def progress_handle_create_or_update(
-            self: IoManager, progress: ProgressHandle | None = None, **kwargs
+        self: IoManager, progress: ProgressHandle | None = None, **kwargs
     ) -> ProgressHandle:
 
         if progress is not None:

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.output.abstract_prompt_output_handler import (
     AbstractPromptOutputHandler,
@@ -160,7 +161,7 @@ class ProgressHandle(BaseClass):
         end = max(0, min(self.response.total, end))
         if end < start:
             start, end = end, start
-        
+
         # Create child handle sharing the same response/context/output
         child = ProgressHandle(
             response=self.response,
@@ -170,18 +171,18 @@ class ProgressHandle(BaseClass):
             range_start=start,
             range_end=end,
         )
-        
+
         # If virtual_total is specified, store it separately
         # This allows N child steps to map onto M parent units
         if virtual_total is not None:
             if virtual_total < 0:
                 raise ValueError("virtual_total must be >= 0")
             child._virtual_total = virtual_total
-        
+
         # If color is specified, apply it to the shared response
         if color is not None:
             self.response.color = color
-        
+
         return child
 
     def finish(self, **kwargs) -> str | None:

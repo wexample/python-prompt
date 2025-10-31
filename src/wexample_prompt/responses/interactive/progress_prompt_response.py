@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.enums.terminal_color import TerminalColor
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -132,6 +132,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_helpers.helpers.ansi import ansi_strip
+
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 

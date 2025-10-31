@@ -5,12 +5,14 @@ from typing import TYPE_CHECKING, ClassVar
 from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
+
     from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
     from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
@@ -64,18 +66,6 @@ class PromptContext(BaseClass):
         )
 
     @classmethod
-    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
-        return {
-            "indentation": context.indentation,
-            "indentation_character": context.indentation_character,
-            "indentation_color": context.indentation_color,
-            "indentation_background_color": context.indentation_background_color,
-            "indentation_length": context.indentation_length,
-            "verbosity": context.verbosity,
-            "width": context.width,
-        }
-
-    @classmethod
     def create_from_parent_context_and_kwargs(
         cls, kwargs: Kwargs, parent_context: PromptContext | None = None
     ) -> PromptContext:
@@ -93,6 +83,18 @@ class PromptContext(BaseClass):
         but manager parameters like terminal width are not available in this case.
         """
         return context or PromptContext()
+
+    @classmethod
+    def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
+        return {
+            "indentation": context.indentation,
+            "indentation_character": context.indentation_character,
+            "indentation_color": context.indentation_color,
+            "indentation_background_color": context.indentation_background_color,
+            "indentation_length": context.indentation_length,
+            "verbosity": context.verbosity,
+            "width": context.width,
+        }
 
     def calc_indentation_char_length(self) -> int:
         return self.get_indentation() * self.indentation_length

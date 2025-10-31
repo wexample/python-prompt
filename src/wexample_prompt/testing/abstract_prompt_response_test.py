@@ -5,10 +5,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.abstract_method import abstract_method
+
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
+
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
