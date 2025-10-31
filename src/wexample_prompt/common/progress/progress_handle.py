@@ -126,6 +126,7 @@ class ProgressHandle(BaseClass):
         total: int | None = None,
         to_step: int | None = None,
         virtual_total: int | None = None,
+        color: TerminalColor | None = None,
     ) -> ProgressHandle:
         """Create a child handle that controls only a sub-range of this handle.
 
@@ -176,6 +177,10 @@ class ProgressHandle(BaseClass):
             if virtual_total < 0:
                 raise ValueError("virtual_total must be >= 0")
             child._virtual_total = virtual_total
+        
+        # If color is specified, apply it to the shared response
+        if color is not None:
+            self.response.color = color
         
         return child
 

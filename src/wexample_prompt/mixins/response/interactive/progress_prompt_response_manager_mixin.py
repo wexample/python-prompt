@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_helpers.const.types import Kwargs
@@ -22,15 +21,16 @@ class ProgressPromptResponseManagerMixin:
     """Mixin class for managing progress prompt responses."""
 
     def progress(
-        self: IoManager,
-        total: int = 100,
-        current: float | int | str = 0,
-        width: int | None = None,
-        label: str | None = None,
-        verbosity: VerbosityLevel | None = None,
-        context: PromptContext | None = None,
-        print: bool = True,
-        **kwargs: Kwargs,
+            self: IoManager,
+            total: int = 100,
+            current: float | int | str = 0,
+            width: int | None = None,
+            label: str | None = None,
+            verbosity: VerbosityLevel | None = None,
+            context: PromptContext | None = None,
+            print_response: bool = True,
+            color: TerminalColor | None = None,
+            **kwargs: Kwargs,
     ) -> ProgressPromptResponse:
         from wexample_prompt.responses.interactive.progress_prompt_response import (
             ProgressPromptResponse,
@@ -41,13 +41,14 @@ class ProgressPromptResponseManagerMixin:
             current=current,
             width=width,
             label=label,
+            color=color,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
         )
 
         # We may need to initialize a hidden progress handle.
-        if print:
+        if print_response:
             # The first print is done without progress handle.
             response = self.print_response(
                 response=response,
@@ -64,7 +65,7 @@ class ProgressPromptResponseManagerMixin:
         return response
 
     def progress_handle_create_or_update(
-        self: IoManager, progress: ProgressHandle | None = None, **kwargs
+            self: IoManager, progress: ProgressHandle | None = None, **kwargs
     ) -> ProgressHandle:
 
         if progress is not None:
