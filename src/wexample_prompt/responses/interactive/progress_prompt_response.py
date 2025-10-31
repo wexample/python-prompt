@@ -25,7 +25,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
     color: TerminalColor | None = public_field(
         default=None, description="Optional color applied to the bar"
     )
-    current: int = public_field(description="Current progress (must be >= 0)")
+    current: float = public_field(description="Current progress (must be >= 0)")
     label: str | None = public_field(
         default=None, description="Optional label displayed before the bar"
     )

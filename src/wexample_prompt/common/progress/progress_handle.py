@@ -50,6 +50,7 @@ class ProgressHandle(BaseClass):
     response: ProgressPromptResponse = public_field(
         description="The associated progress response (root response)."
     )
+    _virtual_total: int | None = None
 
     # --- Public properties ---
     @property
@@ -124,6 +125,7 @@ class ProgressHandle(BaseClass):
         from_: int | None = None,
         total: int | None = None,
         to_step: int | None = None,
+        virtual_total: int | None = None,
     ) -> ProgressHandle:
         """Create a child handle that controls only a sub-range of this handle.
 
@@ -135,6 +137,9 @@ class ProgressHandle(BaseClass):
           - `to_step` (relative size from the start, i.e. child size = to_step).
           If multiple are provided, `total` takes precedence, then `to`, then `to_step`.
         - The sub-range maps child's [0..child_total] onto parent's [from_..end].
+        - If `virtual_total` is specified, the child will have this virtual total
+          instead of the physical range size. This allows mapping N child steps
+          onto M parent units (e.g., 5 child steps onto 1 parent unit).
         """
         start = from_ if from_ is not None else self.response.current
         if total is None and to is None and to_step is None:
@@ -154,8 +159,9 @@ class ProgressHandle(BaseClass):
         end = max(0, min(self.response.total, end))
         if end < start:
             start, end = end, start
+        
         # Create child handle sharing the same response/context/output
-        return ProgressHandle(
+        child = ProgressHandle(
             response=self.response,
             context=self.context,
             output=self.output,
@@ -163,6 +169,15 @@ class ProgressHandle(BaseClass):
             range_start=start,
             range_end=end,
         )
+        
+        # If virtual_total is specified, store it separately
+        # This allows N child steps to map onto M parent units
+        if virtual_total is not None:
+            if virtual_total < 0:
+                raise ValueError("virtual_total must be >= 0")
+            child._virtual_total = virtual_total
+        
+        return child
 
     def finish(self, **kwargs) -> str | None:
         if self._is_child():
@@ -221,7 +236,17 @@ class ProgressHandle(BaseClass):
                 norm = ProgressPromptResponse._normalize_value(
                     self._effective_total(), current
                 )
-                mapped = int(self.range_start) + max(0, min(self._effective_total(), norm))  # type: ignore[arg-type]
+                # Map virtual position to physical position
+                if self._virtual_total is not None:
+                    physical_size = float(self.range_end - self.range_start)  # type: ignore[arg-type]
+                    if self._virtual_total > 0:
+                        # Keep float precision for accurate mapping
+                        physical_progress = norm * physical_size / self._virtual_total
+                    else:
+                        physical_progress = 0.0
+                    mapped = float(self.range_start) + max(0.0, min(physical_size, physical_progress))  # type: ignore[arg-type]
+                else:
+                    mapped = float(self.range_start) + max(0, min(self._effective_total(), norm))  # type: ignore[arg-type]
                 # Directly set absolute current on the shared response
                 self.response.current = mapped
             if label is not None:
@@ -251,14 +276,28 @@ class ProgressHandle(BaseClass):
                 return self.render()
             return None
 
-    def _child_current(self) -> int:
+    def _child_current(self) -> float:
         # Derive child-relative current from parent's absolute current
         if not self._is_child():
             return self.response.current
         cur = max(self.range_start, min(self.range_end, self.response.current))  # type: ignore[arg-type]
-        return max(0, min(self._effective_total(), cur - int(self.range_start)))  # type: ignore[arg-type]
+        # Map physical position to virtual position
+        physical_progress = cur - float(self.range_start)  # type: ignore[arg-type]
+        physical_size = float(self.range_end - self.range_start)  # type: ignore[arg-type]
+        if physical_size == 0:
+            return 0.0
+        # If virtual total is set, scale the progress
+        if self._virtual_total is not None:
+            virtual_progress = physical_progress * self._virtual_total / physical_size
+            # Round to avoid floating point accumulation errors
+            virtual_progress = round(virtual_progress, 10)
+            return max(0.0, min(float(self._virtual_total), virtual_progress))
+        return max(0.0, min(float(self._effective_total()), physical_progress))
 
     def _effective_total(self) -> int:
+        # If a virtual total is set, use it instead of the physical range size
+        if self._virtual_total is not None:
+            return self._virtual_total
         if self._is_child():
             return max(0, int(self.range_end - self.range_start))  # type: ignore[arg-type]
         return self.response.total
