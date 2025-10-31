@@ -36,7 +36,7 @@ if __name__ == "__main__":
     long_paragraph = (
         "This is a long paragraph used to test how confirmation prompts behave when "
         "the question spans multiple lines. It contains enough words to exceed a "
-        "typical terminal width, ensuring that auto-wrapping occurs and our erase/" 
+        "typical terminal width, ensuring that auto-wrapping occurs and our erase/"
         "render logic can be validated for multi-line content rendering."
     )
     response = io.confirm(
@@ -72,3 +72,23 @@ if __name__ == "__main__":
         reset_on_finish=True,
     )
     print(f"Path answer: {response.get_answer()}")
+
+    response = io.confirm(
+        question="Does this indentation displays well?",
+        choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+        default="yes",
+        reset_on_finish=True,
+        indentation=5
+    )
+    print(f"Answer: {response.get_answer()}")
+
+    io.indentation = 5
+    response = io.confirm(
+        question="Does this double indentation displays well?",
+        choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+        default="yes",
+        reset_on_finish=True,
+        indentation=5
+    )
+    print(f"Answer: {response.get_answer()}")
+
