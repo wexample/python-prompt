@@ -43,7 +43,7 @@ class TestScreenPromptResponse(AbstractPromptResponseTest):
 
         response = self._io.screen(callback=_cb, height=3)
         assert isinstance(response, AbstractPromptResponse)
-        # rendered_content available after render via StdoutOutputHandler
+        # rendered_content available after render via PromptStdoutOutputHandler
         self._assert_contains_text(response.rendered_content, "step 0")
 
     def test_reload_then_close(self) -> None:
