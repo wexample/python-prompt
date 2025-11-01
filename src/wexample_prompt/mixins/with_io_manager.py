@@ -41,7 +41,9 @@ class WithIoManager(BaseClass):
 
         defaults = {
             "parent_context": parent_context,
-            "indentation": self.get_io_context_indentation(),
+            "indentation": self.get_io_context_indentation(
+                parent_context=parent_context
+            ),
             "indentation_character": self.get_io_context_indentation_character(),
             "indentation_color": self.get_io_context_indentation_color(),
             "indentation_background_color": self.get_io_context_indentation_background_color(),
@@ -68,9 +70,16 @@ class WithIoManager(BaseClass):
     def get_io_context_colorized(self) -> bool | None:
         return None
 
-    def get_io_context_indentation(self) -> int:
+    def get_io_context_indentation(
+        self, *, parent_context: "PromptContext | None" = None
+    ) -> int:
+        if parent_context is not None:
+            return parent_context.get_indentation() + 1
+
         if self.parent_io_handler is not None:
-            return self.parent_io_handler.indentation + 1
+            context = self.parent_io_handler.create_io_context()
+            return context.get_indentation() + 1
+
         return 0
 
     def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:

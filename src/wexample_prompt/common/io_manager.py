@@ -252,21 +252,37 @@ class IoManager(
     def create_context(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.prompt_context import PromptContext
 
-        context = PromptContext.create_if_none(context=context)
+        base_context = PromptContext.create_if_none(context=context)
+        context_kwargs = PromptContext.create_kwargs_from_context(
+            context=base_context
+        )
 
-        context.verbosity = (
-            context.verbosity
-            if context.verbosity is not None
-            else self.default_context_verbosity
+        base_indentation_length = (
+            context_kwargs.get("indentation_length") or self.indentation_length
         )
-        context.indentation = context.indentation or self.indentation
-        context.indentation_length = (
-            context.indentation_length or self.indentation_length
+        base_indentation = context_kwargs.get("indentation") or 0
+        total_indentation = base_indentation + self.indentation
+
+        context_kwargs["colorized"] = base_context.colorized
+        context_kwargs["formatting"] = base_context.formatting
+        context_kwargs["indentation"] = total_indentation
+        context_kwargs["indentation_length"] = base_indentation_length
+        verbosity = context_kwargs.get("verbosity")
+        context_kwargs["verbosity"] = (
+            verbosity if verbosity is not None else self.default_context_verbosity
         )
-        context.width = context.width or (
-            self.terminal_width - context.calc_indentation_char_length()
+
+        width = context_kwargs.get("width")
+        if width is None:
+            context_kwargs["width"] = (
+                self.terminal_width
+                - (total_indentation * base_indentation_length)
+            )
+
+        return PromptContext.create_from_parent_context_and_kwargs(
+            parent_context=base_context.parent_context,
+            kwargs=context_kwargs,
         )
-        return context
 
     def erase_response(
         self,

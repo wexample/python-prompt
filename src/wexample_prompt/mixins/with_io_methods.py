@@ -36,7 +36,8 @@ class WithIoMethods(WithIoManager):
             if callable(attr):
 
                 def wrapper(*args, **kwargs):
-                    kwargs["context"] = self.create_io_context()
+                    if "context" not in kwargs or kwargs["context"] is None:
+                        kwargs["context"] = self.create_io_context()
                     return attr(*args, **kwargs)
 
                 return wrapper
