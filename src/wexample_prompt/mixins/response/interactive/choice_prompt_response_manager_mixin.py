@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.responses.interactive.choice_prompt_response import (
         ChoicePromptResponse,
@@ -28,6 +29,7 @@ class ChoicePromptResponseManagerMixin:
         choices: list[Any] | Mapping[Any, Any],
         default: Any | None = None,
         abort: bool | str | None = None,
+        color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         reset_on_finish: bool = False,
@@ -43,6 +45,7 @@ class ChoicePromptResponseManagerMixin:
             choices=choices,
             default=default,
             abort=abort,
+            color=color,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
