@@ -1,0 +1,157 @@
+from __future__ import annotations
+
+import re
+from typing import Iterable
+
+from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.enums.text_style import TextStyle
+
+_STYLE_DIRECTIVE_PATTERN = re.compile(r"@color:([^\{\}]+)\{", re.IGNORECASE)
+
+
+def parse_style_markup(
+    text: str,
+    default_color: TerminalColor | None = None,
+    base_styles: Iterable[TextStyle] | None = None,
+) -> list[list[PromptResponseSegment]]:
+    """
+    Parse a text with custom markup like ``@color:red+bold{content}`` into
+    prompt response segments grouped by lines.
+
+    Supported modifiers:
+      * Any ``TerminalColor`` member name (case-insensitive, - or _ interchangeable).
+      * Any ``TextStyle`` member name (case-insensitive).
+
+    Multiple modifiers can be combined with ``+`` (eg ``@color:blue+bold``).
+    Nested directives are supported.
+    """
+
+    lines: list[list[PromptResponseSegment]] = []
+    current_segments: list[PromptResponseSegment] = []
+    initial_styles = list(base_styles) if base_styles else []
+
+    def push_text(
+        value: str,
+        active_color: TerminalColor | None,
+        active_styles: Iterable[TextStyle],
+    ) -> None:
+        nonlocal current_segments
+
+        styles_list = list(active_styles)
+        buffer: list[str] = []
+
+        for ch in value:
+            if ch == "\n":
+                if buffer:
+                    segment_text = "".join(buffer)
+                    current_segments.append(
+                        PromptResponseSegment(
+                            text=segment_text,
+                            color=active_color,
+                            styles=list(styles_list),
+                        )
+                    )
+                    buffer = []
+                elif not current_segments:
+                    current_segments.append(
+                        PromptResponseSegment(
+                            text="",
+                            color=active_color,
+                            styles=list(styles_list),
+                        )
+                    )
+
+                lines.append(current_segments)
+                current_segments = []
+                continue
+
+            buffer.append(ch)
+
+        if buffer:
+            segment_text = "".join(buffer)
+            current_segments.append(
+                PromptResponseSegment(
+                    text=segment_text,
+                    color=active_color,
+                    styles=list(styles_list),
+                )
+            )
+
+    def apply_tokens(
+        tokens: str, active_color: TerminalColor | None, active_styles: list[TextStyle]
+    ) -> tuple[TerminalColor | None, list[TextStyle]]:
+        updated_color = active_color
+        styles_list = list(active_styles)
+
+        for raw_token in tokens.split("+"):
+            token = raw_token.strip()
+            if not token:
+                continue
+
+            normalized = re.sub(r"[^0-9A-Z_]", "_", token, flags=re.IGNORECASE).upper()
+
+            if normalized in TextStyle.__members__:
+                style = TextStyle[normalized]
+                if style not in styles_list:
+                    styles_list.append(style)
+                continue
+
+            if normalized in TerminalColor.__members__:
+                updated_color = TerminalColor[normalized]
+                continue
+
+        return updated_color, styles_list
+
+    def extract_braced_content(source: str, start_index: int) -> tuple[str, int]:
+        depth = 0
+        i = start_index
+        while i < len(source):
+            if source[i] == "{":
+                depth += 1
+            elif source[i] == "}":
+                if depth == 0:
+                    return source[start_index:i], i + 1
+                depth -= 1
+            i += 1
+
+        raise ValueError("Unmatched '{' in style markup.")
+
+    def parse_section(
+        section_text: str,
+        active_color: TerminalColor | None,
+        active_styles: list[TextStyle],
+    ) -> None:
+        index = 0
+        while index < len(section_text):
+            match = _STYLE_DIRECTIVE_PATTERN.search(section_text, index)
+            if not match:
+                remaining = section_text[index:]
+                if remaining:
+                    push_text(remaining, active_color, active_styles)
+                return
+
+            prefix = section_text[index : match.start()]
+            if prefix:
+                push_text(prefix, active_color, active_styles)
+
+            tokens = match.group(1)
+            try:
+                content, next_index = extract_braced_content(section_text, match.end())
+            except ValueError:
+                # Treat the directive literally if it is malformed.
+                push_text(section_text[match.start() :], active_color, active_styles)
+                return
+
+            child_color, child_styles = apply_tokens(tokens, active_color, active_styles)
+            parse_section(content, child_color, child_styles)
+            index = next_index
+
+        return
+
+    parse_section(text, default_color, initial_styles)
+
+    if current_segments:
+        lines.append(current_segments)
+
+    return lines

@@ -30,29 +30,13 @@ class PromptResponseLine(BaseClass):
         """
         Create a line from a single text string.
         """
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.style_markup_parser import parse_style_markup
 
-        # Normalize input to a list of raw lines without newline characters
-        raw_lines: list[str] = []
-        if isinstance(text, str):
-            # splitlines() handles \r\n, \r, \n and does not keep separators
-            raw_lines = text.splitlines()
-        else:
-            for item in text:
-                raw_lines.extend(item.splitlines())
-
+        raw_inputs = [text] if isinstance(text, str) else list(text)
         lines: list[PromptResponseLine] = []
-        for raw in raw_lines:
-            lines.append(
-                cls(
-                    segments=[
-                        PromptResponseSegment(
-                            text=raw,
-                            color=color,
-                        )
-                    ]
-                )
-            )
+        for raw in raw_inputs:
+            for segments in parse_style_markup(raw, default_color=color):
+                lines.append(cls(segments=segments))
 
         return lines
 
