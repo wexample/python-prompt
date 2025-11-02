@@ -8,14 +8,18 @@ from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
-line_breaks_text = f'This is a {"long " * 80}text'
+line_breaks_text = (
+    "@🔵+bold{This is a }"
+    + ("@color:yellow{long} " * 20)
+    + "text with @🟣+underline{inline styling} sprinkled everywhere."
+)
 
 
 @base_class
 class TestClassA(WithIoMethods):
     def __attrs_post_init__(self, **kwargs):
         self._init_io_manager()
-        self.info('Test class A created')
+        self.info("@🟢+bold{Test class A created}")
 
     def create_b(self) -> TestClassB:
         test_class_b = TestClassB(io=self.io)
@@ -26,9 +30,11 @@ class TestClassA(WithIoMethods):
 class TestClassB(WithIoMethods):
     def __attrs_post_init__(self, **kwargs):
         self._init_io_manager()
-        self.info('Test class B created')
-        progress = self.progress(label="Some progress bar...").get_handle()
-        progress.finish(label="Progress complete")
+        self.info("@🟢+bold{Test class B created}")
+        progress = self.progress(
+            label="@color:magenta+bold{Some progress bar...}"
+        ).get_handle()
+        progress.finish(label="@🟢+bold{Progress complete}")
 
     def get_io_context_indentation_color(self) -> TerminalColor | None:
         return TerminalColor.WHITE

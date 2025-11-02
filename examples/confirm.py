@@ -9,7 +9,7 @@ class Confirm(Example):
 
         # Simple yes/no box (using preset mapping constant)
         response = io.confirm(
-            question="Do you want to continue?",
+            question="@🔵+bold{Do you want to continue?}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="yes",
             reset_on_finish=True,
@@ -18,7 +18,7 @@ class Confirm(Example):
 
         # Yes / Yes for all / No (using class constant)
         response = io.confirm(
-            question="Proceed with all operations?",
+            question="@color:magenta+bold{Proceed with all operations?}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             default="ok",
             reset_on_finish=True,
@@ -27,7 +27,7 @@ class Confirm(Example):
 
         # Yes / Yes for all / No (using class constant)
         response = io.confirm(
-            question="Do you prefer not to be asked?",
+            question="@🟣+bold{Do you prefer not to be asked?}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             default="yes",
             reset_on_finish=True,
@@ -37,9 +37,9 @@ class Confirm(Example):
 
         # Long paragraph example (should wrap across multiple lines in the terminal)
         long_paragraph = (
-            "This is a long paragraph used to test how confirmation prompts behave when "
+            "@color:cyan+bold{This is a long paragraph} used to test how confirmation prompts behave when "
             "the question spans multiple lines. It contains enough words to exceed a "
-            "typical terminal width, ensuring that auto-wrapping occurs and our erase/"
+            "@🔶{typical terminal width}, ensuring that auto-wrapping occurs and our erase/"
             "render logic can be validated for multi-line content rendering."
         )
         response = io.confirm(
@@ -56,7 +56,7 @@ class Confirm(Example):
             "and/contains/query?with=lots&of=parameters&and=maybe#fragments"
         )
         response = io.confirm(
-            question=f"Open this URL? {long_url}",
+            question=f"Open this @🔷+bold{{URL}}? {long_url}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             default="ok",
             reset_on_finish=True,
@@ -69,7 +69,7 @@ class Confirm(Example):
             "and/even/more/nested/paths/that/should/wrap/properly.txt"
         )
         response = io.confirm(
-            question=f"Use this file path? {long_path}",
+            question=f"Use this @color:yellow+bold{{file path}}? {long_path}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             default="ok",
             reset_on_finish=True,
@@ -77,7 +77,7 @@ class Confirm(Example):
         print(f"Path answer: {response.get_answer()}")
 
         response = io.confirm(
-            question="Does this indentation displays well?",
+            question="@🟢+bold{Does this indentation display well?}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="yes",
             reset_on_finish=True,
@@ -87,10 +87,12 @@ class Confirm(Example):
 
         io.indentation = 5
         response = io.confirm(
-            question="Does this double indentation displays well?",
+            question="@🟢+bold{Does this double indentation display well?}",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="yes",
             reset_on_finish=True,
             indentation=5,
         )
         print(f"Answer: {response.get_answer()}")
+
+        io.success("@🟢+bold{Confirm demo complete!}")

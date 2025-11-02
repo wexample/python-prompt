@@ -13,9 +13,12 @@ class ExceptionExample(Example):
             middle()
 
         demo_io = IoManager()
-        demo_io.error(message="Simple error message")
+        demo_io.error(message="@🔴+bold{Simple error message}")
 
         try:
             make_boom()
         except Exception as e:
-            demo_io.error(message="Error message with exception", exception=e)
+            demo_io.error(
+                message="@color:magenta+bold{Error message with exception}",
+                exception=e,
+            )

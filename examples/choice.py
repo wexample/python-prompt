@@ -3,6 +3,7 @@ import os
 from wexample_helpers.classes.example.example import Example
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.enums.choice import FilePickerMode
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 
 class Choice(Example):
@@ -10,33 +11,35 @@ class Choice(Example):
         demo_io = IoManager()
 
         choice = demo_io.choice(
-            question="Which vegetable do you prefer?",
+            question="Which @🟠+bold{vegetable} do you prefer?",
             choices=[
                 "Onions",
                 "Carrot",
             ],
+            color=TerminalColor.CYAN,
         ).get_answer()
 
         if choice is None:
-            demo_io.log("Aborted")
+            demo_io.log("@color:yellow{Aborted}")
         else:
-            demo_io.success(choice)
+            demo_io.success(f"@🟢{{{choice}}}", color=TerminalColor.GREEN)
 
         choice = demo_io.choice(
-            question="Which fruit do you prefer?",
+            question="Which @🔶{fruit} do you prefer?",
             choices={
                 "apples": "Apples",
                 "bananas": "Bananas",
             },
+            color=TerminalColor.MAGENTA,
         ).get_answer()
 
         if choice is None:
-            demo_io.log("Aborted")
+            demo_io.log("@color:yellow{Aborted}")
         else:
-            demo_io.success(choice)
+            demo_io.success(f"@🟢{{{choice}}}", color=TerminalColor.GREEN)
 
         choice = demo_io.choice(
-            question="This question already have an answer, so the choice is not interactive:",
+            question="This question already has an @🔵+bold{answer}, so the choice is not interactive:",
             choices={
                 "no": "No",
                 "maybe": "Maybe",
@@ -45,27 +48,27 @@ class Choice(Example):
             predefined_answer="Yes",
         ).get_answer()
 
-        demo_io.separator("Files selection")
+        demo_io.separator("@🔶+bold{Files selection}")
 
         file = demo_io.file_picker(
-            question="Select a file",
+            question="Select a @🔷{file}",
             mode=FilePickerMode.FILES,
         ).get_answer()
 
         if file is None:
-            demo_io.log("Aborted")
+            demo_io.log("@color:yellow{Aborted}")
         else:
-            demo_io.success(file)
+            demo_io.success(f"@🟢{{{file}}}", color=TerminalColor.GREEN)
 
         file = demo_io.file_picker(
-            question="Select a directory",
+            question="Select a @🟤+bold{directory}",
             mode=FilePickerMode.DIRS,
         ).get_answer()
 
         if file is None:
-            demo_io.log("Aborted")
+            demo_io.log("@color:yellow{Aborted}")
         else:
-            demo_io.success(file)
+            demo_io.success(f"@🟢{{{file}}}", color=TerminalColor.GREEN)
 
         file = None
         base_dir = os.getcwd()
@@ -87,6 +90,6 @@ class Choice(Example):
                 file = False
 
         if file is False:
-            demo_io.log("Aborted")
+            demo_io.log("@color:yellow{Aborted}")
         else:
-            demo_io.success(file)
+            demo_io.success(f"@🟢{{{file}}}", color=TerminalColor.GREEN)

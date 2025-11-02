@@ -15,19 +15,19 @@ class Nesting(Example):
         level_one.print_deep_log_one()
 
         io = IoManager()
-        io.separator()
+        io.separator("@🔷+bold{Spinner demo}")
 
         start = time.time()
         total = 5.0  # seconds
         delay = 0.05  # 50 ms between frames
         while time.time() - start < total:
             sym = SpinnerPool.next()
-            response = io.info("Loading...", symbol=sym)
+            response = io.info("@🔵{Loading...}", symbol=sym)
             time.sleep(delay)
             io.erase_response(response=response)
 
         # Custom frames example: use emojis for a fun spinner.
-        io.separator()
+        io.separator("@color:magenta+bold{Custom frames}")
         custom_key = "fun"
         custom_frames = ["🚀", "💣", "😱", "💥", "✨"]
         SpinnerPool.set_frames(custom_frames, key=custom_key)
@@ -36,6 +36,6 @@ class Nesting(Example):
         delay = 0.12
         while time.time() - start < total:
             sym = SpinnerPool.next(custom_key)
-            response = io.info("Custom loading...", symbol=sym)
+            response = io.info("@color:yellow+bold{Custom loading...}", symbol=sym)
             time.sleep(delay)
             io.erase_response(response=response)

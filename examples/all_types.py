@@ -16,7 +16,7 @@ class AllTypes(Example):
             example_response = example.example_class()
 
             demo_io.separator(
-                label=response_type.get_snake_short_class_name(),
+                label=f"@🔷+bold{{{response_type.get_snake_short_class_name()}}}",
                 character=">",
             )
 

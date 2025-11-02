@@ -18,15 +18,15 @@ class Screen(Example):
         def _callback(response: ScreenPromptResponse):
             response.clear()
 
-            response.print(f"Some text, {counter['n']} times...")
+            response.print(f"@color:cyan+bold{{Some text}}, {counter['n']} times...")
             response.progress(
-                total=total, current=counter["n"], label="Demo progression..."
+                total=total, current=counter["n"], label="@color:yellow{Demo progression...}"
             )
-            response.log("(Any io method work)")
+            response.log("@🟢{(Any io method works)}")
 
             if counter["n"] == 10:
                 response.confirm(
-                    question="Do you want to continue demo ?",
+                    question="@🔵+bold{Do you want to continue demo ?}",
                     choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
                     default="yes",
                 )
@@ -49,14 +49,14 @@ class Screen(Example):
 
         def _proc_callback(response: ScreenPromptResponse):
             response.clear()
-            response.print("Top CPU processes (refresh 1s, ~10s total)")
+            response.print("@color:magenta+bold{Top CPU processes (refresh 1s, ~10s total)}")
 
             # Get processes sorted by CPU descending; keep header + 10 rows
             cmd = ["ps", "-eo", "pid,comm,pcpu,pmem,etime", "--sort=-pcpu"]
             res = subprocess.run(cmd, capture_output=True, text=True, check=False)
             lines = [ln for ln in res.stdout.strip().splitlines() if ln.strip()]
             for ln in lines[:11]:
-                response.print(ln)
+                response.print(f"@color:cyan{{{ln}}}")
 
             if time.time() - start >= 3:
                 response.close()
