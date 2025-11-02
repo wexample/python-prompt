@@ -31,6 +31,16 @@ Second line keeps magenta bold unless overridden
 
 If the markup is malformed (missing closing brace, unknown modifier), the raw text is preserved so you can fix it without breaking rendering.
 
+You can also use emoji shorthand instead of the explicit `color:` prefix for the base colors:
+
+```
+@🔵+bold{Blue headline}
+@🟢{Success}
+@🔴{Failure}
+```
+
+Both syntaxes can be mixed freely inside the same string.
+
 ### Manager Helpers
 
 All `IoManager` helpers mirror their response factory signatures, so you can pass new styling arguments directly. For example, every message-level helper accepts an optional `color=...` argument:
