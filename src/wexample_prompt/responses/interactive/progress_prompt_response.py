@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, ClassVar
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
+from wexample_prompt.common.style_markup_parser import parse_style_markup
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -150,14 +151,27 @@ class ProgressPromptResponse(AbstractPromptResponse):
         max_content_width = max(0, total_width - visible_indent)
 
         # Compose left label and right percentage parts
-        left_label = f"{self.label} " if self.label else ""
+        label_segments: list[PromptResponseSegment] = []
+        label_visible_width = 0
+        if self.label:
+            parsed_lines = parse_style_markup(self.label)
+            for idx, line in enumerate(parsed_lines):
+                if idx > 0:
+                    label_segments.append(PromptResponseSegment(text=" "))
+                    label_visible_width += 1
+                for seg in line:
+                    label_segments.append(seg)
+                    label_visible_width += len(seg.text)
+            # trailing space between label and bar
+            label_segments.append(PromptResponseSegment(text=" "))
+            label_visible_width += 1
         right_percent = f" {percentage}%"
 
         # Determine bar width to perfectly fit the line
         bar_width = max(
             0,
             max_content_width
-            - len(ansi_strip(left_label))
+            - label_visible_width
             - len(ansi_strip(right_percent)),
         )
 
@@ -177,8 +191,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
         segments = []
-        if left_label:
-            segments.append(PromptResponseSegment(text=left_label))
+        if label_segments:
+            segments.extend(label_segments)
         if bar_text:
             segments.append(PromptResponseSegment(text=bar_text, color=self.color))
         # percentage (always shown)
