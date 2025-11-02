@@ -7,7 +7,29 @@ from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
-_STYLE_DIRECTIVE_PATTERN = re.compile(r"@color:([^\{\}]+)\{", re.IGNORECASE)
+_STYLE_DIRECTIVE_PATTERN = re.compile(r"@(?:color:)?([^\{\}]+)\{", re.IGNORECASE)
+_EMOJI_COLOR_MAP: dict[str, TerminalColor] = {
+    "🔴": TerminalColor.RED,
+    "🟥": TerminalColor.RED,
+    "🟥️": TerminalColor.RED,
+    "🟠": TerminalColor.LIGHT_RED,
+    "🟧": TerminalColor.LIGHT_RED,
+    "🟡": TerminalColor.YELLOW,
+    "🟨": TerminalColor.YELLOW,
+    "🟢": TerminalColor.GREEN,
+    "🟩": TerminalColor.GREEN,
+    "🔵": TerminalColor.BLUE,
+    "🟦": TerminalColor.BLUE,
+    "🟣": TerminalColor.MAGENTA,
+    "🟪": TerminalColor.MAGENTA,
+    "🟤": TerminalColor.LIGHT_BLACK,
+    "⚫": TerminalColor.BLACK,
+    "⚪": TerminalColor.WHITE,
+    "🔷": TerminalColor.CYAN,
+    "🔹": TerminalColor.CYAN,
+    "🔶": TerminalColor.LIGHT_YELLOW,
+    "🔸": TerminalColor.LIGHT_YELLOW,
+}
 
 
 def parse_style_markup(
@@ -87,6 +109,10 @@ def parse_style_markup(
         for raw_token in tokens.split("+"):
             token = raw_token.strip()
             if not token:
+                continue
+
+            if token in _EMOJI_COLOR_MAP:
+                updated_color = _EMOJI_COLOR_MAP[token]
                 continue
 
             normalized = re.sub(r"[^0-9A-Z_]", "_", token, flags=re.IGNORECASE).upper()

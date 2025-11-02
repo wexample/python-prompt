@@ -98,3 +98,18 @@ class TestPromptResponseLine:
         assert next_line_seg.text == "Next"
         assert next_line_seg.color is TerminalColor.BLUE
         assert TextStyle.BOLD in next_line_seg.styles
+
+    def test_emoji_color_mapping(self) -> None:
+        """Emoji tokens map to their corresponding terminal colors."""
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        text = "@🔵{Blue}@🟢{Green}@🔴+bold{Red}"
+        lines = PromptResponseLine.create_from_string(text)
+
+        assert len(lines) == 1
+        segments = lines[0].segments
+        assert len(segments) == 3
+        assert segments[0].color is TerminalColor.BLUE
+        assert segments[1].color is TerminalColor.GREEN
+        assert segments[2].color is TerminalColor.RED
