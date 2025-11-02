@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from wexample_helpers.decorator.base_class import base_class
+from wexample_helpers.classes.example.example import Example
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
@@ -39,21 +40,21 @@ class TestClassB(WithIoMethods):
         return "|"
 
 
-if __name__ == "__main__":
-    io = IoManager()
+class Indentation(Example):
+    def execute(self) -> None:
+        io = IoManager()
 
-    io.log(
-        message=line_breaks_text,
-    )
-
-    io.log(
-        message=line_breaks_text,
-        context=PromptContext(
-            formatting=True,
-            indentation=1,
+        io.log(
+            message=line_breaks_text,
         )
-    )
 
-    test_class_a = TestClassA()
+        io.log(
+            message=line_breaks_text,
+            context=PromptContext(
+                formatting=True,
+                indentation=1,
+            ),
+        )
 
-    test_class_a.create_b()
+        test_class_a = TestClassA()
+        test_class_a.create_b()

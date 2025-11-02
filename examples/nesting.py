@@ -1,36 +1,41 @@
-if __name__ == "__main__":
-    from wexample_prompt.testing.resources.classes.class_indenation_level_one import ClassIndentationLevelOne
+import time
 
-    level_one = ClassIndentationLevelOne()
-    level_one._init_io_manager()
+from wexample_helpers.classes.example.example import Example
+from wexample_prompt.common.io_manager import IoManager
+from wexample_prompt.common.spinner_pool import SpinnerPool
+from wexample_prompt.testing.resources.classes.class_indenation_level_one import (
+    ClassIndentationLevelOne,
+)
 
-    level_one.print_deep_log_one()
 
-    from wexample_prompt.common.io_manager import IoManager
-    import time
-    from wexample_prompt.common.spinner_pool import SpinnerPool
-    io = IoManager()
-    io.separator()
+class Nesting(Example):
+    def execute(self) -> None:
+        level_one = ClassIndentationLevelOne()
+        level_one._init_io_manager()
+        level_one.print_deep_log_one()
 
-    start = time.time()
-    total = 5.0  # seconds
-    delay = 0.05  # 50 ms between frames
-    while time.time() - start < total:
-        sym = SpinnerPool.next()
-        response = io.info('Loading...', symbol=sym)
-        time.sleep(delay)
-        io.erase_response(response=response)
+        io = IoManager()
+        io.separator()
 
-    # Custom frames example: use emojis for a fun spinner.
-    io.separator()
-    custom_key = "fun"
-    custom_frames = ["🚀", "💣", "😱", "💥", "✨"]
-    SpinnerPool.set_frames(custom_frames, key=custom_key)
-    start = time.time()
-    total = 3.0
-    delay = 0.12
-    while time.time() - start < total:
-        sym = SpinnerPool.next(custom_key)
-        response = io.info('Custom loading...', symbol=sym)
-        time.sleep(delay)
-        io.erase_response(response=response)
+        start = time.time()
+        total = 5.0  # seconds
+        delay = 0.05  # 50 ms between frames
+        while time.time() - start < total:
+            sym = SpinnerPool.next()
+            response = io.info("Loading...", symbol=sym)
+            time.sleep(delay)
+            io.erase_response(response=response)
+
+        # Custom frames example: use emojis for a fun spinner.
+        io.separator()
+        custom_key = "fun"
+        custom_frames = ["🚀", "💣", "😱", "💥", "✨"]
+        SpinnerPool.set_frames(custom_frames, key=custom_key)
+        start = time.time()
+        total = 3.0
+        delay = 0.12
+        while time.time() - start < total:
+            sym = SpinnerPool.next(custom_key)
+            response = io.info("Custom loading...", symbol=sym)
+            time.sleep(delay)
+            io.erase_response(response=response)

@@ -1,5 +1,6 @@
 from time import sleep
 
+from wexample_helpers.classes.example.example import Example
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
@@ -158,13 +159,13 @@ def section_virtual_subdivisions(io: IoManager) -> None:
     # Finish the root to reach 100%
     root.finish(label="All items complete", color=TerminalColor.GREEN)
 
-
-if __name__ == "__main__":
-    io = IoManager()
-    section_using_io_manager(io)
-    section_standalone_no_manager()
-    section_various_inputs(io)
-    section_sub_progress(io)
-    section_nested_sub_progress(io)
-    section_dynamic_resize_sub_progress(io)
-    section_virtual_subdivisions(io)
+class Progress(Example):
+    def execute(self) -> None:
+        io = IoManager()
+        section_using_io_manager(io)
+        section_standalone_no_manager()
+        section_various_inputs(io)
+        section_sub_progress(io)
+        section_nested_sub_progress(io)
+        section_dynamic_resize_sub_progress(io)
+        section_virtual_subdivisions(io)

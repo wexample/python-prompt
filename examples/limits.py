@@ -1,3 +1,4 @@
+from wexample_helpers.classes.example.example import Example
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
@@ -40,10 +41,11 @@ def choice_long_multiline_text(io: IoManager) -> None:
         ]
     ).get_answer()
 
-if __name__ == "__main__":
-    io = IoManager()
-    echo_long_multiline_text(io)
-    task_long_multiline_text(io)
-    file_long_multiline_text(io)
-    choice_long_multiline_text(io)
-    confirm_long_multiline_text(io)
+class Limits(Example):
+    def execute(self) -> None:
+        io = IoManager()
+        echo_long_multiline_text(io)
+        task_long_multiline_text(io)
+        file_long_multiline_text(io)
+        choice_long_multiline_text(io)
+        confirm_long_multiline_text(io)
