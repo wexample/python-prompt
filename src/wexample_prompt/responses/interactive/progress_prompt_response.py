@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, ClassVar
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.common.style_markup_parser import parse_style_markup
+from wexample_prompt.common.style_markup_parser import flatten_style_markup
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -154,14 +154,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label_segments: list[PromptResponseSegment] = []
         label_visible_width = 0
         if self.label:
-            parsed_lines = parse_style_markup(self.label)
-            for idx, line in enumerate(parsed_lines):
-                if idx > 0:
-                    label_segments.append(PromptResponseSegment(text=" "))
-                    label_visible_width += 1
-                for seg in line:
-                    label_segments.append(seg)
-                    label_visible_width += len(seg.text)
+            label_segments = flatten_style_markup(self.label, joiner=" ")
+            label_visible_width = sum(len(seg.text) for seg in label_segments)
             # trailing space between label and bar
             label_segments.append(PromptResponseSegment(text=" "))
             label_visible_width += 1

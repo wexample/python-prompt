@@ -140,12 +140,12 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     def _render_buffer(self) -> None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         # Consume buffered output as a single string, split into lines
         rendered = self._io_buffer.flush()
         # Normalize to lines
         for raw_line in rendered:
-            self.lines.append(
-                PromptResponseLine(segments=[PromptResponseSegment(text=raw_line)])
-            )
+            if raw_line is None:
+                continue
+            for line in PromptResponseLine.create_from_string(raw_line):
+                self.lines.append(line)

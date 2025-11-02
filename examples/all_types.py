@@ -10,10 +10,12 @@ class AllTypes(Example):
         all_response_types = IoManager.get_response_types()
         demo_io = IoManager()
 
+        rendered_types: list[str] = []
         for response_type in all_response_types:
             response_type = cast(type[AbstractPromptResponse], response_type)
             example = response_type.get_example_class()()
             example_response = example.example_class()
+            rendered_types.append(response_type.__name__)
 
             demo_io.separator(
                 label=f"@🔷+bold{{{response_type.get_snake_short_class_name()}}}",
@@ -41,3 +43,7 @@ class AllTypes(Example):
                 example_response,
                 context=PromptContext(indentation=1),
             )
+
+        demo_io.success(
+            message=f"@🟢+bold{{Rendered {len(rendered_types)} response types}}",
+        )

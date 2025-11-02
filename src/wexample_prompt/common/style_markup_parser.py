@@ -181,3 +181,36 @@ def parse_style_markup(
         lines.append(current_segments)
 
     return lines
+
+
+def flatten_style_markup(
+    text: str,
+    *,
+    default_color: TerminalColor | None = None,
+    base_styles: Iterable[TextStyle] | None = None,
+    joiner: str | None = " ",
+) -> list[PromptResponseSegment]:
+    """Parse markup and flatten multi-line output into a single list of segments.
+
+    Parameters
+    ----------
+    text:
+        The source string that may contain inline directives.
+    default_color:
+        Optional fallback color applied to segments without an explicit color.
+    base_styles:
+        Styles propagated to every generated segment unless overridden.
+    joiner:
+        String inserted between logical lines when the markup produced multiple
+        lines. Set to ``None`` to keep them separate (no automatic joiner).
+    """
+    segments: list[PromptResponseSegment] = []
+    parsed_lines = parse_style_markup(
+        text=text, default_color=default_color, base_styles=base_styles
+    )
+
+    for idx, line in enumerate(parsed_lines):
+        if idx > 0 and joiner is not None:
+            segments.append(PromptResponseSegment(text=joiner))
+        segments.extend(line)
+    return segments

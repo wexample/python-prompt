@@ -6,6 +6,7 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_prompt.common.style_markup_parser import flatten_style_markup
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
@@ -30,8 +31,9 @@ class SeparatorPromptResponse(AbstractMessageResponse):
     label: str | None = public_field(
         default=None, description="A label to display on the separator right"
     )
-    separator_response_label: PromptResponseSegment | None = public_field(
-        default=None, description="The label displayed at the right"
+    label_segments: list[PromptResponseSegment] = public_field(
+        factory=list,
+        description="Segments used to render the optional label.",
     )
     separator_response_segment: PromptResponseSegment = public_field(
         description="The line segment used by render process"
@@ -52,22 +54,21 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-        segments = []
+        segments: list[PromptResponseSegment] = []
 
         separator_response_segment = PromptResponseSegment(text="-", color=color)
         segments.append(separator_response_segment)
 
-        separator_response_label = None
+        label_segments: list[PromptResponseSegment] = []
         if label:
-            separator_response_label = PromptResponseSegment(
-                text=f" {label}", color=color
-            )
-
-            segments.append(separator_response_label)
+            label_segments = flatten_style_markup(label, default_color=color, joiner=" ")
+            # Prepend spacing before label
+            label_segments.insert(0, PromptResponseSegment(text=" ", color=color))
+            segments.extend(label_segments)
 
         return cls(
             separator_response_segment=separator_response_segment,
-            separator_response_label=separator_response_label,
+            label_segments=label_segments,
             label=label,
             width=width,
             character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
@@ -86,8 +87,8 @@ class SeparatorPromptResponse(AbstractMessageResponse):
     def render(self, context: PromptContext | None = None) -> str | None:
         width = self.width or context.get_width()
         length = width - len(context.render_indentation_text())
-        if self.separator_response_label:
-            length -= len(self.separator_response_label.text)
+        if self.label_segments:
+            length -= sum(len(seg.text) for seg in self.label_segments)
 
         self.separator_response_segment.text = length * self.character
 

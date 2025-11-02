@@ -194,7 +194,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
     def _build_lines(self, context: PromptContext) -> None:
         from wexample_helpers.helpers.ansi import ansi_display_width
 
-        from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -212,7 +211,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # Determine question lines. We do NOT adapt the box width to content; we
         # strictly use the terminal/context width as the fixed width.
         q_lines = PromptResponseLine.create_from_string(self.question)
-        question_texts = ["".join(seg.text for seg in ln.segments) for ln in q_lines]
+        question_segments = [ln.segments for ln in q_lines]
+        question_texts = ["".join(seg.text for seg in segments) for segments in question_segments]
         # Fixed width: use get_width() strictly; if unavailable, fallback to self.width or 80
         if term_width and term_width > 0:
             box_width = term_width
@@ -233,7 +233,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             if ansi_display_width(t_chk) + len(q_pad) + extra > box_width:
                 q_pad = ""
                 break
-        for idx, t in enumerate(question_texts):
+        for idx, segments_for_line in enumerate(question_segments):
             segs: list[PromptResponseSegment] = []
             # Left padding (if any)
             if q_pad:
@@ -244,19 +244,27 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             if idx == 0:
                 segs.append(
                     PromptResponseSegment(
-                        text=ColorManager.colorize(text="?", color=TerminalColor.BLUE),
-                        color=TerminalColor.RESET,
+                        text="?",
+                        color=TerminalColor.BLUE,
+                        styles=[TextStyle.BOLD],
                     )
                 )
                 segs.append(PromptResponseSegment(text=" ", color=TerminalColor.RESET))
             # The question text itself
-            segs.append(
-                PromptResponseSegment(
-                    text=t,
-                    color=TerminalColor.LIGHT_WHITE,
-                    styles=[TextStyle.BOLD],
+            for original in segments_for_line:
+                styles = list(original.styles)
+                color = original.color
+                if color is None:
+                    color = TerminalColor.LIGHT_WHITE
+                if not styles and original.color is None:
+                    styles = [TextStyle.BOLD]
+                segs.append(
+                    PromptResponseSegment(
+                        text=original.text,
+                        color=color,
+                        styles=styles,
+                    )
                 )
-            )
             self.lines.append(PromptResponseLine(segments=segs))
 
         # Separator line between question and options (different char)
