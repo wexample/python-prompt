@@ -85,10 +85,13 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         return SeparatorExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_helpers.helpers.ansi import ansi_strip
+        from wexample_prompt.common.text_width import get_visible_width
+        
         width = self.width or context.get_width()
-        length = width - len(context.render_indentation_text())
+        length = width - get_visible_width(ansi_strip(context.render_indentation_text()))
         if self.label_segments:
-            length -= sum(len(seg.text) for seg in self.label_segments)
+            length -= sum(get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments)
 
         self.separator_response_segment.text = length * self.character
 

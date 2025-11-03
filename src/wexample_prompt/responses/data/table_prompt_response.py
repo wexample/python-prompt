@@ -60,14 +60,15 @@ class TablePromptResponse(AbstractPromptResponse):
     def _get_visible_width(text: str) -> int:
         """Get visible width of text, excluding ANSI escape sequences and markup."""
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
+        from wexample_prompt.common.text_width import get_visible_width
         
         # Parse markup to get segments
         segments = flatten_style_markup(text, joiner=None)
-        # Strip ANSI codes from each segment and sum lengths
+        # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
         total_width = 0
         for seg in segments:
             clean_text = TablePromptResponse._strip_ansi(seg.text)
-            total_width += len(clean_text)
+            total_width += get_visible_width(clean_text)
         return total_width
 
     @staticmethod
