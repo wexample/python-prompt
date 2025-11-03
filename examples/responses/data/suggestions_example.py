@@ -15,9 +15,5 @@ class SuggestionsExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcSuggestionsExample()
 
-        demo_io.separator("@🔵+bold{Suggestions Examples}")
-
         demo_io.log("@color:cyan{Basic suggestions example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Suggestions examples complete}")

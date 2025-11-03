@@ -15,9 +15,5 @@ class WarningExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcWarningExample()
 
-        demo_io.separator("@🟠+bold{Warning Examples}")
-
         demo_io.log("@color:cyan{Basic warning example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Warning examples complete}")

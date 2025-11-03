@@ -15,9 +15,5 @@ class TaskExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcTaskExample()
 
-        demo_io.separator("@🔵+bold{Task Examples}")
-
         demo_io.log("@color:cyan{Basic task example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Task examples complete}")

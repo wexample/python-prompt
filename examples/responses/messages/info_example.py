@@ -15,9 +15,5 @@ class InfoExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcInfoExample()
 
-        demo_io.separator("@🔵+bold{Info Examples}")
-
         demo_io.log("@color:cyan{Basic info example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Info examples complete}")

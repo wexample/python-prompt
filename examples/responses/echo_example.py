@@ -15,9 +15,5 @@ class EchoExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcEchoExample()
 
-        demo_io.separator("@🔵+bold{Echo Examples}")
-
         demo_io.log("@color:cyan{Basic echo example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Echo examples complete}")

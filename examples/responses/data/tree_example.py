@@ -15,9 +15,5 @@ class TreeExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcTreeExample()
 
-        demo_io.separator("@🔵+bold{Tree Examples}")
-
         demo_io.log("@color:cyan{Basic tree example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Tree examples complete}")

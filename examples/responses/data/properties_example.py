@@ -15,9 +15,5 @@ class PropertiesExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcPropertiesExample()
 
-        demo_io.separator("@🔵+bold{Properties Examples}")
-
         demo_io.log("@color:cyan{Basic properties example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Properties examples complete}")

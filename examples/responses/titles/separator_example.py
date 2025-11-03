@@ -15,9 +15,5 @@ class SeparatorExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcSeparatorExample()
 
-        demo_io.separator("@🔵+bold{Separator Examples}")
-
         demo_io.log("@color:cyan{Basic separator example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Separator examples complete}")

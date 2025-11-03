@@ -15,9 +15,5 @@ class ListExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcListExample()
 
-        demo_io.separator("@🔵+bold{List Examples}")
-
         demo_io.log("@color:cyan{Basic list example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{List examples complete}")

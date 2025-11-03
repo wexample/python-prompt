@@ -15,9 +15,5 @@ class FailureExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcFailureExample()
 
-        demo_io.separator("@🔴+bold{Failure Examples}")
-
         demo_io.log("@color:cyan{Basic failure example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Failure examples complete}")

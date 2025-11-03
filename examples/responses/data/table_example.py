@@ -15,9 +15,5 @@ class TableExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcTableExample()
 
-        demo_io.separator("@🔵+bold{Table Examples}")
-
         demo_io.log("@color:cyan{Basic table example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Table examples complete}")

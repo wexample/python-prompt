@@ -15,9 +15,5 @@ class DebugExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcDebugExample()
 
-        demo_io.separator("@🔵+bold{Debug Examples}")
-
         demo_io.log("@color:cyan{Basic debug example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Debug examples complete}")

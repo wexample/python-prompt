@@ -37,8 +37,7 @@ class InteractiveExecutor(Executor, WithIoMethods):
                 continue
 
             matched = True
-            self.separator(label=f"@🔷+bold{{{key}}}")
-            self.log(message=f"@color:cyan{{Executing example #{index}}}")
+            self.title(text=key)
 
             runner = getattr(example, "run", None)
             if callable(runner):

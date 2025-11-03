@@ -7,6 +7,9 @@ from typing import Any
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.responses.data.multiple_prompt_response import (
+    MultiplePromptResponse,
+)
 
 
 @base_class
@@ -25,7 +28,7 @@ class MultipleExample(AbstractResponseExample):
 
         response = MultiplePromptResponse.create_multiple(
             responses=[LogPromptResponse.create_log("Initial response")],
-            context=self.io.create_context(),
+            # context=self.io.create_context(),
         )
 
         # Add more responses

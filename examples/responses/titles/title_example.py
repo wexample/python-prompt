@@ -15,9 +15,5 @@ class TitleExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcTitleExample()
 
-        demo_io.separator("@🔵+bold{Title Examples}")
-
         demo_io.log("@color:cyan{Basic title example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{Title examples complete}")

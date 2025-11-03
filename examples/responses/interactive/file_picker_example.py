@@ -15,9 +15,5 @@ class FilePickerExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcFilePickerExample()
 
-        demo_io.separator("@🔵+bold{File Picker Examples}")
-
         demo_io.log("@color:cyan{Basic file picker example}")
         src_example.example_manager()
-
-        demo_io.success("@🟢+bold{File picker examples complete}")

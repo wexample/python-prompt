@@ -15,13 +15,9 @@ class ErrorExample(AbstractPromptResponseExample):
         demo_io = self.create_io_manager()
         src_example = SrcErrorExample()
 
-        demo_io.separator("@🔴+bold{Error Examples - All Cases}")
-
         # Execute all examples from src
         for example_config in src_example.get_examples():
             demo_io.separator(f"@🔶{{{example_config['title']}}}")
             demo_io.log(f"  {example_config['description']}")
             if 'callback' in example_config:
                 example_config['callback']()
-
-        demo_io.success("@🟢+bold{Error examples complete}")
