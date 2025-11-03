@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
@@ -61,17 +63,64 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
 
     def example_indented(self) -> None:
         """Message with indentation."""
+        from wexample_prompt.enums.indentation_style import IndentationStyle
+        from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
         method = self.get_io_method()
         name = self.get_response_name()
         
-        # Normal indentation
+        # Normal indentation (repeat mode - default)
         method(message=f"Normal {name}", indentation=0)
         method(message=f"Indented {name} (level 3)", indentation=3)
         method(message=f"Indented {name} (level 5)", indentation=5)
         
-        # Colored indentation
-        method(message=f"@color:cyan{{Colored {name} with indentation}}", indentation=3)
-        method(message=f"@🟢+bold{{Emoji and bold {name} with indentation}}", indentation=5)
+        # Colored indentation text
+        method(
+            message=f"@color:cyan{{Colored {name} with indentation}}",
+            indentation=3,
+            indentation_text_color=TerminalColor.CYAN
+        )
+        
+        # Colored indentation background
+        method(
+            message=f"@🔵+bold{{Colored background indentation}}",
+            indentation=5,
+            indentation_bg_color=TerminalBgColor.BLUE,
+        )
+        
+        # Custom indentation character (repeat mode)
+        method(
+            message=f"Custom character (repeat mode)",
+            indentation=4,
+            indentation_character="→"
+        )
+        
+        # Vertical style (IDE-like)
+        method(
+            message=f"@🟢+bold{{Vertical style (level 3)}}",
+            indentation=3,
+            indentation_style=IndentationStyle.VERTICAL,
+            indentation_character="│"
+        )
+        
+        # Vertical style with color
+        method(
+            message=f"@color:magenta+bold{{Vertical with color}}",
+            indentation=5,
+            indentation_style=IndentationStyle.VERTICAL,
+            indentation_character="│",
+            indentation_text_color=TerminalColor.MAGENTA
+        )
+        
+        # Vertical style with background color
+        method(
+            message=f"@color:yellow+bold{{Vertical with bg color}}",
+            indentation=4,
+            indentation_style=IndentationStyle.VERTICAL,
+            indentation_character="┃",
+            indentation_bg_color=TerminalBgColor.GREEN
+        )
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

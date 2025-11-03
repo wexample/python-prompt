@@ -55,8 +55,9 @@ class WithIoManager(BaseClass):
                 parent_context=parent_context
             ),
             "indentation_character": self.get_io_context_indentation_character(),
-            "indentation_color": self.get_io_context_indentation_color(),
-            "indentation_background_color": self.get_io_context_indentation_background_color(),
+            "indentation_text_color": self.get_io_context_indentation_text_color(),
+            "indentation_bg_color": self.get_io_context_indentation_bg_color(),
+            "indentation_style": self.get_io_context_indentation_style(),
             "colorized": self.get_io_context_colorized()
             or (
                 parent_context.colorized
@@ -96,14 +97,18 @@ class WithIoManager(BaseClass):
 
         return 0
 
-    def get_io_context_indentation_background_color(self) -> TerminalBgColor | None:
+    def get_io_context_indentation_bg_color(self) -> TerminalBgColor | None:
         return None
 
     def get_io_context_indentation_character(self) -> str | None:
         return None
 
-    def get_io_context_indentation_color(self) -> TerminalColor | None:
+    def get_io_context_indentation_text_color(self) -> TerminalColor | None:
         return None
+
+    def get_io_context_indentation_style(self):
+        from wexample_prompt.enums.indentation_style import IndentationStyle
+        return None  # Will inherit from parent or use default
 
     def get_io_context_indentation_width(self) -> int | None:
         return None
