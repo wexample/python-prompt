@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 
 
 class TestTreePromptResponse(AbstractPromptResponseTest):
+    __test__ = True  # Re-enable test collection for concrete test class
+
     """Test cases for TreePromptResponse."""
 
     def get_expected_lines(self) -> int:

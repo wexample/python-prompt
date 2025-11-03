@@ -4,6 +4,8 @@ from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestIoManager(AbstractPromptTest):
+    __test__ = True  # Re-enable test collection for concrete test class
+
     def test_class_indentation_levels(self) -> None:
         from wexample_prompt.testing.resources.classes.class_indenation_level_one import (
             ClassIndentationLevelOne,

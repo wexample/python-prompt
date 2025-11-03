@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 
 
 class TestDebugPromptResponse(AbstractPromptMessageResponseTest):
+    __test__ = True  # Re-enable test collection for concrete test class
+    
     def get_expected_lines(self) -> int:
         return 1  # Debug messages are single line
 
