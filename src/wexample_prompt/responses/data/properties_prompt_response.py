@@ -123,8 +123,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         )
 
         lines: list[PromptResponseLine] = []
-        # Empty top spacer
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         if self.title:
             title_len = len(self.title)
