@@ -16,10 +16,9 @@ class InteractiveExecutor(Executor, WithIoMethods):
     """
 
     def __attrs_post_init__(self) -> None:
-        # Ensure an IO manager is available before parent init instantiates examples.
-        self._init_io_manager()
-        object.__setattr__(self, "parent_io_handler", None)
         super().__attrs_post_init__()
+        self.set_parent_io_handler(None)
+        self.ensure_io_manager()
         self._attach_examples_to_executor()
 
     def _attach_examples_to_executor(self) -> None:
@@ -29,15 +28,13 @@ class InteractiveExecutor(Executor, WithIoMethods):
         examples_registry = self.get_registry("examples")
 
         for example in examples_registry.get_all().values():
-            if hasattr(example, "executor"):
-                object.__setattr__(example, "executor", self)
-
-            if isinstance(example, WithIoManager):
-                object.__setattr__(example, "parent_io_handler", self)
-                object.__setattr__(example, "io", self.io)
-
             if isinstance(example, InteractiveExample):
                 example.bind_executor(self)
+            elif isinstance(example, WithIoManager):
+                example.set_parent_io_handler(self)
+                example.ensure_io_manager()
+            elif hasattr(example, "executor"):
+                object.__setattr__(example, "executor", self)
 
     def execute(self) -> None:
         examples_registry = self.get_registry("examples")

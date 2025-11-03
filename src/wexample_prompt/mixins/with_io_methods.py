@@ -17,22 +17,15 @@ class WithIoMethods(WithIoManager):
         io_response = self._get_io_methods(name)
         if io_response is not None:
             return io_response
-
-        try:
-            return super().__getattr__(name)
-        except AttributeError:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )
 
     def _get_io_methods(self, name: str) -> Any:
-        if self.io is None:
-            raise RuntimeError(
-                f"{self.__class__.__name__} is trying to execute '{name}', but no 'io' manager was provided."
-            )
+        io = self.ensure_io_manager()
 
-        if hasattr(self.io, name):
-            attr = getattr(self.io, name)
+        if hasattr(io, name):
+            attr = getattr(io, name)
             if callable(attr):
 
                 def wrapper(*args, **kwargs):
