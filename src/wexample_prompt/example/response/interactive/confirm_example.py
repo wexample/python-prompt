@@ -171,6 +171,107 @@ class ConfirmExample(AbstractResponseExample):
         )
         self.io.indentation = 0
 
+    def example_simple(self) -> None:
+        """Simple yes/no confirmation."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="Do you want to continue?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+            default="yes",
+            reset_on_finish=True,
+            predefined_answer="yes"
+        )
+
+    def example_with_formatting(self) -> None:
+        """Confirmation with inline formatting."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="@color:red+bold{⚠ Warning}: This will @color:yellow{delete all data}. Continue?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+            default="no",
+            reset_on_finish=True,
+            predefined_answer="no"
+        )
+
+    def example_with_emojis(self) -> None:
+        """Confirmation with emojis."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="🚀 Deploy to production?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+            default="no",
+            reset_on_finish=True,
+            predefined_answer="yes"
+        )
+
+    def example_ok_cancel(self) -> None:
+        """OK/Cancel confirmation."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="Save changes?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
+            default="ok",
+            reset_on_finish=True,
+            predefined_answer="ok"
+        )
+
+    def example_yes_no_all(self) -> None:
+        """Yes/No/All confirmation."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="Apply changes to all files?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
+            default="yes",
+            reset_on_finish=True,
+            predefined_answer="all"
+        )
+
+    def example_with_paths(self) -> None:
+        """Confirmation with file paths."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        
+        self.io.confirm(
+            question="Delete @path:short{/home/user/documents/report.pdf}?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+            default="no",
+            reset_on_finish=True,
+            predefined_answer="no"
+        )
+
+    def example_nesting_demo(self) -> None:
+        """Confirmation with parent/child nesting."""
+        from wexample_prompt.responses.interactive.confirm_prompt_response import (
+            ConfirmPromptResponse,
+        )
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        
+        self.io.confirm(
+            question="@color:yellow+bold{Nesting Demo} - Continue?",
+            choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
+            default="yes",
+            reset_on_finish=True,
+            predefined_answer="yes"
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
 
@@ -179,9 +280,39 @@ class ConfirmExample(AbstractResponseExample):
         """
         return [
             {
-                "title": "Basic Confirm",
-                "description": "Simple confirmation dialog",
-                "callback": self.example_manager,
+                "title": "Simple",
+                "description": "Simple yes/no confirmation",
+                "callback": self.example_simple,
+            },
+            {
+                "title": "With Formatting",
+                "description": "Confirmation with inline formatting (@color)",
+                "callback": self.example_with_formatting,
+            },
+            {
+                "title": "With Emojis",
+                "description": "Confirmation with emojis",
+                "callback": self.example_with_emojis,
+            },
+            {
+                "title": "OK/Cancel",
+                "description": "OK/Cancel confirmation",
+                "callback": self.example_ok_cancel,
+            },
+            {
+                "title": "Yes/No/All",
+                "description": "Yes/No/All confirmation",
+                "callback": self.example_yes_no_all,
+            },
+            {
+                "title": "With Paths",
+                "description": "Confirmation with clickable file paths (@path)",
+                "callback": self.example_with_paths,
+            },
+            {
+                "title": "Nesting",
+                "description": "Confirmation with parent/child nesting",
+                "callback": self.example_nesting_demo,
             },
             {
                 "title": "Edge Case: Limits",
