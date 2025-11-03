@@ -6,9 +6,14 @@ from wexample_wex_addon_dev_python.workdir.python_package_workdir import PythonP
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
+    from .prompt_readme_config_value import PromptReadmeConfigValue
 
 
 class AppWorkdir(PythonPackageWorkdir):
+    def _get_readme_content(self) -> PromptReadmeConfigValue:
+        from .prompt_readme_config_value import PromptReadmeConfigValue
+        return PromptReadmeConfigValue
+
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
         from wexample_helpers.helpers.string import string_to_kebab_case
 

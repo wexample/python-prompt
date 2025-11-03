@@ -1,0 +1,5 @@
+from config_value.python_package_readme_config_value import PythonPackageReadmeContentConfigValue
+
+
+class PromptReadmeConfigValue(PythonPackageReadmeContentConfigValue):
+    pass
