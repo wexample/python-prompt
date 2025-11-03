@@ -55,3 +55,4 @@ coverage-*.json
 coverage*.lcov
 *.pid
 *.pid.lock
+/coverage.json
