@@ -22,6 +22,24 @@ class ListPromptResponse(AbstractMessageResponse):
     """Display items as a bulleted list, supporting nested indentation via leading spaces."""
 
     @classmethod
+    def apply_prefix_to_kwargs(cls, prefix: str, args: tuple, kwargs: dict) -> tuple[tuple, dict]:
+        """Apply prefix to items parameter.
+        
+        Args:
+            prefix: The formatted prefix to apply (e.g., "[child] ")
+            args: Positional arguments
+            kwargs: Keyword arguments
+            
+        Returns:
+            Tuple of (modified_args, modified_kwargs)
+        """
+        # Handle items parameter
+        if "items" in kwargs and isinstance(kwargs["items"], list):
+            kwargs["items"] = [prefix + item if isinstance(item, str) else item for item in kwargs["items"]]
+        
+        return args, kwargs
+
+    @classmethod
     def create_list(
         cls,
         items: list[str],
