@@ -163,6 +163,40 @@ class PropertiesExample(AbstractResponseExample):
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")
 
+    def example_with_indentation(self) -> None:
+        """Properties with different indentation levels."""
+        self.io.log("@color:cyan+bold{Properties at different indentation levels:}")
+        
+        # Level 0
+        self.io.properties(
+            properties={
+                "level": "0 (no indentation)",
+                "name": "Root",
+            },
+            title="Level 0",
+            indentation=0
+        )
+        
+        # Level 1
+        self.io.properties(
+            properties={
+                "level": "1 (indented once)",
+                "name": "Child",
+            },
+            title="Level 1",
+            indentation=1
+        )
+        
+        # Level 3
+        self.io.properties(
+            properties={
+                "level": "3 (indented 3 times)",
+                "name": "Deep Child",
+            },
+            title="Level 3",
+            indentation=3
+        )
+
     def example_complex_structure(self) -> None:
         """Complex nested structure."""
         self.io.properties(
@@ -235,6 +269,11 @@ class PropertiesExample(AbstractResponseExample):
                 "title": "Nesting",
                 "description": "Properties with parent/child nesting",
                 "callback": self.example_nesting,
+            },
+            {
+                "title": "With Indentation",
+                "description": "Properties at different indentation levels",
+                "callback": self.example_with_indentation,
             },
             {
                 "title": "Complex Structure",

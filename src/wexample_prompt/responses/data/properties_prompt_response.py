@@ -138,14 +138,13 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             lines.append(self._create_border_line(content_width))
 
         for content in content_lines:
-            lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text=" "),
-                        PromptResponseSegment(text=content),
-                    ]
-                )
-            )
+            # Parse content for inline formatting
+            from wexample_prompt.common.style_markup_parser import flatten_style_markup
+            content_segments = flatten_style_markup(content, joiner=None)
+            
+            # Add leading space and parsed content
+            all_segments = [PromptResponseSegment(text=" ")] + content_segments
+            lines.append(PromptResponseLine(segments=all_segments))
 
         lines.append(self._create_border_line(content_width))
 
