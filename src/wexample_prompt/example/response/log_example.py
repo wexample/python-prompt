@@ -45,7 +45,7 @@ class LogExample(AbstractResponseExample):
         
         # Colored indentation
         self.io.log(message="@color:cyan{Colored log with indentation}", indentation=3)
-        self.io.log(message="@🟢+bold{Emoji and bold with indentation}", indentation=5)
+        self.io.log(message="@🟢+bold{Emoji and bold} with indentation", indentation=5)
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
@@ -66,7 +66,7 @@ class LogExample(AbstractResponseExample):
             },
             {
                 "title": "Indented",
-                "description": "Log with various indentation levels",
+                "description": "Log with @color:magenta+bold{various} indentation levels",
                 "callback": self.example_indented,
             },
         ]
