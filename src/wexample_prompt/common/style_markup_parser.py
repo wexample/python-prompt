@@ -9,8 +9,8 @@ from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
 # Pattern to match directives: @type:params{content} or @type{content}
-# Supports word characters, emojis, and special chars for backward compatibility
-_STYLE_DIRECTIVE_PATTERN = re.compile(r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸]+)(?::([^\{\}]+))?\{", re.IGNORECASE)
+# Supports word characters, emojis, +, and special chars for backward compatibility
+_STYLE_DIRECTIVE_PATTERN = re.compile(r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸+]+)(?::([^\{\}]+))?\{", re.IGNORECASE)
 _EMOJI_COLOR_MAP: dict[str, TerminalColor] = {
     "🔴": TerminalColor.RED,
     "🟥": TerminalColor.RED,
@@ -210,7 +210,7 @@ def parse_style_markup(
                 push_text(section_text[match.start() :], active_color, active_styles)
                 return
 
-            # Handle special formatters
+            # Handle special formatters (must be explicit directive types)
             if directive_type == "path":
                 formatted = format_path(content, short=(directive_params == "short"))
                 push_text(formatted, active_color, active_styles)
@@ -224,8 +224,14 @@ def parse_style_markup(
                 continue
             
             # Handle color/style directives (backward compatibility)
-            # If directive_type is "color" or looks like a color/style token
-            tokens = directive_params if directive_params else directive_type
+            # If directive_type is "color", use params as tokens
+            # Otherwise, use directive_type itself as tokens (for @red{}, @🔵+bold{}, etc.)
+            if directive_type == "color" and directive_params:
+                tokens = directive_params
+            else:
+                # For @red{}, @🔵+bold{}, etc., the whole directive_type is the token
+                tokens = directive_type
+            
             child_color, child_styles = apply_tokens(tokens, active_color, active_styles)
             parse_section(content, child_color, child_styles)
             index = next_index
