@@ -49,6 +49,28 @@ class TablePromptResponse(AbstractPromptResponse):
         return TableExample
 
     @staticmethod
+    def _strip_ansi(text: str) -> str:
+        """Strip ANSI escape sequences from text."""
+        import re
+        # Remove ANSI escape sequences (including hyperlinks)
+        ansi_escape = re.compile(r'\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\')
+        return ansi_escape.sub('', text)
+    
+    @staticmethod
+    def _get_visible_width(text: str) -> int:
+        """Get visible width of text, excluding ANSI escape sequences and markup."""
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
+        
+        # Parse markup to get segments
+        segments = flatten_style_markup(text, joiner=None)
+        # Strip ANSI codes from each segment and sum lengths
+        total_width = 0
+        for seg in segments:
+            clean_text = TablePromptResponse._strip_ansi(seg.text)
+            total_width += len(clean_text)
+        return total_width
+
+    @staticmethod
     def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
         if not rows:
             return []
@@ -57,7 +79,9 @@ class TablePromptResponse(AbstractPromptResponse):
         for row in rows:
             for i in range(num_columns):
                 cell = str(row[i]) if i < len(row) else ""
-                max_widths[i] = max(max_widths[i], len(cell))
+                # Use visible width instead of len()
+                visible_width = TablePromptResponse._get_visible_width(cell)
+                max_widths[i] = max(max_widths[i], visible_width)
         return max_widths
 
     @staticmethod
@@ -83,9 +107,9 @@ class TablePromptResponse(AbstractPromptResponse):
             # Parse cell content for inline formatting
             cell_segments = flatten_style_markup(cell, joiner=None)
             
-            # Calculate actual text length (without markup)
-            cell_text_length = sum(len(seg.text) for seg in cell_segments)
-            padding = widths[i] - cell_text_length
+            # Calculate actual text length (without markup and ANSI codes)
+            cell_text_length = sum(len(TablePromptResponse._strip_ansi(seg.text)) for seg in cell_segments)
+            padding = max(0, widths[i] - cell_text_length)
             
             # Add leading space
             segments.append(PromptResponseSegment(text=" "))
@@ -110,6 +134,22 @@ class TablePromptResponse(AbstractPromptResponse):
 
         max_widths = self._calculate_max_widths(all_rows)
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
+        
+        # Ensure total_width is at least as wide as the title
+        if self.title:
+            min_width_for_title = len(self.title) + 4  # +4 for "+ " and " +"
+            if total_width < min_width_for_title:
+                # Distribute extra space across columns
+                extra_space = min_width_for_title - total_width
+                space_per_column = extra_space // len(max_widths)
+                remainder = extra_space % len(max_widths)
+                
+                for i in range(len(max_widths)):
+                    max_widths[i] += space_per_column
+                    if i < remainder:
+                        max_widths[i] += 1
+                
+                total_width = sum(max_widths) + (len(max_widths) * 3) - 1
 
         lines: list[PromptResponseLine] = []
         lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
