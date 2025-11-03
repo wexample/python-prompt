@@ -20,6 +20,27 @@ class LogPromptResponse(AbstractPromptResponse):
     """Response for log messages."""
 
     @classmethod
+    def apply_prefix_to_kwargs(cls, prefix: str, args: tuple, kwargs: dict) -> tuple[tuple, dict]:
+        """Apply prefix to message parameter.
+        
+        Args:
+            prefix: The formatted prefix to apply (e.g., "[child] ")
+            args: Positional arguments
+            kwargs: Keyword arguments
+            
+        Returns:
+            Tuple of (modified_args, modified_kwargs)
+        """
+        # Handle message parameter
+        if "message" in kwargs:
+            kwargs["message"] = prefix + kwargs["message"]
+        elif len(args) > 0 and isinstance(args[0], str):
+            # Handle positional message argument
+            args = (prefix + args[0],) + args[1:]
+        
+        return args, kwargs
+
+    @classmethod
     def create_log(
         cls: LogPromptResponse,
         message: LineMessage,
