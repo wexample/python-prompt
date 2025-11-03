@@ -79,69 +79,15 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Message with nested parent/child classes demonstrating automatic indentation."""
-        from wexample_helpers.decorator.base_class import base_class
-        from wexample_prompt.enums.indentation_style import IndentationStyle
-        from wexample_prompt.enums.terminal_color import TerminalColor
-        from wexample_prompt.mixins.with_io_methods import WithIoMethods
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
         
         method = self.get_io_method()
-        
-        # Parent class
-        @base_class
-        class ParentTask(WithIoMethods):
-            def execute(self):
-                self.log("Parent task started")
-                self.log("Processing parent operations...")
-                
-                # Create child with automatic indentation
-                child = ChildTask(parent_io_handler=self)
-                child.execute()
-                
-                self.log("Parent task completed")
-        
-        # Child class with prefix
-        @base_class
-        class ChildTask(WithIoMethods):
-            def get_io_context_prefix(self) -> str:
-                return "child"
-            
-            def execute(self):
-                self.log("Child task started")
-                self.log("Processing child operations...")
-                
-                # Create grandchild with automatic indentation
-                grandchild = GrandchildTask(parent_io_handler=self)
-                grandchild.execute()
-                
-                self.log("Child task completed")
-        
-        # Grandchild class with custom indentation style and custom prefix format
-        @base_class
-        class GrandchildTask(WithIoMethods):
-            def get_io_context_indentation_style(self):
-                return IndentationStyle.VERTICAL
-            
-            def get_io_context_indentation_character(self) -> str:
-                return "│"
-            
-            def get_io_context_indentation_text_color(self):
-                return TerminalColor.CYAN
-            
-            def get_io_context_prefix(self) -> str:
-                return "grandchild"
-            
-            def get_io_context_prefix_format(self) -> str:
-                return "({prefix}) "  # Custom format with parentheses
-            
-            def execute(self):
-                self.log("Grandchild task started (vertical style)")
-                self.log("Processing grandchild operations...")
-                self.log("Grandchild task completed")
+        response_name = self.get_response_name()
         
         # Execute the demo
         method(message="@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}")
         parent = ParentTask(io=self.io)
-        parent.execute()
+        parent.execute(method_name=response_name)
 
     def example_indented(self) -> None:
         """Message with indentation."""

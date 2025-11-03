@@ -117,6 +117,14 @@ class ListExample(AbstractResponseExample):
             "  Nested long item: " + "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " * 3,
         ])
 
+    def example_nesting(self) -> None:
+        """List with nested parent/child classes demonstrating automatic indentation."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        
+        self.io.list(items=["@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}"])
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="list")
+
     def example_edge_cases(self) -> None:
         """List with edge cases."""
         self.io.list(items=[
@@ -169,6 +177,11 @@ class ListExample(AbstractResponseExample):
                 "title": "Long Items",
                 "description": "List with long items that wrap",
                 "callback": self.example_long_items,
+            },
+            {
+                "title": "Nesting",
+                "description": "Parent/child classes with automatic indentation",
+                "callback": self.example_nesting,
             },
             {
                 "title": "Edge Cases",

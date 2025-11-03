@@ -32,17 +32,22 @@ class WithIoMethods(WithIoManager):
                     if "context" not in kwargs or kwargs["context"] is None:
                         kwargs["context"] = self.create_io_context()
                     
-                    # Add prefix to message if defined
+                    # Add prefix to message/items if defined
                     prefix = self.get_io_context_prefix()
-                    if prefix and "message" in kwargs:
+                    if prefix:
                         prefix_format = self.get_io_context_prefix_format()
                         formatted_prefix = prefix_format.format(prefix=prefix)
-                        kwargs["message"] = formatted_prefix + kwargs["message"]
-                    elif prefix and len(args) > 0 and isinstance(args[0], str):
-                        # Handle positional message argument
-                        prefix_format = self.get_io_context_prefix_format()
-                        formatted_prefix = prefix_format.format(prefix=prefix)
-                        args = (formatted_prefix + args[0],) + args[1:]
+                        
+                        # Handle message parameter
+                        if "message" in kwargs:
+                            kwargs["message"] = formatted_prefix + kwargs["message"]
+                        elif len(args) > 0 and isinstance(args[0], str):
+                            # Handle positional message argument
+                            args = (formatted_prefix + args[0],) + args[1:]
+                        
+                        # Handle items parameter (for list, etc.)
+                        if "items" in kwargs and isinstance(kwargs["items"], list):
+                            kwargs["items"] = [formatted_prefix + item if isinstance(item, str) else item for item in kwargs["items"]]
                     
                     return attr(*args, **kwargs)
 
