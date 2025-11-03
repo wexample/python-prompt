@@ -26,6 +26,22 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
         method(message="@color:yellow+bold{Bold yellow text}")
         method(message="@🔵{Blue emoji} with @color:magenta+bold{mixed} @color:green{formatting}")
 
+    def example_emoji(self) -> None:
+        """Message with emojis."""
+        method = self.get_io_method()
+        method(message="🎉 Success with emoji")
+        method(message="⚠️ Warning emoji 🔥 Fire emoji")
+        method(message="@color:cyan{Colored text} with 🌟 emoji 🚀 inside")
+        method(message="Multiple emojis: 🔵 🟢 🟡 🔴 🟣 🟠")
+
+    def example_inline_styling(self) -> None:
+        """Message with inline styling (underline, italic, etc.)."""
+        method = self.get_io_method()
+        method(message="Text with @🟣+underline{underline styling}")
+        method(message="Text with @color:yellow+italic{italic styling}")
+        method(message="@color:cyan+bold{Bold} and @color:magenta+underline{underline} and @color:green+italic{italic}")
+        method(message="@🔵+bold+underline{Multiple styles combined}")
+
     def example_indented(self) -> None:
         """Message with indentation."""
         method = self.get_io_method()
@@ -56,6 +72,11 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 "title": "Formatted",
                 "description": "Message with colors and bold",
                 "callback": self.example_formatted,
+            },
+            {
+                "title": "Inline Styling",
+                "description": "Message with underline, italic, and combined styles",
+                "callback": self.example_inline_styling,
             },
             {
                 "title": "Indented",
