@@ -117,30 +117,16 @@ class ErrorExample(AbstractSimpleMessageExample):
         Returns:
             List of example configurations
         """
-        return [
-            {
-                "title": "Basic Error",
-                "description": "Simple error message",
-                "callback": self.example_manager,
-            },
-            {
-                "title": "Edge Case: Limits",
-                "description": "Long error messages and paths",
-                "callback": self.edge_case_limits,
-            },
-            {
-                "title": "Edge Case: Indentation",
-                "description": "Errors with various indentation levels",
-                "callback": self.edge_case_indentation,
-            },
+        # Get base examples from AbstractSimpleMessageExample
+        base_examples = super().get_examples()
+        
+        # Add error-specific examples
+        error_specific = [
             {
                 "title": "Edge Case: With Exception",
                 "description": "Error with exception and traceback",
                 "callback": self.edge_case_with_exception,
             },
-            {
-                "title": "Edge Case: Nesting",
-                "description": "Nested error contexts",
-                "callback": self.edge_case_nesting,
-            },
         ]
+        
+        return base_examples + error_specific
