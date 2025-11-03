@@ -167,13 +167,17 @@ class ProgressExample(AbstractResponseExample):
         handle.finish(label='@color:green+bold{Build complete}')
 
     def example_with_percentage(self) -> None:
-        """Progress bar showing percentage."""
-        response = self.io.progress(label='Uploading', total=100)
+        """Progress bar showing percentage instead of current/total."""
+        response = self.io.progress(
+            label='Uploading',
+            total=100,
+            show_percentage=True
+        )
         handle = response.get_handle()
-        for i in range(0, 101, 5):
-            time.sleep(0.02)
-            handle.update(current=i, label=f'Uploading ({i}%)')
-        handle.finish(label='@color:green{Upload complete (100%)}')
+        for i in range(0, 101, 10):
+            time.sleep(0.03)
+            handle.update(current=i)
+        handle.finish(label='@color:green{Upload complete}')
 
     def example_nested_progress(self) -> None:
         """Nested progress bars with parent/child."""

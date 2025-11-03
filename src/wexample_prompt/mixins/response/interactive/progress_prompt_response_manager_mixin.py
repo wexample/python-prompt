@@ -27,6 +27,7 @@ class ProgressPromptResponseManagerMixin:
         current: float | int | str = 0,
         width: int | None = None,
         label: str | None = None,
+        show_percentage: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         print_response: bool = True,
@@ -43,6 +44,7 @@ class ProgressPromptResponseManagerMixin:
             width=width,
             label=label,
             color=color,
+            show_percentage=show_percentage,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),

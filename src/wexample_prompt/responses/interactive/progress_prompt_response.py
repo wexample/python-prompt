@@ -30,6 +30,9 @@ class ProgressPromptResponse(AbstractPromptResponse):
     label: str | None = public_field(
         default=None, description="Optional label displayed before the bar"
     )
+    show_percentage: bool = public_field(
+        default=False, description="Show percentage instead of current/total"
+    )
     # Instance fields
     total: int = public_field(description="Total number of items (must be > 0)")
     width: int | None = public_field(
@@ -45,6 +48,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         width: int | None = None,
         label: str | None = None,
         color: TerminalColor | None = None,
+        show_percentage: bool = False,
         verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -62,7 +66,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
             current=norm_current,
             width=width,
             label=label,
-            color=color or TerminalColor.RESET,
+            color=color or TerminalColor.CYAN,
+            show_percentage=show_percentage,
             verbosity=verbosity,
         )
 
@@ -155,12 +160,24 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label_visible_width = 0
         if self.label:
             label_segments = flatten_style_markup(self.label, joiner=" ")
-            # Calculate visible width using ansi_strip to handle emojis and ANSI codes correctly
-            label_visible_width = sum(len(ansi_strip(seg.text)) for seg in label_segments)
+            # Calculate visible width: strip ANSI codes and count emojis as 2 chars
+            for seg in label_segments:
+                clean_text = ansi_strip(seg.text)
+                # Count visible width: emojis (unicode > 0x1F000) count as 2
+                for char in clean_text:
+                    if ord(char) > 0x1F000:  # Emoji range
+                        label_visible_width += 2
+                    else:
+                        label_visible_width += 1
             # trailing space between label and bar
             label_segments.append(PromptResponseSegment(text=" "))
             label_visible_width += 1
-        right_percent = f" {current}/{self.total}"
+        
+        # Choose display format based on show_percentage
+        if self.show_percentage:
+            right_percent = f" {percentage}%"
+        else:
+            right_percent = f" {current}/{self.total}"
 
         # Determine bar width to perfectly fit the line
         bar_width = max(
