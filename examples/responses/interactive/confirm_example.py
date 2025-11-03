@@ -3,7 +3,7 @@ from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
 
 
-class Confirm(Example):
+class ConfirmExample(Example):
     def execute(self) -> None:
         io = IoManager()
 

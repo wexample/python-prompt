@@ -159,7 +159,7 @@ def section_virtual_subdivisions(io: IoManager) -> None:
     # Finish the root to reach 100%
     root.finish(label="@🟢+bold{All items complete}", color=TerminalColor.GREEN)
 
-class Progress(Example):
+class ProgressExample(Example):
     def execute(self) -> None:
         io = IoManager()
         section_using_io_manager(io)

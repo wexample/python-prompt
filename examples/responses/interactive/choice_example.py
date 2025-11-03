@@ -6,7 +6,7 @@ from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class Choice(Example):
+class ChoiceExample(Example):
     def execute(self) -> None:
         demo_io = IoManager()
 

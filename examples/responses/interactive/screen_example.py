@@ -8,7 +8,7 @@ from wexample_prompt.responses.interactive.confirm_prompt_response import Confir
 from wexample_prompt.responses.interactive.screen_prompt_response import ScreenPromptResponse
 
 
-class Screen(Example):
+class ScreenExample(Example):
     def execute(self) -> None:
         io = IoManager()
 
