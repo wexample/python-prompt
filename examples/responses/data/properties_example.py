@@ -1,10 +1,10 @@
-"""Interactive example for properties display - delegates to src example."""
+"""Interactive example for properties - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class PropertiesExample(AbstractPromptResponseExample):
-    """Interactive example for properties display."""
+    """Interactive example for properties."""
 
     def execute(self) -> None:
         """Execute properties examples."""
@@ -12,8 +12,4 @@ class PropertiesExample(AbstractPromptResponseExample):
             PropertiesExample as SrcPropertiesExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcPropertiesExample()
-
-        demo_io.log("@color:cyan{Basic properties example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcPropertiesExample)

@@ -1,10 +1,10 @@
-"""Interactive example for info messages - delegates to src example."""
+"""Interactive example for info - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class InfoExample(AbstractPromptResponseExample):
-    """Interactive example for info messages."""
+    """Interactive example for info."""
 
     def execute(self) -> None:
         """Execute info examples."""
@@ -12,8 +12,4 @@ class InfoExample(AbstractPromptResponseExample):
             InfoExample as SrcInfoExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcInfoExample()
-
-        demo_io.log("@color:cyan{Basic info example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcInfoExample)

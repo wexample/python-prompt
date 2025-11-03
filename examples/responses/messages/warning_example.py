@@ -1,10 +1,10 @@
-"""Interactive example for warning messages - delegates to src example."""
+"""Interactive example for warning - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class WarningExample(AbstractPromptResponseExample):
-    """Interactive example for warning messages."""
+    """Interactive example for warning."""
 
     def execute(self) -> None:
         """Execute warning examples."""
@@ -12,8 +12,4 @@ class WarningExample(AbstractPromptResponseExample):
             WarningExample as SrcWarningExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcWarningExample()
-
-        demo_io.log("@color:cyan{Basic warning example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcWarningExample)

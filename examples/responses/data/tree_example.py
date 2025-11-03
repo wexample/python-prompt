@@ -1,10 +1,10 @@
-"""Interactive example for tree display - delegates to src example."""
+"""Interactive example for tree - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class TreeExample(AbstractPromptResponseExample):
-    """Interactive example for tree display."""
+    """Interactive example for tree."""
 
     def execute(self) -> None:
         """Execute tree examples."""
@@ -12,8 +12,4 @@ class TreeExample(AbstractPromptResponseExample):
             TreeExample as SrcTreeExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcTreeExample()
-
-        demo_io.log("@color:cyan{Basic tree example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcTreeExample)

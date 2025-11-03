@@ -1,10 +1,10 @@
-"""Interactive example for task messages - delegates to src example."""
+"""Interactive example for task - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class TaskExample(AbstractPromptResponseExample):
-    """Interactive example for task messages."""
+    """Interactive example for task."""
 
     def execute(self) -> None:
         """Execute task examples."""
@@ -12,8 +12,4 @@ class TaskExample(AbstractPromptResponseExample):
             TaskExample as SrcTaskExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcTaskExample()
-
-        demo_io.log("@color:cyan{Basic task example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcTaskExample)

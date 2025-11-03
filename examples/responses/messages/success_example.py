@@ -1,10 +1,10 @@
-"""Interactive example for success messages - delegates to src example."""
+"""Interactive example for success - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class SuccessExample(AbstractPromptResponseExample):
-    """Interactive example for success messages."""
+    """Interactive example for success."""
 
     def execute(self) -> None:
         """Execute success examples."""
@@ -12,8 +12,4 @@ class SuccessExample(AbstractPromptResponseExample):
             SuccessExample as SrcSuccessExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcSuccessExample()
-
-        demo_io.log("@color:cyan{Basic success example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcSuccessExample)

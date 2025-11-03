@@ -12,8 +12,4 @@ class LogExample(AbstractPromptResponseExample):
             LogExample as SrcLogExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcLogExample()
-
-        demo_io.log("@color:cyan{Basic log example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcLogExample)

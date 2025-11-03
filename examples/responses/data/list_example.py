@@ -1,10 +1,9 @@
-"""Interactive example for list display - delegates to src example."""
-
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+"""Interactive example for list - delegates to src example."""
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class ListExample(AbstractPromptResponseExample):
-    """Interactive example for list display."""
+    """Interactive example for list."""
 
     def execute(self) -> None:
         """Execute list examples."""
@@ -12,8 +11,4 @@ class ListExample(AbstractPromptResponseExample):
             ListExample as SrcListExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcListExample()
-
-        demo_io.log("@color:cyan{Basic list example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcListExample)

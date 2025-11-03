@@ -1,10 +1,10 @@
-"""Interactive example for table display - delegates to src example."""
+"""Interactive example for table - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class TableExample(AbstractPromptResponseExample):
-    """Interactive example for table display."""
+    """Interactive example for table."""
 
     def execute(self) -> None:
         """Execute table examples."""
@@ -12,8 +12,4 @@ class TableExample(AbstractPromptResponseExample):
             TableExample as SrcTableExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcTableExample()
-
-        demo_io.log("@color:cyan{Basic table example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcTableExample)

@@ -1,10 +1,10 @@
-"""Interactive example for suggestions display - delegates to src example."""
+"""Interactive example for suggestions - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class SuggestionsExample(AbstractPromptResponseExample):
-    """Interactive example for suggestions display."""
+    """Interactive example for suggestions."""
 
     def execute(self) -> None:
         """Execute suggestions examples."""
@@ -12,8 +12,4 @@ class SuggestionsExample(AbstractPromptResponseExample):
             SuggestionsExample as SrcSuggestionsExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcSuggestionsExample()
-
-        demo_io.log("@color:cyan{Basic suggestions example}")
-        src_example.example_manager()
+        self.execute_delegated(SrcSuggestionsExample)

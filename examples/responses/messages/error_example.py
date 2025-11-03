@@ -1,6 +1,6 @@
 """Interactive example for error messages - delegates to src example."""
 
-from ..abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class ErrorExample(AbstractPromptResponseExample):
@@ -12,12 +12,4 @@ class ErrorExample(AbstractPromptResponseExample):
             ErrorExample as SrcErrorExample,
         )
 
-        demo_io = self.create_io_manager()
-        src_example = SrcErrorExample()
-
-        # Execute all examples from src
-        for example_config in src_example.get_examples():
-            demo_io.separator(f"@🔶{{{example_config['title']}}}")
-            demo_io.log(f"  {example_config['description']}")
-            if 'callback' in example_config:
-                example_config['callback']()
+        self.execute_delegated(SrcErrorExample)

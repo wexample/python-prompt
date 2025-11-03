@@ -71,3 +71,24 @@ class AbstractPromptResponseExample(InteractiveExample):
     def create_io_manager(self) -> IoManager:
         """Create and return a new IoManager instance."""
         return IoManager()
+
+    def execute_delegated(self, src_example_class):
+        """
+        Execute examples by delegating to src example class.
+        Automatically runs all examples if get_examples() is available,
+        otherwise runs example_manager().
+        
+        Args:
+            src_example_class: The source example class to instantiate and delegate to
+        """
+        src_example = src_example_class()
+        
+        # Check if the src example has get_examples method
+        if hasattr(src_example, 'get_examples'):
+            examples = src_example.get_examples()
+            for example_config in examples:
+                if 'callback' in example_config:
+                    example_config['callback']()
+        else:
+            # Fallback to basic example_manager
+            src_example.example_manager()
