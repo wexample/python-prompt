@@ -131,12 +131,12 @@ class TablePromptResponse(AbstractPromptResponse):
             lines.append(self._create_border_line(total_width))
 
         if self.headers:
-            header_segments = self._create_row_segments(self.headers, max_widths)
+            header_segments = self._format_row(self.headers, max_widths)
             lines.append(PromptResponseLine(segments=header_segments))
             lines.append(self._create_border_line(total_width))
 
         for row in self.data:
-            row_segments = self._create_row_segments(row, max_widths)
+            row_segments = self._format_row(row, max_widths)
             lines.append(PromptResponseLine(segments=row_segments))
 
         lines.append(self._create_border_line(total_width))
