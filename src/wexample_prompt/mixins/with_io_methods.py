@@ -31,6 +31,19 @@ class WithIoMethods(WithIoManager):
                 def wrapper(*args, **kwargs):
                     if "context" not in kwargs or kwargs["context"] is None:
                         kwargs["context"] = self.create_io_context()
+                    
+                    # Add prefix to message if defined
+                    prefix = self.get_io_context_prefix()
+                    if prefix and "message" in kwargs:
+                        prefix_format = self.get_io_context_prefix_format()
+                        formatted_prefix = prefix_format.format(prefix=prefix)
+                        kwargs["message"] = formatted_prefix + kwargs["message"]
+                    elif prefix and len(args) > 0 and isinstance(args[0], str):
+                        # Handle positional message argument
+                        prefix_format = self.get_io_context_prefix_format()
+                        formatted_prefix = prefix_format.format(prefix=prefix)
+                        args = (formatted_prefix + args[0],) + args[1:]
+                    
                     return attr(*args, **kwargs)
 
                 return wrapper

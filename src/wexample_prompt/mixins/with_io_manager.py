@@ -113,6 +113,16 @@ class WithIoManager(BaseClass):
     def get_io_context_indentation_width(self) -> int | None:
         return None
 
+    def get_io_context_prefix(self) -> str | None:
+        """Get the prefix to prepend to messages (e.g., '[child]')."""
+        return None
+
+    def get_io_context_prefix_format(self) -> str:
+        """Get the format string for the prefix. Use {prefix} as placeholder.
+        Default: '[{prefix}] '
+        """
+        return "[{prefix}] "
+
     def ensure_io_manager(self) -> IoManager:
         try:
             current_io = object.__getattribute__(self, "io")

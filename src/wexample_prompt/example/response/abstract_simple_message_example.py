@@ -83,9 +83,12 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 
                 self.log("Parent task completed")
         
-        # Child class
+        # Child class with prefix
         @base_class
         class ChildTask(WithIoMethods):
+            def get_io_context_prefix(self) -> str:
+                return "child"
+            
             def execute(self):
                 self.log("Child task started")
                 self.log("Processing child operations...")
@@ -96,7 +99,7 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 
                 self.log("Child task completed")
         
-        # Grandchild class with custom indentation style
+        # Grandchild class with custom indentation style and custom prefix format
         @base_class
         class GrandchildTask(WithIoMethods):
             def get_io_context_indentation_style(self):
@@ -107,6 +110,12 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
             
             def get_io_context_indentation_text_color(self):
                 return TerminalColor.CYAN
+            
+            def get_io_context_prefix(self) -> str:
+                return "grandchild"
+            
+            def get_io_context_prefix_format(self) -> str:
+                return "({prefix}) "  # Custom format with parentheses
             
             def execute(self):
                 self.log("Grandchild task started (vertical style)")
