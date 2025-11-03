@@ -1,6 +1,6 @@
 from time import sleep
 
-from wexample_helpers.classes.example.example import Example
+from ..abstract_prompt_response_example import AbstractPromptResponseExample
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
@@ -159,7 +159,99 @@ def section_virtual_subdivisions(io: IoManager) -> None:
     # Finish the root to reach 100%
     root.finish(label="@🟢+bold{All items complete}", color=TerminalColor.GREEN)
 
-class ProgressExample(Example):
+def section_edge_case_limits(io: IoManager) -> None:
+    io.separator('@🔶+bold{LIMITS: Long labels in progress bars}')
+    
+    # Very long label
+    response = io.progress(
+        label='@color:cyan{This is a very long progress label that contains lots of text and should test wrapping behavior when it exceeds terminal width}',
+        total=100
+    )
+    handle = response.get_handle()
+    for cur in (25, 50, 75, 100):
+        sleep(0.05)
+        handle.update(current=cur)
+    
+    # Multiple progress bars with varying label lengths
+    io.separator('@🔶+bold{LIMITS: Multiple bars with different label lengths}')
+    bars = []
+    for i in range(3):
+        label_length = ['@color:cyan{Short}', '@color:yellow{Medium length label}', '@color:magenta{Very long label that should wrap across multiple lines in the terminal}'][i]
+        response = io.progress(label=label_length, total=50, current=0)
+        bars.append(response.get_handle())
+    
+    for cur in range(0, 51, 10):
+        sleep(0.05)
+        for handle in bars:
+            handle.update(current=cur)
+    
+    for handle in bars:
+        handle.finish()
+
+
+def section_edge_case_indentation(io: IoManager) -> None:
+    io.separator('@🔶+bold{INDENTATION: Progress with indentation}')
+    
+    response = io.progress(
+        label='@color:cyan{Level 0}',
+        total=100,
+        indentation=0
+    )
+    handle = response.get_handle()
+    handle.update(current=50)
+    handle.finish()
+    
+    io.indentation = 3
+    response = io.progress(
+        label='@color:yellow{Level 3 indentation}',
+        total=100
+    )
+    handle = response.get_handle()
+    handle.update(current=50)
+    handle.finish()
+    
+    response = io.progress(
+        label='@color:magenta{Level 3 + 5 indentation}',
+        total=100,
+        indentation=5
+    )
+    handle = response.get_handle()
+    handle.update(current=50)
+    handle.finish()
+    
+    io.indentation = 0
+
+
+def section_edge_case_nesting_complex(io: IoManager) -> None:
+    io.separator('@🔶+bold{NESTING: Complex nested progress with multiple levels}')
+    
+    # Simulate a complex build process with multiple nested stages
+    response = io.progress(label='@color:cyan+bold{Build Process}', total=3)
+    root = response.get_handle()
+    
+    stages = ['Compilation', 'Testing', 'Packaging']
+    
+    for stage_idx, stage_name in enumerate(stages):
+        io.indentation += 1
+        stage_handle = root.create_range_handle(
+            to_step=1,
+            virtual_total=5
+        )
+        
+        for step in range(1, 6):
+            sleep(0.03)
+            stage_handle.advance(
+                step=1,
+                label=f"@color:yellow{{{stage_name}: step {step}/5}}"
+            )
+        
+        stage_handle.finish(label=f"@color:green+bold{{{stage_name} complete}}")
+        io.indentation -= 1
+    
+    root.finish(label="@🟢+bold{Build complete}", color=TerminalColor.GREEN)
+
+
+class ProgressExample(AbstractPromptResponseExample):
     def execute(self) -> None:
         io = IoManager()
         section_using_io_manager(io)
@@ -169,3 +261,8 @@ class ProgressExample(Example):
         section_nested_sub_progress(io)
         section_dynamic_resize_sub_progress(io)
         section_virtual_subdivisions(io)
+        
+        # Edge cases
+        section_edge_case_limits(io)
+        section_edge_case_indentation(io)
+        section_edge_case_nesting_complex(io)
