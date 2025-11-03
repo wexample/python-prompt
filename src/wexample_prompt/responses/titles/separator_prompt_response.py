@@ -36,11 +36,37 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         description="Segments used to render the optional label.",
     )
     separator_response_segment: PromptResponseSegment = public_field(
-        description="The line segment used by render process"
+        factory=lambda: PromptResponseSegment(text=""),
+        description="The line segment used by render process",
     )
     width: int | None = public_field(
         default=None, description="A fixed width, use context width if not provided"
     )
+
+    def __attrs_post_init__(self) -> None:
+        parent = super()
+        if hasattr(parent, "__attrs_post_init__"):
+            parent.__attrs_post_init__()
+
+        if not self.separator_response_segment:
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
+
+            character = self.character or self.DEFAULT_CHARACTER
+            self.separator_response_segment = PromptResponseSegment(text=character)
+
+        if not self.lines:
+            from wexample_prompt.common.prompt_response_line import PromptResponseLine
+
+            self.lines = [
+                PromptResponseLine(segments=[self.separator_response_segment])
+            ]
+        else:
+            first_line = self.lines[0]
+            if self.separator_response_segment not in first_line.segments:
+                first_line.segments.insert(0, self.separator_response_segment)
+
 
     @classmethod
     def create_separator(
