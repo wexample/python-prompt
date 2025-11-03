@@ -42,6 +42,23 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
         method(message="@color:cyan+bold{Bold} and @color:magenta+underline{underline} and @color:green+italic{italic}")
         method(message="@🔵+bold+underline{Multiple styles combined}")
 
+    def example_edge_cases(self) -> None:
+        """Message with edge cases: very short, very long, special characters."""
+        method = self.get_io_method()
+        
+        # Very short
+        method(message="OK")
+        method(message="✓")
+        
+        # Very long
+        long_text = "This is a very long message that contains a lot of text to test how the prompt system handles wrapping and display of lengthy content. " * 3
+        method(message=long_text)
+        
+        # Special characters
+        method(message="Special chars: <>&\"'`[]{}()±×÷≠≈∞")
+        method(message="Path: /home/user/very/long/path/to/some/file/that/might/wrap.txt")
+        method(message="URL: https://example.com/very/long/url/with/many/segments?param1=value1&param2=value2")
+
     def example_indented(self) -> None:
         """Message with indentation."""
         method = self.get_io_method()
