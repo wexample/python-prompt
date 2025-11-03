@@ -38,3 +38,13 @@ class AbstractResponseExample(WithIoManager, BaseClass):
     @abstract_method
     def example_manager(self) -> None:
         pass
+
+    def get_response_name(self) -> str:
+        """Get the short name of the response type (e.g., 'log', 'echo', 'info')."""
+        response = self.example_class()
+        return response.get_snake_short_class_name()
+
+    def get_io_method(self):
+        """Get the io method corresponding to this response type."""
+        name = self.get_response_name()
+        return getattr(self.io, name)
