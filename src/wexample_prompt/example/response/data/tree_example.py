@@ -172,6 +172,20 @@ class TreeExample(AbstractResponseExample):
             }
         })
 
+    def example_with_paths(self) -> None:
+        """Tree with clickable file paths."""
+        self.io.tree(data={
+            "📁 project": {
+                "@path:short{/home/user/project/src/main.py}": None,
+                "@path:short{/home/user/project/src/utils.py}": None,
+                "📁 tests": {
+                    "@path:short{/home/user/project/tests/test_main.py}": None,
+                },
+                "@path:short{/home/user/project/README.md}": None,
+                "@path:short{/home/user/project/setup.py}": None,
+            }
+        })
+
     def example_with_indentation(self) -> None:
         """Trees at different indentation levels."""
         self.io.log("@color:cyan+bold{Trees at different levels:}")
@@ -239,6 +253,11 @@ class TreeExample(AbstractResponseExample):
                 "title": "Mixed Structure",
                 "description": "Tree with mixed files and folders with emojis",
                 "callback": self.example_mixed_structure,
+            },
+            {
+                "title": "With Paths",
+                "description": "Tree with clickable file paths (@path)",
+                "callback": self.example_with_paths,
             },
             {
                 "title": "With Indentation",
