@@ -91,9 +91,19 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 "callback": self.example_formatted,
             },
             {
+                "title": "Emoji",
+                "description": "Message with various emojis",
+                "callback": self.example_emoji,
+            },
+            {
                 "title": "Inline Styling",
                 "description": "Message with underline, italic, and combined styles",
                 "callback": self.example_inline_styling,
+            },
+            {
+                "title": "Edge Cases",
+                "description": "Very short, very long, and special characters",
+                "callback": self.example_edge_cases,
             },
             {
                 "title": "Indented",
