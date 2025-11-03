@@ -6,3 +6,6 @@ from wexample_prompt.mixins.with_io_methods import WithIoMethods
 class InteractiveExecutor(WithIoMethods, Executor):
     def _get_example_class_type(self) -> type[InteractiveExample]:
         return InteractiveExample
+
+    def _print_log(self, message: str) -> None:
+        self.io.log(message=message)
