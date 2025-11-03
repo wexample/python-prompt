@@ -70,15 +70,30 @@ class TablePromptResponse(AbstractPromptResponse):
         )
 
     @staticmethod
-    def _create_row_segments(
+    def _format_row(
         row: list[Any], widths: list[int]
     ) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
-            segments.append(PromptResponseSegment(text=f" {cell:<{widths[i]}} |"))
+            
+            # Parse cell content for inline formatting
+            cell_segments = flatten_style_markup(cell, joiner=None)
+            
+            # Calculate actual text length (without markup)
+            cell_text_length = sum(len(seg.text) for seg in cell_segments)
+            padding = widths[i] - cell_text_length
+            
+            # Add leading space
+            segments.append(PromptResponseSegment(text=" "))
+            # Add parsed cell content
+            segments.extend(cell_segments)
+            # Add padding and closing pipe
+            segments.append(PromptResponseSegment(text=" " * padding + " |"))
+        
         return segments
 
     def render(self, context: PromptContext | None = None) -> str | None:
