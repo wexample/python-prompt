@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.example.response.abstract_title_example import AbstractTitleExample
 
 
 @base_class
-class TitleExample(AbstractResponseExample):
+class TitleExample(AbstractTitleExample):
+    """Example usage of TitlePromptResponse with comprehensive formatting tests."""
+    
     def example_class(self):
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,
@@ -24,3 +26,11 @@ class TitleExample(AbstractResponseExample):
 
     def get_test_message(self) -> str:
         return "Test title"
+    
+    def get_io_method(self):
+        """Return the IO method for this title type."""
+        return self.io.title
+    
+    def get_response_name(self) -> str:
+        """Return the response name for this title type."""
+        return "title"
