@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 class InteractiveExample(Example, WithIoMethods):
-
     def after_execute(self) -> None:
         """Hook executed after example logic."""
 

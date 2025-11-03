@@ -66,8 +66,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             first_line = self.lines[0]
             if self.separator_response_segment not in first_line.segments:
                 first_line.segments.insert(0, self.separator_response_segment)
-
-
+    
     @classmethod
     def create_separator(
         cls: SeparatorPromptResponse,

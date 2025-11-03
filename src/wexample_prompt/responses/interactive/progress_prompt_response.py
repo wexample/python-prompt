@@ -25,8 +25,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"
     color: TerminalColor | None = public_field(
-        default=TerminalColor.BLUE,
-        description="Optional color applied to the bar"
+        default=TerminalColor.BLUE, description="Optional color applied to the bar"
     )
     current: float = public_field(description="Current progress (must be >= 0)")
     label: str | None = public_field(

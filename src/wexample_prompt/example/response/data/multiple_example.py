@@ -46,8 +46,11 @@ class MultipleExample(AbstractResponseExample):
 
     def example_all_message_types(self) -> MultiplePromptResponse | None:
         """Show all different message types together."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
         from wexample_prompt.responses.messages.info_prompt_response import (
             InfoPromptResponse,
         )
@@ -56,9 +59,6 @@ class MultipleExample(AbstractResponseExample):
         )
         from wexample_prompt.responses.messages.warning_prompt_response import (
             WarningPromptResponse,
-        )
-        from wexample_prompt.responses.messages.error_prompt_response import (
-            ErrorPromptResponse,
         )
 
         responses = [
@@ -92,15 +92,15 @@ class MultipleExample(AbstractResponseExample):
 
     def example_complex_structure(self) -> MultiplePromptResponse | None:
         """Complex structure with titles, lists, and messages."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
-        from wexample_prompt.responses.titles.title_prompt_response import (
-            TitlePromptResponse,
-        )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
             SubtitlePromptResponse,
+        )
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
         )
 
         responses = [
@@ -158,10 +158,10 @@ class MultipleExample(AbstractResponseExample):
 
     def example_with_formatting(self) -> MultiplePromptResponse | None:
         """Multiple responses with inline formatting."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
         from wexample_prompt.responses.data.list_prompt_response import (
             ListPromptResponse,
         )
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         responses = [
             LogPromptResponse.create_log(

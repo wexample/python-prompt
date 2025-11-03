@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime
-from typing import Iterable
+from collections.abc import Iterable
 
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor

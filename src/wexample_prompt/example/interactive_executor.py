@@ -18,16 +18,6 @@ class InteractiveExecutor(Executor, WithIoMethods):
         self.ensure_io_manager()
         self._attach_examples_to_executor()
 
-    def _attach_examples_to_executor(self) -> None:
-        """
-        Bind every discovered example to this executor so they share the same IO manager.
-        """
-        examples_registry = self.get_registry("examples")
-
-        for example in examples_registry.get_all().values():
-            # Should be InteractiveExample
-            example.bind_executor(self)
-
     def execute(self) -> None:
         examples_registry = self.get_registry("examples")
         matched = False
@@ -51,3 +41,13 @@ class InteractiveExecutor(Executor, WithIoMethods):
             tokens: Iterable[str] = self.filters or ()
             filters = ", ".join(tokens)
             self.warning(message=f"No examples matched filters: {filters}")
+
+    def _attach_examples_to_executor(self) -> None:
+        """
+        Bind every discovered example to this executor so they share the same IO manager.
+        """
+        examples_registry = self.get_registry("examples")
+
+        for example in examples_registry.get_all().values():
+            # Should be InteractiveExample
+            example.bind_executor(self)

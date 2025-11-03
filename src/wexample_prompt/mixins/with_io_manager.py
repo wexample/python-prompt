@@ -82,7 +82,7 @@ class WithIoManager(BaseClass):
         return None
 
     def get_io_context_indentation(
-        self, *, parent_context: "PromptContext | None" = None
+        self, *, parent_context: PromptContext | None = None
     ) -> int:
         if parent_context is not None:
             return parent_context.get_indentation() + 1

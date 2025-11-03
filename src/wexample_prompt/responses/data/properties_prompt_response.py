@@ -90,6 +90,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
         from wexample_helpers.helpers.ansi import ansi_strip
+
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

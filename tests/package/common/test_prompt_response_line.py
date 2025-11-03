@@ -28,6 +28,7 @@ class TestPromptResponseLine:
         assert next_line_seg.text == "Next"
         assert next_line_seg.color is TerminalColor.BLUE
         assert TextStyle.BOLD in next_line_seg.styles
+
     def test_create_basic_line(self) -> None:
         """Test creating a basic line with single segment."""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine

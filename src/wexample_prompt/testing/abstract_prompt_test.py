@@ -20,6 +20,7 @@ class AbstractPromptTest(unittest.TestCase):
     2. IoManager integration
     3. PromptContext implementation
     """
+
     _io: IoManager
     __test__ = False  # Prevent pytest from discovering this abstract class
     _test_message: str = "Test message"

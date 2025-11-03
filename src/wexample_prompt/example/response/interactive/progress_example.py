@@ -6,8 +6,8 @@ import time
 from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.enums.terminal_color import TerminalColor
 
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
 
@@ -117,8 +117,8 @@ class ProgressExample(AbstractResponseExample):
 
     def example_nested_progress(self) -> None:
         """Nested progress bars with parent/child."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
         from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
 
         response = self.io.progress(
             label="@color:yellow+bold{Main task}", total=3, color=TerminalColor.RED

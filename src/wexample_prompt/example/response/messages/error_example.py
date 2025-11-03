@@ -30,40 +30,6 @@ class ErrorExample(AbstractSimpleMessageExample):
             "and/even/more/nested/paths/that/should/wrap/properly.txt"
         )
 
-    def example_class(self):
-        from wexample_prompt.responses.messages.error_prompt_response import (
-            ErrorPromptResponse,
-        )
-
-        return ErrorPromptResponse.create_error(
-            message=self.get_test_message(),
-        )
-
-    def example_extended(self) -> None:
-        self._class_with_methods.error(message=self.get_test_message())
-
-    def example_manager(self) -> None:
-        self.io.error(message=self.get_test_message())
-
-    def get_test_message(self) -> str:
-        return "Test error message"
-
-    def get_io_method(self):
-        """Return the IO method for this message type."""
-        return self.io.error
-
-    def get_response_name(self) -> str:
-        """Return the response name for this message type."""
-        return "error"
-
-    def edge_case_limits(self) -> None:
-        """Test edge cases: limits (long error messages)."""
-        # Long error message
-        self.io.error(message=self.generate_long_error())
-
-        # Error with long path
-        self.io.error(message="@🔴+bold{Path error:} " + self.generate_long_path())
-
     def edge_case_indentation(self) -> None:
         """Test edge cases: indentation."""
         self.io.error(message="@🔴+bold{Error at level 0}", indentation=0)
@@ -74,6 +40,27 @@ class ErrorExample(AbstractSimpleMessageExample):
         self.io.error(
             message="@🔴+bold{Error at indentation level 3 + 5}", indentation=5
         )
+        self.io.indentation = 0
+
+    def edge_case_limits(self) -> None:
+        """Test edge cases: limits (long error messages)."""
+        # Long error message
+        self.io.error(message=self.generate_long_error())
+
+        # Error with long path
+        self.io.error(message="@🔴+bold{Path error:} " + self.generate_long_path())
+
+    def edge_case_nesting(self) -> None:
+        """Test edge cases: nested error contexts."""
+        self.io.log("@color:cyan{Starting outer function}")
+        self.io.indentation += 1
+        self.io.error("@🔴+bold{Error at level 1}")
+
+        self.io.indentation += 1
+        self.io.error("@🟠+bold{Error at level 2}")
+
+        self.io.indentation += 1
+        self.io.error("@🔴+bold{Error at level 3}")
         self.io.indentation = 0
 
     def edge_case_with_exception(self) -> None:
@@ -96,18 +83,20 @@ class ErrorExample(AbstractSimpleMessageExample):
                 exception=e,
             )
 
-    def edge_case_nesting(self) -> None:
-        """Test edge cases: nested error contexts."""
-        self.io.log("@color:cyan{Starting outer function}")
-        self.io.indentation += 1
-        self.io.error("@🔴+bold{Error at level 1}")
+    def example_class(self):
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
 
-        self.io.indentation += 1
-        self.io.error("@🟠+bold{Error at level 2}")
+        return ErrorPromptResponse.create_error(
+            message=self.get_test_message(),
+        )
 
-        self.io.indentation += 1
-        self.io.error("@🔴+bold{Error at level 3}")
-        self.io.indentation = 0
+    def example_extended(self) -> None:
+        self._class_with_methods.error(message=self.get_test_message())
+
+    def example_manager(self) -> None:
+        self.io.error(message=self.get_test_message())
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
@@ -128,3 +117,14 @@ class ErrorExample(AbstractSimpleMessageExample):
         ]
 
         return base_examples + error_specific
+
+    def get_io_method(self):
+        """Return the IO method for this message type."""
+        return self.io.error
+
+    def get_response_name(self) -> str:
+        """Return the response name for this message type."""
+        return "error"
+
+    def get_test_message(self) -> str:
+        return "Test error message"
