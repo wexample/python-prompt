@@ -49,9 +49,14 @@ class ListPromptResponse(AbstractMessageResponse):
             bullet_text = ("  " * indent_level) + f"{bullet} "
 
             bullet_segment = PromptResponseSegment(text=bullet_text, color=color)
-            text_segment = PromptResponseSegment(text=content, color=color)
-
-            lines.append(PromptResponseLine(segments=[bullet_segment, text_segment]))
+            
+            # Parse content for inline formatting (@color, @path, @time, etc.)
+            from wexample_prompt.common.style_markup_parser import flatten_style_markup
+            content_segments = flatten_style_markup(content, default_color=color, joiner=None)
+            
+            # Combine bullet with parsed content segments
+            all_segments = [bullet_segment] + content_segments
+            lines.append(PromptResponseLine(segments=all_segments))
 
         return cls(lines=lines, verbosity=verbosity)
 
