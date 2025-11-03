@@ -6,6 +6,7 @@ import time
 from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 from wexample_prompt.example.abstract_response_example import AbstractResponseExample
 
@@ -46,7 +47,7 @@ class ProgressExample(AbstractResponseExample):
         self._class_with_methods.progress(
             total=5,
             current=3,
-            label="Processing",
+            label="Processing"
         )
 
     def example_manager(self) -> None:
@@ -83,7 +84,8 @@ class ProgressExample(AbstractResponseExample):
         self.io.indentation = 3
         response = self.io.progress(
             label='@color:yellow{Level 3 indentation}',
-            total=100
+            total=100,
+            color=TerminalColor.MAGENTA
         )
         handle = response.get_handle()
         handle.update(current=50)
@@ -127,7 +129,13 @@ class ProgressExample(AbstractResponseExample):
 
     def example_simple(self) -> None:
         """Simple progress bar."""
-        response = self.io.progress(label='Processing', total=100)
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
+        response = self.io.progress(
+            label='Processing',
+            total=100,
+            color=TerminalColor.CYAN
+        )
         handle = response.get_handle()
         for i in range(0, 101, 20):
             time.sleep(0.05)
@@ -136,9 +144,12 @@ class ProgressExample(AbstractResponseExample):
 
     def example_with_formatting(self) -> None:
         """Progress bar with inline formatting."""
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
         response = self.io.progress(
             label='@color:cyan+bold{Downloading} files...',
-            total=100
+            total=100,
+            color=TerminalColor.BLUE
         )
         handle = response.get_handle()
         for i in range(0, 101, 10):
@@ -148,7 +159,13 @@ class ProgressExample(AbstractResponseExample):
 
     def example_with_emojis(self) -> None:
         """Progress bar with emojis."""
-        response = self.io.progress(label='🚀 Deploying...', total=100)
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
+        response = self.io.progress(
+            label='🚀 Deploying...',
+            total=100,
+            color=TerminalColor.YELLOW
+        )
         handle = response.get_handle()
         for i in range(0, 101, 25):
             time.sleep(0.05)
@@ -157,7 +174,13 @@ class ProgressExample(AbstractResponseExample):
 
     def example_with_steps(self) -> None:
         """Progress bar with step updates."""
-        response = self.io.progress(label='Building project', total=5)
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
+        response = self.io.progress(
+            label='Building project',
+            total=5,
+            color=TerminalColor.GREEN
+        )
         handle = response.get_handle()
         
         steps = ['Compiling', 'Linking', 'Testing', 'Packaging', 'Done']
@@ -168,10 +191,13 @@ class ProgressExample(AbstractResponseExample):
 
     def example_with_percentage(self) -> None:
         """Progress bar showing percentage instead of current/total."""
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        
         response = self.io.progress(
             label='Uploading',
             total=100,
-            show_percentage=True
+            show_percentage=True,
+            color=TerminalColor.MAGENTA
         )
         handle = response.get_handle()
         for i in range(0, 101, 10):
@@ -182,8 +208,13 @@ class ProgressExample(AbstractResponseExample):
     def example_nested_progress(self) -> None:
         """Nested progress bars with parent/child."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.enums.terminal_color import TerminalColor
         
-        response = self.io.progress(label='@color:yellow+bold{Main task}', total=3)
+        response = self.io.progress(
+            label='@color:yellow+bold{Main task}',
+            total=3,
+            color=TerminalColor.RED
+        )
         handle = response.get_handle()
         
         for i in range(1, 4):
