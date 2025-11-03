@@ -49,30 +49,6 @@ class TablePromptResponse(AbstractPromptResponse):
         return TableExample
 
     @staticmethod
-    def _strip_ansi(text: str) -> str:
-        """Strip ANSI escape sequences from text."""
-        import re
-
-        # Remove ANSI escape sequences (including hyperlinks)
-        ansi_escape = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
-        return ansi_escape.sub("", text)
-
-    @staticmethod
-    def _get_visible_width(text: str) -> int:
-        """Get visible width of text, excluding ANSI escape sequences and markup."""
-        from wexample_prompt.common.style_markup_parser import flatten_style_markup
-        from wexample_prompt.common.text_width import get_visible_width
-
-        # Parse markup to get segments
-        segments = flatten_style_markup(text, joiner=None)
-        # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
-        total_width = 0
-        for seg in segments:
-            clean_text = TablePromptResponse._strip_ansi(seg.text)
-            total_width += get_visible_width(clean_text)
-        return total_width
-
-    @staticmethod
     def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
         if not rows:
             return []
@@ -121,6 +97,30 @@ class TablePromptResponse(AbstractPromptResponse):
             segments.append(PromptResponseSegment(text=" " * padding + " |"))
 
         return segments
+
+    @staticmethod
+    def _get_visible_width(text: str) -> int:
+        """Get visible width of text, excluding ANSI escape sequences and markup."""
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
+        from wexample_prompt.common.text_width import get_visible_width
+
+        # Parse markup to get segments
+        segments = flatten_style_markup(text, joiner=None)
+        # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
+        total_width = 0
+        for seg in segments:
+            clean_text = TablePromptResponse._strip_ansi(seg.text)
+            total_width += get_visible_width(clean_text)
+        return total_width
+
+    @staticmethod
+    def _strip_ansi(text: str) -> str:
+        """Strip ANSI escape sequences from text."""
+        import re
+
+        # Remove ANSI escape sequences (including hyperlinks)
+        ansi_escape = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
+        return ansi_escape.sub("", text)
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine

@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 
 class TestWarningPromptResponse(AbstractPromptMessageResponseTest):
-    __test__ = True  # Re-enable test collection for concrete test class
     """Test cases for WarningPromptResponse."""
+    __test__ = True  # Re-enable test collection for concrete test class
 
     def get_expected_lines(self) -> int:
         return 1  # Warning messages are single line

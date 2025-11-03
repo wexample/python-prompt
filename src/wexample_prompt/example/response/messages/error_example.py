@@ -4,7 +4,9 @@ from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.example.response.abstract_simple_message_example import AbstractSimpleMessageExample
+from wexample_prompt.example.response.abstract_simple_message_example import (
+    AbstractSimpleMessageExample,
+)
 
 
 @base_class
@@ -14,9 +16,9 @@ class ErrorExample(AbstractSimpleMessageExample):
     @staticmethod
     def generate_long_error() -> str:
         """Generate long error message."""
-        return (
-            "@🔴+bold{Critical Error:} "
-            + ("This is a very long error message that contains detailed information about what went wrong. " * 5)
+        return "@🔴+bold{Critical Error:} " + (
+            "This is a very long error message that contains detailed information about what went wrong. "
+            * 5
         )
 
     @staticmethod
@@ -27,6 +29,7 @@ class ErrorExample(AbstractSimpleMessageExample):
             "very/very/very/long/subdirectory/structure/with/files/and/more/files/"
             "and/even/more/nested/paths/that/should/wrap/properly.txt"
         )
+
     def example_class(self):
         from wexample_prompt.responses.messages.error_prompt_response import (
             ErrorPromptResponse,
@@ -44,11 +47,11 @@ class ErrorExample(AbstractSimpleMessageExample):
 
     def get_test_message(self) -> str:
         return "Test error message"
-    
+
     def get_io_method(self):
         """Return the IO method for this message type."""
         return self.io.error
-    
+
     def get_response_name(self) -> str:
         """Return the response name for this message type."""
         return "error"
@@ -59,35 +62,30 @@ class ErrorExample(AbstractSimpleMessageExample):
         self.io.error(message=self.generate_long_error())
 
         # Error with long path
-        self.io.error(
-            message="@🔴+bold{Path error:} " + self.generate_long_path()
-        )
+        self.io.error(message="@🔴+bold{Path error:} " + self.generate_long_path())
 
     def edge_case_indentation(self) -> None:
         """Test edge cases: indentation."""
-        self.io.error(
-            message="@🔴+bold{Error at level 0}",
-            indentation=0
-        )
+        self.io.error(message="@🔴+bold{Error at level 0}", indentation=0)
 
         self.io.indentation = 3
-        self.io.error(
-            message="@🔴+bold{Error at indentation level 3}"
-        )
+        self.io.error(message="@🔴+bold{Error at indentation level 3}")
 
         self.io.error(
-            message="@🔴+bold{Error at indentation level 3 + 5}",
-            indentation=5
+            message="@🔴+bold{Error at indentation level 3 + 5}", indentation=5
         )
         self.io.indentation = 0
 
     def edge_case_with_exception(self) -> None:
         """Test edge cases: errors with exceptions."""
+
         def make_error() -> None:
             def inner() -> None:
                 raise ValueError("Test exception from example")
+
             def middle() -> None:
                 inner()
+
             middle()
 
         try:
@@ -119,7 +117,7 @@ class ErrorExample(AbstractSimpleMessageExample):
         """
         # Get base examples from AbstractSimpleMessageExample
         base_examples = super().get_examples()
-        
+
         # Add error-specific examples
         error_specific = [
             {
@@ -128,5 +126,5 @@ class ErrorExample(AbstractSimpleMessageExample):
                 "callback": self.edge_case_with_exception,
             },
         ]
-        
+
         return base_examples + error_specific

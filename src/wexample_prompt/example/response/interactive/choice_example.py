@@ -34,33 +34,23 @@ class ChoiceExample(AbstractResponseExample):
         """Generate text with special characters."""
         return "@🔵{Special: } émojis 🎉 symbols ±×÷ quotes \"'` brackets []{}() slashes /\\"
 
-    def example_class(self, indentation: int | None = None):
-        from wexample_prompt.responses.interactive.choice_prompt_response import (
-            ChoicePromptResponse,
-        )
-
-        return ChoicePromptResponse.create_choice(
-            question="Select an option:",
-            choices={
-                "value1": "Choice 1",
-                "value2": "Choice 2",
-                "value3": "Choice 3",
-            },
-            default="value2",
-            predefined_answer="value3",
-        )
-
-    def example_extended(self) -> None:
-        choices = ["Option 1", "Option 2", "Option 3"]
-        self._class_with_methods.choice(
-            question="Select an option:", choices=choices, predefined_answer="Option 2"
-        )
-
-    def example_manager(self) -> None:
-        choices = ["Option 1", "Option 2", "Option 3"]
+    def edge_case_indentation(self) -> None:
+        """Test edge cases: indentation."""
         self.io.choice(
-            question="Select an option:", choices=choices, predefined_answer="Option 2"
+            question="@🟢+bold{Choice with indentation}",
+            choices=["Yes", "No"],
+            indentation=5,
+            predefined_answer="Yes",
         )
+
+        self.io.indentation = 3
+        self.io.choice(
+            question="@🟢+bold{Choice with double indentation}",
+            choices=["Yes", "No"],
+            indentation=5,
+            predefined_answer="Yes",
+        )
+        self.io.indentation = 0
 
     def edge_case_limits(self) -> None:
         """Test edge cases: limits (long text, many choices)."""
@@ -97,24 +87,6 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="option_1",
         )
 
-    def edge_case_indentation(self) -> None:
-        """Test edge cases: indentation."""
-        self.io.choice(
-            question="@🟢+bold{Choice with indentation}",
-            choices=["Yes", "No"],
-            indentation=5,
-            predefined_answer="Yes",
-        )
-
-        self.io.indentation = 3
-        self.io.choice(
-            question="@🟢+bold{Choice with double indentation}",
-            choices=["Yes", "No"],
-            indentation=5,
-            predefined_answer="Yes",
-        )
-        self.io.indentation = 0
-
     def edge_case_special(self) -> None:
         """Test edge cases: special characters."""
         self.io.choice(
@@ -127,37 +99,52 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="Normal option",
         )
 
+    def example_class(self, indentation: int | None = None):
+        from wexample_prompt.responses.interactive.choice_prompt_response import (
+            ChoicePromptResponse,
+        )
+
+        return ChoicePromptResponse.create_choice(
+            question="Select an option:",
+            choices={
+                "value1": "Choice 1",
+                "value2": "Choice 2",
+                "value3": "Choice 3",
+            },
+            default="value2",
+            predefined_answer="value3",
+        )
+
+    def example_extended(self) -> None:
+        choices = ["Option 1", "Option 2", "Option 3"]
+        self._class_with_methods.choice(
+            question="Select an option:", choices=choices, predefined_answer="Option 2"
+        )
+
+    def example_manager(self) -> None:
+        choices = ["Option 1", "Option 2", "Option 3"]
+        self.io.choice(
+            question="Select an option:", choices=choices, predefined_answer="Option 2"
+        )
+
+    def example_nesting(self) -> None:
+        """Choice with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        self.io.choice(
+            question="@color:yellow+bold{Nesting Demo} - Continue?",
+            choices=["Yes", "No"],
+            predefined_answer="Yes",
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
     def example_simple(self) -> None:
         """Simple yes/no choice."""
         self.io.choice(
             question="Do you want to continue?",
             choices=["Yes", "No"],
             predefined_answer="Yes",
-        )
-
-    def example_with_formatting(self) -> None:
-        """Choice with inline formatting."""
-        self.io.choice(
-            question="@color:cyan+bold{Select deployment environment}:",
-            choices=[
-                "@color:green{Production}",
-                "@color:yellow{Staging}",
-                "@color:blue{Development}",
-            ],
-            predefined_answer="@color:blue{Development}",
-        )
-
-    def example_with_emojis(self) -> None:
-        """Choice with emojis."""
-        self.io.choice(
-            question="🚀 Select action:",
-            choices=[
-                "✅ Deploy",
-                "🧪 Run tests",
-                "📊 View stats",
-                "❌ Cancel",
-            ],
-            predefined_answer="🧪 Run tests",
         )
 
     def example_with_dict(self) -> None:
@@ -174,6 +161,31 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="py",
         )
 
+    def example_with_emojis(self) -> None:
+        """Choice with emojis."""
+        self.io.choice(
+            question="🚀 Select action:",
+            choices=[
+                "✅ Deploy",
+                "🧪 Run tests",
+                "📊 View stats",
+                "❌ Cancel",
+            ],
+            predefined_answer="🧪 Run tests",
+        )
+
+    def example_with_formatting(self) -> None:
+        """Choice with inline formatting."""
+        self.io.choice(
+            question="@color:cyan+bold{Select deployment environment}:",
+            choices=[
+                "@color:green{Production}",
+                "@color:yellow{Staging}",
+                "@color:blue{Development}",
+            ],
+            predefined_answer="@color:blue{Development}",
+        )
+
     def example_with_paths(self) -> None:
         """Choice with file paths."""
         self.io.choice(
@@ -185,18 +197,6 @@ class ChoiceExample(AbstractResponseExample):
             ],
             predefined_answer="@path:short{/etc/app/config.yml}",
         )
-
-    def example_nesting(self) -> None:
-        """Choice with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
-        self.io.choice(
-            question="@color:yellow+bold{Nesting Demo} - Continue?",
-            choices=["Yes", "No"],
-            predefined_answer="Yes",
-        )
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

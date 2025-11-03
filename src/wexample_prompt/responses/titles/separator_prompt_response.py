@@ -88,6 +88,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_helpers.helpers.ansi import ansi_strip
+
         from wexample_prompt.common.text_width import get_visible_width
 
         width = self.width or context.get_width()

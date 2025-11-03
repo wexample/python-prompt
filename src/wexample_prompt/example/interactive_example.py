@@ -11,16 +11,16 @@ if TYPE_CHECKING:
 
 
 class InteractiveExample(Example, WithIoMethods):
+
+    def after_execute(self) -> None:
+        """Hook executed after example logic."""
+
+    def before_execute(self) -> None:
+        """Hook executed before example logic."""
     def bind_executor(self, executor: InteractiveExecutor) -> None:
         object.__setattr__(self, "executor", executor)
         self.set_parent_io_handler(executor)
         self.ensure_io_manager()
-
-    def before_execute(self) -> None:
-        """Hook executed before example logic."""
-
-    def after_execute(self) -> None:
-        """Hook executed after example logic."""
 
     def run(self) -> None:
         """Run the example with optional pre/post hooks."""

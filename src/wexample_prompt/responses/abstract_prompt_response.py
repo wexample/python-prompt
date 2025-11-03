@@ -38,15 +38,6 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
     _rendered_content: str | None = None
 
     @classmethod
-    def get_class_name_suffix(cls) -> str | None:
-        return "PromptResponse"
-
-    @classmethod
-    @abstract_method
-    def get_example_class(cls) -> type[AbstractResponseExample]:
-        cls._raise_not_implemented_error()
-
-    @classmethod
     def apply_prefix_to_kwargs(
         cls, prefix: str, args: tuple, kwargs: dict
     ) -> tuple[tuple, dict]:
@@ -64,6 +55,15 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
             Tuple of (modified_args, modified_kwargs)
         """
         return args, kwargs
+
+    @classmethod
+    def get_class_name_suffix(cls) -> str | None:
+        return "PromptResponse"
+
+    @classmethod
+    @abstract_method
+    def get_example_class(cls) -> type[AbstractResponseExample]:
+        cls._raise_not_implemented_error()
 
     @classmethod
     def rebuild_context_for_kwargs(

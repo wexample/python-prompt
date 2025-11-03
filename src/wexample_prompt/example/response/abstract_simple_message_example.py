@@ -15,59 +15,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class AbstractSimpleMessageExample(AbstractResponseExample):
     """Base class for simple message examples with standard formatting tests."""
 
-    def example_normal(self) -> None:
-        """Normal message without formatting."""
-        method = self.get_io_method()
-        name = self.get_response_name()
-        method(message=f"Simple {name} message")
-
-    def example_formatted(self) -> None:
-        """Message with color and bold formatting."""
-        method = self.get_io_method()
-        method(message="@color:cyan{Cyan text}")
-        method(message="@color:yellow+bold{Bold yellow text}")
-        method(
-            message="@🔵{Blue emoji} with @color:magenta+bold{mixed} @color:green{formatting}"
-        )
-
-    def example_emoji(self) -> None:
-        """Message with emojis."""
-        method = self.get_io_method()
-        method(message="🎉 Success with emoji")
-        method(message="⚠️ Warning emoji 🔥 Fire emoji")
-        method(message="@color:cyan{Colored text} with 🌟 emoji 🚀 inside")
-        method(message="Multiple emojis: 🔵 🟢 🟡 🔴 🟣 🟠")
-
-    def example_inline_styling(self) -> None:
-        """Message with inline styling (underline, italic, etc.)."""
-        method = self.get_io_method()
-        method(message="Text with @🟣+underline{underline styling}")
-        method(message="Text with @color:yellow+italic{italic styling}")
-        method(
-            message="@color:cyan+bold{Bold} and @color:magenta+underline{underline} and @color:green+italic{italic}"
-        )
-        method(message="@🔵+bold+underline{Multiple styles combined}")
-
-    def example_formatters(self) -> None:
-        """Message with special formatters (@path, @time)."""
-        method = self.get_io_method()
-
-        # Path formatter
-        method(message="File saved to: @path{/home/user/documents/report.pdf}")
-        method(
-            message="Short path: @path:short{/home/user/documents/very/long/path/to/file.txt}"
-        )
-
-        # Time formatter
-        method(message="Current time: @time{}")
-        method(message="Custom format: @time:%Y-%m-%d %H:%M:%S{}")
-        method(message="Timestamp: @time:%H:%M{1699000000}")
-
-        # Combined with colors
-        method(
-            message="@color:green{✓} Saved to @color:cyan{@path:short{/tmp/output.log}} at @color:yellow{@time{}}"
-        )
-
     def example_edge_cases(self) -> None:
         """Message with edge cases: very short, very long, special characters."""
         method = self.get_io_method()
@@ -92,17 +39,42 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
             message="URL: https://example.com/very/long/url/with/many/segments?param1=value1&param2=value2"
         )
 
-    def example_nesting(self) -> None:
-        """Message with nested parent/child classes demonstrating automatic indentation."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
+    def example_emoji(self) -> None:
+        """Message with emojis."""
         method = self.get_io_method()
-        response_name = self.get_response_name()
+        method(message="🎉 Success with emoji")
+        method(message="⚠️ Warning emoji 🔥 Fire emoji")
+        method(message="@color:cyan{Colored text} with 🌟 emoji 🚀 inside")
+        method(message="Multiple emojis: 🔵 🟢 🟡 🔴 🟣 🟠")
 
-        # Execute the demo
-        method(message="@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}")
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name=response_name)
+    def example_formatted(self) -> None:
+        """Message with color and bold formatting."""
+        method = self.get_io_method()
+        method(message="@color:cyan{Cyan text}")
+        method(message="@color:yellow+bold{Bold yellow text}")
+        method(
+            message="@🔵{Blue emoji} with @color:magenta+bold{mixed} @color:green{formatting}"
+        )
+
+    def example_formatters(self) -> None:
+        """Message with special formatters (@path, @time)."""
+        method = self.get_io_method()
+
+        # Path formatter
+        method(message="File saved to: @path{/home/user/documents/report.pdf}")
+        method(
+            message="Short path: @path:short{/home/user/documents/very/long/path/to/file.txt}"
+        )
+
+        # Time formatter
+        method(message="Current time: @time{}")
+        method(message="Custom format: @time:%Y-%m-%d %H:%M:%S{}")
+        method(message="Timestamp: @time:%H:%M{1699000000}")
+
+        # Combined with colors
+        method(
+            message="@color:green{✓} Saved to @color:cyan{@path:short{/tmp/output.log}} at @color:yellow{@time{}}"
+        )
 
     def example_indented(self) -> None:
         """Message with indentation."""
@@ -164,6 +136,34 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
             indentation_character="┃",
             indentation_bg_color=TerminalBgColor.GREEN,
         )
+
+    def example_inline_styling(self) -> None:
+        """Message with inline styling (underline, italic, etc.)."""
+        method = self.get_io_method()
+        method(message="Text with @🟣+underline{underline styling}")
+        method(message="Text with @color:yellow+italic{italic styling}")
+        method(
+            message="@color:cyan+bold{Bold} and @color:magenta+underline{underline} and @color:green+italic{italic}"
+        )
+        method(message="@🔵+bold+underline{Multiple styles combined}")
+
+    def example_nesting(self) -> None:
+        """Message with nested parent/child classes demonstrating automatic indentation."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        method = self.get_io_method()
+        response_name = self.get_response_name()
+
+        # Execute the demo
+        method(message="@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}")
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name=response_name)
+
+    def example_normal(self) -> None:
+        """Normal message without formatting."""
+        method = self.get_io_method()
+        name = self.get_response_name()
+        method(message=f"Simple {name} message")
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

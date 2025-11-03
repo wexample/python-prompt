@@ -1,4 +1,5 @@
 """Reusable nesting demo classes for examples."""
+
 from __future__ import annotations
 
 from wexample_helpers.decorator.base_class import base_class

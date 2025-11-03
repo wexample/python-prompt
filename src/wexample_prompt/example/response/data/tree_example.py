@@ -36,6 +36,24 @@ class TreeExample(AbstractResponseExample):
             data=data,
         )
 
+    def example_deep_nesting(self) -> None:
+        """Tree with deep nesting."""
+        self.io.tree(
+            data={
+                "level1": {
+                    "level2": {
+                        "level3": {
+                            "level4": {
+                                "level5": {
+                                    "deep_file.txt": None,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
     def example_extended(self) -> None:
         """Example using context."""
         data = {
@@ -69,6 +87,47 @@ class TreeExample(AbstractResponseExample):
             }
         }
         self.io.tree(data=data)
+
+    def example_mixed_structure(self) -> None:
+        """Tree with mixed files and folders."""
+        self.io.tree(
+            data={
+                "📁 webapp": {
+                    "📁 frontend": {
+                        "📁 src": {
+                            "📁 components": {
+                                "⚙️ Header.tsx": None,
+                                "⚙️ Footer.tsx": None,
+                            },
+                            "🎨 App.css": None,
+                            "⚙️ App.tsx": None,
+                        },
+                        "📦 package.json": None,
+                    },
+                    "📁 backend": {
+                        "📁 api": {
+                            "🐍 routes.py": None,
+                            "🐍 models.py": None,
+                        },
+                        "📦 requirements.txt": None,
+                    },
+                }
+            }
+        )
+
+    def example_nesting(self) -> None:
+        """Tree with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        self.io.tree(
+            data={
+                "@color:yellow+bold{Nesting Demo}": {
+                    "tree_example": None,
+                }
+            }
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
 
     def example_simple(self) -> None:
         """Simple tree structure."""
@@ -121,20 +180,28 @@ class TreeExample(AbstractResponseExample):
             }
         )
 
-    def example_deep_nesting(self) -> None:
-        """Tree with deep nesting."""
+    def example_with_indentation(self) -> None:
+        """Trees at different indentation levels."""
+        self.io.log("@color:cyan+bold{Trees at different levels:}")
+
+        self.io.tree(data={"level0": {"file.txt": None}}, indentation=0)
+
+        self.io.tree(data={"level1": {"file.txt": None}}, indentation=1)
+
+        self.io.tree(data={"level3": {"file.txt": None}}, indentation=3)
+
+    def example_with_paths(self) -> None:
+        """Tree with clickable file paths."""
         self.io.tree(
             data={
-                "level1": {
-                    "level2": {
-                        "level3": {
-                            "level4": {
-                                "level5": {
-                                    "deep_file.txt": None,
-                                }
-                            }
-                        }
-                    }
+                "📁 project": {
+                    "@path:short{/home/user/project/src/main.py}": None,
+                    "@path:short{/home/user/project/src/utils.py}": None,
+                    "📁 tests": {
+                        "@path:short{/home/user/project/tests/test_main.py}": None,
+                    },
+                    "@path:short{/home/user/project/README.md}": None,
+                    "@path:short{/home/user/project/setup.py}": None,
                 }
             }
         )
@@ -156,73 +223,6 @@ class TreeExample(AbstractResponseExample):
                 }
             }
         )
-
-    def example_mixed_structure(self) -> None:
-        """Tree with mixed files and folders."""
-        self.io.tree(
-            data={
-                "📁 webapp": {
-                    "📁 frontend": {
-                        "📁 src": {
-                            "📁 components": {
-                                "⚙️ Header.tsx": None,
-                                "⚙️ Footer.tsx": None,
-                            },
-                            "🎨 App.css": None,
-                            "⚙️ App.tsx": None,
-                        },
-                        "📦 package.json": None,
-                    },
-                    "📁 backend": {
-                        "📁 api": {
-                            "🐍 routes.py": None,
-                            "🐍 models.py": None,
-                        },
-                        "📦 requirements.txt": None,
-                    },
-                }
-            }
-        )
-
-    def example_with_paths(self) -> None:
-        """Tree with clickable file paths."""
-        self.io.tree(
-            data={
-                "📁 project": {
-                    "@path:short{/home/user/project/src/main.py}": None,
-                    "@path:short{/home/user/project/src/utils.py}": None,
-                    "📁 tests": {
-                        "@path:short{/home/user/project/tests/test_main.py}": None,
-                    },
-                    "@path:short{/home/user/project/README.md}": None,
-                    "@path:short{/home/user/project/setup.py}": None,
-                }
-            }
-        )
-
-    def example_with_indentation(self) -> None:
-        """Trees at different indentation levels."""
-        self.io.log("@color:cyan+bold{Trees at different levels:}")
-
-        self.io.tree(data={"level0": {"file.txt": None}}, indentation=0)
-
-        self.io.tree(data={"level1": {"file.txt": None}}, indentation=1)
-
-        self.io.tree(data={"level3": {"file.txt": None}}, indentation=3)
-
-    def example_nesting(self) -> None:
-        """Tree with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
-        self.io.tree(
-            data={
-                "@color:yellow+bold{Nesting Demo}": {
-                    "tree_example": None,
-                }
-            }
-        )
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

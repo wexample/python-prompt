@@ -21,56 +21,6 @@ class SeparatorExample(AbstractResponseExample):
     def example_extended(self) -> None:
         self._class_with_methods.separator(label="Class method")
 
-    def example_manager(self) -> None:
-        self.io.separator()
-
-    def example_simple(self) -> None:
-        """Simple separator without label."""
-        self.io.separator()
-        self.io.separator(label="Simple Separator")
-
-    def example_with_formatting(self) -> None:
-        """Separator with color and bold formatting."""
-        self.io.separator(label="@color:cyan+bold{Cyan Bold Separator}")
-        self.io.separator(label="@color:yellow{Yellow Separator}")
-        self.io.separator(label="@🔵+bold{Blue Emoji Separator}")
-
-    def example_with_emojis(self) -> None:
-        """Separator with emojis."""
-        self.io.separator(label="🎉 Success Section")
-        self.io.separator(label="⚠️ Warning Section")
-        self.io.separator(label="🚀 Deployment Section")
-        self.io.separator(label="✅ Completed Section")
-
-    def example_long_text(self) -> None:
-        """Separator with long text."""
-        self.io.separator(
-            label="This is a very long separator label that contains a lot of text"
-        )
-        self.io.separator(
-            label="@color:magenta+bold{Very Long Formatted Separator} with lots of text"
-        )
-
-    def example_with_paths(self) -> None:
-        """Separator with file paths."""
-        self.io.separator(
-            label="Processing: @path:short{/home/user/documents/report.pdf}"
-        )
-        self.io.separator(label="@color:green{✓ Saved to} @path:short{/tmp/output.log}")
-
-    def example_with_time(self) -> None:
-        """Separator with time formatters."""
-        self.io.separator(label="Build started at @time{}")
-        self.io.separator(label="@color:cyan{Deployment} - @time:%H:%M:%S{}")
-
-    def example_nesting(self) -> None:
-        """Separator with nested parent/child classes."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
-        self.io.separator(label="@color:yellow+bold{Nesting Demo}")
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
-
     def example_indented(self) -> None:
         """Separator with indentation."""
         from wexample_prompt.enums.terminal_color import TerminalColor
@@ -86,6 +36,56 @@ class SeparatorExample(AbstractResponseExample):
             indentation=3,
             indentation_text_color=TerminalColor.CYAN,
         )
+
+    def example_long_text(self) -> None:
+        """Separator with long text."""
+        self.io.separator(
+            label="This is a very long separator label that contains a lot of text"
+        )
+        self.io.separator(
+            label="@color:magenta+bold{Very Long Formatted Separator} with lots of text"
+        )
+
+    def example_manager(self) -> None:
+        self.io.separator()
+
+    def example_nesting(self) -> None:
+        """Separator with nested parent/child classes."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        self.io.separator(label="@color:yellow+bold{Nesting Demo}")
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
+    def example_simple(self) -> None:
+        """Simple separator without label."""
+        self.io.separator()
+        self.io.separator(label="Simple Separator")
+
+    def example_with_emojis(self) -> None:
+        """Separator with emojis."""
+        self.io.separator(label="🎉 Success Section")
+        self.io.separator(label="⚠️ Warning Section")
+        self.io.separator(label="🚀 Deployment Section")
+        self.io.separator(label="✅ Completed Section")
+
+    def example_with_formatting(self) -> None:
+        """Separator with color and bold formatting."""
+        self.io.separator(label="@color:cyan+bold{Cyan Bold Separator}")
+        self.io.separator(label="@color:yellow{Yellow Separator}")
+        self.io.separator(label="@🔵+bold{Blue Emoji Separator}")
+
+    def example_with_paths(self) -> None:
+        """Separator with file paths."""
+        self.io.separator(
+            label="Processing: @path:short{/home/user/documents/report.pdf}"
+        )
+        self.io.separator(label="@color:green{✓ Saved to} @path:short{/tmp/output.log}")
+
+    def example_with_time(self) -> None:
+        """Separator with time formatters."""
+        self.io.separator(label="Build started at @time{}")
+        self.io.separator(label="@color:cyan{Deployment} - @time:%H:%M:%S{}")
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

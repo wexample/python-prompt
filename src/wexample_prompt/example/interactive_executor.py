@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from wexample_helpers.classes.example.executor import Executor
 from wexample_prompt.mixins.with_io_methods import WithIoMethods

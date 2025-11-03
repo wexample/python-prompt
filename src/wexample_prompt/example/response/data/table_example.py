@@ -45,6 +45,23 @@ class TableExample(AbstractResponseExample):
             title="Employee List",
         )
 
+    def example_long_content(self) -> None:
+        """Table with long content that wraps."""
+        self.io.table(
+            headers=["Command", "Description"],
+            data=[
+                [
+                    "git commit",
+                    "This is a very long description that contains a lot of text and will probably wrap to multiple lines",
+                ],
+                [
+                    "docker run",
+                    "Run a command in a new container with various options and parameters",
+                ],
+            ],
+            title="Commands",
+        )
+
     def example_manager(self) -> None:
         """Example using IoManager directly."""
         headers = ["Name", "Age", "City"]
@@ -57,30 +74,6 @@ class TableExample(AbstractResponseExample):
             data=data,
             headers=headers,
             title="Employee List",
-        )
-
-    def example_simple(self) -> None:
-        """Simple table."""
-        self.io.table(
-            headers=["ID", "Name", "Status"],
-            data=[
-                ["1", "Task A", "Done"],
-                ["2", "Task B", "In Progress"],
-                ["3", "Task C", "Pending"],
-            ],
-            title="Tasks",
-        )
-
-    def example_with_formatting(self) -> None:
-        """Table with inline formatting."""
-        self.io.table(
-            headers=["Name", "Status", "Progress"],
-            data=[
-                ["Build", "@color:green+bold{✓ Success}", "100%"],
-                ["Tests", "@color:yellow{⚠ Running}", "75%"],
-                ["Deploy", "@color:red{✗ Failed}", "0%"],
-            ],
-            title="Pipeline Status",
         )
 
     def example_many_columns(self) -> None:
@@ -100,6 +93,30 @@ class TableExample(AbstractResponseExample):
         data = [[str(i), f"Item {i}", f"Value {i}"] for i in range(1, 16)]
         self.io.table(headers=["ID", "Name", "Value"], data=data, title="Large Dataset")
 
+    def example_nesting(self) -> None:
+        """Table with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        self.io.table(
+            headers=["Demo", "Type"],
+            data=[["@color:yellow+bold{Nesting}", "Table"]],
+            title="Nesting Demo",
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
+    def example_simple(self) -> None:
+        """Simple table."""
+        self.io.table(
+            headers=["ID", "Name", "Status"],
+            data=[
+                ["1", "Task A", "Done"],
+                ["2", "Task B", "In Progress"],
+                ["3", "Task C", "Pending"],
+            ],
+            title="Tasks",
+        )
+
     def example_with_emojis(self) -> None:
         """Table with emojis."""
         self.io.table(
@@ -113,45 +130,16 @@ class TableExample(AbstractResponseExample):
             title="System Status",
         )
 
-    def example_with_paths(self) -> None:
-        """Table with file paths."""
+    def example_with_formatting(self) -> None:
+        """Table with inline formatting."""
         self.io.table(
-            headers=["File", "Size", "Modified"],
+            headers=["Name", "Status", "Progress"],
             data=[
-                [
-                    "@path:short{/home/user/documents/report.pdf}",
-                    "2.5 MB",
-                    "@time:%Y-%m-%d{1699000000}",
-                ],
-                [
-                    "@path:short{/home/user/projects/app/main.py}",
-                    "15 KB",
-                    "@time:%Y-%m-%d{1699100000}",
-                ],
-                [
-                    "@path:short{/etc/nginx/nginx.conf}",
-                    "8 KB",
-                    "@time:%Y-%m-%d{1699200000}",
-                ],
+                ["Build", "@color:green+bold{✓ Success}", "100%"],
+                ["Tests", "@color:yellow{⚠ Running}", "75%"],
+                ["Deploy", "@color:red{✗ Failed}", "0%"],
             ],
-            title="Recent Files",
-        )
-
-    def example_long_content(self) -> None:
-        """Table with long content that wraps."""
-        self.io.table(
-            headers=["Command", "Description"],
-            data=[
-                [
-                    "git commit",
-                    "This is a very long description that contains a lot of text and will probably wrap to multiple lines",
-                ],
-                [
-                    "docker run",
-                    "Run a command in a new container with various options and parameters",
-                ],
-            ],
-            title="Commands",
+            title="Pipeline Status",
         )
 
     def example_with_indentation(self) -> None:
@@ -179,17 +167,29 @@ class TableExample(AbstractResponseExample):
             indentation=3,
         )
 
-    def example_nesting(self) -> None:
-        """Table with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
+    def example_with_paths(self) -> None:
+        """Table with file paths."""
         self.io.table(
-            headers=["Demo", "Type"],
-            data=[["@color:yellow+bold{Nesting}", "Table"]],
-            title="Nesting Demo",
+            headers=["File", "Size", "Modified"],
+            data=[
+                [
+                    "@path:short{/home/user/documents/report.pdf}",
+                    "2.5 MB",
+                    "@time:%Y-%m-%d{1699000000}",
+                ],
+                [
+                    "@path:short{/home/user/projects/app/main.py}",
+                    "15 KB",
+                    "@time:%Y-%m-%d{1699100000}",
+                ],
+                [
+                    "@path:short{/etc/nginx/nginx.conf}",
+                    "8 KB",
+                    "@time:%Y-%m-%d{1699200000}",
+                ],
+            ],
+            title="Recent Files",
         )
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

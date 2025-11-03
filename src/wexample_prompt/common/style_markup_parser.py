@@ -10,7 +10,9 @@ from wexample_prompt.enums.text_style import TextStyle
 
 # Pattern to match directives: @type:params{content} or @type{content}
 # Supports word characters, emojis, +, and special chars for backward compatibility
-_STYLE_DIRECTIVE_PATTERN = re.compile(r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸+]+)(?::([^\{\}]+))?\{", re.IGNORECASE)
+_STYLE_DIRECTIVE_PATTERN = re.compile(
+    r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸+]+)(?::([^\{\}]+))?\{", re.IGNORECASE
+)
 _EMOJI_COLOR_MAP: dict[str, TerminalColor] = {
     "🔴": TerminalColor.RED,
     "🟥": TerminalColor.RED,
@@ -154,6 +156,7 @@ def parse_style_markup(
         """Format a file path, optionally making it clickable."""
         try:
             from wexample_helpers.helpers.cli import cli_make_clickable_path
+
             if short and "/" in path:
                 # Show only filename for short format
                 filename = path.rsplit("/", 1)[-1]
@@ -167,11 +170,11 @@ def parse_style_markup(
         """Format a timestamp or current time."""
         if fmt is None:
             fmt = "%H:%M:%S"
-        
+
         # If content is empty, use current time
         if not content.strip():
             return datetime.now().strftime(fmt)
-        
+
         # Try to parse content as timestamp
         try:
             # If it's a number, treat as unix timestamp
@@ -201,7 +204,7 @@ def parse_style_markup(
 
             directive_type = match.group(1).lower()
             directive_params = match.group(2) or ""
-            
+
             try:
                 content, next_index = extract_braced_content(section_text, match.end())
             except ValueError:
@@ -215,13 +218,13 @@ def parse_style_markup(
                 push_text(formatted, active_color, active_styles)
                 index = next_index
                 continue
-            
+
             if directive_type == "time":
                 formatted = format_time(content, directive_params or None)
                 push_text(formatted, active_color, active_styles)
                 index = next_index
                 continue
-            
+
             # Handle color/style directives (backward compatibility)
             # If directive_type is "color", use params as tokens
             # Otherwise, use directive_type itself as tokens (for @red{}, @🔵+bold{}, etc.)
@@ -230,8 +233,10 @@ def parse_style_markup(
             else:
                 # For @red{}, @🔵+bold{}, etc., the whole directive_type is the token
                 tokens = directive_type
-            
-            child_color, child_styles = apply_tokens(tokens, active_color, active_styles)
+
+            child_color, child_styles = apply_tokens(
+                tokens, active_color, active_styles
+            )
             parse_section(content, child_color, child_styles)
             index = next_index
 

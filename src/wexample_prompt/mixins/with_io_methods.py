@@ -21,29 +21,6 @@ class WithIoMethods(WithIoManager):
             f"'{self.__class__.__name__}' object has no attribute '{name}'"
         )
 
-    def _get_response_class_for_method(self, method_name: str):
-        """Get the response class for a given IO method name.
-
-        Args:
-            method_name: The method name (e.g., 'log', 'list', 'echo')
-
-        Returns:
-            The response class or None if not found
-        """
-        from wexample_prompt.common.io_manager import IoManager
-
-        # Get all response types from IoManager
-        response_types = IoManager.get_response_types()
-
-        # Find the response class that matches the method name
-        for response_class in response_types:
-            # Get the short name (e.g., 'log' from 'LogPromptResponse')
-            short_name = response_class.get_snake_short_class_name()
-            if short_name == method_name:
-                return response_class
-
-        return None
-
     def _get_io_methods(self, name: str) -> Any:
         io = self.ensure_io_manager()
 
@@ -72,4 +49,27 @@ class WithIoMethods(WithIoManager):
 
                 return wrapper
             return attr
+        return None
+
+    def _get_response_class_for_method(self, method_name: str):
+        """Get the response class for a given IO method name.
+
+        Args:
+            method_name: The method name (e.g., 'log', 'list', 'echo')
+
+        Returns:
+            The response class or None if not found
+        """
+        from wexample_prompt.common.io_manager import IoManager
+
+        # Get all response types from IoManager
+        response_types = IoManager.get_response_types()
+
+        # Find the response class that matches the method name
+        for response_class in response_types:
+            # Get the short name (e.g., 'log' from 'LogPromptResponse')
+            short_name = response_class.get_snake_short_class_name()
+            if short_name == method_name:
+                return response_class
+
         return None

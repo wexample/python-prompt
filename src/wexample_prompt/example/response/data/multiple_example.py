@@ -44,6 +44,33 @@ class MultipleExample(AbstractResponseExample):
 
         return response
 
+    def example_all_message_types(self) -> MultiplePromptResponse | None:
+        """Show all different message types together."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
+        from wexample_prompt.responses.messages.info_prompt_response import (
+            InfoPromptResponse,
+        )
+        from wexample_prompt.responses.messages.success_prompt_response import (
+            SuccessPromptResponse,
+        )
+        from wexample_prompt.responses.messages.warning_prompt_response import (
+            WarningPromptResponse,
+        )
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
+
+        responses = [
+            LogPromptResponse.create_log("Log message"),
+            EchoPromptResponse.create_echo("Echo message"),
+            InfoPromptResponse.create_info("Info message"),
+            SuccessPromptResponse.create_success("Success message"),
+            WarningPromptResponse.create_warning("Warning message"),
+            ErrorPromptResponse.create_error("Error message"),
+        ]
+        return self.io.multiple(responses=responses)
+
     def example_class(self, indentation: int | None = None):
         """Example using the class directly."""
         from wexample_prompt.responses.data.list_prompt_response import (
@@ -62,6 +89,44 @@ class MultipleExample(AbstractResponseExample):
         return MultiplePromptResponse.create_multiple(
             responses=responses,
         )
+
+    def example_complex_structure(self) -> MultiplePromptResponse | None:
+        """Complex structure with titles, lists, and messages."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
+        )
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
+
+        responses = [
+            TitlePromptResponse.create_title("Project Report"),
+            SubtitlePromptResponse.create_subtitle("Summary"),
+            LogPromptResponse.create_log("Project completed successfully"),
+            SubtitlePromptResponse.create_subtitle("Files Modified"),
+            ListPromptResponse.create_list(
+                items=[
+                    "📄 README.md",
+                    "📄 setup.py",
+                    "📁 src/",
+                    "  📄 main.py",
+                    "  📄 utils.py",
+                ]
+            ),
+            SubtitlePromptResponse.create_subtitle("Statistics"),
+            ListPromptResponse.create_list(
+                items=[
+                    "@color:green{✓} 15 tests passed",
+                    "@color:yellow{⚠} 2 warnings",
+                    "@color:cyan{ℹ} 100% coverage",
+                ]
+            ),
+        ]
+        return self.io.multiple(responses=responses)
 
     def example_extended(self) -> None:
         """Example using PromptContext."""
@@ -90,6 +155,61 @@ class MultipleExample(AbstractResponseExample):
             LogPromptResponse.create_log("Last response"),
         ]
         self.io.multiple(responses=responses)
+
+    def example_with_formatting(self) -> MultiplePromptResponse | None:
+        """Multiple responses with inline formatting."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+
+        responses = [
+            LogPromptResponse.create_log(
+                "@color:green+bold{Success}: Operation completed"
+            ),
+            ListPromptResponse.create_list(
+                items=[
+                    "@color:cyan{File}: @path:short{/home/user/file1.txt}",
+                    "@color:cyan{File}: @path:short{/home/user/file2.txt}",
+                ]
+            ),
+            LogPromptResponse.create_log("@color:yellow{Time}: @time{}"),
+        ]
+        return self.io.multiple(responses=responses)
+
+    def example_with_nesting(self) -> MultiplePromptResponse | None:
+        """Multiple responses with nested parent/child."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+        responses = [
+            LogPromptResponse.create_log(
+                "@color:yellow+bold{Nesting in Multiple Response}"
+            ),
+        ]
+
+        # Add nesting demo
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
+        return self.io.multiple(responses=responses)
+
+    def example_with_separators(self) -> MultiplePromptResponse | None:
+        """Multiple responses with separators."""
+        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
+        )
+
+        responses = [
+            LogPromptResponse.create_log("Section 1: Introduction"),
+            LogPromptResponse.create_log("This is the first section"),
+            SeparatorPromptResponse.create_separator(),
+            LogPromptResponse.create_log("Section 2: Details"),
+            LogPromptResponse.create_log("This is the second section"),
+            SeparatorPromptResponse.create_separator(label="End"),
+        ]
+        return self.io.multiple(responses=responses)
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
@@ -164,125 +284,5 @@ class MultipleExample(AbstractResponseExample):
             LogPromptResponse.create_log("First message"),
             LogPromptResponse.create_log("Second message"),
             LogPromptResponse.create_log("Third message"),
-        ]
-        return self.io.multiple(responses=responses)
-
-    def example_with_formatting(self) -> MultiplePromptResponse | None:
-        """Multiple responses with inline formatting."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-
-        responses = [
-            LogPromptResponse.create_log(
-                "@color:green+bold{Success}: Operation completed"
-            ),
-            ListPromptResponse.create_list(
-                items=[
-                    "@color:cyan{File}: @path:short{/home/user/file1.txt}",
-                    "@color:cyan{File}: @path:short{/home/user/file2.txt}",
-                ]
-            ),
-            LogPromptResponse.create_log("@color:yellow{Time}: @time{}"),
-        ]
-        return self.io.multiple(responses=responses)
-
-    def example_with_nesting(self) -> MultiplePromptResponse | None:
-        """Multiple responses with nested parent/child."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-
-        responses = [
-            LogPromptResponse.create_log(
-                "@color:yellow+bold{Nesting in Multiple Response}"
-            ),
-        ]
-
-        # Add nesting demo
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
-
-        return self.io.multiple(responses=responses)
-
-    def example_all_message_types(self) -> MultiplePromptResponse | None:
-        """Show all different message types together."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-        from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
-        from wexample_prompt.responses.messages.info_prompt_response import (
-            InfoPromptResponse,
-        )
-        from wexample_prompt.responses.messages.success_prompt_response import (
-            SuccessPromptResponse,
-        )
-        from wexample_prompt.responses.messages.warning_prompt_response import (
-            WarningPromptResponse,
-        )
-        from wexample_prompt.responses.messages.error_prompt_response import (
-            ErrorPromptResponse,
-        )
-
-        responses = [
-            LogPromptResponse.create_log("Log message"),
-            EchoPromptResponse.create_echo("Echo message"),
-            InfoPromptResponse.create_info("Info message"),
-            SuccessPromptResponse.create_success("Success message"),
-            WarningPromptResponse.create_warning("Warning message"),
-            ErrorPromptResponse.create_error("Error message"),
-        ]
-        return self.io.multiple(responses=responses)
-
-    def example_with_separators(self) -> MultiplePromptResponse | None:
-        """Multiple responses with separators."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-        from wexample_prompt.responses.titles.separator_prompt_response import (
-            SeparatorPromptResponse,
-        )
-
-        responses = [
-            LogPromptResponse.create_log("Section 1: Introduction"),
-            LogPromptResponse.create_log("This is the first section"),
-            SeparatorPromptResponse.create_separator(),
-            LogPromptResponse.create_log("Section 2: Details"),
-            LogPromptResponse.create_log("This is the second section"),
-            SeparatorPromptResponse.create_separator(label="End"),
-        ]
-        return self.io.multiple(responses=responses)
-
-    def example_complex_structure(self) -> MultiplePromptResponse | None:
-        """Complex structure with titles, lists, and messages."""
-        from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.titles.title_prompt_response import (
-            TitlePromptResponse,
-        )
-        from wexample_prompt.responses.titles.subtitle_prompt_response import (
-            SubtitlePromptResponse,
-        )
-
-        responses = [
-            TitlePromptResponse.create_title("Project Report"),
-            SubtitlePromptResponse.create_subtitle("Summary"),
-            LogPromptResponse.create_log("Project completed successfully"),
-            SubtitlePromptResponse.create_subtitle("Files Modified"),
-            ListPromptResponse.create_list(
-                items=[
-                    "📄 README.md",
-                    "📄 setup.py",
-                    "📁 src/",
-                    "  📄 main.py",
-                    "  📄 utils.py",
-                ]
-            ),
-            SubtitlePromptResponse.create_subtitle("Statistics"),
-            ListPromptResponse.create_list(
-                items=[
-                    "@color:green{✓} 15 tests passed",
-                    "@color:yellow{⚠} 2 warnings",
-                    "@color:cyan{ℹ} 100% coverage",
-                ]
-            ),
         ]
         return self.io.multiple(responses=responses)

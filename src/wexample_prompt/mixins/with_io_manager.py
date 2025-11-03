@@ -108,6 +108,7 @@ class WithIoManager(BaseClass):
 
     def get_io_context_indentation_style(self) -> None:
         from wexample_prompt.enums.indentation_style import IndentationStyle
+
         return None  # Will inherit from parent or use default
 
     def get_io_context_indentation_width(self) -> int | None:

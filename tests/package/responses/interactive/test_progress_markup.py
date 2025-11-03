@@ -2,7 +2,10 @@ from __future__ import annotations
 
 
 def test_progress_label_markup_renders_without_tokens() -> None:
-    from wexample_prompt.responses.interactive.progress_prompt_response import ProgressPromptResponse
+    from wexample_prompt.responses.interactive.progress_prompt_response import (
+        ProgressPromptResponse,
+    )
+
     response = ProgressPromptResponse.create_progress(
         total=100,
         current=50,

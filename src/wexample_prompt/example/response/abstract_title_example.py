@@ -37,8 +37,12 @@ class AbstractTitleExample(AbstractResponseExample):
     def example_long_text(self) -> None:
         """Title with long text."""
         method = self.get_io_method()
-        method(text="This is a very long title that contains a lot of text to test how the system handles wrapping")
-        method(text="@color:magenta+bold{Very Long Formatted Title} with lots of text that might wrap around")
+        method(
+            text="This is a very long title that contains a lot of text to test how the system handles wrapping"
+        )
+        method(
+            text="@color:magenta+bold{Very Long Formatted Title} with lots of text that might wrap around"
+        )
 
     def example_with_paths(self) -> None:
         """Title with file paths."""
@@ -55,7 +59,7 @@ class AbstractTitleExample(AbstractResponseExample):
     def example_nesting(self) -> None:
         """Title with nested parent/child classes."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         method = self.get_io_method()
         method(text="@color:yellow+bold{Nesting Demo}")
         parent = ParentTask(io=self.io)
@@ -64,20 +68,20 @@ class AbstractTitleExample(AbstractResponseExample):
     def example_indented(self) -> None:
         """Title with indentation."""
         from wexample_prompt.enums.terminal_color import TerminalColor
-        
+
         method = self.get_io_method()
         name = self.get_response_name()
-        
+
         # Different indentation levels
         method(text=f"Normal {name}", indentation=0)
         method(text=f"Indented {name} (level 3)", indentation=3)
         method(text=f"Indented {name} (level 5)", indentation=5)
-        
+
         # Colored indentation
         method(
             text=f"@color:cyan{{Colored {name} with indentation}}",
             indentation=3,
-            indentation_text_color=TerminalColor.CYAN
+            indentation_text_color=TerminalColor.CYAN,
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

@@ -24,9 +24,6 @@ class TitleExample(AbstractTitleExample):
     def example_manager(self) -> None:
         self.io.title(text=self.get_test_message())
 
-    def get_test_message(self) -> str:
-        return "Test title"
-
     def get_io_method(self):
         """Return the IO method for this title type."""
         return self.io.title
@@ -34,3 +31,6 @@ class TitleExample(AbstractTitleExample):
     def get_response_name(self) -> str:
         """Return the response name for this title type."""
         return "title"
+
+    def get_test_message(self) -> str:
+        return "Test title"

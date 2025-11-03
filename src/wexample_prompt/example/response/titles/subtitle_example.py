@@ -26,9 +26,6 @@ class SubtitleExample(AbstractTitleExample):
     def example_manager(self) -> None:
         self.io.subtitle(text=self.get_test_message())
 
-    def get_test_message(self) -> str:
-        return "Test subtitle"
-
     def get_io_method(self):
         """Return the IO method for this title type."""
         return self.io.subtitle
@@ -36,3 +33,6 @@ class SubtitleExample(AbstractTitleExample):
     def get_response_name(self) -> str:
         """Return the response name for this title type."""
         return "subtitle"
+
+    def get_test_message(self) -> str:
+        return "Test subtitle"

@@ -5,31 +5,6 @@ import inspect
 from wexample_prompt.common.io_manager import IoManager
 
 
-def _summarize_parameters(signature: inspect.Signature, skip: set[str]):
-    required: set[str] = set()
-    optional: set[str] = set()
-    has_var_kwargs = False
-
-    for parameter in signature.parameters.values():
-        if parameter.name in skip:
-            continue
-
-        if parameter.kind == inspect.Parameter.VAR_KEYWORD:
-            has_var_kwargs = True
-            continue
-
-        if parameter.default is inspect.Parameter.empty and parameter.kind in (
-            inspect.Parameter.POSITIONAL_ONLY,
-            inspect.Parameter.POSITIONAL_OR_KEYWORD,
-            inspect.Parameter.KEYWORD_ONLY,
-        ):
-            required.add(parameter.name)
-        else:
-            optional.add(parameter.name)
-
-    return required, optional, has_var_kwargs
-
-
 def test_io_manager_response_signatures_align_with_factories() -> None:
     io = IoManager()
 
@@ -69,3 +44,28 @@ def test_io_manager_response_signatures_align_with_factories() -> None:
             f"{io.__class__.__name__}.{method_name} missing optional arguments from "
             f"{response_cls.__name__}: {missing_optional}"
         )
+
+
+def _summarize_parameters(signature: inspect.Signature, skip: set[str]):
+    required: set[str] = set()
+    optional: set[str] = set()
+    has_var_kwargs = False
+
+    for parameter in signature.parameters.values():
+        if parameter.name in skip:
+            continue
+
+        if parameter.kind == inspect.Parameter.VAR_KEYWORD:
+            has_var_kwargs = True
+            continue
+
+        if parameter.default is inspect.Parameter.empty and parameter.kind in (
+            inspect.Parameter.POSITIONAL_ONLY,
+            inspect.Parameter.POSITIONAL_OR_KEYWORD,
+            inspect.Parameter.KEYWORD_ONLY,
+        ):
+            required.add(parameter.name)
+        else:
+            optional.add(parameter.name)
+
+    return required, optional, has_var_kwargs

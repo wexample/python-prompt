@@ -13,6 +13,7 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 @base_class
 class ScreenExample(AbstractResponseExample):
     """Example usage of ScreenPromptResponse with various demos."""
+
     def example_class(self):
         from wexample_prompt.responses.interactive.screen_prompt_response import (
             ScreenPromptResponse,

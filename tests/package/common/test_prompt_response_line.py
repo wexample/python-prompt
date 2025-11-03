@@ -2,7 +2,6 @@ from __future__ import annotations
 
 
 class TestPromptResponseLine:
-
     def test_color_markup_with_styles_and_nesting(self) -> None:
         """Combined color + styles and nested directives should be parsed recursively."""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine

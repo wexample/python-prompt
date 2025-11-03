@@ -17,8 +17,8 @@ if TYPE_CHECKING:
 
 
 class TestTreePromptResponse(AbstractPromptResponseTest):
-    __test__ = True  # Re-enable test collection for concrete test class
     """Test cases for TreePromptResponse."""
+    __test__ = True  # Re-enable test collection for concrete test class
 
     def get_expected_lines(self) -> int:
         # Empty lines (1) + root (1) + folder1 (5 files) + folder2 (3 file) + test text (1) + empty (2)

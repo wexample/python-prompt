@@ -35,22 +35,20 @@ class FilePickerExample(AbstractResponseExample):
         """Example using the IoManager."""
         self.io.file_picker(question="Select a file:", predefined_answer="some_file")
 
+    def example_nesting(self) -> None:
+        """File picker with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+
+        self.io.file_picker(
+            question="@color:yellow+bold{Nesting Demo} - Select file:",
+            predefined_answer="example.txt",
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
     def example_simple(self) -> None:
         """Simple file picker in current directory."""
         self.io.file_picker(question="Select a file:", predefined_answer="README.md")
-
-    def example_with_formatting(self) -> None:
-        """File picker with inline formatting."""
-        self.io.file_picker(
-            question="@color:cyan+bold{Select configuration file}:",
-            predefined_answer="config.yml",
-        )
-
-    def example_with_emojis(self) -> None:
-        """File picker with emojis."""
-        self.io.file_picker(
-            question="📁 Select a Python file:", predefined_answer="main.py"
-        )
 
     def example_specific_dir(self) -> None:
         """File picker in specific directory."""
@@ -64,16 +62,18 @@ class FilePickerExample(AbstractResponseExample):
             ),
         )
 
-    def example_nesting(self) -> None:
-        """File picker with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
+    def example_with_emojis(self) -> None:
+        """File picker with emojis."""
         self.io.file_picker(
-            question="@color:yellow+bold{Nesting Demo} - Select file:",
-            predefined_answer="example.txt",
+            question="📁 Select a Python file:", predefined_answer="main.py"
         )
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
+
+    def example_with_formatting(self) -> None:
+        """File picker with inline formatting."""
+        self.io.file_picker(
+            question="@color:cyan+bold{Select configuration file}:",
+            predefined_answer="config.yml",
+        )
 
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.

@@ -132,15 +132,6 @@ class PromptContext(BaseClass):
 
         return self.indentation_character
 
-    def get_indentation_text_color(self) -> TerminalColor | None:
-        if self.indentation_text_color is None:
-            if self.parent_context:
-                return self.parent_context.get_indentation_text_color()
-            else:
-                return None
-
-        return self.indentation_text_color
-
     def get_indentation_style(self) -> IndentationStyle:
         if self.indentation_style is None:
             if self.parent_context:
@@ -149,6 +140,15 @@ class PromptContext(BaseClass):
                 return IndentationStyle.REPEAT
 
         return self.indentation_style
+
+    def get_indentation_text_color(self) -> TerminalColor | None:
+        if self.indentation_text_color is None:
+            if self.parent_context:
+                return self.parent_context.get_indentation_text_color()
+            else:
+                return None
+
+        return self.indentation_text_color
 
     def get_width(self) -> int:
         # None width allowed to let know that no fixed width has been specified before using it.

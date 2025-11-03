@@ -33,6 +33,37 @@ class PropertiesExample(AbstractResponseExample):
             title="User Information",
         )
 
+    def example_complex_structure(self) -> None:
+        """Complex nested structure."""
+        self.io.properties(
+            properties={
+                "project": {
+                    "name": "MyApp",
+                    "version": "2.1.0",
+                    "author": {
+                        "name": "John Doe",
+                        "email": "john@example.com",
+                    },
+                },
+                "dependencies": {
+                    "python": "3.11+",
+                    "packages": {
+                        "django": "4.2.0",
+                        "celery": "5.3.0",
+                        "redis": "4.5.0",
+                    },
+                },
+                "deployment": {
+                    "environment": "production",
+                    "servers": {
+                        "web": ["web1.example.com", "web2.example.com"],
+                        "db": "db.example.com",
+                    },
+                },
+            },
+            title="Project Configuration",
+        )
+
     def example_extended(self) -> None:
         """Example using context."""
         properties = {
@@ -46,6 +77,17 @@ class PropertiesExample(AbstractResponseExample):
         self._class_with_methods.properties(
             properties=properties,
             title="Operation Results",
+        )
+
+    def example_long_values(self) -> None:
+        """Properties with long values."""
+        self.io.properties(
+            properties={
+                "description": "This is a very long description that contains a lot of text and will probably wrap to multiple lines depending on the terminal width",
+                "path": "/home/user/very/long/path/to/some/directory/with/many/subdirectories/file.txt",
+                "url": "https://example.com/very/long/url/with/many/segments/and/parameters?param1=value1&param2=value2&param3=value3",
+            },
+            title="Long Values",
         )
 
     def example_manager(self) -> None:
@@ -63,15 +105,22 @@ class PropertiesExample(AbstractResponseExample):
             title="Server Configuration",
         )
 
-    def example_simple(self) -> None:
-        """Simple flat properties."""
+    def example_mixed_types(self) -> None:
+        """Properties with different value types."""
         self.io.properties(
             properties={
-                "name": "Alice",
-                "role": "Developer",
-                "status": "Active",
+                "string": "Hello World",
+                "integer": 42,
+                "float": 3.14159,
+                "boolean": True,
+                "none": None,
+                "list": [1, 2, 3],
+                "nested": {
+                    "key1": "value1",
+                    "key2": 123,
+                },
             },
-            title="User Profile",
+            title="Mixed Data Types",
         )
 
     def example_nested(self) -> None:
@@ -93,34 +142,26 @@ class PropertiesExample(AbstractResponseExample):
             title="Application Configuration",
         )
 
-    def example_with_formatting(self) -> None:
-        """Properties with inline formatting."""
-        self.io.properties(
-            properties={
-                "status": "@color:green+bold{✓ Online}",
-                "uptime": "@color:cyan{99.9%}",
-                "last_deploy": "@time:%Y-%m-%d{1699000000}",
-                "config_file": "@path:short{/etc/app/config.yml}",
-            },
-            title="Server Status",
-        )
+    def example_nesting(self) -> None:
+        """Properties with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
 
-    def example_mixed_types(self) -> None:
-        """Properties with different value types."""
+        self.io.properties(
+            properties={"demo": "@color:yellow+bold{Nesting Demo}"},
+            title="Properties with Nesting",
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
+    def example_simple(self) -> None:
+        """Simple flat properties."""
         self.io.properties(
             properties={
-                "string": "Hello World",
-                "integer": 42,
-                "float": 3.14159,
-                "boolean": True,
-                "none": None,
-                "list": [1, 2, 3],
-                "nested": {
-                    "key1": "value1",
-                    "key2": 123,
-                },
+                "name": "Alice",
+                "role": "Developer",
+                "status": "Active",
             },
-            title="Mixed Data Types",
+            title="User Profile",
         )
 
     def example_with_emojis(self) -> None:
@@ -141,27 +182,17 @@ class PropertiesExample(AbstractResponseExample):
             title="Test Results",
         )
 
-    def example_long_values(self) -> None:
-        """Properties with long values."""
+    def example_with_formatting(self) -> None:
+        """Properties with inline formatting."""
         self.io.properties(
             properties={
-                "description": "This is a very long description that contains a lot of text and will probably wrap to multiple lines depending on the terminal width",
-                "path": "/home/user/very/long/path/to/some/directory/with/many/subdirectories/file.txt",
-                "url": "https://example.com/very/long/url/with/many/segments/and/parameters?param1=value1&param2=value2&param3=value3",
+                "status": "@color:green+bold{✓ Online}",
+                "uptime": "@color:cyan{99.9%}",
+                "last_deploy": "@time:%Y-%m-%d{1699000000}",
+                "config_file": "@path:short{/etc/app/config.yml}",
             },
-            title="Long Values",
+            title="Server Status",
         )
-
-    def example_nesting(self) -> None:
-        """Properties with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-
-        self.io.properties(
-            properties={"demo": "@color:yellow+bold{Nesting Demo}"},
-            title="Properties with Nesting",
-        )
-        parent = ParentTask(io=self.io)
-        parent.execute(method_name="log")
 
     def example_with_indentation(self) -> None:
         """Properties with different indentation levels."""
@@ -195,37 +226,6 @@ class PropertiesExample(AbstractResponseExample):
             },
             title="Level 3",
             indentation=3,
-        )
-
-    def example_complex_structure(self) -> None:
-        """Complex nested structure."""
-        self.io.properties(
-            properties={
-                "project": {
-                    "name": "MyApp",
-                    "version": "2.1.0",
-                    "author": {
-                        "name": "John Doe",
-                        "email": "john@example.com",
-                    },
-                },
-                "dependencies": {
-                    "python": "3.11+",
-                    "packages": {
-                        "django": "4.2.0",
-                        "celery": "5.3.0",
-                        "redis": "4.5.0",
-                    },
-                },
-                "deployment": {
-                    "environment": "production",
-                    "servers": {
-                        "web": ["web1.example.com", "web2.example.com"],
-                        "db": "db.example.com",
-                    },
-                },
-            },
-            title="Project Configuration",
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

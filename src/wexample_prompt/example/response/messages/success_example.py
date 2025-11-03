@@ -26,9 +26,6 @@ class SuccessExample(AbstractSimpleMessageExample):
     def example_manager(self) -> None:
         self.io.success(message=self.get_test_message())
 
-    def get_test_message(self) -> str:
-        return "Test success message"
-
     def get_io_method(self):
         """Return the IO method for this message type."""
         return self.io.success
@@ -36,3 +33,6 @@ class SuccessExample(AbstractSimpleMessageExample):
     def get_response_name(self) -> str:
         """Return the response name for this message type."""
         return "success"
+
+    def get_test_message(self) -> str:
+        return "Test success message"

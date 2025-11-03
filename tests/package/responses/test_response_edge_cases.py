@@ -77,60 +77,6 @@ LONG_TEXT = (
 ) * 3
 
 
-def _make_context(indentation: int = 0) -> PromptContext:
-    return PromptContext(indentation=indentation, formatting=True)
-
-
-def _render(response) -> str:
-    rendered = response.render(context=_make_context())
-    assert rendered is not None
-    return rendered
-
-
-def _make_io() -> IoManager:
-    return IoManager(output=PromptBufferOutputHandler())
-
-
-def test_message_responses_handle_long_text() -> None:
-    context = _make_context()
-    cases: list[tuple[Callable[..., object], dict[str, object]]] = [
-        (EchoPromptResponse.create_echo, {"message": LONG_TEXT}),
-        (LogPromptResponse.create_log, {"message": LONG_TEXT}),
-        (InfoPromptResponse.create_info, {"message": LONG_TEXT}),
-        (DebugPromptResponse.create_debug, {"message": LONG_TEXT}),
-        (WarningPromptResponse.create_warning, {"message": LONG_TEXT}),
-        (ErrorPromptResponse.create_error, {"message": LONG_TEXT}),
-        (FailurePromptResponse.create_failure, {"message": LONG_TEXT}),
-        (SuccessPromptResponse.create_success, {"message": LONG_TEXT}),
-        (TaskPromptResponse.create_task, {"message": LONG_TEXT}),
-    ]
-
-    for factory, kwargs in cases:
-        rendered = factory(**kwargs).render(context=context)
-        assert rendered is not None
-        assert LONG_TEXT.split()[0] in rendered
-
-
-def test_title_responses_handle_long_text() -> None:
-    rendered = TitlePromptResponse.create_title(text=LONG_TEXT).render(
-        context=_make_context()
-    )
-    assert rendered is not None
-    assert LONG_TEXT.split()[0] in rendered
-
-    rendered = SubtitlePromptResponse.create_subtitle(text=LONG_TEXT).render(
-        context=_make_context(1)
-    )
-    assert rendered is not None
-    assert LONG_TEXT.split()[0] in rendered
-
-    rendered = SeparatorPromptResponse.create_separator(label=LONG_TEXT).render(
-        context=_make_context()
-    )
-    assert rendered is not None
-    assert LONG_TEXT.split()[0] in rendered
-
-
 def test_data_responses_handle_long_text() -> None:
     responses = [
         ListPromptResponse.create_list(items=[LONG_TEXT, LONG_TEXT]),
@@ -197,6 +143,46 @@ def test_interactive_responses_accept_predefined_answers(tmp_path) -> None:
     assert LONG_TEXT.split()[0] in rendered
 
 
+def test_message_responses_handle_long_text() -> None:
+    context = _make_context()
+    cases: list[tuple[Callable[..., object], dict[str, object]]] = [
+        (EchoPromptResponse.create_echo, {"message": LONG_TEXT}),
+        (LogPromptResponse.create_log, {"message": LONG_TEXT}),
+        (InfoPromptResponse.create_info, {"message": LONG_TEXT}),
+        (DebugPromptResponse.create_debug, {"message": LONG_TEXT}),
+        (WarningPromptResponse.create_warning, {"message": LONG_TEXT}),
+        (ErrorPromptResponse.create_error, {"message": LONG_TEXT}),
+        (FailurePromptResponse.create_failure, {"message": LONG_TEXT}),
+        (SuccessPromptResponse.create_success, {"message": LONG_TEXT}),
+        (TaskPromptResponse.create_task, {"message": LONG_TEXT}),
+    ]
+
+    for factory, kwargs in cases:
+        rendered = factory(**kwargs).render(context=context)
+        assert rendered is not None
+        assert LONG_TEXT.split()[0] in rendered
+
+
+def test_title_responses_handle_long_text() -> None:
+    rendered = TitlePromptResponse.create_title(text=LONG_TEXT).render(
+        context=_make_context()
+    )
+    assert rendered is not None
+    assert LONG_TEXT.split()[0] in rendered
+
+    rendered = SubtitlePromptResponse.create_subtitle(text=LONG_TEXT).render(
+        context=_make_context(1)
+    )
+    assert rendered is not None
+    assert LONG_TEXT.split()[0] in rendered
+
+    rendered = SeparatorPromptResponse.create_separator(label=LONG_TEXT).render(
+        context=_make_context()
+    )
+    assert rendered is not None
+    assert LONG_TEXT.split()[0] in rendered
+
+
 def test_with_io_methods_propagates_indentation() -> None:
     class ParentWorker(WithIoMethods):
         def __attrs_post_init__(self) -> None:
@@ -218,3 +204,17 @@ def test_with_io_methods_propagates_indentation() -> None:
     parent.ensure_io_manager().indentation_up()
     deeper_context = child.create_io_context()
     assert deeper_context.get_indentation() == child_context.get_indentation()
+
+
+def _make_context(indentation: int = 0) -> PromptContext:
+    return PromptContext(indentation=indentation, formatting=True)
+
+
+def _make_io() -> IoManager:
+    return IoManager(output=PromptBufferOutputHandler())
+
+
+def _render(response) -> str:
+    rendered = response.render(context=_make_context())
+    assert rendered is not None
+    return rendered

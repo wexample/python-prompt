@@ -197,7 +197,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 title_color = (
                     TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                 )
-                title_styles = [TextStyle.BOLD] if is_selected else []
+                [TextStyle.BOLD] if is_selected else []
 
                 # Parse title for inline formatting
                 from wexample_prompt.common.style_markup_parser import (
