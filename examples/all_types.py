@@ -3,9 +3,10 @@ from typing import cast
 from wexample_helpers.classes.example.example import Example
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_context import PromptContext
+from wexample_prompt.example.interactive_example import InteractiveExample
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
-class AllTypes(Example):
+class AllTypes(InteractiveExample):
     def execute(self) -> None:
         all_response_types = IoManager.get_response_types()
         demo_io = IoManager()

@@ -3,9 +3,6 @@ from __future__ import annotations
 from typing import Iterable
 
 from wexample_helpers.classes.example.executor import Executor
-
-from wexample_prompt.example.interactive_example import InteractiveExample
-from wexample_prompt.mixins.with_io_manager import WithIoManager
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 
@@ -28,13 +25,8 @@ class InteractiveExecutor(Executor, WithIoMethods):
         examples_registry = self.get_registry("examples")
 
         for example in examples_registry.get_all().values():
-            if isinstance(example, InteractiveExample):
-                example.bind_executor(self)
-            elif isinstance(example, WithIoManager):
-                example.set_parent_io_handler(self)
-                example.ensure_io_manager()
-            elif hasattr(example, "executor"):
-                object.__setattr__(example, "executor", self)
+            # Should be InteractiveExample
+            example.bind_executor(self)
 
     def execute(self) -> None:
         examples_registry = self.get_registry("examples")
