@@ -4,12 +4,12 @@ from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.example.response.abstract_simple_message_example import AbstractSimpleMessageExample
 
 
 @base_class
-class ErrorExample(AbstractResponseExample):
-    """Example usage of ErrorPromptResponse with edge cases."""
+class ErrorExample(AbstractSimpleMessageExample):
+    """Example usage of ErrorPromptResponse with comprehensive formatting tests and edge cases."""
 
     @staticmethod
     def generate_long_error() -> str:
@@ -44,6 +44,14 @@ class ErrorExample(AbstractResponseExample):
 
     def get_test_message(self) -> str:
         return "Test error message"
+    
+    def get_io_method(self):
+        """Return the IO method for this message type."""
+        return self.io.error
+    
+    def get_response_name(self) -> str:
+        """Return the response name for this message type."""
+        return "error"
 
     def edge_case_limits(self) -> None:
         """Test edge cases: limits (long error messages)."""
