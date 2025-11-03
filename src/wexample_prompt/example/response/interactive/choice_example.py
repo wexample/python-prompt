@@ -127,6 +127,77 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="Normal option",
         )
 
+    def example_simple(self) -> None:
+        """Simple yes/no choice."""
+        self.io.choice(
+            question="Do you want to continue?",
+            choices=["Yes", "No"],
+            predefined_answer="Yes"
+        )
+
+    def example_with_formatting(self) -> None:
+        """Choice with inline formatting."""
+        self.io.choice(
+            question="@color:cyan+bold{Select deployment environment}:",
+            choices=[
+                "@color:green{Production}",
+                "@color:yellow{Staging}",
+                "@color:blue{Development}",
+            ],
+            predefined_answer="@color:blue{Development}"
+        )
+
+    def example_with_emojis(self) -> None:
+        """Choice with emojis."""
+        self.io.choice(
+            question="🚀 Select action:",
+            choices=[
+                "✅ Deploy",
+                "🧪 Run tests",
+                "📊 View stats",
+                "❌ Cancel",
+            ],
+            predefined_answer="🧪 Run tests"
+        )
+
+    def example_with_dict(self) -> None:
+        """Choice with dict (value: label)."""
+        self.io.choice(
+            question="Select your preferred language:",
+            choices={
+                "py": "🐍 Python",
+                "js": "📜 JavaScript",
+                "rs": "🦀 Rust",
+                "go": "🐹 Go",
+            },
+            default="py",
+            predefined_answer="py"
+        )
+
+    def example_with_paths(self) -> None:
+        """Choice with file paths."""
+        self.io.choice(
+            question="Select configuration file:",
+            choices=[
+                "@path:short{/etc/app/config.yml}",
+                "@path:short{/home/user/.config/app.conf}",
+                "@path:short{/opt/app/settings.json}",
+            ],
+            predefined_answer="@path:short{/etc/app/config.yml}"
+        )
+
+    def example_nesting(self) -> None:
+        """Choice with parent/child nesting."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        
+        self.io.choice(
+            question="@color:yellow+bold{Nesting Demo} - Continue?",
+            choices=["Yes", "No"],
+            predefined_answer="Yes"
+        )
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
 
@@ -135,9 +206,34 @@ class ChoiceExample(AbstractResponseExample):
         """
         return [
             {
-                "title": "Basic Choice",
-                "description": "Simple choice with predefined answer",
-                "callback": self.example_manager,
+                "title": "Simple",
+                "description": "Simple yes/no choice",
+                "callback": self.example_simple,
+            },
+            {
+                "title": "With Formatting",
+                "description": "Choice with inline formatting (@color)",
+                "callback": self.example_with_formatting,
+            },
+            {
+                "title": "With Emojis",
+                "description": "Choice with emojis",
+                "callback": self.example_with_emojis,
+            },
+            {
+                "title": "With Dict",
+                "description": "Choice with dict (value: label)",
+                "callback": self.example_with_dict,
+            },
+            {
+                "title": "With Paths",
+                "description": "Choice with clickable file paths (@path)",
+                "callback": self.example_with_paths,
+            },
+            {
+                "title": "Nesting",
+                "description": "Choice with parent/child nesting",
+                "callback": self.example_nesting,
             },
             {
                 "title": "Edge Case: Limits",

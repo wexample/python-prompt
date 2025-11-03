@@ -199,18 +199,24 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 )
                 title_styles = [TextStyle.BOLD] if is_selected else []
 
+                # Parse title for inline formatting
+                from wexample_prompt.common.style_markup_parser import flatten_style_markup
+                title_segments = flatten_style_markup(str(choice.title), joiner=None)
+                
+                # Apply selection styling to segments that don't have color
+                for seg in title_segments:
+                    if seg.color is None:
+                        seg.color = title_color
+                    if is_selected and TextStyle.BOLD not in seg.styles:
+                        seg.styles.append(TextStyle.BOLD)
+
                 line.segments = [
                     PromptResponseSegment(
                         text=prefix,
                         color=prefix_color,
                         styles=prefix_styles,
                     ),
-                    PromptResponseSegment(
-                        text=str(choice.title),
-                        color=title_color,
-                        styles=title_styles,
-                    ),
-                ]
+                ] + title_segments
 
                 self.lines.append(line)
 
