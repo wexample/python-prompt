@@ -89,18 +89,23 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
+        from wexample_helpers.helpers.ansi import ansi_strip
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.text_width import get_visible_width
 
         if not self.properties:
             return ""
 
         context = PromptContext.create_if_none(context=context)
 
-        # Determine content width
+        # Determine content width by aligning with available visible width (indent-aware)
+        indentation_visible_width = get_visible_width(
+            ansi_strip(context.render_indentation_text())
+        )
         total_width = context.get_width()
-        content_width = max(10, total_width - 2)
+        content_width = max(10, total_width - indentation_visible_width)
 
         max_key_width = 0
 
