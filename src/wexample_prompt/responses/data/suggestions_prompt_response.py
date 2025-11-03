@@ -48,18 +48,19 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         # Suggestions (each on its own line; support multi-line suggestions too)
         for suggestion in suggestions:
             for sline in PromptResponseLine.create_from_string(suggestion):
+                # Prepend arrow and keep parsed segments
+                arrow_segment = PromptResponseSegment(
+                    text=f"  {arrow_style} ",
+                    color=TerminalColor.CYAN,
+                )
+                # Add bold to suggestion segments if they don't have color
+                for seg in sline.segments:
+                    if seg.color is None and TextStyle.BOLD not in seg.styles:
+                        seg.styles.append(TextStyle.BOLD)
+                
                 lines.append(
                     PromptResponseLine(
-                        segments=[
-                            PromptResponseSegment(
-                                text=f"  {arrow_style} ",
-                                color=TerminalColor.CYAN,
-                            ),
-                            PromptResponseSegment(
-                                text="".join(seg.text for seg in sline.segments),
-                                styles=[TextStyle.BOLD],
-                            ),
-                        ]
+                        segments=[arrow_segment] + sline.segments
                     )
                 )
 
