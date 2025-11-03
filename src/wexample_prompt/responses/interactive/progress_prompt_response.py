@@ -62,7 +62,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             current=norm_current,
             width=width,
             label=label,
-            color=color or TerminalColor.BLUE,
+            color=color or TerminalColor.RESET,
             verbosity=verbosity,
         )
 
@@ -155,11 +155,12 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label_visible_width = 0
         if self.label:
             label_segments = flatten_style_markup(self.label, joiner=" ")
-            label_visible_width = sum(len(seg.text) for seg in label_segments)
+            # Calculate visible width using ansi_strip to handle emojis and ANSI codes correctly
+            label_visible_width = sum(len(ansi_strip(seg.text)) for seg in label_segments)
             # trailing space between label and bar
             label_segments.append(PromptResponseSegment(text=" "))
             label_visible_width += 1
-        right_percent = f" {percentage}%"
+        right_percent = f" {current}/{self.total}"
 
         # Determine bar width to perfectly fit the line
         bar_width = max(
