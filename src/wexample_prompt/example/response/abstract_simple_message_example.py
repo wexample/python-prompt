@@ -61,6 +61,63 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
         method(message="Path: /home/user/very/long/path/to/some/file/that/might/wrap.txt")
         method(message="URL: https://example.com/very/long/url/with/many/segments?param1=value1&param2=value2")
 
+    def example_nesting(self) -> None:
+        """Message with nested parent/child classes demonstrating automatic indentation."""
+        from wexample_helpers.decorator.base_class import base_class
+        from wexample_prompt.enums.indentation_style import IndentationStyle
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.mixins.with_io_methods import WithIoMethods
+        
+        method = self.get_io_method()
+        
+        # Parent class
+        @base_class
+        class ParentTask(WithIoMethods):
+            def execute(self):
+                self.log("Parent task started")
+                self.log("Processing parent operations...")
+                
+                # Create child with automatic indentation
+                child = ChildTask(parent_io_handler=self)
+                child.execute()
+                
+                self.log("Parent task completed")
+        
+        # Child class
+        @base_class
+        class ChildTask(WithIoMethods):
+            def execute(self):
+                self.log("Child task started")
+                self.log("Processing child operations...")
+                
+                # Create grandchild with automatic indentation
+                grandchild = GrandchildTask(parent_io_handler=self)
+                grandchild.execute()
+                
+                self.log("Child task completed")
+        
+        # Grandchild class with custom indentation style
+        @base_class
+        class GrandchildTask(WithIoMethods):
+            def get_io_context_indentation_style(self):
+                return IndentationStyle.VERTICAL
+            
+            def get_io_context_indentation_character(self) -> str:
+                return "│"
+            
+            def get_io_context_indentation_text_color(self):
+                return TerminalColor.CYAN
+            
+            def execute(self):
+                self.log("Grandchild task started (vertical style)")
+                self.log("Processing grandchild operations...")
+                self.log("Grandchild task completed")
+        
+        # Execute the demo
+        method(message="@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}")
+        parent = ParentTask(io=self.io)
+        parent.execute()
+
     def example_indented(self) -> None:
         """Message with indentation."""
         from wexample_prompt.enums.indentation_style import IndentationStyle
@@ -153,6 +210,11 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 "title": "Edge Cases",
                 "description": "Very short, very long, and special characters",
                 "callback": self.example_edge_cases,
+            },
+            {
+                "title": "Nesting",
+                "description": "Parent/child classes with automatic indentation",
+                "callback": self.example_nesting,
             },
             {
                 "title": "Indented",

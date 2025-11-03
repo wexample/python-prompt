@@ -182,9 +182,14 @@ class PromptContext(BaseClass):
             return char * self.indentation_length
 
     def render_indentation_text(self) -> str:
-        output = ""
-        if self.parent_context:
-            output = self.parent_context.render_indentation_text()
-
         """Get the current indentation string."""
-        return output + self.render_indentation_part()
+        style = self.get_indentation_style()
+        char = self.get_indentation_character()
+        level = self.get_indentation()
+        
+        if style == IndentationStyle.VERTICAL:
+            # Vertical mode: render all levels at once
+            return (char + " ") * level
+        else:
+            # Repeat mode: repeat character × (level × length)
+            return char * (level * self.indentation_length)
