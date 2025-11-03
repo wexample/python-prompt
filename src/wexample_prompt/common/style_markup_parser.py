@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from typing import Iterable
 
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
-_STYLE_DIRECTIVE_PATTERN = re.compile(r"@(?:color:)?([^\{\}]+)\{", re.IGNORECASE)
+# Pattern to match directives: @type:params{content} or @type{content}
+# Supports word characters, emojis, and special chars for backward compatibility
+_STYLE_DIRECTIVE_PATTERN = re.compile(r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸]+)(?::([^\{\}]+))?\{", re.IGNORECASE)
 _EMOJI_COLOR_MAP: dict[str, TerminalColor] = {
     "🔴": TerminalColor.RED,
     "🟥": TerminalColor.RED,
@@ -40,6 +43,11 @@ def parse_style_markup(
     """
     Parse a text with custom markup like ``@color:red+bold{content}`` into
     prompt response segments grouped by lines.
+
+    Supported directives:
+      * ``@color:name+style{text}`` or ``@name+style{text}`` - Apply color and styles
+      * ``@path{/path/to/file}`` or ``@path:short{/path/to/file}`` - Format file paths (clickable)
+      * ``@time{format}`` or ``@time:format{timestamp}`` - Format timestamps
 
     Supported modifiers:
       * Any ``TerminalColor`` member name (case-insensitive, - or _ interchangeable).
@@ -143,6 +151,37 @@ def parse_style_markup(
 
         raise ValueError("Unmatched '{' in style markup.")
 
+    def format_path(path: str, short: bool = False) -> str:
+        """Format a file path, optionally making it clickable."""
+        try:
+            from wexample_helpers.helpers.cli import cli_make_clickable_path
+            if short and "/" in path:
+                # Show only filename for short format
+                filename = path.rsplit("/", 1)[-1]
+                return cli_make_clickable_path(path, short_title=filename)
+            return cli_make_clickable_path(path)
+        except ImportError:
+            # Fallback if helper not available
+            return path
+
+    def format_time(content: str, fmt: str | None = None) -> str:
+        """Format a timestamp or current time."""
+        if fmt is None:
+            fmt = "%H:%M:%S"
+        
+        # If content is empty, use current time
+        if not content.strip():
+            return datetime.now().strftime(fmt)
+        
+        # Try to parse content as timestamp
+        try:
+            # If it's a number, treat as unix timestamp
+            timestamp = float(content)
+            return datetime.fromtimestamp(timestamp).strftime(fmt)
+        except ValueError:
+            # If it's already formatted, return as-is
+            return content
+
     def parse_section(
         section_text: str,
         active_color: TerminalColor | None,
@@ -161,7 +200,9 @@ def parse_style_markup(
             if prefix:
                 push_text(prefix, active_color, active_styles)
 
-            tokens = match.group(1)
+            directive_type = match.group(1).lower()
+            directive_params = match.group(2) or ""
+            
             try:
                 content, next_index = extract_braced_content(section_text, match.end())
             except ValueError:
@@ -169,6 +210,22 @@ def parse_style_markup(
                 push_text(section_text[match.start() :], active_color, active_styles)
                 return
 
+            # Handle special formatters
+            if directive_type == "path":
+                formatted = format_path(content, short=(directive_params == "short"))
+                push_text(formatted, active_color, active_styles)
+                index = next_index
+                continue
+            
+            if directive_type == "time":
+                formatted = format_time(content, directive_params or None)
+                push_text(formatted, active_color, active_styles)
+                index = next_index
+                continue
+            
+            # Handle color/style directives (backward compatibility)
+            # If directive_type is "color" or looks like a color/style token
+            tokens = directive_params if directive_params else directive_type
             child_color, child_styles = apply_tokens(tokens, active_color, active_styles)
             parse_section(content, child_color, child_styles)
             index = next_index

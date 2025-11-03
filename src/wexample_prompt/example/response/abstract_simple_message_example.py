@@ -44,6 +44,22 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
         method(message="@color:cyan+bold{Bold} and @color:magenta+underline{underline} and @color:green+italic{italic}")
         method(message="@🔵+bold+underline{Multiple styles combined}")
 
+    def example_formatters(self) -> None:
+        """Message with special formatters (@path, @time)."""
+        method = self.get_io_method()
+        
+        # Path formatter
+        method(message="File saved to: @path{/home/user/documents/report.pdf}")
+        method(message="Short path: @path:short{/home/user/documents/very/long/path/to/file.txt}")
+        
+        # Time formatter
+        method(message="Current time: @time{}")
+        method(message="Custom format: @time:%Y-%m-%d %H:%M:%S{}")
+        method(message="Timestamp: @time:%H:%M{1699000000}")
+        
+        # Combined with colors
+        method(message="@color:green{✓} Saved to @color:cyan{@path:short{/tmp/output.log}} at @color:yellow{@time{}}")
+
     def example_edge_cases(self) -> None:
         """Message with edge cases: very short, very long, special characters."""
         method = self.get_io_method()
@@ -214,6 +230,11 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
                 "title": "Inline Styling",
                 "description": "Message with underline, italic, and combined styles",
                 "callback": self.example_inline_styling,
+            },
+            {
+                "title": "Formatters",
+                "description": "Special formatters: @path{} and @time{}",
+                "callback": self.example_formatters,
             },
             {
                 "title": "Edge Cases",
