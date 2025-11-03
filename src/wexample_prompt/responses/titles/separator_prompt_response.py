@@ -35,8 +35,8 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         factory=list,
         description="Segments used to render the optional label.",
     )
-    separator_response_segment: PromptResponseSegment = public_field(
-        factory=lambda: PromptResponseSegment(text=""),
+    separator_response_segment: PromptResponseSegment | None = public_field(
+        default=None,
         description="The line segment used by render process",
     )
     width: int | None = public_field(
@@ -126,7 +126,20 @@ class SeparatorPromptResponse(AbstractMessageResponse):
                 get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments
             )
 
-        self.separator_response_segment.text = length * self.character
+        separator_segment = self.separator_response_segment
+        if separator_segment is None:
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
+
+            separator_segment = PromptResponseSegment(
+                text="", color=getattr(self, "color", None)
+            )
+            self.separator_response_segment = separator_segment
+            if self.lines:
+                self.lines[0].segments.insert(0, separator_segment)
+        character = self.character or self.DEFAULT_CHARACTER
+        separator_segment.text = length * character
 
         return super().render(
             context=context,
