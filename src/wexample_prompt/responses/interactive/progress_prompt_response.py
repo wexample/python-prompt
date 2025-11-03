@@ -62,16 +62,19 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
         norm_current = cls._normalize_value(total, current)
 
-        return cls(
+        init_kwargs = dict(
             lines=[],
             total=total,
             current=norm_current,
             width=width,
             label=label,
-            color=color,
             show_percentage=show_percentage,
             verbosity=verbosity,
         )
+        if color is not None:
+            init_kwargs["color"] = color
+
+        return cls(**init_kwargs)
 
     @classmethod
     def get_example_class(cls) -> type:
