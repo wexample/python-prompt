@@ -64,12 +64,11 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import (
-            ChoiceExample,
+        from wexample_prompt.example.response.interactive.screen_example import (
+            ScreenExample,
         )
 
-        # Reuse any example class infra; a dedicated Screen example can be added later.
-        return ChoiceExample
+        return ScreenExample
 
     # Drawing helpers for the callback
     def clear(self) -> None:
