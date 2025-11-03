@@ -125,6 +125,72 @@ class ProgressExample(AbstractResponseExample):
 
         root.finish(label="@🟢+bold{Build complete}")
 
+    def example_simple(self) -> None:
+        """Simple progress bar."""
+        response = self.io.progress(label='Processing', total=100)
+        handle = response.get_handle()
+        for i in range(0, 101, 20):
+            time.sleep(0.05)
+            handle.update(current=i)
+        handle.finish()
+
+    def example_with_formatting(self) -> None:
+        """Progress bar with inline formatting."""
+        response = self.io.progress(
+            label='@color:cyan+bold{Downloading} files...',
+            total=100
+        )
+        handle = response.get_handle()
+        for i in range(0, 101, 10):
+            time.sleep(0.03)
+            handle.update(current=i)
+        handle.finish(label='@color:green+bold{✓ Download complete}')
+
+    def example_with_emojis(self) -> None:
+        """Progress bar with emojis."""
+        response = self.io.progress(label='🚀 Deploying...', total=100)
+        handle = response.get_handle()
+        for i in range(0, 101, 25):
+            time.sleep(0.05)
+            handle.update(current=i)
+        handle.finish(label='✅ Deployment successful')
+
+    def example_with_steps(self) -> None:
+        """Progress bar with step updates."""
+        response = self.io.progress(label='Building project', total=5)
+        handle = response.get_handle()
+        
+        steps = ['Compiling', 'Linking', 'Testing', 'Packaging', 'Done']
+        for i, step in enumerate(steps):
+            time.sleep(0.1)
+            handle.update(current=i+1, label=f'@color:yellow{{{step}}}')
+        handle.finish(label='@color:green+bold{Build complete}')
+
+    def example_with_percentage(self) -> None:
+        """Progress bar showing percentage."""
+        response = self.io.progress(label='Uploading', total=100)
+        handle = response.get_handle()
+        for i in range(0, 101, 5):
+            time.sleep(0.02)
+            handle.update(current=i, label=f'Uploading ({i}%)')
+        handle.finish(label='@color:green{Upload complete (100%)}')
+
+    def example_nested_progress(self) -> None:
+        """Nested progress bars with parent/child."""
+        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        
+        response = self.io.progress(label='@color:yellow+bold{Main task}', total=3)
+        handle = response.get_handle()
+        
+        for i in range(1, 4):
+            time.sleep(0.1)
+            handle.update(current=i, label=f'@color:yellow+bold{{Step {i}/3}}')
+        
+        handle.finish(label='@color:green+bold{Main task complete}')
+        
+        parent = ParentTask(io=self.io)
+        parent.execute(method_name="log")
+
     def get_examples(self) -> list[dict[str, Any]]:
         """Get list of examples.
 
@@ -133,9 +199,34 @@ class ProgressExample(AbstractResponseExample):
         """
         return [
             {
-                "title": "Basic Progress",
+                "title": "Simple",
                 "description": "Simple progress bar",
-                "callback": self.example_manager,
+                "callback": self.example_simple,
+            },
+            {
+                "title": "With Formatting",
+                "description": "Progress bar with inline formatting (@color)",
+                "callback": self.example_with_formatting,
+            },
+            {
+                "title": "With Emojis",
+                "description": "Progress bar with emojis",
+                "callback": self.example_with_emojis,
+            },
+            {
+                "title": "With Steps",
+                "description": "Progress bar with step-by-step updates",
+                "callback": self.example_with_steps,
+            },
+            {
+                "title": "With Percentage",
+                "description": "Progress bar showing percentage",
+                "callback": self.example_with_percentage,
+            },
+            {
+                "title": "Nested Progress",
+                "description": "Nested progress with parent/child",
+                "callback": self.example_nested_progress,
             },
             {
                 "title": "Edge Case: Limits",
