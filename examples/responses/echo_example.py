@@ -1,6 +1,6 @@
 """Interactive example for echo - delegates to src example."""
 
-from .abstract_prompt_response_example import AbstractPromptResponseExample
+from examples.responses.abstract_prompt_response_example import AbstractPromptResponseExample
 
 
 class EchoExample(AbstractPromptResponseExample):
