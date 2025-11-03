@@ -8,6 +8,7 @@ from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.common.style_markup_parser import flatten_style_markup
+from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -24,7 +25,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"
     color: TerminalColor | None = public_field(
-        default=None, description="Optional color applied to the bar"
+        default=TerminalColor.BLUE,
+        description="Optional color applied to the bar"
     )
     current: float = public_field(description="Current progress (must be >= 0)")
     label: str | None = public_field(
@@ -66,7 +68,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             current=norm_current,
             width=width,
             label=label,
-            color=color or TerminalColor.BLUE,
+            color=color,
             show_percentage=show_percentage,
             verbosity=verbosity,
         )
