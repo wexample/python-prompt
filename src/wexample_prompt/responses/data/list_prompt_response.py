@@ -22,21 +22,26 @@ class ListPromptResponse(AbstractMessageResponse):
     """Display items as a bulleted list, supporting nested indentation via leading spaces."""
 
     @classmethod
-    def apply_prefix_to_kwargs(cls, prefix: str, args: tuple, kwargs: dict) -> tuple[tuple, dict]:
+    def apply_prefix_to_kwargs(
+        cls, prefix: str, args: tuple, kwargs: dict
+    ) -> tuple[tuple, dict]:
         """Apply prefix to items parameter.
-        
+
         Args:
             prefix: The formatted prefix to apply (e.g., "[child] ")
             args: Positional arguments
             kwargs: Keyword arguments
-            
+
         Returns:
             Tuple of (modified_args, modified_kwargs)
         """
         # Handle items parameter
         if "items" in kwargs and isinstance(kwargs["items"], list):
-            kwargs["items"] = [prefix + item if isinstance(item, str) else item for item in kwargs["items"]]
-        
+            kwargs["items"] = [
+                prefix + item if isinstance(item, str) else item
+                for item in kwargs["items"]
+            ]
+
         return args, kwargs
 
     @classmethod
@@ -67,11 +72,14 @@ class ListPromptResponse(AbstractMessageResponse):
             bullet_text = ("  " * indent_level) + f"{bullet} "
 
             bullet_segment = PromptResponseSegment(text=bullet_text, color=color)
-            
+
             # Parse content for inline formatting (@color, @path, @time, etc.)
             from wexample_prompt.common.style_markup_parser import flatten_style_markup
-            content_segments = flatten_style_markup(content, default_color=color, joiner=None)
-            
+
+            content_segments = flatten_style_markup(
+                content, default_color=color, joiner=None
+            )
+
             # Combine bullet with parsed content segments
             all_segments = [bullet_segment] + content_segments
             lines.append(PromptResponseLine(segments=all_segments))

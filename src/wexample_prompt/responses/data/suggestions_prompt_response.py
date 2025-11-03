@@ -57,11 +57,9 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
                 for seg in sline.segments:
                     if seg.color is None and TextStyle.BOLD not in seg.styles:
                         seg.styles.append(TextStyle.BOLD)
-                
+
                 lines.append(
-                    PromptResponseLine(
-                        segments=[arrow_segment] + sline.segments
-                    )
+                    PromptResponseLine(segments=[arrow_segment] + sline.segments)
                 )
 
         # Bottom spacer

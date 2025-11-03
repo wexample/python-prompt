@@ -11,7 +11,7 @@ from wexample_prompt.mixins.with_io_methods import WithIoMethods
 class ParentTask(WithIoMethods):
     """Parent task demonstrating basic nesting."""
     
-    def execute(self, method_name: str = "log"):
+    def execute(self, method_name: str = "log") -> None:
         """Execute parent task.
         
         Args:
@@ -26,7 +26,7 @@ class ParentTask(WithIoMethods):
         
         self._output_message(method_name, "Parent task completed")
     
-    def _output_message(self, method_name: str, message: str):
+    def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""
         if method_name == "list":
             self.list(items=[message])
@@ -42,7 +42,7 @@ class ChildTask(WithIoMethods):
     def get_io_context_prefix(self) -> str:
         return "child"
     
-    def execute(self, method_name: str = "log"):
+    def execute(self, method_name: str = "log") -> None:
         """Execute child task.
         
         Args:
@@ -57,7 +57,7 @@ class ChildTask(WithIoMethods):
         
         self._output_message(method_name, "Child task completed")
     
-    def _output_message(self, method_name: str, message: str):
+    def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""
         if method_name == "list":
             self.list(items=[message])
@@ -85,7 +85,7 @@ class GrandchildTask(WithIoMethods):
     def get_io_context_prefix_format(self) -> str:
         return "({prefix}) "  # Custom format with parentheses
     
-    def execute(self, method_name: str = "log"):
+    def execute(self, method_name: str = "log") -> None:
         """Execute grandchild task.
         
         Args:
@@ -95,7 +95,7 @@ class GrandchildTask(WithIoMethods):
         self._output_message(method_name, "Processing grandchild operations...")
         self._output_message(method_name, "Grandchild task completed")
     
-    def _output_message(self, method_name: str, message: str):
+    def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""
         if method_name == "list":
             self.list(items=[message])

@@ -32,7 +32,9 @@ class InteractiveExecutor(Executor, WithIoMethods):
         examples_registry = self.get_registry("examples")
         matched = False
 
-        for index, (key, example) in enumerate(examples_registry.get_all().items(), start=1):
+        for index, (key, example) in enumerate(
+            examples_registry.get_all().items(), start=1
+        ):
             if not self._should_run_example(key, example):
                 continue
 

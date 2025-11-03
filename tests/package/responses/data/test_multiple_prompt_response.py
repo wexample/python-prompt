@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 class TestMultiplePromptResponse(AbstractPromptResponseTest):
     __test__ = True  # Re-enable test collection for concrete test class
-
     """Test multiple prompt response."""
 
     def get_expected_lines(self) -> int:

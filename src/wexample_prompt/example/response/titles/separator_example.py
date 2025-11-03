@@ -10,7 +10,7 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 @base_class
 class SeparatorExample(AbstractResponseExample):
     """Example usage of SeparatorPromptResponse with comprehensive formatting tests."""
-    
+
     def example_class(self):
         from wexample_prompt.responses.titles.separator_prompt_response import (
             SeparatorPromptResponse,
@@ -44,12 +44,18 @@ class SeparatorExample(AbstractResponseExample):
 
     def example_long_text(self) -> None:
         """Separator with long text."""
-        self.io.separator(label="This is a very long separator label that contains a lot of text")
-        self.io.separator(label="@color:magenta+bold{Very Long Formatted Separator} with lots of text")
+        self.io.separator(
+            label="This is a very long separator label that contains a lot of text"
+        )
+        self.io.separator(
+            label="@color:magenta+bold{Very Long Formatted Separator} with lots of text"
+        )
 
     def example_with_paths(self) -> None:
         """Separator with file paths."""
-        self.io.separator(label="Processing: @path:short{/home/user/documents/report.pdf}")
+        self.io.separator(
+            label="Processing: @path:short{/home/user/documents/report.pdf}"
+        )
         self.io.separator(label="@color:green{✓ Saved to} @path:short{/tmp/output.log}")
 
     def example_with_time(self) -> None:
@@ -60,7 +66,7 @@ class SeparatorExample(AbstractResponseExample):
     def example_nesting(self) -> None:
         """Separator with nested parent/child classes."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.separator(label="@color:yellow+bold{Nesting Demo}")
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")
@@ -68,17 +74,17 @@ class SeparatorExample(AbstractResponseExample):
     def example_indented(self) -> None:
         """Separator with indentation."""
         from wexample_prompt.enums.terminal_color import TerminalColor
-        
+
         # Different indentation levels
         self.io.separator(label="Normal separator", indentation=0)
         self.io.separator(label="Indented separator (level 3)", indentation=3)
         self.io.separator(label="Indented separator (level 5)", indentation=5)
-        
+
         # Colored indentation
         self.io.separator(
             label="@color:cyan{Colored separator with indentation}",
             indentation=3,
-            indentation_text_color=TerminalColor.CYAN
+            indentation_text_color=TerminalColor.CYAN,
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

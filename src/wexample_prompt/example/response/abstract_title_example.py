@@ -129,7 +129,7 @@ class AbstractTitleExample(AbstractResponseExample):
             },
         ]
 
-    def get_io_method(self):
+    def get_io_method(self) -> None:
         """Return the IO method for this title type. Must be implemented by subclasses."""
         raise NotImplementedError("Subclasses must implement get_io_method()")
 

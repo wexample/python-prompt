@@ -17,8 +17,7 @@ class ChoiceExample(AbstractResponseExample):
         several_lines = "> @color:cyan{And several short lines}\n"
         return (
             "@🔵+bold{This is a }" + ("@color:yellow{long} " * 15) + "text\n"
-            "> With a " + ("@color:magenta{long} " * 10) + "line\n"
-            + several_lines * 10
+            "> With a " + ("@color:magenta{long} " * 10) + "line\n" + several_lines * 10
         )
 
     @staticmethod
@@ -34,6 +33,7 @@ class ChoiceExample(AbstractResponseExample):
     def generate_special_characters_text() -> str:
         """Generate text with special characters."""
         return "@🔵{Special: } émojis 🎉 symbols ±×÷ quotes \"'` brackets []{}() slashes /\\"
+
     def example_class(self, indentation: int | None = None):
         from wexample_prompt.responses.interactive.choice_prompt_response import (
             ChoicePromptResponse,
@@ -132,7 +132,7 @@ class ChoiceExample(AbstractResponseExample):
         self.io.choice(
             question="Do you want to continue?",
             choices=["Yes", "No"],
-            predefined_answer="Yes"
+            predefined_answer="Yes",
         )
 
     def example_with_formatting(self) -> None:
@@ -144,7 +144,7 @@ class ChoiceExample(AbstractResponseExample):
                 "@color:yellow{Staging}",
                 "@color:blue{Development}",
             ],
-            predefined_answer="@color:blue{Development}"
+            predefined_answer="@color:blue{Development}",
         )
 
     def example_with_emojis(self) -> None:
@@ -157,7 +157,7 @@ class ChoiceExample(AbstractResponseExample):
                 "📊 View stats",
                 "❌ Cancel",
             ],
-            predefined_answer="🧪 Run tests"
+            predefined_answer="🧪 Run tests",
         )
 
     def example_with_dict(self) -> None:
@@ -171,7 +171,7 @@ class ChoiceExample(AbstractResponseExample):
                 "go": "🐹 Go",
             },
             default="py",
-            predefined_answer="py"
+            predefined_answer="py",
         )
 
     def example_with_paths(self) -> None:
@@ -183,17 +183,17 @@ class ChoiceExample(AbstractResponseExample):
                 "@path:short{/home/user/.config/app.conf}",
                 "@path:short{/opt/app/settings.json}",
             ],
-            predefined_answer="@path:short{/etc/app/config.yml}"
+            predefined_answer="@path:short{/etc/app/config.yml}",
         )
 
     def example_nesting(self) -> None:
         """Choice with parent/child nesting."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.choice(
             question="@color:yellow+bold{Nesting Demo} - Continue?",
             choices=["Yes", "No"],
-            predefined_answer="Yes"
+            predefined_answer="Yes",
         )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")

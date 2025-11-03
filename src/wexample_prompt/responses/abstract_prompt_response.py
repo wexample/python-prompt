@@ -47,17 +47,19 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
         cls._raise_not_implemented_error()
 
     @classmethod
-    def apply_prefix_to_kwargs(cls, prefix: str, args: tuple, kwargs: dict) -> tuple[tuple, dict]:
+    def apply_prefix_to_kwargs(
+        cls, prefix: str, args: tuple, kwargs: dict
+    ) -> tuple[tuple, dict]:
         """Apply prefix to the appropriate parameters in kwargs/args.
-        
+
         This method should be overridden by subclasses to handle their specific parameters.
         Default implementation does nothing.
-        
+
         Args:
             prefix: The formatted prefix to apply (e.g., "[child] ")
             args: Positional arguments
             kwargs: Keyword arguments
-            
+
         Returns:
             Tuple of (modified_args, modified_kwargs)
         """

@@ -68,7 +68,7 @@ class TableExample(AbstractResponseExample):
                 ["2", "Task B", "In Progress"],
                 ["3", "Task C", "Pending"],
             ],
-            title="Tasks"
+            title="Tasks",
         )
 
     def example_with_formatting(self) -> None:
@@ -80,7 +80,7 @@ class TableExample(AbstractResponseExample):
                 ["Tests", "@color:yellow{⚠ Running}", "75%"],
                 ["Deploy", "@color:red{✗ Failed}", "0%"],
             ],
-            title="Pipeline Status"
+            title="Pipeline Status",
         )
 
     def example_many_columns(self) -> None:
@@ -92,17 +92,13 @@ class TableExample(AbstractResponseExample):
                 ["2", "Bob", "bob@example.com", "Designer", "Design", "Active"],
                 ["3", "Charlie", "charlie@example.com", "Manager", "Product", "Away"],
             ],
-            title="Team Members"
+            title="Team Members",
         )
 
     def example_many_rows(self) -> None:
         """Table with many rows."""
         data = [[str(i), f"Item {i}", f"Value {i}"] for i in range(1, 16)]
-        self.io.table(
-            headers=["ID", "Name", "Value"],
-            data=data,
-            title="Large Dataset"
-        )
+        self.io.table(headers=["ID", "Name", "Value"], data=data, title="Large Dataset")
 
     def example_with_emojis(self) -> None:
         """Table with emojis."""
@@ -114,7 +110,7 @@ class TableExample(AbstractResponseExample):
                 ["📧 Mail Server", "🟡 Degraded", "95.2%"],
                 ["🔍 Search", "🔴 Offline", "0%"],
             ],
-            title="System Status"
+            title="System Status",
         )
 
     def example_with_paths(self) -> None:
@@ -122,11 +118,23 @@ class TableExample(AbstractResponseExample):
         self.io.table(
             headers=["File", "Size", "Modified"],
             data=[
-                ["@path:short{/home/user/documents/report.pdf}", "2.5 MB", "@time:%Y-%m-%d{1699000000}"],
-                ["@path:short{/home/user/projects/app/main.py}", "15 KB", "@time:%Y-%m-%d{1699100000}"],
-                ["@path:short{/etc/nginx/nginx.conf}", "8 KB", "@time:%Y-%m-%d{1699200000}"],
+                [
+                    "@path:short{/home/user/documents/report.pdf}",
+                    "2.5 MB",
+                    "@time:%Y-%m-%d{1699000000}",
+                ],
+                [
+                    "@path:short{/home/user/projects/app/main.py}",
+                    "15 KB",
+                    "@time:%Y-%m-%d{1699100000}",
+                ],
+                [
+                    "@path:short{/etc/nginx/nginx.conf}",
+                    "8 KB",
+                    "@time:%Y-%m-%d{1699200000}",
+                ],
             ],
-            title="Recent Files"
+            title="Recent Files",
         )
 
     def example_long_content(self) -> None:
@@ -134,45 +142,51 @@ class TableExample(AbstractResponseExample):
         self.io.table(
             headers=["Command", "Description"],
             data=[
-                ["git commit", "This is a very long description that contains a lot of text and will probably wrap to multiple lines"],
-                ["docker run", "Run a command in a new container with various options and parameters"],
+                [
+                    "git commit",
+                    "This is a very long description that contains a lot of text and will probably wrap to multiple lines",
+                ],
+                [
+                    "docker run",
+                    "Run a command in a new container with various options and parameters",
+                ],
             ],
-            title="Commands"
+            title="Commands",
         )
 
     def example_with_indentation(self) -> None:
         """Tables at different indentation levels."""
         self.io.log("@color:cyan+bold{Tables at different levels:}")
-        
+
         self.io.table(
             headers=["Col1", "Col2"],
             data=[["A", "B"], ["C", "D"]],
             title="Level 0",
-            indentation=0
+            indentation=0,
         )
-        
+
         self.io.table(
             headers=["Col1", "Col2"],
             data=[["A", "B"], ["C", "D"]],
             title="Level 1",
-            indentation=1
+            indentation=1,
         )
-        
+
         self.io.table(
             headers=["Col1", "Col2"],
             data=[["A", "B"], ["C", "D"]],
             title="Level 3",
-            indentation=3
+            indentation=3,
         )
 
     def example_nesting(self) -> None:
         """Table with parent/child nesting."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.table(
             headers=["Demo", "Type"],
             data=[["@color:yellow+bold{Nesting}", "Table"]],
-            title="Nesting Demo"
+            title="Nesting Demo",
         )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")

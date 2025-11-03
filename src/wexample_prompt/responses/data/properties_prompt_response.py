@@ -140,8 +140,9 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         for content in content_lines:
             # Parse content for inline formatting
             from wexample_prompt.common.style_markup_parser import flatten_style_markup
+
             content_segments = flatten_style_markup(content, joiner=None)
-            
+
             # Add leading space and parsed content
             all_segments = [PromptResponseSegment(text=" ")] + content_segments
             lines.append(PromptResponseLine(segments=all_segments))

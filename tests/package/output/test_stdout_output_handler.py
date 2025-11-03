@@ -9,7 +9,9 @@ class TestLogPromptResponse(AbstractPromptTest):
     """Test cases for LogPromptResponse."""
 
     def test_print_writes_to_stdout_and_returns_response(self) -> None:
-        from wexample_prompt.output.prompt_stdout_output_handler import PromptStdoutOutputHandler
+        from wexample_prompt.output.prompt_stdout_output_handler import (
+            PromptStdoutOutputHandler,
+        )
 
         # This is the default output handler
         assert isinstance(self._io.output, PromptStdoutOutputHandler)

@@ -43,7 +43,8 @@ class PromptContext(BaseClass):
         default=" ", description="The character used for indentation"
     )
     indentation_length: int | None = public_field(
-        default=2, description="Number of characters to repeat for one indentation (repeat mode)"
+        default=2,
+        description="Number of characters to repeat for one indentation (repeat mode)",
     )
     indentation_style: IndentationStyle | None = public_field(
         default=IndentationStyle.REPEAT, description="Style of indentation rendering"
@@ -173,7 +174,7 @@ class PromptContext(BaseClass):
         """Render indentation for current level based on style."""
         style = self.get_indentation_style()
         char = self.get_indentation_character()
-        
+
         if style == IndentationStyle.VERTICAL:
             # Vertical mode: one character per level with space
             return char + " "
@@ -186,7 +187,7 @@ class PromptContext(BaseClass):
         style = self.get_indentation_style()
         char = self.get_indentation_character()
         level = self.get_indentation()
-        
+
         if style == IndentationStyle.VERTICAL:
             # Vertical mode: render all levels at once
             return (char + " ") * level

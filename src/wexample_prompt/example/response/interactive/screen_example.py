@@ -21,7 +21,7 @@ class ScreenExample(AbstractResponseExample):
         counter = {"n": 0}
         total = 10
 
-        def _callback(response: ScreenPromptResponse):
+        def _callback(response: ScreenPromptResponse) -> None:
             response.clear()
             response.print(f"Test screen iteration {counter['n']}/{total}")
             sleep(0.05)
@@ -40,7 +40,7 @@ class ScreenExample(AbstractResponseExample):
         counter = {"n": 0}
         total = 10
 
-        def _callback(response):
+        def _callback(response) -> None:
             response.clear()
             response.print(f"Test screen (extended) {counter['n']}/{total}")
             sleep(0.05)
@@ -56,7 +56,7 @@ class ScreenExample(AbstractResponseExample):
         counter = {"n": 0}
         total = 10
 
-        def _callback(response):
+        def _callback(response) -> None:
             response.clear()
             response.print(f"Test screen (manager) {counter['n']}/{total}")
             sleep(0.05)
@@ -80,7 +80,7 @@ class ScreenExample(AbstractResponseExample):
         counter = {"n": 0}
         total = 50
 
-        def _callback(response: ScreenPromptResponse):
+        def _callback(response: ScreenPromptResponse) -> None:
             response.clear()
 
             response.print(f"@color:cyan+bold{{Some text}}, {counter['n']} times...")
@@ -119,7 +119,7 @@ class ScreenExample(AbstractResponseExample):
 
         start = time.time()
 
-        def _proc_callback(response: ScreenPromptResponse):
+        def _proc_callback(response: ScreenPromptResponse) -> None:
             response.clear()
             response.print(
                 "@color:magenta+bold{Top CPU processes (refresh 1s, ~3s total)}"

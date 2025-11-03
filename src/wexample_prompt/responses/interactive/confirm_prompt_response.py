@@ -212,7 +212,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # strictly use the terminal/context width as the fixed width.
         q_lines = PromptResponseLine.create_from_string(self.question)
         question_segments = [ln.segments for ln in q_lines]
-        question_texts = ["".join(seg.text for seg in segments) for segments in question_segments]
+        question_texts = [
+            "".join(seg.text for seg in segments) for segments in question_segments
+        ]
         # Fixed width: use get_width() strictly; if unavailable, fallback to self.width or 80
         if term_width and term_width > 0:
             box_width = term_width

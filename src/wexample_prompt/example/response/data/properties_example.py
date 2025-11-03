@@ -71,7 +71,7 @@ class PropertiesExample(AbstractResponseExample):
                 "role": "Developer",
                 "status": "Active",
             },
-            title="User Profile"
+            title="User Profile",
         )
 
     def example_nested(self) -> None:
@@ -90,7 +90,7 @@ class PropertiesExample(AbstractResponseExample):
                     "ttl": 3600,
                 },
             },
-            title="Application Configuration"
+            title="Application Configuration",
         )
 
     def example_with_formatting(self) -> None:
@@ -102,7 +102,7 @@ class PropertiesExample(AbstractResponseExample):
                 "last_deploy": "@time:%Y-%m-%d{1699000000}",
                 "config_file": "@path:short{/etc/app/config.yml}",
             },
-            title="Server Status"
+            title="Server Status",
         )
 
     def example_mixed_types(self) -> None:
@@ -120,7 +120,7 @@ class PropertiesExample(AbstractResponseExample):
                     "key2": 123,
                 },
             },
-            title="Mixed Data Types"
+            title="Mixed Data Types",
         )
 
     def example_with_emojis(self) -> None:
@@ -138,7 +138,7 @@ class PropertiesExample(AbstractResponseExample):
                     "🔓 Public": 1205,
                 },
             },
-            title="Test Results"
+            title="Test Results",
         )
 
     def example_long_values(self) -> None:
@@ -149,16 +149,16 @@ class PropertiesExample(AbstractResponseExample):
                 "path": "/home/user/very/long/path/to/some/directory/with/many/subdirectories/file.txt",
                 "url": "https://example.com/very/long/url/with/many/segments/and/parameters?param1=value1&param2=value2&param3=value3",
             },
-            title="Long Values"
+            title="Long Values",
         )
 
     def example_nesting(self) -> None:
         """Properties with parent/child nesting."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.properties(
             properties={"demo": "@color:yellow+bold{Nesting Demo}"},
-            title="Properties with Nesting"
+            title="Properties with Nesting",
         )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")
@@ -166,7 +166,7 @@ class PropertiesExample(AbstractResponseExample):
     def example_with_indentation(self) -> None:
         """Properties with different indentation levels."""
         self.io.log("@color:cyan+bold{Properties at different indentation levels:}")
-        
+
         # Level 0
         self.io.properties(
             properties={
@@ -174,9 +174,9 @@ class PropertiesExample(AbstractResponseExample):
                 "name": "Root",
             },
             title="Level 0",
-            indentation=0
+            indentation=0,
         )
-        
+
         # Level 1
         self.io.properties(
             properties={
@@ -184,9 +184,9 @@ class PropertiesExample(AbstractResponseExample):
                 "name": "Child",
             },
             title="Level 1",
-            indentation=1
+            indentation=1,
         )
-        
+
         # Level 3
         self.io.properties(
             properties={
@@ -194,7 +194,7 @@ class PropertiesExample(AbstractResponseExample):
                 "name": "Deep Child",
             },
             title="Level 3",
-            indentation=3
+            indentation=3,
         )
 
     def example_complex_structure(self) -> None:
@@ -225,7 +225,7 @@ class PropertiesExample(AbstractResponseExample):
                     },
                 },
             },
-            title="Project Configuration"
+            title="Project Configuration",
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

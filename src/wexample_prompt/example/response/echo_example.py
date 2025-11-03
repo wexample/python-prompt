@@ -10,6 +10,7 @@ from wexample_prompt.example.response.abstract_simple_message_example import (
 @base_class
 class EchoExample(AbstractSimpleMessageExample):
     """Example usage of EchoPromptResponse with various formatting."""
+
     def example_class(self):
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 

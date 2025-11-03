@@ -106,7 +106,7 @@ class WithIoManager(BaseClass):
     def get_io_context_indentation_text_color(self) -> TerminalColor | None:
         return None
 
-    def get_io_context_indentation_style(self):
+    def get_io_context_indentation_style(self) -> None:
         from wexample_prompt.enums.indentation_style import IndentationStyle
         return None  # Will inherit from parent or use default
 

@@ -56,7 +56,6 @@ def parse_style_markup(
     Multiple modifiers can be combined with ``+`` (eg ``@color:blue+bold``).
     Nested directives are supported.
     """
-
     lines: list[list[PromptResponseSegment]] = []
     current_segments: list[PromptResponseSegment] = []
     initial_styles = list(base_styles) if base_styles else []

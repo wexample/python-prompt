@@ -61,7 +61,9 @@ class SeparatorPromptResponse(AbstractMessageResponse):
 
         label_segments: list[PromptResponseSegment] = []
         if label:
-            label_segments = flatten_style_markup(label, default_color=color, joiner=" ")
+            label_segments = flatten_style_markup(
+                label, default_color=color, joiner=" "
+            )
             # Prepend spacing before label
             label_segments.insert(0, PromptResponseSegment(text=" ", color=color))
             segments.extend(label_segments)
@@ -87,11 +89,15 @@ class SeparatorPromptResponse(AbstractMessageResponse):
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_helpers.helpers.ansi import ansi_strip
         from wexample_prompt.common.text_width import get_visible_width
-        
+
         width = self.width or context.get_width()
-        length = width - get_visible_width(ansi_strip(context.render_indentation_text()))
+        length = width - get_visible_width(
+            ansi_strip(context.render_indentation_text())
+        )
         if self.label_segments:
-            length -= sum(get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments)
+            length -= sum(
+                get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments
+            )
 
         self.separator_response_segment.text = length * self.character
 

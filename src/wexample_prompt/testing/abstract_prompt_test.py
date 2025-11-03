@@ -22,7 +22,6 @@ class AbstractPromptTest(unittest.TestCase):
     """
 
     __test__ = False  # Prevent pytest from discovering this abstract class
-
     _io: IoManager
     _test_message: str = "Test message"
     _test_message_multiline: str = "\n".join(["Line 1", "Line 2", "Line 3"])

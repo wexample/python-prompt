@@ -21,14 +21,16 @@ class EchoPromptResponse(AbstractPromptResponse):
     """A basic response with no style"""
 
     @classmethod
-    def apply_prefix_to_kwargs(cls, prefix: str, args: tuple, kwargs: dict) -> tuple[tuple, dict]:
+    def apply_prefix_to_kwargs(
+        cls, prefix: str, args: tuple, kwargs: dict
+    ) -> tuple[tuple, dict]:
         """Apply prefix to message parameter.
-        
+
         Args:
             prefix: The formatted prefix to apply (e.g., "[child] ")
             args: Positional arguments
             kwargs: Keyword arguments
-            
+
         Returns:
             Tuple of (modified_args, modified_kwargs)
         """
@@ -38,7 +40,7 @@ class EchoPromptResponse(AbstractPromptResponse):
         elif len(args) > 0 and isinstance(args[0], str):
             # Handle positional message argument
             args = (prefix + args[0],) + args[1:]
-        
+
         return args, kwargs
 
     @classmethod

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 
 class InteractiveExample(Example, WithIoMethods):
-    def bind_executor(self, executor: "InteractiveExecutor") -> None:
+    def bind_executor(self, executor: InteractiveExecutor) -> None:
         object.__setattr__(self, "executor", executor)
         self.set_parent_io_handler(executor)
         self.ensure_io_manager()

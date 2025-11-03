@@ -51,10 +51,14 @@ def test_io_manager_response_signatures_align_with_factories() -> None:
         )
 
         missing_required = sorted(
-            name for name in factory_required if name not in io_required and name not in io_optional
+            name
+            for name in factory_required
+            if name not in io_required and name not in io_optional
         )
         missing_optional = sorted(
-            name for name in factory_optional if name not in io_required and name not in io_optional
+            name
+            for name in factory_optional
+            if name not in io_required and name not in io_optional
         )
 
         assert not missing_required, (

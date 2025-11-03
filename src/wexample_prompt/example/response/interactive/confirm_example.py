@@ -176,13 +176,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="Do you want to continue?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="yes",
             reset_on_finish=True,
-            predefined_answer="yes"
+            predefined_answer="yes",
         )
 
     def example_with_formatting(self) -> None:
@@ -190,13 +190,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="@color:red+bold{⚠ Warning}: This will @color:yellow{delete all data}. Continue?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="no",
             reset_on_finish=True,
-            predefined_answer="no"
+            predefined_answer="no",
         )
 
     def example_with_emojis(self) -> None:
@@ -204,13 +204,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="🚀 Deploy to production?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="no",
             reset_on_finish=True,
-            predefined_answer="yes"
+            predefined_answer="yes",
         )
 
     def example_ok_cancel(self) -> None:
@@ -218,13 +218,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="Save changes?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_OK_CANCEL,
             default="ok",
             reset_on_finish=True,
-            predefined_answer="ok"
+            predefined_answer="ok",
         )
 
     def example_yes_no_all(self) -> None:
@@ -232,13 +232,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="Apply changes to all files?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO_ALL,
             default="yes",
             reset_on_finish=True,
-            predefined_answer="all"
+            predefined_answer="all",
         )
 
     def example_with_paths(self) -> None:
@@ -246,13 +246,13 @@ class ConfirmExample(AbstractResponseExample):
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        
+
         self.io.confirm(
             question="Delete @path:short{/home/user/documents/report.pdf}?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="no",
             reset_on_finish=True,
-            predefined_answer="no"
+            predefined_answer="no",
         )
 
     def example_nesting_demo(self) -> None:
@@ -261,13 +261,13 @@ class ConfirmExample(AbstractResponseExample):
             ConfirmPromptResponse,
         )
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.confirm(
             question="@color:yellow+bold{Nesting Demo} - Continue?",
             choices=ConfirmPromptResponse.MAPPING_PRESET_YES_NO,
             default="yes",
             reset_on_finish=True,
-            predefined_answer="yes"
+            predefined_answer="yes",
         )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")

@@ -72,148 +72,155 @@ class TreeExample(AbstractResponseExample):
 
     def example_simple(self) -> None:
         """Simple tree structure."""
-        self.io.tree(data={
-            "project": {
-                "src": {
-                    "main.py": None,
-                    "utils.py": None,
-                },
-                "tests": {
-                    "test_main.py": None,
-                },
-                "README.md": None,
+        self.io.tree(
+            data={
+                "project": {
+                    "src": {
+                        "main.py": None,
+                        "utils.py": None,
+                    },
+                    "tests": {
+                        "test_main.py": None,
+                    },
+                    "README.md": None,
+                }
             }
-        })
+        )
 
     def example_with_emojis(self) -> None:
         """Tree with emojis."""
-        self.io.tree(data={
-            "📁 project": {
-                "📁 src": {
-                    "🐍 main.py": None,
-                    "🐍 utils.py": None,
-                },
-                "📁 tests": {
-                    "🧪 test_main.py": None,
-                },
-                "📝 README.md": None,
+        self.io.tree(
+            data={
+                "📁 project": {
+                    "📁 src": {
+                        "🐍 main.py": None,
+                        "🐍 utils.py": None,
+                    },
+                    "📁 tests": {
+                        "🧪 test_main.py": None,
+                    },
+                    "📝 README.md": None,
+                }
             }
-        })
+        )
 
     def example_with_formatting(self) -> None:
         """Tree with inline formatting."""
-        self.io.tree(data={
-            "@color:cyan+bold{project}": {
-                "@color:yellow{src}": {
-                    "@color:green{main.py}": None,
-                    "@color:green{utils.py}": None,
-                },
-                "@color:yellow{tests}": {
-                    "@color:blue{test_main.py}": None,
-                },
-                "@color:magenta{README.md}": None,
+        self.io.tree(
+            data={
+                "@color:cyan+bold{project}": {
+                    "@color:yellow{src}": {
+                        "@color:green{main.py}": None,
+                        "@color:green{utils.py}": None,
+                    },
+                    "@color:yellow{tests}": {
+                        "@color:blue{test_main.py}": None,
+                    },
+                    "@color:magenta{README.md}": None,
+                }
             }
-        })
+        )
 
     def example_deep_nesting(self) -> None:
         """Tree with deep nesting."""
-        self.io.tree(data={
-            "level1": {
-                "level2": {
-                    "level3": {
-                        "level4": {
-                            "level5": {
-                                "deep_file.txt": None,
+        self.io.tree(
+            data={
+                "level1": {
+                    "level2": {
+                        "level3": {
+                            "level4": {
+                                "level5": {
+                                    "deep_file.txt": None,
+                                }
                             }
                         }
                     }
                 }
             }
-        })
+        )
 
     def example_with_values(self) -> None:
         """Tree with values displayed."""
-        self.io.tree(data={
-            "config": {
-                "database": {
-                    "host": "localhost",
-                    "port": 5432,
-                    "name": "mydb",
-                },
-                "cache": {
-                    "type": "redis",
-                    "ttl": 3600,
-                },
+        self.io.tree(
+            data={
+                "config": {
+                    "database": {
+                        "host": "localhost",
+                        "port": 5432,
+                        "name": "mydb",
+                    },
+                    "cache": {
+                        "type": "redis",
+                        "ttl": 3600,
+                    },
+                }
             }
-        })
+        )
 
     def example_mixed_structure(self) -> None:
         """Tree with mixed files and folders."""
-        self.io.tree(data={
-            "📁 webapp": {
-                "📁 frontend": {
-                    "📁 src": {
-                        "📁 components": {
-                            "⚙️ Header.tsx": None,
-                            "⚙️ Footer.tsx": None,
+        self.io.tree(
+            data={
+                "📁 webapp": {
+                    "📁 frontend": {
+                        "📁 src": {
+                            "📁 components": {
+                                "⚙️ Header.tsx": None,
+                                "⚙️ Footer.tsx": None,
+                            },
+                            "🎨 App.css": None,
+                            "⚙️ App.tsx": None,
                         },
-                        "🎨 App.css": None,
-                        "⚙️ App.tsx": None,
+                        "📦 package.json": None,
                     },
-                    "📦 package.json": None,
-                },
-                "📁 backend": {
-                    "📁 api": {
-                        "🐍 routes.py": None,
-                        "🐍 models.py": None,
+                    "📁 backend": {
+                        "📁 api": {
+                            "🐍 routes.py": None,
+                            "🐍 models.py": None,
+                        },
+                        "📦 requirements.txt": None,
                     },
-                    "📦 requirements.txt": None,
-                },
+                }
             }
-        })
+        )
 
     def example_with_paths(self) -> None:
         """Tree with clickable file paths."""
-        self.io.tree(data={
-            "📁 project": {
-                "@path:short{/home/user/project/src/main.py}": None,
-                "@path:short{/home/user/project/src/utils.py}": None,
-                "📁 tests": {
-                    "@path:short{/home/user/project/tests/test_main.py}": None,
-                },
-                "@path:short{/home/user/project/README.md}": None,
-                "@path:short{/home/user/project/setup.py}": None,
+        self.io.tree(
+            data={
+                "📁 project": {
+                    "@path:short{/home/user/project/src/main.py}": None,
+                    "@path:short{/home/user/project/src/utils.py}": None,
+                    "📁 tests": {
+                        "@path:short{/home/user/project/tests/test_main.py}": None,
+                    },
+                    "@path:short{/home/user/project/README.md}": None,
+                    "@path:short{/home/user/project/setup.py}": None,
+                }
             }
-        })
+        )
 
     def example_with_indentation(self) -> None:
         """Trees at different indentation levels."""
         self.io.log("@color:cyan+bold{Trees at different levels:}")
-        
-        self.io.tree(
-            data={"level0": {"file.txt": None}},
-            indentation=0
-        )
-        
-        self.io.tree(
-            data={"level1": {"file.txt": None}},
-            indentation=1
-        )
-        
-        self.io.tree(
-            data={"level3": {"file.txt": None}},
-            indentation=3
-        )
+
+        self.io.tree(data={"level0": {"file.txt": None}}, indentation=0)
+
+        self.io.tree(data={"level1": {"file.txt": None}}, indentation=1)
+
+        self.io.tree(data={"level3": {"file.txt": None}}, indentation=3)
 
     def example_nesting(self) -> None:
         """Tree with parent/child nesting."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
-        self.io.tree(data={
-            "@color:yellow+bold{Nesting Demo}": {
-                "tree_example": None,
+
+        self.io.tree(
+            data={
+                "@color:yellow+bold{Nesting Demo}": {
+                    "tree_example": None,
+                }
             }
-        })
+        )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")
 

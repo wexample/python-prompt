@@ -253,9 +253,7 @@ class IoManager(
         from wexample_prompt.common.prompt_context import PromptContext
 
         base_context = PromptContext.create_if_none(context=context)
-        context_kwargs = PromptContext.create_kwargs_from_context(
-            context=base_context
-        )
+        context_kwargs = PromptContext.create_kwargs_from_context(context=base_context)
 
         base_indentation_length = (
             context_kwargs.get("indentation_length") or self.indentation_length
@@ -274,9 +272,8 @@ class IoManager(
 
         width = context_kwargs.get("width")
         if width is None:
-            context_kwargs["width"] = (
-                self.terminal_width
-                - (total_indentation * base_indentation_length)
+            context_kwargs["width"] = self.terminal_width - (
+                total_indentation * base_indentation_length
             )
 
         return PromptContext.create_from_parent_context_and_kwargs(

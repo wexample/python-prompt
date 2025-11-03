@@ -64,7 +64,7 @@ class SuggestionsExample(AbstractResponseExample):
                 "start",
                 "stop",
                 "restart",
-            ]
+            ],
         )
 
     def example_with_formatting(self) -> None:
@@ -75,7 +75,7 @@ class SuggestionsExample(AbstractResponseExample):
                 "@color:green{git commit} -m 'message'",
                 "@color:green{git push} origin main",
                 "@color:green{git pull} --rebase",
-            ]
+            ],
         )
 
     def example_long_suggestions(self) -> None:
@@ -86,7 +86,7 @@ class SuggestionsExample(AbstractResponseExample):
                 "docker run -d -p 8080:80 --name myapp nginx:latest",
                 "docker-compose up -d --build --remove-orphans",
                 "docker exec -it myapp /bin/bash",
-            ]
+            ],
         )
 
     def example_with_paths(self) -> None:
@@ -97,7 +97,7 @@ class SuggestionsExample(AbstractResponseExample):
                 "@path:short{/home/user/documents/report.pdf}",
                 "@path:short{/home/user/projects/myapp/src/main.py}",
                 "@path:short{/etc/nginx/nginx.conf}",
-            ]
+            ],
         )
 
     def example_with_emojis(self) -> None:
@@ -109,7 +109,7 @@ class SuggestionsExample(AbstractResponseExample):
                 "🧪 Run tests",
                 "📊 View analytics",
                 "🔧 Configure settings",
-            ]
+            ],
         )
 
     def example_many_suggestions(self) -> None:
@@ -127,38 +127,31 @@ class SuggestionsExample(AbstractResponseExample):
                 "scikit-learn",
                 "tensorflow",
                 "pytorch",
-            ]
+            ],
         )
 
     def example_with_indentation(self) -> None:
         """Suggestions at different indentation levels."""
         self.io.log("@color:cyan+bold{Suggestions at different levels:}")
-        
+
         self.io.suggestions(
-            message="Level 0:",
-            suggestions=["option1", "option2"],
-            indentation=0
+            message="Level 0:", suggestions=["option1", "option2"], indentation=0
         )
-        
+
         self.io.suggestions(
-            message="Level 1:",
-            suggestions=["option1", "option2"],
-            indentation=1
+            message="Level 1:", suggestions=["option1", "option2"], indentation=1
         )
-        
+
         self.io.suggestions(
-            message="Level 3:",
-            suggestions=["option1", "option2"],
-            indentation=3
+            message="Level 3:", suggestions=["option1", "option2"], indentation=3
         )
 
     def example_nesting(self) -> None:
         """Suggestions with parent/child nesting."""
         from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
-        
+
         self.io.suggestions(
-            message="@color:yellow+bold{Nesting Demo}",
-            suggestions=["demo1", "demo2"]
+            message="@color:yellow+bold{Nesting Demo}", suggestions=["demo1", "demo2"]
         )
         parent = ParentTask(io=self.io)
         parent.execute(method_name="log")

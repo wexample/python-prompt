@@ -10,6 +10,7 @@ from wexample_prompt.example.response.abstract_simple_message_example import (
 @base_class
 class LogExample(AbstractSimpleMessageExample):
     """Example usage of LogPromptResponse with various formatting."""
+
     def example_class(self):
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 

@@ -52,16 +52,17 @@ class TablePromptResponse(AbstractPromptResponse):
     def _strip_ansi(text: str) -> str:
         """Strip ANSI escape sequences from text."""
         import re
+
         # Remove ANSI escape sequences (including hyperlinks)
-        ansi_escape = re.compile(r'\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\')
-        return ansi_escape.sub('', text)
-    
+        ansi_escape = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
+        return ansi_escape.sub("", text)
+
     @staticmethod
     def _get_visible_width(text: str) -> int:
         """Get visible width of text, excluding ANSI escape sequences and markup."""
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
         from wexample_prompt.common.text_width import get_visible_width
-        
+
         # Parse markup to get segments
         segments = flatten_style_markup(text, joiner=None)
         # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
@@ -95,30 +96,30 @@ class TablePromptResponse(AbstractPromptResponse):
         )
 
     @staticmethod
-    def _format_row(
-        row: list[Any], widths: list[int]
-    ) -> list[PromptResponseSegment]:
+    def _format_row(row: list[Any], widths: list[int]) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
         segments = [PromptResponseSegment(text="|")]
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
-            
+
             # Parse cell content for inline formatting
             cell_segments = flatten_style_markup(cell, joiner=None)
-            
+
             # Calculate actual text length (without markup and ANSI codes)
-            cell_text_length = sum(len(TablePromptResponse._strip_ansi(seg.text)) for seg in cell_segments)
+            cell_text_length = sum(
+                len(TablePromptResponse._strip_ansi(seg.text)) for seg in cell_segments
+            )
             padding = max(0, widths[i] - cell_text_length)
-            
+
             # Add leading space
             segments.append(PromptResponseSegment(text=" "))
             # Add parsed cell content
             segments.extend(cell_segments)
             # Add padding and closing pipe
             segments.append(PromptResponseSegment(text=" " * padding + " |"))
-        
+
         return segments
 
     def render(self, context: PromptContext | None = None) -> str | None:
@@ -135,7 +136,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
         max_widths = self._calculate_max_widths(all_rows)
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
-        
+
         # Ensure total_width is at least as wide as the title
         if self.title:
             min_width_for_title = len(self.title) + 4  # +4 for "+ " and " +"
@@ -144,12 +145,12 @@ class TablePromptResponse(AbstractPromptResponse):
                 extra_space = min_width_for_title - total_width
                 space_per_column = extra_space // len(max_widths)
                 remainder = extra_space % len(max_widths)
-                
+
                 for i in range(len(max_widths)):
                     max_widths[i] += space_per_column
                     if i < remainder:
                         max_widths[i] += 1
-                
+
                 total_width = sum(max_widths) + (len(max_widths) * 3) - 1
 
         lines: list[PromptResponseLine] = []

@@ -20,11 +20,11 @@ class TestIoManager(AbstractPromptTest):
         from wexample_prompt.testing.resources.classes.class_indenation_level_one import (
             ClassIndentationLevelOne,
         )
-        from wexample_prompt.testing.resources.classes.class_indenation_level_two import (
-            ClassIndentationLevelTwo,
-        )
         from wexample_prompt.testing.resources.classes.class_indenation_level_three import (
             ClassIndentationLevelThree,
+        )
+        from wexample_prompt.testing.resources.classes.class_indenation_level_two import (
+            ClassIndentationLevelTwo,
         )
 
         level_one = ClassIndentationLevelOne(io=self._io)

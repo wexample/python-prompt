@@ -83,10 +83,10 @@ class ErrorExample(AbstractSimpleMessageExample):
 
     def edge_case_with_exception(self) -> None:
         """Test edge cases: errors with exceptions."""
-        def make_error():
-            def inner():
+        def make_error() -> None:
+            def inner() -> None:
                 raise ValueError("Test exception from example")
-            def middle():
+            def middle() -> None:
                 inner()
             middle()
 

@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 class TestTaskPromptResponse(AbstractPromptMessageResponseTest):
     __test__ = True  # Re-enable test collection for concrete test class
-
     """Test cases for TaskPromptResponse."""
 
     def get_expected_lines(self) -> int:

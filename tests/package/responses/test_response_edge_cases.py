@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import Callable
+from collections.abc import Callable
 
 from wexample_prompt.common.io_manager import IoManager
 from wexample_prompt.common.prompt_context import PromptContext
