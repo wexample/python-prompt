@@ -61,7 +61,12 @@ class ProgressPromptResponseManagerMixin:
                 ),
             )
         else:
-            response.init_handle(context=context)
+            rebuilt_context = ProgressPromptResponse.rebuild_context_for_kwargs(
+                context=context,
+                parent_kwargs=kwargs,
+            )
+            effective_context = self.create_context(context=rebuilt_context)
+            response.init_handle(context=effective_context)
 
         # The first print is done without progress handle.
         response.get_handle().output = self.output
