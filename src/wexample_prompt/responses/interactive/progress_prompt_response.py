@@ -135,8 +135,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
                 context=context,
             )
 
-            # In case of context change.
-            self._handle.context = context
+        # Always refresh the handle context with the most recent effective context.
+        self._handle.context = context
 
         return context
 
