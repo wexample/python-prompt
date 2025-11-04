@@ -32,14 +32,14 @@ class AbstractMessageResponse(AbstractPromptResponse):
         """
         # Determine the effective symbol (explicit symbol in kwargs > class default)
         effective_symbol = kwargs.get("symbol", cls.SYMBOL)
-        
+
         # Build the final prefix: prefix + symbol (if any) + space
         final_prefix = prefix
         if effective_symbol:
             final_prefix = f"{prefix}{effective_symbol} "
             # Remove the symbol from kwargs so it won't be added again in _create_symbol_message
             kwargs["symbol"] = ""
-        
+
         # Handle message parameter
         if "message" in kwargs:
             kwargs["message"] = final_prefix + kwargs["message"]

@@ -114,8 +114,8 @@ class ScreenExample(AbstractResponseExample):
         total = 10
 
         def _callback(response) -> None:
-            from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
             from time import sleep
+
             response.clear()
             response.print(f"Test screen (extended) {counter['n']}/{total}")
             sleep(0.05)
@@ -132,8 +132,8 @@ class ScreenExample(AbstractResponseExample):
         total = 10
 
         def _callback(response) -> None:
-            from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
             from time import sleep
+
             response.clear()
             response.print(f"Test screen (manager) {counter['n']}/{total}")
             sleep(0.05)

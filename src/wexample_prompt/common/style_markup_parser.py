@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
-from collections.abc import Iterable
-
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
+from collections.abc import Iterable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+    from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.enums.text_style import TextStyle
 
 # Pattern to match directives: @type:params{content} or @type{content}
 # Supports word characters, emojis, +, and special chars for backward compatibility
@@ -58,6 +60,7 @@ def flatten_style_markup(
         String inserted between logical lines when the markup produced multiple
         lines. Set to ``None`` to keep them separate (no automatic joiner).
     """
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
     segments: list[PromptResponseSegment] = []
     parsed_lines = parse_style_markup(
         text=text, default_color=default_color, base_styles=base_styles
@@ -100,6 +103,7 @@ def parse_style_markup(
         active_color: TerminalColor | None,
         active_styles: Iterable[TextStyle],
     ) -> None:
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         nonlocal current_segments
 
         styles_list = list(active_styles)
@@ -145,6 +149,8 @@ def parse_style_markup(
     def apply_tokens(
         tokens: str, active_color: TerminalColor | None, active_styles: list[TextStyle]
     ) -> tuple[TerminalColor | None, list[TextStyle]]:
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
         updated_color = active_color
         styles_list = list(active_styles)
 
@@ -201,6 +207,7 @@ def parse_style_markup(
 
     def format_time(content: str, fmt: str | None = None) -> str:
         """Format a timestamp or current time."""
+        from datetime import datetime
         if fmt is None:
             fmt = "%H:%M:%S"
 

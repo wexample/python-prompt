@@ -24,7 +24,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
     DEFAULT_PREFIX: ClassVar[str] = "❯"
     DEFAULT_CHARACTER: ClassVar[str] = "⫻"
-    
+
     @classmethod
     def apply_prefix_to_kwargs(
         cls, prefix: str, args: tuple, kwargs: dict
@@ -44,9 +44,9 @@ class AbstractTitleResponse(AbstractMessageResponse):
         """
         # Store the prefix in kwargs so it can be prepended to DEFAULT_PREFIX during creation
         kwargs["_context_prefix"] = prefix
-        
+
         return args, kwargs
-    
+
     character: str | None = public_field(
         default=DEFAULT_CHARACTER,
         description="Character used to fill the remaining line",
@@ -79,32 +79,38 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
         # Extract context prefix if provided (added by apply_prefix_to_kwargs)
         _context_prefix = kwargs.pop("_context_prefix", None)
-        
+
         # Prepend context prefix if provided (e.g., "[child] ❯ " instead of "❯ ")
-        prefix_text = f"{_context_prefix}{cls.DEFAULT_PREFIX} " if _context_prefix else f"{cls.DEFAULT_PREFIX} "
-        
+        prefix_text = (
+            f"{_context_prefix}{cls.DEFAULT_PREFIX} "
+            if _context_prefix
+            else f"{cls.DEFAULT_PREFIX} "
+        )
+
         prefix = PromptResponseSegment(
             text=prefix_text,
             color=color,
         )
-        
+
         # Parse text to support color markups like @color:cyan+bold{...}
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
-        
+
         # Parse the text with markup support, using default color if no markup specified
         text_segments = flatten_style_markup(
-            f"{text} ",  # Add trailing space as before
-            default_color=color,
-            joiner=None
+            f"{text} ", default_color=color, joiner=None  # Add trailing space as before
         )
-        
+
         # For backward compatibility, store the first text segment as text_segment
         # (used for width calculation in render)
-        text_seg = text_segments[0] if text_segments else PromptResponseSegment(
-            text=f"{text} ",
-            color=color,
+        text_seg = (
+            text_segments[0]
+            if text_segments
+            else PromptResponseSegment(
+                text=f"{text} ",
+                color=color,
+            )
         )
-        
+
         fill = PromptResponseSegment(
             text="",
             color=color,
@@ -119,9 +125,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             fill_segment=fill,
             width=width,
             character=character or cls.DEFAULT_CHARACTER,
-            lines=[
-                PromptResponseLine(segments=segments)
-            ],
+            lines=[PromptResponseLine(segments=segments)],
             verbosity=verbosity,
         )
 

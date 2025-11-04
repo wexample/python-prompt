@@ -1,16 +1,6 @@
 from __future__ import annotations
 
-import os
 from collections.abc import Callable
-from wexample_prompt.responses.interactive.choice_prompt_response import (
-    ChoicePromptResponse,
-)
-from wexample_prompt.responses.interactive.file_picker_prompt_response import (
-    FilePickerPromptResponse,
-)
-from wexample_prompt.responses.interactive.progress_prompt_response import (
-    ProgressPromptResponse,
-)
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from typing import TYPE_CHECKING
 

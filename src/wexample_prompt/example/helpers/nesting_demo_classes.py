@@ -62,8 +62,12 @@ class GrandchildTask(OutputMessageMixin, WithIoMethods):
         Args:
             method_name: IO method to use (log, list, etc.)
         """
-        self._output_message(method_name, "Grandchild task started (vertical style)", prefix=True)
-        self._output_message(method_name, "Processing grandchild operations...", prefix=True)
+        self._output_message(
+            method_name, "Grandchild task started (vertical style)", prefix=True
+        )
+        self._output_message(
+            method_name, "Processing grandchild operations...", prefix=True
+        )
         self._output_message(method_name, "Grandchild task completed", prefix=True)
 
     def get_io_context_indentation_character(self) -> str:

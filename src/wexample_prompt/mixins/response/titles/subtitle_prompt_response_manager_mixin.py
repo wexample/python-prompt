@@ -34,7 +34,7 @@ class SubtitlePromptResponseManagerMixin:
 
         # Extract _context_prefix if present (added by apply_prefix_to_kwargs)
         _context_prefix = kwargs.pop("_context_prefix", None)
-        
+
         response = SubtitlePromptResponse.create_subtitle(
             text=text,
             color=color,

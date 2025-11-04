@@ -51,10 +51,10 @@ class ErrorPromptResponse(AbstractMessageResponse):
             # First line: symbol + header in red
             # Parse header_text to support color markups like @color:magenta+bold{...}
             effective_symbol = symbol or cls.SYMBOL
-            
+
             # Parse the header text to extract color/style markups
             from wexample_prompt.common.style_markup_parser import flatten_style_markup
-            
+
             header_segments: list[PromptResponseSegment] = []
             if effective_symbol:
                 header_segments.append(
@@ -62,12 +62,10 @@ class ErrorPromptResponse(AbstractMessageResponse):
                         text=f"{effective_symbol} ", color=(color or TerminalColor.RED)
                     )
                 )
-            
+
             # Parse header text with markup support, using default color if no markup specified
             parsed_segments = flatten_style_markup(
-                header_text, 
-                default_color=(color or TerminalColor.RED),
-                joiner=None
+                header_text, default_color=(color or TerminalColor.RED), joiner=None
             )
             header_segments.extend(parsed_segments)
 

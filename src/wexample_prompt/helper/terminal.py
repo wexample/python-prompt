@@ -5,15 +5,6 @@ from __future__ import annotations
 import wcwidth
 
 
-def terminal_strip_sequences(text: str) -> str:
-    """Strip CSI/OSC ANSI escape sequences so width calculations see only visible chars."""
-    from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
-    from wexample_helpers.helpers.ansi import ansi_strip
-
-    cleaned = ansi_strip(text)
-    return OSC_SEQUENCE_RE.sub("", cleaned)
-
-
 def terminal_get_visible_width(text: str) -> int:
     """Calculate the visible width of text using wcwidth.
 
@@ -44,3 +35,12 @@ def terminal_get_visible_width(text: str) -> int:
             width += char_width
 
     return max(0, width)
+
+
+def terminal_strip_sequences(text: str) -> str:
+    """Strip CSI/OSC ANSI escape sequences so width calculations see only visible chars."""
+    from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
+    from wexample_helpers.helpers.ansi import ansi_strip
+
+    cleaned = ansi_strip(text)
+    return OSC_SEQUENCE_RE.sub("", cleaned)
