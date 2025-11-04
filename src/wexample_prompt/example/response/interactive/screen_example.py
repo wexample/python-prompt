@@ -38,7 +38,7 @@ class ScreenExample(AbstractResponseExample):
                 response.close()
                 return
 
-            sleep(1.0)
+            time.sleep(1.0)
             response.reload()
 
         self.io.screen(callback=_proc_callback, height=14)
@@ -77,7 +77,7 @@ class ScreenExample(AbstractResponseExample):
                     response.close()
                     return
 
-            sleep(0.01)
+            time.sleep(0.01)
             counter["n"] += 1
             if counter["n"] > total:
                 response.close()
@@ -97,7 +97,7 @@ class ScreenExample(AbstractResponseExample):
         def _callback(response: ScreenPromptResponse) -> None:
             response.clear()
             response.print(f"Test screen iteration {counter['n']}/{total}")
-            sleep(0.05)
+            time.sleep(0.05)
             counter["n"] += 1
             if counter["n"] > total:
                 response.close()

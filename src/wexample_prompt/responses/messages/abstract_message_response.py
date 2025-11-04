@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, ClassVar
 
 from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -17,19 +18,34 @@ class AbstractMessageResponse(AbstractPromptResponse):
 
     @classmethod
     def apply_prefix_to_kwargs(
-        cls, prefix: str, args: tuple, kwargs: dict, symbol: str | None = None
+        cls, prefix: str, args: tuple, kwargs: dict
     ) -> tuple[tuple, dict]:
-        """Apply prefix and optional symbol to message parameter."""
-        effective_symbol = symbol if symbol is not None else cls.SYMBOL
+        """Apply prefix to message parameter.
 
-        full_prefix = prefix
+        Args:
+            prefix: The formatted prefix to apply (e.g., "[child] ")
+            args: Positional arguments
+            kwargs: Keyword arguments
+
+        Returns:
+            Tuple of (modified_args, modified_kwargs)
+        """
+        # Determine the effective symbol (explicit symbol in kwargs > class default)
+        effective_symbol = kwargs.get("symbol", cls.SYMBOL)
+        
+        # Build the final prefix: prefix + symbol (if any) + space
+        final_prefix = prefix
         if effective_symbol:
-            full_prefix += f"{effective_symbol} "
-
+            final_prefix = f"{prefix}{effective_symbol} "
+            # Remove the symbol from kwargs so it won't be added again in _create_symbol_message
+            kwargs["symbol"] = ""
+        
+        # Handle message parameter
         if "message" in kwargs:
-            kwargs["message"] = full_prefix + kwargs["message"]
+            kwargs["message"] = final_prefix + kwargs["message"]
         elif len(args) > 0 and isinstance(args[0], str):
-            args = (full_prefix + args[0],) + args[1:]
+            # Handle positional message argument
+            args = (final_prefix + args[0],) + args[1:]
 
         return args, kwargs
 
@@ -43,8 +59,19 @@ class AbstractMessageResponse(AbstractPromptResponse):
     ) -> AbstractMessageResponse:
         """Create a message with a symbol"""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        # Determine effective symbol (explicit > class default)
+        effective_symbol = symbol if symbol is not None else cls.SYMBOL
 
         # Build lines from message handling multi-line inputs like PromptResponseLine.create_from_string
         raw_lines = PromptResponseLine.create_from_string(text=text, color=color)
+
+        # Prepend symbol (if any) to the first line only
+        if effective_symbol and raw_lines:
+            first = raw_lines[0]
+            first.segments.insert(
+                0, PromptResponseSegment(text=f"{effective_symbol} ", color=color)
+            )
 
         return cls._create(lines=raw_lines, **kwargs)
