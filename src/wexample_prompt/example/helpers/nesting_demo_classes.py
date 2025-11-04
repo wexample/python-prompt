@@ -39,14 +39,14 @@ class ChildTask(OutputMessageMixin, WithIoMethods):
         Args:
             method_name: IO method to use (log, list, etc.)
         """
-        self._output_message(method_name, "Child task started")
-        self._output_message(method_name, "Processing child operations...")
+        self._output_message(method_name, "Child task started", prefix=True)
+        self._output_message(method_name, "Processing child operations...", prefix=True)
 
         # Create grandchild with automatic indentation
         grandchild = GrandchildTask(parent_io_handler=self)
         grandchild.execute(method_name)
 
-        self._output_message(method_name, "Child task completed")
+        self._output_message(method_name, "Child task completed", prefix=True)
 
     def get_io_context_prefix(self) -> str:
         return "child"
@@ -62,9 +62,9 @@ class GrandchildTask(OutputMessageMixin, WithIoMethods):
         Args:
             method_name: IO method to use (log, list, etc.)
         """
-        self._output_message(method_name, "Grandchild task started (vertical style)")
-        self._output_message(method_name, "Processing grandchild operations...")
-        self._output_message(method_name, "Grandchild task completed")
+        self._output_message(method_name, "Grandchild task started (vertical style)", prefix=True)
+        self._output_message(method_name, "Processing grandchild operations...", prefix=True)
+        self._output_message(method_name, "Grandchild task completed", prefix=True)
 
     def get_io_context_indentation_character(self) -> str:
         return "│"
