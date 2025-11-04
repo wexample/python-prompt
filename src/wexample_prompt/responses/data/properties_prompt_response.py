@@ -118,7 +118,10 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             self.properties, max_key_width, self.nested_indent
         )
 
-        lines: list[PromptResponseLine] = []
+        # Maintain a leading spacer line so the block visually separates like other responses.
+        lines: list[PromptResponseLine] = [
+            PromptResponseLine(segments=[PromptResponseSegment(text="")])
+        ]
 
         if self.title:
             title_len = len(self.title)
