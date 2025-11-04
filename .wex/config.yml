@@ -4,8 +4,8 @@ global:
 test:
   coverage:
     last_report:
-      covered: 3384
+      covered: 3407
       excluded: 438
-      missing: 1038
-      percent: 76.52645861601086
-      total: 4422
+      missing: 1058
+      percent: 76.30459126539753
+      total: 4465
