@@ -159,13 +159,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label_segments: list[PromptResponseSegment] = []
         label_visible_width = 0
         if self.label:
-            from wexample_prompt.common.text_width import get_visible_width
+            from wexample_prompt.helper.terminal import terminal_get_visible_width
 
             label_segments = flatten_style_markup(self.label, joiner=" ")
             # Calculate visible width: strip ANSI codes and count emojis as 2 chars
             for seg in label_segments:
                 clean_text = ansi_strip(seg.text)
-                label_visible_width += get_visible_width(clean_text)
+                label_visible_width += terminal_get_visible_width(clean_text)
             # trailing space between label and bar
             label_segments.append(PromptResponseSegment(text=" "))
             label_visible_width += 1
@@ -177,13 +177,13 @@ class ProgressPromptResponse(AbstractPromptResponse):
             right_percent = f" {current}/{self.total}"
 
         # Determine bar width to perfectly fit the line
-        from wexample_prompt.common.text_width import get_visible_width
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         bar_width = max(
             0,
             max_content_width
             - label_visible_width
-            - get_visible_width(ansi_strip(right_percent)),
+            - terminal_get_visible_width(ansi_strip(right_percent)),
         )
 
         # Build colored bar of exact computed width

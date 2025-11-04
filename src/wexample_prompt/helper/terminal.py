@@ -2,23 +2,20 @@
 
 from __future__ import annotations
 
-import re
-
 import wcwidth
 
-from wexample_helpers.helpers.ansi import ansi_strip
-
-# OSC (Operating System Command) sequences such as hyperlinks: ESC ] ... ( ESC \ or BEL )
-OSC_SEQUENCE_RE = re.compile(r"\x1B\][0-?]*.*?(?:\x1B\\|\x07)")
 
 
-def strip_terminal_sequences(text: str) -> str:
+def terminal_strip_sequences(text: str) -> str:
     """Strip CSI/OSC ANSI escape sequences so width calculations see only visible chars."""
+    from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
+    from wexample_helpers.helpers.ansi import ansi_strip
+
     cleaned = ansi_strip(text)
     return OSC_SEQUENCE_RE.sub("", cleaned)
 
 
-def get_visible_width(text: str) -> int:
+def terminal_get_visible_width(text: str) -> int:
     """Calculate the visible width of text using wcwidth.
 
     This function properly handles:
@@ -33,7 +30,7 @@ def get_visible_width(text: str) -> int:
     Returns:
         The visible width in terminal columns
     """
-    text = strip_terminal_sequences(text)
+    text = terminal_strip_sequences(text)
 
     width = wcwidth.wcswidth(text)
     # wcswidth returns -1 if the string contains non-printable characters

@@ -197,9 +197,9 @@ class PromptContext(BaseClass):
 
     def get_indentation_visible_width(self) -> int:
         """Return the visible width of the indentation, ignoring ANSI codes."""
-        from wexample_prompt.common.text_width import get_visible_width
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
-        return get_visible_width(self.render_indentation_text())
+        return terminal_get_visible_width(self.render_indentation_text())
 
     def get_available_width(self, width: int | None = None, minimum: int = 0) -> int:
         """Compute the remaining visible width once indentation is applied.
