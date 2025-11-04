@@ -85,22 +85,36 @@ class AbstractTitleResponse(AbstractMessageResponse):
         )
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wcwidth import wcswidth
-
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.text_width import get_visible_width
 
         context = PromptContext.create_if_none(context=context)
 
         # Prefer provided context, else defer to super to resolve any defaulting
         width = self.width or context.get_width()
-
         # Compute remaining space after prefix + text and indentation
         remaining = context.get_available_width(width, minimum=0)
 
-        remaining -= wcswidth(self.prefix_segment.text)
-        remaining -= wcswidth(self.text_segment.text)
-        self.fill_segment.text = max(0, remaining) * (
-            self.character or self.DEFAULT_CHARACTER
-        )
+        remaining -= get_visible_width(self.prefix_segment.text)
+        remaining -= get_visible_width(self.text_segment.text)
+
+        target_width = max(0, remaining)
+        fill_pattern = self.character or self.DEFAULT_CHARACTER
+        if target_width:
+            pattern_width = get_visible_width(fill_pattern)
+            if pattern_width <= 0:
+                fill_pattern = self.DEFAULT_CHARACTER
+                pattern_width = get_visible_width(fill_pattern) or 1
+
+            repeats = target_width // pattern_width if pattern_width else 0
+            fill_text = fill_pattern * repeats
+            visible = repeats * pattern_width
+
+            if visible < target_width:
+                fill_text += " " * (target_width - visible)
+        else:
+            fill_text = ""
+
+        self.fill_segment.text = fill_text
 
         return super().render(context=context)
