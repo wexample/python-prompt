@@ -87,14 +87,31 @@ class AbstractTitleResponse(AbstractMessageResponse):
             text=prefix_text,
             color=color,
         )
-        text_seg = PromptResponseSegment(
+        
+        # Parse text to support color markups like @color:cyan+bold{...}
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
+        
+        # Parse the text with markup support, using default color if no markup specified
+        text_segments = flatten_style_markup(
+            f"{text} ",  # Add trailing space as before
+            default_color=color,
+            joiner=None
+        )
+        
+        # For backward compatibility, store the first text segment as text_segment
+        # (used for width calculation in render)
+        text_seg = text_segments[0] if text_segments else PromptResponseSegment(
             text=f"{text} ",
             color=color,
         )
+        
         fill = PromptResponseSegment(
             text="",
             color=color,
         )
+
+        # Build segments list: prefix + parsed text segments + fill
+        segments = [prefix] + text_segments + [fill]
 
         return cls(
             prefix_segment=prefix,
@@ -103,13 +120,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
             width=width,
             character=character or cls.DEFAULT_CHARACTER,
             lines=[
-                PromptResponseLine(
-                    segments=[
-                        prefix,
-                        text_seg,
-                        fill,
-                    ]
-                )
+                PromptResponseLine(segments=segments)
             ],
             verbosity=verbosity,
         )
@@ -125,8 +136,11 @@ class AbstractTitleResponse(AbstractMessageResponse):
         # Compute remaining space after prefix + text and indentation
         remaining = context.get_available_width(width, minimum=0)
 
-        remaining -= terminal_get_visible_width(self.prefix_segment.text)
-        remaining -= terminal_get_visible_width(self.text_segment.text)
+        # Calculate width of all segments except fill
+        # (prefix + all text segments, which may be multiple if markup was parsed)
+        for segment in self.lines[0].segments:
+            if segment is not self.fill_segment:
+                remaining -= terminal_get_visible_width(segment.text)
 
         target_width = max(0, remaining)
         fill_pattern = self.character or self.DEFAULT_CHARACTER
