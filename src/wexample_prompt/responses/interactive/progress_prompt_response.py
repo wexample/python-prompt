@@ -52,7 +52,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         show_percentage: bool = False,
         verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
-        from wexample_prompt.enums.terminal_color import TerminalColor
+        pass
 
         if total <= 0:
             raise ValueError("Total must be greater than 0")

@@ -40,9 +40,6 @@ class ParentTask(WithIoMethods):
 class ChildTask(WithIoMethods):
     """Child task with prefix."""
 
-    def get_io_context_prefix(self) -> str:
-        return "child"
-
     def execute(self, method_name: str = "log") -> None:
         """Execute child task.
 
@@ -58,6 +55,9 @@ class ChildTask(WithIoMethods):
 
         self._output_message(method_name, "Child task completed")
 
+    def get_io_context_prefix(self) -> str:
+        return "child"
+
     def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""
         if method_name == "list":
@@ -71,21 +71,6 @@ class ChildTask(WithIoMethods):
 class GrandchildTask(WithIoMethods):
     """Grandchild task with custom indentation style and prefix format."""
 
-    def get_io_context_indentation_style(self):
-        return IndentationStyle.VERTICAL
-
-    def get_io_context_indentation_character(self) -> str:
-        return "│"
-
-    def get_io_context_indentation_text_color(self):
-        return TerminalColor.CYAN
-
-    def get_io_context_prefix(self) -> str:
-        return "grandchild"
-
-    def get_io_context_prefix_format(self) -> str:
-        return "({prefix}) "  # Custom format with parentheses
-
     def execute(self, method_name: str = "log") -> None:
         """Execute grandchild task.
 
@@ -95,6 +80,21 @@ class GrandchildTask(WithIoMethods):
         self._output_message(method_name, "Grandchild task started (vertical style)")
         self._output_message(method_name, "Processing grandchild operations...")
         self._output_message(method_name, "Grandchild task completed")
+
+    def get_io_context_indentation_character(self) -> str:
+        return "│"
+
+    def get_io_context_indentation_style(self):
+        return IndentationStyle.VERTICAL
+
+    def get_io_context_indentation_text_color(self):
+        return TerminalColor.CYAN
+
+    def get_io_context_prefix(self) -> str:
+        return "grandchild"
+
+    def get_io_context_prefix_format(self) -> str:
+        return "({prefix}) "  # Custom format with parentheses
 
     def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""

@@ -13,6 +13,7 @@ from wexample_prompt.responses.interactive.progress_prompt_response import (
 )
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
@@ -26,14 +27,23 @@ LONG_TEXT = (
 
 
 def test_data_responses_handle_long_text() -> None:
-    from wexample_prompt.responses.data.properties_prompt_response import PropertiesPromptResponse
-    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+    from wexample_prompt.responses.data.properties_prompt_response import (
+        PropertiesPromptResponse,
+    )
+    from wexample_prompt.responses.messages.info_prompt_response import (
+        InfoPromptResponse,
+    )
     from wexample_prompt.responses.data.table_prompt_response import TablePromptResponse
     from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-    from wexample_prompt.responses.data.multiple_prompt_response import MultiplePromptResponse
+    from wexample_prompt.responses.data.multiple_prompt_response import (
+        MultiplePromptResponse,
+    )
     from wexample_prompt.responses.data.tree_prompt_response import TreePromptResponse
     from wexample_prompt.responses.data.list_prompt_response import ListPromptResponse
-    from wexample_prompt.responses.data.suggestions_prompt_response import SuggestionsPromptResponse
+    from wexample_prompt.responses.data.suggestions_prompt_response import (
+        SuggestionsPromptResponse,
+    )
+
     responses = [
         ListPromptResponse.create_list(items=[LONG_TEXT, LONG_TEXT]),
         PropertiesPromptResponse.create_properties(properties={"key": LONG_TEXT}),
@@ -59,8 +69,11 @@ def test_data_responses_handle_long_text() -> None:
 
 
 def test_interactive_responses_accept_predefined_answers(tmp_path) -> None:
-    from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+    from wexample_prompt.responses.interactive.confirm_prompt_response import (
+        ConfirmPromptResponse,
+    )
     from wexample_prompt.enums.choice import FilePickerMode
+
     io = _make_io()
 
     # Choice
@@ -102,15 +115,30 @@ def test_interactive_responses_accept_predefined_answers(tmp_path) -> None:
 
 
 def test_message_responses_handle_long_text() -> None:
-    from wexample_prompt.responses.messages.debug_prompt_response import DebugPromptResponse
-    from wexample_prompt.responses.messages.info_prompt_response import InfoPromptResponse
+    from wexample_prompt.responses.messages.debug_prompt_response import (
+        DebugPromptResponse,
+    )
+    from wexample_prompt.responses.messages.info_prompt_response import (
+        InfoPromptResponse,
+    )
     from wexample_prompt.responses.log_prompt_response import LogPromptResponse
-    from wexample_prompt.responses.messages.success_prompt_response import SuccessPromptResponse
-    from wexample_prompt.responses.messages.task_prompt_response import TaskPromptResponse
-    from wexample_prompt.responses.messages.warning_prompt_response import WarningPromptResponse
-    from wexample_prompt.responses.messages.failure_prompt_response import FailurePromptResponse
+    from wexample_prompt.responses.messages.success_prompt_response import (
+        SuccessPromptResponse,
+    )
+    from wexample_prompt.responses.messages.task_prompt_response import (
+        TaskPromptResponse,
+    )
+    from wexample_prompt.responses.messages.warning_prompt_response import (
+        WarningPromptResponse,
+    )
+    from wexample_prompt.responses.messages.failure_prompt_response import (
+        FailurePromptResponse,
+    )
     from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
-    from wexample_prompt.responses.messages.error_prompt_response import ErrorPromptResponse
+    from wexample_prompt.responses.messages.error_prompt_response import (
+        ErrorPromptResponse,
+    )
+
     context = _make_context()
     cases: list[tuple[Callable[..., object], dict[str, object]]] = [
         (EchoPromptResponse.create_echo, {"message": LONG_TEXT}),
@@ -131,9 +159,16 @@ def test_message_responses_handle_long_text() -> None:
 
 
 def test_title_responses_handle_long_text() -> None:
-    from wexample_prompt.responses.titles.title_prompt_response import TitlePromptResponse
-    from wexample_prompt.responses.titles.separator_prompt_response import SeparatorPromptResponse
-    from wexample_prompt.responses.titles.subtitle_prompt_response import SubtitlePromptResponse
+    from wexample_prompt.responses.titles.title_prompt_response import (
+        TitlePromptResponse,
+    )
+    from wexample_prompt.responses.titles.separator_prompt_response import (
+        SeparatorPromptResponse,
+    )
+    from wexample_prompt.responses.titles.subtitle_prompt_response import (
+        SubtitlePromptResponse,
+    )
+
     rendered = TitlePromptResponse.create_title(text=LONG_TEXT).render(
         context=_make_context()
     )
@@ -178,12 +213,16 @@ def test_with_io_methods_propagates_indentation() -> None:
 
 def _make_context(indentation: int = 0) -> PromptContext:
     from wexample_prompt.common.prompt_context import PromptContext
+
     return PromptContext(indentation=indentation, formatting=True)
 
 
 def _make_io() -> IoManager:
     from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.output.prompt_buffer_output_handler import PromptBufferOutputHandler
+    from wexample_prompt.output.prompt_buffer_output_handler import (
+        PromptBufferOutputHandler,
+    )
+
     return IoManager(output=PromptBufferOutputHandler())
 
 

@@ -105,6 +105,22 @@ class PromptContext(BaseClass):
     def calc_indentation_char_length(self) -> int:
         return self.get_indentation() * self.indentation_length
 
+    def get_available_width(self, width: int | None = None, minimum: int = 0) -> int:
+        """Compute the remaining visible width once indentation is applied.
+
+        Args:
+            width: Desired total width including indentation. When None, the context width is used.
+            minimum: Lower bound for the returned value.
+        """
+        target_width = self.get_width() if width is None else max(0, width)
+
+        # Clamp explicit width to the context's effective width when available.
+        context_width = self.get_width()
+        if width is not None and context_width:
+            target_width = min(target_width, context_width)
+
+        return max(minimum, target_width - self.get_indentation_visible_width())
+
     def get_indentation(self) -> int:
         if self.indentation is None:
             if self.parent_context:
@@ -150,6 +166,12 @@ class PromptContext(BaseClass):
 
         return self.indentation_text_color
 
+    def get_indentation_visible_width(self) -> int:
+        """Return the visible width of the indentation, ignoring ANSI codes."""
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+        return terminal_get_visible_width(self.render_indentation_text())
+
     def get_width(self) -> int:
         # None width allowed to let know that no fixed width has been specified before using it.
         return self.width or PromptContext.DEFAULT_WIDTH
@@ -194,25 +216,3 @@ class PromptContext(BaseClass):
         else:
             # Repeat mode: repeat character × (level × length)
             return char * (level * self.indentation_length)
-
-    def get_indentation_visible_width(self) -> int:
-        """Return the visible width of the indentation, ignoring ANSI codes."""
-        from wexample_prompt.helper.terminal import terminal_get_visible_width
-
-        return terminal_get_visible_width(self.render_indentation_text())
-
-    def get_available_width(self, width: int | None = None, minimum: int = 0) -> int:
-        """Compute the remaining visible width once indentation is applied.
-
-        Args:
-            width: Desired total width including indentation. When None, the context width is used.
-            minimum: Lower bound for the returned value.
-        """
-        target_width = self.get_width() if width is None else max(0, width)
-
-        # Clamp explicit width to the context's effective width when available.
-        context_width = self.get_width()
-        if width is not None and context_width:
-            target_width = min(target_width, context_width)
-
-        return max(minimum, target_width - self.get_indentation_visible_width())

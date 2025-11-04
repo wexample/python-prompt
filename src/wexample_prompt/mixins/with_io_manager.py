@@ -78,6 +78,29 @@ class WithIoManager(BaseClass):
 
         return PromptContext.create_from_kwargs(kwargs=defaults)
 
+    def ensure_io_manager(self) -> IoManager:
+        try:
+            current_io = object.__getattribute__(self, "io")
+        except AttributeError:
+            current_io = None
+        if current_io is not None:
+            return current_io
+
+        try:
+            parent_handler = object.__getattribute__(self, "parent_io_handler")
+        except AttributeError:
+            parent_handler = None
+        if parent_handler is not None:
+            inherited = parent_handler.ensure_io_manager()
+            object.__setattr__(self, "io", inherited)
+            object.__setattr__(self, "_owns_io", False)
+            return inherited
+
+        created = self._create_io_manager()
+        object.__setattr__(self, "io", created)
+        object.__setattr__(self, "_owns_io", True)
+        return created
+
     def get_io_context_colorized(self) -> bool | None:
         return None
 
@@ -103,13 +126,13 @@ class WithIoManager(BaseClass):
     def get_io_context_indentation_character(self) -> str | None:
         return None
 
-    def get_io_context_indentation_text_color(self) -> TerminalColor | None:
-        return None
-
     def get_io_context_indentation_style(self) -> None:
         from wexample_prompt.enums.indentation_style import IndentationStyle
 
         return None  # Will inherit from parent or use default
+
+    def get_io_context_indentation_text_color(self) -> TerminalColor | None:
+        return None
 
     def get_io_context_indentation_width(self) -> int | None:
         return None
@@ -123,29 +146,6 @@ class WithIoManager(BaseClass):
         Default: '[{prefix}] '
         """
         return "[{prefix}] "
-
-    def ensure_io_manager(self) -> IoManager:
-        try:
-            current_io = object.__getattribute__(self, "io")
-        except AttributeError:
-            current_io = None
-        if current_io is not None:
-            return current_io
-
-        try:
-            parent_handler = object.__getattribute__(self, "parent_io_handler")
-        except AttributeError:
-            parent_handler = None
-        if parent_handler is not None:
-            inherited = parent_handler.ensure_io_manager()
-            object.__setattr__(self, "io", inherited)
-            object.__setattr__(self, "_owns_io", False)
-            return inherited
-
-        created = self._create_io_manager()
-        object.__setattr__(self, "io", created)
-        object.__setattr__(self, "_owns_io", True)
-        return created
 
     def set_parent_io_handler(self, parent: WithIoManager | None) -> None:
         object.__setattr__(self, "parent_io_handler", parent)

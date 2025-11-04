@@ -5,6 +5,7 @@ import inspect
 
 def test_io_manager_response_signatures_align_with_factories() -> None:
     from wexample_prompt.common.io_manager import IoManager
+
     io = IoManager()
 
     for response_cls in io.get_response_types():

@@ -66,7 +66,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             first_line = self.lines[0]
             if self.separator_response_segment not in first_line.segments:
                 first_line.segments.insert(0, self.separator_response_segment)
-    
+
     @classmethod
     def create_separator(
         cls: SeparatorPromptResponse,
@@ -120,7 +120,8 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         length = context.get_available_width(width, minimum=0)
         if self.label_segments:
             length -= sum(
-                terminal_get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments
+                terminal_get_visible_width(ansi_strip(seg.text))
+                for seg in self.label_segments
             )
 
         separator_segment = self.separator_response_segment

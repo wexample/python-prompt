@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import subprocess
 import time
-from time import sleep
 from typing import Any
 
 from wexample_helpers.decorator.base_class import base_class
@@ -115,6 +114,8 @@ class ScreenExample(AbstractResponseExample):
         total = 10
 
         def _callback(response) -> None:
+            from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+            from time import sleep
             response.clear()
             response.print(f"Test screen (extended) {counter['n']}/{total}")
             sleep(0.05)
@@ -131,6 +132,8 @@ class ScreenExample(AbstractResponseExample):
         total = 10
 
         def _callback(response) -> None:
+            from wexample_prompt.responses.interactive.confirm_prompt_response import ConfirmPromptResponse
+            from time import sleep
             response.clear()
             response.print(f"Test screen (manager) {counter['n']}/{total}")
             sleep(0.05)

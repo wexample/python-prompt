@@ -17,7 +17,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
 
     @classmethod
     def apply_prefix_to_kwargs(
-            cls, prefix: str, args: tuple, kwargs: dict, symbol: str | None = None
+        cls, prefix: str, args: tuple, kwargs: dict, symbol: str | None = None
     ) -> tuple[tuple, dict]:
         """Apply prefix and optional symbol to message parameter."""
         effective_symbol = symbol if symbol is not None else cls.SYMBOL
@@ -35,11 +35,11 @@ class AbstractMessageResponse(AbstractPromptResponse):
 
     @classmethod
     def _create_symbol_message(
-            cls,
-            text: LineMessage,
-            color: TerminalColor,
-            symbol: str | None = None,
-            **kwargs,
+        cls,
+        text: LineMessage,
+        color: TerminalColor,
+        symbol: str | None = None,
+        **kwargs,
     ) -> AbstractMessageResponse:
         """Create a message with a symbol"""
         from wexample_prompt.common.prompt_response_line import PromptResponseLine

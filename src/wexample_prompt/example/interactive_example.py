@@ -16,6 +16,7 @@ class InteractiveExample(Example, WithIoMethods):
 
     def before_execute(self) -> None:
         """Hook executed before example logic."""
+
     def bind_executor(self, executor: InteractiveExecutor) -> None:
         object.__setattr__(self, "executor", executor)
         self.set_parent_io_handler(executor)

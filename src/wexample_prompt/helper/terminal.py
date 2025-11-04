@@ -5,7 +5,6 @@ from __future__ import annotations
 import wcwidth
 
 
-
 def terminal_strip_sequences(text: str) -> str:
     """Strip CSI/OSC ANSI escape sequences so width calculations see only visible chars."""
     from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
