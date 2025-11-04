@@ -99,7 +99,7 @@ class GrandchildTask(WithIoMethods):
     def _output_message(self, method_name: str, message: str) -> None:
         """Output a message using the appropriate method."""
         if method_name == "list":
-            self.list(items=[message])
+            self.list(items=[message], prefix=True)
         else:
             method = getattr(self, method_name)
-            method(message=message)
+            method(message=message, prefix=True)
