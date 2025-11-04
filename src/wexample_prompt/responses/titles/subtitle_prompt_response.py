@@ -29,6 +29,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel | None = None,
+        _context_prefix: str | None = None,
     ) -> SubtitlePromptResponse:
         from wexample_prompt.enums.terminal_color import TerminalColor
 
@@ -38,6 +39,7 @@ class SubtitlePromptResponse(AbstractTitleResponse):
             character=character,
             width=width,
             verbosity=verbosity,
+            _context_prefix=_context_prefix,
         )
 
     @classmethod

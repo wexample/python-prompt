@@ -24,6 +24,29 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
     DEFAULT_PREFIX: ClassVar[str] = "❯"
     DEFAULT_CHARACTER: ClassVar[str] = "⫻"
+    
+    @classmethod
+    def apply_prefix_to_kwargs(
+        cls, prefix: str, args: tuple, kwargs: dict
+    ) -> tuple[tuple, dict]:
+        """Apply prefix before the DEFAULT_PREFIX symbol for title responses.
+
+        For titles, we want: [prefix] ❯ text
+        Not: ❯ [prefix] text
+
+        Args:
+            prefix: The formatted prefix to apply (e.g., "[child] ")
+            args: Positional arguments
+            kwargs: Keyword arguments
+
+        Returns:
+            Tuple of (modified_args, modified_kwargs)
+        """
+        # Store the prefix in kwargs so it can be prepended to DEFAULT_PREFIX during creation
+        kwargs["_context_prefix"] = prefix
+        
+        return args, kwargs
+    
     character: str | None = public_field(
         default=DEFAULT_CHARACTER,
         description="Character used to fill the remaining line",
@@ -49,12 +72,19 @@ class AbstractTitleResponse(AbstractMessageResponse):
         character: str | None = None,
         width: int | None = None,
         verbosity: VerbosityLevel = None,
+        **kwargs,
     ) -> AbstractTitleResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
+        # Extract context prefix if provided (added by apply_prefix_to_kwargs)
+        _context_prefix = kwargs.pop("_context_prefix", None)
+        
+        # Prepend context prefix if provided (e.g., "[child] ❯ " instead of "❯ ")
+        prefix_text = f"{_context_prefix}{cls.DEFAULT_PREFIX} " if _context_prefix else f"{cls.DEFAULT_PREFIX} "
+        
         prefix = PromptResponseSegment(
-            text=f"{cls.DEFAULT_PREFIX} ",
+            text=prefix_text,
             color=color,
         )
         text_seg = PromptResponseSegment(

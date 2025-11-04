@@ -5,11 +5,12 @@ from __future__ import annotations
 from wexample_helpers.decorator.base_class import base_class
 from wexample_prompt.enums.indentation_style import IndentationStyle
 from wexample_prompt.enums.terminal_color import TerminalColor
+from wexample_prompt.example.helpers.output_message_mixin import OutputMessageMixin
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 
 @base_class
-class ParentTask(WithIoMethods):
+class ParentTask(OutputMessageMixin, WithIoMethods):
     """Parent task demonstrating basic nesting."""
 
     def execute(self, method_name: str = "log") -> None:
@@ -27,17 +28,9 @@ class ParentTask(WithIoMethods):
 
         self._output_message(method_name, "Parent task completed")
 
-    def _output_message(self, method_name: str, message: str) -> None:
-        """Output a message using the appropriate method."""
-        if method_name == "list":
-            self.list(items=[message])
-        else:
-            method = getattr(self, method_name)
-            method(message=message)
-
 
 @base_class
-class ChildTask(WithIoMethods):
+class ChildTask(OutputMessageMixin, WithIoMethods):
     """Child task with prefix."""
 
     def execute(self, method_name: str = "log") -> None:
@@ -58,17 +51,9 @@ class ChildTask(WithIoMethods):
     def get_io_context_prefix(self) -> str:
         return "child"
 
-    def _output_message(self, method_name: str, message: str) -> None:
-        """Output a message using the appropriate method."""
-        if method_name == "list":
-            self.list(items=[message])
-        else:
-            method = getattr(self, method_name)
-            method(message=message)
-
 
 @base_class
-class GrandchildTask(WithIoMethods):
+class GrandchildTask(OutputMessageMixin, WithIoMethods):
     """Grandchild task with custom indentation style and prefix format."""
 
     def execute(self, method_name: str = "log") -> None:
@@ -95,11 +80,3 @@ class GrandchildTask(WithIoMethods):
 
     def get_io_context_prefix_format(self) -> str:
         return "({prefix}) "  # Custom format with parentheses
-
-    def _output_message(self, method_name: str, message: str) -> None:
-        """Output a message using the appropriate method."""
-        if method_name == "list":
-            self.list(items=[message], prefix=True)
-        else:
-            method = getattr(self, method_name)
-            method(message=message, prefix=True)
