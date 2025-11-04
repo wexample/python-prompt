@@ -153,11 +153,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         percentage = min(100, int(100 * current / self.total))
 
         # Compute available content width (context width minus indentation)
-        indent_text = context.render_indentation()
-
-        visible_indent = len(ansi_strip(indent_text))
-        total_width = self.width or context.get_width()
-        max_content_width = max(0, total_width - visible_indent)
+        max_content_width = context.get_available_width(self.width, minimum=0)
 
         # Compose left label and right percentage parts
         label_segments: list[PromptResponseSegment] = []

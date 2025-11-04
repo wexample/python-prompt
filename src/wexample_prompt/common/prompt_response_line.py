@@ -60,11 +60,9 @@ class PromptResponseLine(BaseClass):
         self, context: PromptContext, indentation: str
     ) -> int | None:
         """Compute the maximum visible width available for content on a line, or None if unbounded."""
-        return (
-            max(0, (context.get_width()) - self._visible_len(indentation))
-            if context.width
-            else None
-        )
+        if context.width:
+            return context.get_available_width(context.width, minimum=0)
+        return None
 
     def _render_no_formatting(self, context: PromptContext, indentation: str) -> str:
         """Render all segments on a single line, without wrapping."""

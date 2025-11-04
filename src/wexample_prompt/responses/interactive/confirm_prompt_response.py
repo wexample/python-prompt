@@ -200,7 +200,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         from wexample_prompt.enums.text_style import TextStyle
 
         # No centering/truncation: allow natural terminal wrapping.
-        # Compute box width: clamp to terminal/context width so it is NEVER exceeded.
+        # Compute box width based on available space (context width minus indentation).
         term_width = context.get_width()
 
         # Build options text in the order provided by the mapping (insertion order)
@@ -216,10 +216,8 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
             "".join(seg.text for seg in segments) for segments in question_segments
         ]
         # Fixed width: use get_width() strictly; if unavailable, fallback to self.width or 80
-        if term_width and term_width > 0:
-            box_width = term_width
-        else:
-            box_width = self.width or 80
+        desired_width = self.width if self.width is not None else term_width or 80
+        box_width = context.get_available_width(desired_width, minimum=1)
 
         # Compose a boxed layout using lines and segments
         self.lines = []

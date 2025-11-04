@@ -95,7 +95,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         width = self.width or context.get_width()
 
         # Compute remaining space after prefix + text and indentation
-        remaining = width - len(context.render_indentation_text())
+        remaining = context.get_available_width(width, minimum=0)
 
         remaining -= wcswidth(self.prefix_segment.text)
         remaining -= wcswidth(self.text_segment.text)

@@ -117,9 +117,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         from wexample_prompt.common.text_width import get_visible_width
 
         width = self.width or context.get_width()
-        length = width - get_visible_width(
-            ansi_strip(context.render_indentation_text())
-        )
+        length = context.get_available_width(width, minimum=0)
         if self.label_segments:
             length -= sum(
                 get_visible_width(ansi_strip(seg.text)) for seg in self.label_segments
