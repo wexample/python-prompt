@@ -32,18 +32,19 @@ class WithIoMethods(WithIoManager):
                     if "context" not in kwargs or kwargs["context"] is None:
                         kwargs["context"] = self.create_io_context()
 
-                    # Add prefix using the response class's apply_prefix_to_kwargs method
-                    prefix = self.get_io_context_prefix()
-                    if prefix:
-                        prefix_format = self.get_io_context_prefix_format()
-                        formatted_prefix = prefix_format.format(prefix=prefix)
+                    if kwargs.pop("prefix", False):
+                        # Add prefix using the response class's apply_prefix_to_kwargs method
+                        prefix = self.get_io_context_prefix()
+                        if prefix:
+                            prefix_format = self.get_io_context_prefix_format()
+                            formatted_prefix = prefix_format.format(prefix=prefix)
 
-                        # Get the response class from the method name
-                        response_class = self._get_response_class_for_method(name)
-                        if response_class:
-                            args, kwargs = response_class.apply_prefix_to_kwargs(
-                                formatted_prefix, args, kwargs
-                            )
+                            # Get the response class from the method name
+                            response_class = self._get_response_class_for_method(name)
+                            if response_class:
+                                args, kwargs = response_class.apply_prefix_to_kwargs(
+                                    formatted_prefix, args, kwargs
+                                )
 
                     return attr(*args, **kwargs)
 
