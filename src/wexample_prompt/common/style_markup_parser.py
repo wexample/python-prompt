@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-    from wexample_prompt.enums.terminal_color import TerminalColor
     from wexample_prompt.enums.text_style import TextStyle
 
 # Pattern to match directives: @type:params{content} or @type{content}
@@ -61,6 +60,7 @@ def flatten_style_markup(
         lines. Set to ``None`` to keep them separate (no automatic joiner).
     """
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
     segments: list[PromptResponseSegment] = []
     parsed_lines = parse_style_markup(
         text=text, default_color=default_color, base_styles=base_styles
@@ -104,6 +104,7 @@ def parse_style_markup(
         active_styles: Iterable[TextStyle],
     ) -> None:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         nonlocal current_segments
 
         styles_list = list(active_styles)
@@ -151,6 +152,7 @@ def parse_style_markup(
     ) -> tuple[TerminalColor | None, list[TextStyle]]:
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+
         updated_color = active_color
         styles_list = list(active_styles)
 
@@ -208,6 +210,7 @@ def parse_style_markup(
     def format_time(content: str, fmt: str | None = None) -> str:
         """Format a timestamp or current time."""
         from datetime import datetime
+
         if fmt is None:
             fmt = "%H:%M:%S"
 
