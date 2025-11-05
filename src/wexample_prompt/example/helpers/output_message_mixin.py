@@ -8,6 +8,48 @@ from typing import Any
 class OutputMessageMixin:
     """Mixin providing flexible _output_message method for demo classes."""
 
+    def _build_kwargs_for_response(
+        self, response_class: type, message: str, **extra_kwargs: Any
+    ) -> dict[str, Any]:
+        """Build kwargs dict for a specific response class.
+
+        Args:
+            response_class: The response class
+            message: The message content
+            **extra_kwargs: Additional kwargs to merge
+
+        Returns:
+            Dict of kwargs appropriate for the response class
+        """
+        from wexample_prompt.responses.data.list_prompt_response import (
+            ListPromptResponse,
+        )
+        from wexample_prompt.responses.titles.separator_prompt_response import (
+            SeparatorPromptResponse,
+        )
+        from wexample_prompt.responses.titles.subtitle_prompt_response import (
+            SubtitlePromptResponse,
+        )
+        from wexample_prompt.responses.titles.title_prompt_response import (
+            TitlePromptResponse,
+        )
+
+        kwargs = extra_kwargs.copy()
+
+        # Map response classes to their parameter names
+        if issubclass(response_class, ListPromptResponse):
+            kwargs["items"] = [message]
+        elif issubclass(
+            response_class,
+            (TitlePromptResponse, SubtitlePromptResponse, SeparatorPromptResponse),
+        ):
+            kwargs["text"] = message
+        else:
+            # Default: most responses use 'message' parameter
+            kwargs["message"] = message
+
+        return kwargs
+
     def _output_message(
         self, method_name: str, message: str, prefix: bool = False, **extra_kwargs: Any
     ) -> None:
@@ -48,45 +90,3 @@ class OutputMessageMixin:
         # Call the method with the appropriate kwargs
         method = getattr(self, method_name)
         method(**kwargs)
-
-    def _build_kwargs_for_response(
-        self, response_class: type, message: str, **extra_kwargs: Any
-    ) -> dict[str, Any]:
-        """Build kwargs dict for a specific response class.
-
-        Args:
-            response_class: The response class
-            message: The message content
-            **extra_kwargs: Additional kwargs to merge
-
-        Returns:
-            Dict of kwargs appropriate for the response class
-        """
-        from wexample_prompt.responses.data.list_prompt_response import (
-            ListPromptResponse,
-        )
-        from wexample_prompt.responses.titles.subtitle_prompt_response import (
-            SubtitlePromptResponse,
-        )
-        from wexample_prompt.responses.titles.title_prompt_response import (
-            TitlePromptResponse,
-        )
-        from wexample_prompt.responses.titles.separator_prompt_response import (
-            SeparatorPromptResponse,
-        )
-
-        kwargs = extra_kwargs.copy()
-
-        # Map response classes to their parameter names
-        if issubclass(response_class, ListPromptResponse):
-            kwargs["items"] = [message]
-        elif issubclass(
-            response_class,
-            (TitlePromptResponse, SubtitlePromptResponse, SeparatorPromptResponse),
-        ):
-            kwargs["text"] = message
-        else:
-            # Default: most responses use 'message' parameter
-            kwargs["message"] = message
-
-        return kwargs

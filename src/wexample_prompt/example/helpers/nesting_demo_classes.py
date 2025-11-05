@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from wexample_helpers.decorator.base_class import base_class
-from wexample_prompt.enums.indentation_style import IndentationStyle
-from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.example.helpers.output_message_mixin import OutputMessageMixin
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
@@ -74,9 +72,13 @@ class GrandchildTask(OutputMessageMixin, WithIoMethods):
         return "│"
 
     def get_io_context_indentation_style(self):
+        from wexample_prompt.enums.indentation_style import IndentationStyle
+
         return IndentationStyle.VERTICAL
 
     def get_io_context_indentation_text_color(self):
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
         return TerminalColor.CYAN
 
     def get_io_context_prefix(self) -> str:

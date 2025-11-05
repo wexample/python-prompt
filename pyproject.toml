@@ -45,12 +45,6 @@ exclude = ["wexample_prompt.testing*"]
 [tool.setuptools.package-dir]
 "" = "."
 
-[tool.pytest.ini_options]
-testpaths = [
-    "tests",
-]
-addopts = "-p wexample_helpers.testing.plugin.runtest_makereport"
-
 [tool.pdm]
 distribution = true
 
@@ -60,3 +54,15 @@ package-dir = "src"
 [[tool.pdm.build.packages]]
 include = "wexample_prompt"
 from = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p wexample_helpers.testing.plugin.runtest_makereport"
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["wexample_prompt"]
+omit = ["*/tests/*", "*/.venv/*", "*/venv/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "def __repr__", "raise AssertionError", "raise NotImplementedError", "if __name__ == .__main__.:", "if TYPE_CHECKING:", "@abstractmethod"]
