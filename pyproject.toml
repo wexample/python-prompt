@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-prompt"
-version = "0.0.90"
+version = "0.0.92"
 description = "Helper for your tty interactions"
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
