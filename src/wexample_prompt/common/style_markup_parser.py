@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import re
-from wexample_prompt.enums.terminal_color import TerminalColor
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
+
+from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
