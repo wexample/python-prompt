@@ -3,43 +3,41 @@
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
-from wexample_prompt.const.types import LineMessage
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.choice import FilePickerMode
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.choice_prompt_response import (
     ChoicePromptResponse,
 )
 
+if TYPE_CHECKING:
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
+
+@base_class
 class FilePickerPromptResponse(ChoicePromptResponse):
     """Response for displaying a file picker interface."""
 
-    base_dir: str = Field(
-        description="Base directory to browse from; defaults to current working directory if not provided"
-    )
-    mode: FilePickerMode = Field(
-        default=FilePickerMode.BOTH,
-        description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection.",
-    )
-    abort_option: bool | str | None = Field(
+    abort_option: bool | str | None = public_field(
         default=None,
         description="Abort configuration forwarded to inner ChoicePromptResponse (bool or custom label).",
     )
-    allow_parent_selection: bool = Field(
+    allow_parent_selection: bool = public_field(
         default=False,
         description="If True, include '..' as a selectable entry at the top; otherwise hide it.",
     )
-
-    @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.interactive.file_picker_example import (
-            FilePickerExample,
-        )
-
-        return FilePickerExample
+    base_dir: str = public_field(
+        description="Base directory to browse from; defaults to current working directory if not provided"
+    )
+    mode: FilePickerMode = public_field(
+        default=FilePickerMode.BOTH,
+        description="Filter entries: files, dirs, or both (default). Affects visibility, not just selection.",
+    )
 
     @classmethod
     def create_file_picker(
@@ -103,3 +101,11 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.interactive.file_picker_example import (
+            FilePickerExample,
+        )
+
+        return FilePickerExample

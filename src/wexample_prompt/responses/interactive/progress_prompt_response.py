@@ -4,38 +4,76 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
+from wexample_prompt.common.style_markup_parser import flatten_style_markup
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
     from wexample_prompt.common.progress.progress_handle import ProgressHandle
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
+@base_class
 class ProgressPromptResponse(AbstractPromptResponse):
     """Response for displaying progress bars."""
 
     # Style characters
     FILL_CHAR: ClassVar[str] = "▰"
     EMPTY_CHAR: ClassVar[str] = "▱"
-
-    # Instance fields
-    total: int = Field(description="Total number of items (must be > 0)")
-    current: int = Field(description="Current progress (must be >= 0)")
-    width: int | None = Field(
-        default=None, description="Width of the progress bar in characters"
+    color: TerminalColor | None = public_field(
+        default=TerminalColor.BLUE, description="Optional color applied to the bar"
     )
-    label: str | None = Field(
+    current: float = public_field(description="Current progress (must be >= 0)")
+    label: str | None = public_field(
         default=None, description="Optional label displayed before the bar"
     )
-    color: TerminalColor | None = Field(
-        default=None, description="Optional color applied to the bar"
+    show_percentage: bool = public_field(
+        default=False, description="Show percentage instead of current/total"
+    )
+    # Instance fields
+    total: int = public_field(description="Total number of items (must be > 0)")
+    width: int | None = public_field(
+        default=None, description="Width of the progress bar in characters"
     )
     _handle: ProgressHandle | None = None
+
+    @classmethod
+    def create_progress(
+        cls,
+        total: int = 100,
+        current: float | int | str = 0,
+        width: int | None = None,
+        label: str | None = None,
+        color: TerminalColor | None = None,
+        show_percentage: bool = False,
+        verbosity: VerbosityLevel | None = None,
+    ) -> ProgressPromptResponse:
+        pass
+
+        if total <= 0:
+            raise ValueError("Total must be greater than 0")
+        if width is not None and width < 1:
+            raise ValueError("Width must be at least 1")
+
+        norm_current = cls._normalize_value(total, current)
+
+        init_kwargs = dict(
+            lines=[],
+            total=total,
+            current=norm_current,
+            width=width,
+            label=label,
+            show_percentage=show_percentage,
+            verbosity=verbosity,
+        )
+        if color is not None:
+            init_kwargs["color"] = color
+
+        return cls(**init_kwargs)
 
     @classmethod
     def get_example_class(cls) -> type:
@@ -76,41 +114,15 @@ class ProgressPromptResponse(AbstractPromptResponse):
         # int path
         return max(0, min(total, int(current)))
 
-    @classmethod
-    def create_progress(
-        cls,
-        total: int = 100,
-        current: float | int | str = 0,
-        width: int | None = None,
-        label: str | None = None,
-        color: TerminalColor | None = None,
-        verbosity: VerbosityLevel | None = None,
-    ) -> ProgressPromptResponse:
-        if total <= 0:
-            raise ValueError("Total must be greater than 0")
-        if width is not None and width < 1:
-            raise ValueError("Width must be at least 1")
-
-        norm_current = cls._normalize_value(total, current)
-
-        return cls(
-            lines=[],
-            total=total,
-            current=norm_current,
-            width=width,
-            label=label,
-            color=color or TerminalColor.BLUE,
-            verbosity=verbosity,
-        )
-
     def get_handle(self) -> ProgressHandle:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
 
         assert isinstance(self._handle, ProgressHandle)
         return self._handle
 
-    def render(self, context: PromptContext | None = None) -> str | None:
+    def init_handle(self, context: PromptContext | None = None) -> PromptContext:
         from wexample_prompt.common.progress.progress_handle import ProgressHandle
+        from wexample_prompt.common.prompt_context import PromptContext
 
         # Normalize context
         context = PromptContext.create_if_none(context=context)
@@ -123,31 +135,55 @@ class ProgressPromptResponse(AbstractPromptResponse):
                 context=context,
             )
 
-        # In case of context change.
+        # Always refresh the handle context with the most recent effective context.
         self._handle.context = context
+
+        return context
+
+    def render(self, context: PromptContext | None = None) -> str | None:
+        from wexample_helpers.helpers.ansi import ansi_strip
+
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        context = self.init_handle(context=context)
 
         # Progress values
         current = min(self.current, self.total)
         percentage = min(100, int(100 * current / self.total))
 
         # Compute available content width (context width minus indentation)
-        indent_text = context.render_indentation()
-        from wexample_helpers.helpers.ansi import ansi_strip
-
-        visible_indent = len(ansi_strip(indent_text))
-        total_width = self.width or context.get_width()
-        max_content_width = max(0, total_width - visible_indent)
+        max_content_width = context.get_available_width(self.width, minimum=0)
 
         # Compose left label and right percentage parts
-        left_label = f"{self.label} " if self.label else ""
-        right_percent = f" {percentage}%"
+        label_segments: list[PromptResponseSegment] = []
+        label_visible_width = 0
+        if self.label:
+            from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+            label_segments = flatten_style_markup(self.label, joiner=" ")
+            # Calculate visible width: strip ANSI codes and count emojis as 2 chars
+            for seg in label_segments:
+                clean_text = ansi_strip(seg.text)
+                label_visible_width += terminal_get_visible_width(clean_text)
+            # trailing space between label and bar
+            label_segments.append(PromptResponseSegment(text=" "))
+            label_visible_width += 1
+
+        # Choose display format based on show_percentage
+        if self.show_percentage:
+            right_percent = f" {percentage}%"
+        else:
+            right_percent = f" {current}/{self.total}"
 
         # Determine bar width to perfectly fit the line
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+
         bar_width = max(
             0,
             max_content_width
-            - len(ansi_strip(left_label))
-            - len(ansi_strip(right_percent)),
+            - label_visible_width
+            - terminal_get_visible_width(ansi_strip(right_percent)),
         )
 
         # Build colored bar of exact computed width
@@ -166,8 +202,8 @@ class ProgressPromptResponse(AbstractPromptResponse):
         )
 
         segments = []
-        if left_label:
-            segments.append(PromptResponseSegment(text=left_label))
+        if label_segments:
+            segments.extend(label_segments)
         if bar_text:
             segments.append(PromptResponseSegment(text=bar_text, color=self.color))
         # percentage (always shown)

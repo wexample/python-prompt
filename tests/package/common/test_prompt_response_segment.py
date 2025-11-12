@@ -1,23 +1,27 @@
 from __future__ import annotations
 
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
-
 
 class TestPromptResponseSegment:
     def test_create_basic_segment(self) -> None:
         """Test creating a basic text segment without styling."""
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segment = PromptResponseSegment(text="Hello")
         assert segment.text == "Hello"
 
     def test_empty_text(self) -> None:
         """Test that empty text is allowed."""
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
         segment = PromptResponseSegment(text="")
         assert segment.text == ""
 
     def test_render_with_styles_and_colorized(self) -> None:
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="Hello",
             color=TerminalColor.GREEN,
@@ -33,6 +37,11 @@ class TestPromptResponseSegment:
         assert rendered.endswith("\033[0m")
 
     def test_render_without_colorized(self) -> None:
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="Hello", color=TerminalColor.GREEN, styles=[TextStyle.BOLD]
         )
@@ -42,6 +51,11 @@ class TestPromptResponseSegment:
         assert rendered == "Hello"
 
     def test_render_wrap_preserves_styles(self) -> None:
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
+
         segment = PromptResponseSegment(
             text="HelloWorld", color=TerminalColor.RED, styles=[TextStyle.ITALIC]
         )

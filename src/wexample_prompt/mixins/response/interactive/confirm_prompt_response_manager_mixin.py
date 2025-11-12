@@ -5,11 +5,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.const.types import LineMessage
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.responses.interactive.confirm_prompt_response import (
         ConfirmPromptResponse,
     )

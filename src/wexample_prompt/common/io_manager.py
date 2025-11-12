@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field, PrivateAttr
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.classes.private_field import private_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
@@ -75,15 +78,19 @@ from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin 
     TitlePromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.with_indentation import WithIndentation
-from wexample_prompt.output.abstract_output_handler import AbstractOutputHandler
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
+    from wexample_prompt.output.abstract_prompt_output_handler import (
+        AbstractPromptOutputHandler,
+    )
     from wexample_prompt.responses.abstract_prompt_response import (
         AbstractPromptResponse,
     )
 
 
+@base_class
 class IoManager(
     # Basics
     EchoPromptResponseManagerMixin,
@@ -115,42 +122,27 @@ class IoManager(
     ConfirmPromptResponseManagerMixin,
     # Parent classes
     WithIndentation,
-    ExtendedBaseModel,
+    BaseClass,
 ):
-    _terminal_width: int = PrivateAttr(default=None)
-    output: AbstractOutputHandler | None = Field(
+    default_context_verbosity: VerbosityLevel = public_field(
+        default=VerbosityLevel.DEFAULT,
+        description="The overall verbosity level used in contexts.",
+    )
+    default_response_verbosity: VerbosityLevel = public_field(
+        default=VerbosityLevel.DEFAULT,
+        description="The default verbosity for every generated message.",
+    )
+    output: AbstractPromptOutputHandler = public_field(
         default=None,
         description="Manages what to do with the generated output (print, or store), "
         "by default print to stdout",
     )
-    default_context_verbosity: VerbosityLevel = Field(
-        default=VerbosityLevel.DEFAULT,
-        description="The overall verbosity level used in contexts.",
-    )
-    default_response_verbosity: VerbosityLevel = Field(
-        default=VerbosityLevel.DEFAULT,
-        description="The default verbosity for every generated message.",
+    _terminal_width: int = private_field(
+        default=None, description="The terminal with cached value."
     )
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
+    def __attrs_post_init__(self) -> None:
         self._init_output()
-
-    @property
-    def terminal_width(self, reload: bool = False) -> int:
-        if reload or self._terminal_width is None:
-            import shutil
-
-            self._terminal_width = shutil.get_terminal_size().columns
-
-        return self._terminal_width
-
-    def _init_output(self) -> None:
-        from wexample_prompt.output.stdout_output_handler import StdoutOutputHandler
-
-        self.output = (
-            self.output if (self.output is not None) else StdoutOutputHandler()
-        )
 
     @classmethod
     def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
@@ -251,23 +243,76 @@ class IoManager(
             ConfirmPromptResponse,
         ]
 
+    @property
+    def terminal_width(self) -> int:
+        if self._terminal_width is None:
+            self.reload_terminal_width()
+        return self._terminal_width
+
+    def create_context(self, context: PromptContext | None = None) -> PromptContext:
+        from wexample_prompt.common.prompt_context import PromptContext
+
+        base_context = PromptContext.create_if_none(context=context)
+        context_kwargs = PromptContext.create_kwargs_from_context(context=base_context)
+
+        base_indentation_length = (
+            context_kwargs.get("indentation_length") or self.indentation_length
+        )
+        base_indentation = context_kwargs.get("indentation") or 0
+        total_indentation = base_indentation + self.indentation
+
+        context_kwargs["colorized"] = base_context.colorized
+        context_kwargs["formatting"] = base_context.formatting
+        context_kwargs["indentation"] = total_indentation
+        context_kwargs["indentation_length"] = base_indentation_length
+        verbosity = context_kwargs.get("verbosity")
+        context_kwargs["verbosity"] = (
+            verbosity if verbosity is not None else self.default_context_verbosity
+        )
+
+        width = context_kwargs.get("width")
+        if width is None:
+            context_kwargs["width"] = self.terminal_width - (
+                total_indentation * base_indentation_length
+            )
+
+        return PromptContext.create_from_parent_context_and_kwargs(
+            parent_context=base_context.parent_context,
+            kwargs=context_kwargs,
+        )
+
+    def erase_response(
+        self,
+        response: AbstractPromptResponse,
+    ) -> None:
+        self.output.erase(response=response)
+
     def print_response(
         self,
         response: AbstractPromptResponse,
         context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.common.prompt_context import PromptContext
+        # Quiet mode.
+        if response.verbosity == VerbosityLevel.QUIET:
+            return response
 
-        context = PromptContext.create_if_none(context=context)
-
-        context.verbosity = (
-            context.verbosity
-            if context.verbosity is not None
-            else self.default_context_verbosity
+        self.output.print(
+            response=response, context=self.create_context(context=context)
         )
-        context.indentation = context.indentation or self.indentation
-        context.width = context.width or self.terminal_width
-
-        self.output.print(response=response, context=context)
 
         return response
+
+    def reload_terminal_width(self) -> int:
+        import shutil
+
+        self._terminal_width = shutil.get_terminal_size().columns
+        return self._terminal_width
+
+    def _init_output(self) -> None:
+        from wexample_prompt.output.prompt_stdout_output_handler import (
+            PromptStdoutOutputHandler,
+        )
+
+        self.output = (
+            self.output if (self.output is not None) else PromptStdoutOutputHandler()
+        )

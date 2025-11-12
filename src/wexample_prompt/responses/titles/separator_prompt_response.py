@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from pydantic import Field
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+from wexample_prompt.common.style_markup_parser import flatten_style_markup
 from wexample_prompt.responses.messages.abstract_message_response import (
     AbstractMessageResponse,
 )
@@ -13,56 +14,88 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
+@base_class
 class SeparatorPromptResponse(AbstractMessageResponse):
-    DEFAULT_CHARACTER: ClassVar[str] = "~"
-
     """Response for log messages."""
-    character: str | None = Field(
+
+    DEFAULT_CHARACTER: ClassVar[str] = "-"
+    character: str | None = public_field(
         default=DEFAULT_CHARACTER, description="The character to repeat"
     )
-    label: str | None = Field(
+    label: str | None = public_field(
         default=None, description="A label to display on the separator right"
     )
-    width: int | None = Field(
+    label_segments: list[PromptResponseSegment] = public_field(
+        factory=list,
+        description="Segments used to render the optional label.",
+    )
+    separator_response_segment: PromptResponseSegment | None = public_field(
+        default=None,
+        description="The line segment used by render process",
+    )
+    width: int | None = public_field(
         default=None, description="A fixed width, use context width if not provided"
     )
-    separator_response_segment: PromptResponseSegment = Field(
-        description="The line segment used by render process"
-    )
-    separator_response_label: PromptResponseSegment | None = Field(
-        default=None, description="The label displayed at the right"
-    )
+
+    def __attrs_post_init__(self) -> None:
+        parent = super()
+        if hasattr(parent, "__attrs_post_init__"):
+            parent.__attrs_post_init__()
+
+        if not self.separator_response_segment:
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
+
+            character = self.character or self.DEFAULT_CHARACTER
+            self.separator_response_segment = PromptResponseSegment(text=character)
+
+        if not self.lines:
+            from wexample_prompt.common.prompt_response_line import PromptResponseLine
+
+            self.lines = [
+                PromptResponseLine(segments=[self.separator_response_segment])
+            ]
+        else:
+            first_line = self.lines[0]
+            if self.separator_response_segment not in first_line.segments:
+                first_line.segments.insert(0, self.separator_response_segment)
 
     @classmethod
     def create_separator(
         cls: SeparatorPromptResponse,
         label: str | None = None,
         width: int | None = None,
-        color: TerminalColor = None,
+        color: TerminalColor | None = None,
         character: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-        segments = []
+        segments: list[PromptResponseSegment] = []
 
         separator_response_segment = PromptResponseSegment(text="-", color=color)
         segments.append(separator_response_segment)
 
-        separator_response_label = None
+        label_segments: list[PromptResponseSegment] = []
         if label:
-            separator_response_label = PromptResponseSegment(
-                text=f" {label}", color=color
+            label_segments = flatten_style_markup(
+                label, default_color=color, joiner=" "
             )
-
-            segments.append(separator_response_label)
+            # Prepend spacing before label
+            label_segments.insert(0, PromptResponseSegment(text=" ", color=color))
+            segments.extend(label_segments)
 
         return cls(
             separator_response_segment=separator_response_segment,
-            separator_response_label=separator_response_label,
+            label_segments=label_segments,
             label=label,
             width=width,
             character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
@@ -79,12 +112,32 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         return SeparatorExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        width = self.width or context.get_width()
-        length = width - len(context.render_indentation_text())
-        if self.separator_response_label:
-            length -= len(self.separator_response_label.text)
+        from wexample_helpers.helpers.ansi import ansi_strip
 
-        self.separator_response_segment.text = length * self.character
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+        width = self.width or context.get_width()
+        length = context.get_available_width(width, minimum=0)
+        if self.label_segments:
+            length -= sum(
+                terminal_get_visible_width(ansi_strip(seg.text))
+                for seg in self.label_segments
+            )
+
+        separator_segment = self.separator_response_segment
+        if separator_segment is None:
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
+
+            separator_segment = PromptResponseSegment(
+                text="", color=getattr(self, "color", None)
+            )
+            self.separator_response_segment = separator_segment
+            if self.lines:
+                self.lines[0].segments.insert(0, separator_segment)
+        character = self.character or self.DEFAULT_CHARACTER
+        separator_segment.text = length * character
 
         return super().render(
             context=context,

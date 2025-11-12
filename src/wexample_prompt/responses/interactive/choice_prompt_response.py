@@ -3,50 +3,52 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
-from wexample_prompt.common.choice.choice import Choice
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.const.types import LineMessage
-from wexample_prompt.enums.choice import ChoiceValue
 from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.interactive.abstract_interactive_prompt_response import (
     AbstractInteractivePromptResponse,
 )
 
 if TYPE_CHECKING:
+    from wexample_prompt.common.choice.choice import Choice
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
 
 
+@base_class
 class ChoicePromptResponse(AbstractInteractivePromptResponse):
     """Display a list of choices and get a user selection."""
 
-    choices: list[Choice] = Field(
-        default_factory=list,
+    choices: list[Choice] = public_field(
+        factory=list,
         description="List of choices",
     )
-    default: Any | None = Field(
+    default: Any | None = public_field(
         default=None,
         description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
-    inquirer_kwargs: dict[str, Any] = Field(
-        default_factory=dict,
+    inquirer_kwargs: dict[str, Any] = public_field(
+        factory=dict,
         description="Additional kwargs forwarded to inquirer.select",
     )
-    question: LineMessage = Field(
-        default=None, description="Question text shown to the user"
-    )
-    question_lines: list[PromptResponseLine] = Field(
-        description="Rendered question lines"
-    )
-    predefined_answer: Any = Field(
+    predefined_answer: Any = public_field(
         default=None,
         description="The answer of the question, in order to make the response non interactive",
+    )
+    question: LineMessage = public_field(
+        default=None, description="Question text shown to the user"
+    )
+    question_lines: list[PromptResponseLine] = public_field(
+        description="Rendered question lines"
     )
 
     @classmethod
@@ -62,6 +64,12 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
+        from collections.abc import Mapping
+
+        from wexample_prompt.common.choice.choice import Choice
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.enums.choice import ChoiceValue
+
         # Build question lines from LineMessage, apply styles/colors on segments
         question_lines = PromptResponseLine.create_from_string(question, color=color)
 
@@ -107,10 +115,24 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             predefined_answer=predefined_answer,
         )
 
+    @classmethod
+    def get_example_class(cls) -> type[AbstractResponseExample]:
+        from wexample_prompt.example.response.interactive.choice_example import (
+            ChoiceExample,
+        )
+
+        return ChoiceExample
+
     def render(self, context: PromptContext | None = None) -> None:
         """Render the prompt and return the selected value."""
         import readchar
+
         from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.choice import ChoiceValue
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
 
         context = PromptContext.create_if_none(context=context)
 
@@ -175,7 +197,21 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 title_color = (
                     TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                 )
-                title_styles = [TextStyle.BOLD] if is_selected else []
+                [TextStyle.BOLD] if is_selected else []
+
+                # Parse title for inline formatting
+                from wexample_prompt.common.style_markup_parser import (
+                    flatten_style_markup,
+                )
+
+                title_segments = flatten_style_markup(str(choice.title), joiner=None)
+
+                # Apply selection styling to segments that don't have color
+                for seg in title_segments:
+                    if seg.color is None:
+                        seg.color = title_color
+                    if is_selected and TextStyle.BOLD not in seg.styles:
+                        seg.styles.append(TextStyle.BOLD)
 
                 line.segments = [
                     PromptResponseSegment(
@@ -183,12 +219,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                         color=prefix_color,
                         styles=prefix_styles,
                     ),
-                    PromptResponseSegment(
-                        text=str(choice.title),
-                        color=title_color,
-                        styles=title_styles,
-                    ),
-                ]
+                ] + title_segments
 
                 self.lines.append(line)
 
@@ -236,11 +267,3 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     self._partial_clear(printed_lines)
                 self._answer = None
                 return
-
-    @classmethod
-    def get_example_class(cls) -> type[AbstractResponseExample]:
-        from wexample_prompt.example.response.interactive.choice_example import (
-            ChoiceExample,
-        )
-
-        return ChoiceExample

@@ -1,15 +1,19 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.common.prompt_response_line import PromptResponseLine
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
+
+@base_class
 class PropertiesPromptResponse(AbstractPromptResponse):
     """Render a dictionary of properties as a formatted block, with optional title.
 
@@ -17,24 +21,16 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     render, so the response remains context-agnostic until displayed.
     """
 
-    properties: dict[str, Any] = Field(
-        default_factory=dict, description="The list of properties to display"
-    )
-    title: str | None = Field(
-        default=None, description="The title of the properties list"
-    )
-    nested_indent: int = Field(
+    nested_indent: int = public_field(
         default=2,
         description="Indentation inside the properties list, when rendering sub list of items",
     )
-
-    @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.properties_example import (
-            PropertiesExample,
-        )
-
-        return PropertiesExample
+    properties: dict[str, Any] = public_field(
+        factory=dict, description="The list of properties to display"
+    )
+    title: str | None = public_field(
+        default=None, description="The title of the properties list"
+    )
 
     @classmethod
     def create_properties(
@@ -52,67 +48,22 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: PromptContext | None = None) -> str | None:
-        """Render the properties into lines using the provided context width."""
-        if not self.properties:
-            return ""
-
-        context = PromptContext.create_if_none(context=context)
-
-        # Determine content width
-        total_width = context.get_width()
-        content_width = max(10, total_width - 2)
-
-        max_key_width = 0
-
-        def scan_keys(obj: dict[str, Any]) -> None:
-            nonlocal max_key_width
-            for k, v in obj.items():
-                max_key_width = max(max_key_width, len(str(k)))
-                if isinstance(v, dict):
-                    scan_keys(v)
-
-        scan_keys(self.properties)
-
-        content_lines = self._format_properties(
-            self.properties, max_key_width, self.nested_indent
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.properties_example import (
+            PropertiesExample,
         )
 
-        lines: list[PromptResponseLine] = []
-        # Empty top spacer
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+        return PropertiesExample
 
-        if self.title:
-            title_len = len(self.title)
-            left_pad = max(0, (content_width - title_len) // 2)
-            right_pad = max(0, content_width - title_len - left_pad)
-            lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text="-" * left_pad),
-                        PromptResponseSegment(text=f" {self.title} "),
-                        PromptResponseSegment(text="-" * max(0, right_pad - 2)),
-                    ]
-                )
-            )
-        else:
-            lines.append(self._create_border_line(content_width))
+    @staticmethod
+    def _create_border_line(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
-        for content in content_lines:
-            lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text=" "),
-                        PromptResponseSegment(text=content),
-                    ]
-                )
-            )
-
-        lines.append(self._create_border_line(content_width))
-
-        # Replace and delegate to base to apply verbosity and segment rendering
-        self.lines = lines
-        return super().render(context=context)
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text=f"{'-' * width}")]
+        )
 
     @staticmethod
     def _format_properties(
@@ -136,8 +87,70 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                 lines.append(f"{indent_str}{key_str} : {str(value)}")
         return lines
 
-    @staticmethod
-    def _create_border_line(width: int) -> PromptResponseLine:
-        return PromptResponseLine(
-            segments=[PromptResponseSegment(text=f"{'-' * width}")]
+    def render(self, context: PromptContext | None = None) -> str | None:
+        """Render the properties into lines using the provided context width."""
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        if not self.properties:
+            return ""
+
+        context = PromptContext.create_if_none(context=context)
+
+        # Determine content width by aligning with available visible width (indent-aware)
+        indentation_visible_width = context.get_indentation_visible_width()
+        total_width = context.get_width()
+        content_width = max(10, total_width - indentation_visible_width)
+
+        max_key_width = 0
+
+        def scan_keys(obj: dict[str, Any]) -> None:
+            nonlocal max_key_width
+            for k, v in obj.items():
+                max_key_width = max(max_key_width, len(str(k)))
+                if isinstance(v, dict):
+                    scan_keys(v)
+
+        scan_keys(self.properties)
+
+        content_lines = self._format_properties(
+            self.properties, max_key_width, self.nested_indent
         )
+
+        # Maintain a leading spacer line so the block visually separates like other responses.
+        lines: list[PromptResponseLine] = [
+            PromptResponseLine(segments=[PromptResponseSegment(text="")])
+        ]
+
+        if self.title:
+            title_len = len(self.title)
+            left_pad = max(0, (content_width - title_len) // 2)
+            right_pad = max(0, content_width - title_len - left_pad)
+            lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(text="-" * left_pad),
+                        PromptResponseSegment(text=f" {self.title} "),
+                        PromptResponseSegment(text="-" * max(0, right_pad - 2)),
+                    ]
+                )
+            )
+        else:
+            lines.append(self._create_border_line(content_width))
+
+        for content in content_lines:
+            # Parse content for inline formatting
+            from wexample_prompt.common.style_markup_parser import flatten_style_markup
+
+            content_segments = flatten_style_markup(content, joiner=None)
+
+            # Add leading space and parsed content
+            all_segments = [PromptResponseSegment(text=" ")] + content_segments
+            lines.append(PromptResponseLine(segments=all_segments))
+
+        lines.append(self._create_border_line(content_width))
+
+        # Replace and delegate to base to apply verbosity and segment rendering
+        self.lines = lines
+        return super().render(context=context)

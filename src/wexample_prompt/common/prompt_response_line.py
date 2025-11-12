@@ -4,21 +4,23 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.const.types import LineMessage
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
 
 if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+    from wexample_prompt.const.types import LineMessage
     from wexample_prompt.enums.terminal_color import TerminalColor
 
 
-class PromptResponseLine(ExtendedBaseModel):
+@base_class
+class PromptResponseLine(BaseClass):
     """A line of text composed of one or more segments with optional styling and layout."""
 
-    segments: list[PromptResponseSegment] = Field(
-        default_factory=list, description="List of text segments that constitute a line"
+    segments: list[PromptResponseSegment] = public_field(
+        factory=list, description="List of text segments that constitute a line"
     )
 
     @classmethod
@@ -28,27 +30,13 @@ class PromptResponseLine(ExtendedBaseModel):
         """
         Create a line from a single text string.
         """
-        # Normalize input to a list of raw lines without newline characters
-        raw_lines: list[str] = []
-        if isinstance(text, str):
-            # splitlines() handles \r\n, \r, \n and does not keep separators
-            raw_lines = text.splitlines()
-        else:
-            for item in text:
-                raw_lines.extend(item.splitlines())
+        from wexample_prompt.common.style_markup_parser import parse_style_markup
 
+        raw_inputs = [text] if isinstance(text, str) else list(text)
         lines: list[PromptResponseLine] = []
-        for raw in raw_lines:
-            lines.append(
-                cls(
-                    segments=[
-                        PromptResponseSegment(
-                            text=raw,
-                            color=color,
-                        )
-                    ]
-                )
-            )
+        for raw in raw_inputs:
+            for segments in parse_style_markup(raw, default_color=color):
+                lines.append(cls(segments=segments))
 
         return lines
 
@@ -68,6 +56,14 @@ class PromptResponseLine(ExtendedBaseModel):
 
         return self._render_wrapped(context, indentation, max_content_width)
 
+    def _compute_max_content_width(
+        self, context: PromptContext, indentation: str
+    ) -> int | None:
+        """Compute the maximum visible width available for content on a line, or None if unbounded."""
+        if context.width:
+            return context.get_available_width(context.width, minimum=0)
+        return None
+
     def _render_no_formatting(self, context: PromptContext, indentation: str) -> str:
         """Render all segments on a single line, without wrapping."""
         rendered_segments = []
@@ -76,16 +72,6 @@ class PromptResponseLine(ExtendedBaseModel):
             rendered, _ = seg.render(context, line_remaining_width=10**9)
             rendered_segments.append(rendered)
         return f"{indentation}{''.join(rendered_segments)}"
-
-    def _compute_max_content_width(
-        self, context: PromptContext, indentation: str
-    ) -> int | None:
-        """Compute the maximum visible width available for content on a line, or None if unbounded."""
-        return (
-            max(0, (context.get_width()) - self._visible_len(indentation))
-            if context.width
-            else None
-        )
 
     def _render_unbounded(self, context: PromptContext, indentation: str) -> str:
         """Render without width restriction (no wrapping)."""

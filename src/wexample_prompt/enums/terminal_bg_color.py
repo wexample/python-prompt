@@ -19,7 +19,6 @@ class TerminalBgColor(Enum):
     MAGENTA = Back.MAGENTA
     CYAN = Back.CYAN
     WHITE = Back.WHITE
-
     # Light/Bright background colors
     LIGHT_BLACK = Back.LIGHTBLACK_EX
     LIGHT_RED = Back.LIGHTRED_EX
@@ -29,7 +28,6 @@ class TerminalBgColor(Enum):
     LIGHT_MAGENTA = Back.LIGHTMAGENTA_EX
     LIGHT_CYAN = Back.LIGHTCYAN_EX
     LIGHT_WHITE = Back.LIGHTWHITE_EX
-
     # Reset background
     DEFAULT = Back.RESET
 

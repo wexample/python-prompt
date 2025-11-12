@@ -16,4 +16,5 @@ class VerbosityLevel(IntEnum):
     QUIET = 0
     DEFAULT = 1
     MEDIUM = 2
-    MAXIMUM = 3
+    HIGH = 3
+    MAXIMUM = 4

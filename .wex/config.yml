@@ -1,2 +1,11 @@
-name: prompt
-version: 0.0.44
+global:
+  name: prompt
+  version: 0.0.93
+test:
+  coverage:
+    last_report:
+      covered: 3407
+      excluded: 438
+      missing: 1058
+      percent: 76.30459126539753
+      total: 4465

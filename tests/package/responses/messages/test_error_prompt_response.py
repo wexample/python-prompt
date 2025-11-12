@@ -2,43 +2,27 @@
 
 from __future__ import annotations
 
-from wexample_helpers.const.types import Kwargs
-from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
+from typing import TYPE_CHECKING
+
 from wexample_prompt.testing.abstract_prompt_message_response_test import (
     AbstractPromptMessageResponseTest,
 )
+
+if TYPE_CHECKING:
+    from wexample_helpers.const.types import Kwargs
+
+    from wexample_prompt.responses.abstract_prompt_response import (
+        AbstractPromptResponse,
+    )
 
 
 class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
     """Test cases for ErrorPromptResponse."""
 
-    def _get_response_class(self) -> type[AbstractPromptResponse]:
-        from wexample_prompt.responses.messages.error_prompt_response import (
-            ErrorPromptResponse,
-        )
-
-        return ErrorPromptResponse
-
-    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
-        kwargs = kwargs or {}
-        kwargs.setdefault("message", self._test_message)
-        return kwargs
-
-    def _assert_specific_format(self, rendered: str) -> None:
-        # Error messages should include the error symbol
-        self._assert_contains_text(rendered, "❌")
+    __test__ = True  # Re-enable test collection for concrete test class
 
     def get_expected_lines(self) -> int:
         return 1  # Error messages are single line
-
-    def test_simple_error_is_red(self) -> None:
-        pass
-
-        response = self._create_test_response()
-        rendered = response.render()
-        self._assert_contains_text(rendered, self._test_message)
-        # Expect red color sequence
-        self._assert_contains_text(rendered, "\u001b[31m")
 
     def test_error_with_exception_header_red_and_trace_present(self) -> None:
         # Create a sample exception
@@ -66,3 +50,28 @@ class TestErrorPromptResponse(AbstractPromptMessageResponseTest):
         self._assert_contains_text(trace_text, "boom")
         # Often the type is included by the formatter; if not, message check above suffices
         # (No strict color assertions on the trace to avoid coupling to formatter internals)
+
+    def test_simple_error_is_red(self) -> None:
+        pass
+
+        response = self._create_test_response()
+        rendered = response.render()
+        self._assert_contains_text(rendered, self._test_message)
+        # Expect red color sequence
+        self._assert_contains_text(rendered, "\u001b[31m")
+
+    def _assert_specific_format(self, rendered: str) -> None:
+        # Error messages should include the error symbol
+        self._assert_contains_text(rendered, "❌")
+
+    def _create_test_kwargs(self, kwargs=None) -> Kwargs:
+        kwargs = kwargs or {}
+        kwargs.setdefault("message", self._test_message)
+        return kwargs
+
+    def _get_response_class(self) -> type[AbstractPromptResponse]:
+        from wexample_prompt.responses.messages.error_prompt_response import (
+            ErrorPromptResponse,
+        )
+
+        return ErrorPromptResponse

@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-from wexample_prompt.output.buffer_output_handler import BufferOutputHandler
 from wexample_prompt.testing.abstract_prompt_test import AbstractPromptTest
 
 
 class TestBufferOutputHandler(AbstractPromptTest):
     def test_print_buffers_response_and_returns_rendered(self) -> None:
+        from wexample_prompt.output.prompt_buffer_output_handler import (
+            PromptBufferOutputHandler,
+        )
+
         # Switch IoManager to buffer output handler
-        self._io.output = BufferOutputHandler()
+        self._io.output = PromptBufferOutputHandler()
 
         # Call a simple echo to produce a response
         response = self._io.echo("Buffered output")
@@ -19,7 +22,7 @@ class TestBufferOutputHandler(AbstractPromptTest):
         assert "Buffered output" in response.rendered_content
 
         # Buffer should contain exactly one response object
-        assert isinstance(self._io.output, BufferOutputHandler)
+        assert isinstance(self._io.output, PromptBufferOutputHandler)
         assert len(self._io.output.responses) == 1
 
         # The buffered item should be a response with matching render

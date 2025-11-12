@@ -1,11 +1,18 @@
 from __future__ import annotations
 
-from pydantic import Field
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from typing import TYPE_CHECKING
+
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+if TYPE_CHECKING:
+    from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
+
+@base_class
 class MultiplePromptResponse(AbstractPromptResponse):
     """A response that groups multiple responses and renders them in sequence.
 
@@ -17,33 +24,24 @@ class MultiplePromptResponse(AbstractPromptResponse):
         responses: List of prompt responses to be rendered together.
     """
 
-    responses: list[AbstractPromptResponse] = Field(
-        default_factory=list,
+    responses: list[AbstractPromptResponse] = public_field(
+        factory=list,
         description="List of prompt responses to be rendered together",
     )
 
     @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.multiple_example import (
-            MultipleExample,
-        )
-
-        return MultipleExample
-
-    @classmethod
     def create_multiple(
-        cls,
+        cls: type[MultiplePromptResponse],
         responses: list[AbstractPromptResponse] | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> MultiplePromptResponse:
         """Create a new MultiplePromptResponse from a list of responses."""
-        if responses is None:
-            responses = []
+        responses = responses or []
 
         # Work on deep copies to avoid mutating shared instances across calls.
         cloned_responses: list[AbstractPromptResponse] = []
         for response in responses:
-            cloned = response.model_copy(deep=True)
+            cloned = response.clone()
             cloned.verbosity = verbosity
             cloned_responses.append(cloned)
 
@@ -52,26 +50,13 @@ class MultiplePromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def render(self, context: PromptContext | None = None) -> str | None:
-        """Render all contained responses in sequence.
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.multiple_example import (
+            MultipleExample,
+        )
 
-        Returns:
-            The concatenated rendered string, skipping None parts.
-        """
-
-        context = PromptContext.create_if_none(context=context)
-
-        if not self._verbosity_context_allows_display(context=context):
-            return None
-
-        rendered_parts: list[str] = []
-        for response in self.responses:
-            part = response.render(context=context)
-            if part is not None:
-                rendered_parts.append(part)
-
-        self._rendered_content = "\n".join(rendered_parts) if rendered_parts else None
-        return self._rendered_content
+        return MultipleExample
 
     def append_response(
         self, response: AbstractPromptResponse
@@ -86,3 +71,25 @@ class MultiplePromptResponse(AbstractPromptResponse):
         """Extend responses with a list and return self for chaining."""
         self.responses.extend(responses)
         return self
+
+    def render(self, context: PromptContext | None = None) -> str | None:
+        """Render all contained responses in sequence.
+
+        Returns:
+            The concatenated rendered string, skipping None parts.
+        """
+        from wexample_prompt.common.prompt_context import PromptContext
+
+        context = PromptContext.create_if_none(context=context)
+
+        if not self._verbosity_context_allows_display(context=context):
+            return None
+
+        rendered_parts: list[str] = []
+        for response in self.responses:
+            part = response.render(context=context)
+            if part is not None:
+                rendered_parts.append(part)
+
+        self._rendered_content = "\n".join(rendered_parts) if rendered_parts else None
+        return self._rendered_content

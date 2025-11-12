@@ -2,25 +2,21 @@
 
 from __future__ import annotations
 
-from wexample_prompt.common.prompt_response_line import PromptResponseLine
-from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-from wexample_prompt.const.types import LineMessage
-from wexample_prompt.enums.terminal_color import TerminalColor
-from wexample_prompt.enums.text_style import TextStyle
+from typing import TYPE_CHECKING
+
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+if TYPE_CHECKING:
+    from wexample_prompt.const.types import LineMessage
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
+
+@base_class
 class SuggestionsPromptResponse(AbstractPromptResponse):
     """Display a list of suggestions with an introductory message."""
-
-    @classmethod
-    def get_example_class(cls) -> type:
-        from wexample_prompt.example.response.data.suggestions_example import (
-            SuggestionsExample,
-        )
-
-        return SuggestionsExample
 
     @classmethod
     def create_suggestions(
@@ -30,6 +26,11 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         arrow_style: str = "→",
         verbosity: VerbosityLevel | None = None,
     ) -> SuggestionsPromptResponse:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.enums.terminal_color import TerminalColor
+        from wexample_prompt.enums.text_style import TextStyle
+
         # Build lines independent of context
         lines: list[PromptResponseLine] = []
         # Top spacer
@@ -47,19 +48,18 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
         # Suggestions (each on its own line; support multi-line suggestions too)
         for suggestion in suggestions:
             for sline in PromptResponseLine.create_from_string(suggestion):
+                # Prepend arrow and keep parsed segments
+                arrow_segment = PromptResponseSegment(
+                    text=f"  {arrow_style} ",
+                    color=TerminalColor.CYAN,
+                )
+                # Add bold to suggestion segments if they don't have color
+                for seg in sline.segments:
+                    if seg.color is None and TextStyle.BOLD not in seg.styles:
+                        seg.styles.append(TextStyle.BOLD)
+
                 lines.append(
-                    PromptResponseLine(
-                        segments=[
-                            PromptResponseSegment(
-                                text=f"  {arrow_style} ",
-                                color=TerminalColor.CYAN,
-                            ),
-                            PromptResponseSegment(
-                                text="".join(seg.text for seg in sline.segments),
-                                styles=[TextStyle.BOLD],
-                            ),
-                        ]
-                    )
+                    PromptResponseLine(segments=[arrow_segment] + sline.segments)
                 )
 
         # Bottom spacer
@@ -69,3 +69,11 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
             lines=lines,
             verbosity=verbosity,
         )
+
+    @classmethod
+    def get_example_class(cls) -> type:
+        from wexample_prompt.example.response.data.suggestions_example import (
+            SuggestionsExample,
+        )
+
+        return SuggestionsExample

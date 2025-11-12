@@ -2,31 +2,34 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pydantic import Field
-from wexample_helpers.classes.extended_base_model import ExtendedBaseModel
+from wexample_helpers.classes.base_class import BaseClass
+from wexample_helpers.classes.field import public_field
+from wexample_helpers.decorator.base_class import base_class
+
 from wexample_prompt.enums.terminal_color import TerminalColor
 from wexample_prompt.enums.text_style import TextStyle
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
+    from wexample_prompt.enums.terminal_color import TerminalColor
+    from wexample_prompt.enums.text_style import TextStyle
 
 
-class PromptResponseSegment(ExtendedBaseModel):
+@base_class
+class PromptResponseSegment(BaseClass):
     """A segment of text with optional styling."""
 
-    text: str = Field(description="The content of the segment")
-    color: TerminalColor | None = Field(
+    color: TerminalColor | None = public_field(
         default=None,
         description="The color to apply to segment on rendering, if allowed by context",
     )
-    styles: list[TextStyle] = Field(
-        default_factory=list,
+    styles: list[TextStyle] = public_field(
+        factory=list,
         description="Optional text styles (bold, italic, underline, etc.) to apply when rendering",
     )
+    text: str = public_field(description="The content of the segment")
 
-    def __init__(self, **kwargs) -> None:
-        super().__init__(**kwargs)
-
+    def __attrs_post_init__(self) -> None:
         if "\n" in self.text:
             raise ValueError(
                 "Segment should not contain line breaks; use separate line objects instead"
@@ -41,6 +44,8 @@ class PromptResponseSegment(ExtendedBaseModel):
         - rendered_fit: the rendered string (possibly colorized) that fits in the remaining width
         - remainder_segment: a new PromptResponseSegment with the leftover RAW text and same color, or None
         """
+        from wexample_prompt.common.color_manager import ColorManager
+
         # Split the RAW text by visible width first (no ANSI involved yet)
         fit_raw, remainder_raw = self._split_by_visible_width(
             self.text, line_remaining_width
@@ -49,7 +54,6 @@ class PromptResponseSegment(ExtendedBaseModel):
         # Apply styles and color if allowed by context (single reset at the end)
         rendered_fit = fit_raw
         if context.colorized and fit_raw:
-            from wexample_prompt.common.color_manager import ColorManager
 
             prefix = ColorManager.build_prefix(color=self.color, styles=self.styles)
             if prefix:
