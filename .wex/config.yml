@@ -1,6 +1,6 @@
 global:
   name: prompt
-  version: 0.0.92
+  version: 0.0.93
 test:
   coverage:
     last_report:
