@@ -1,6 +1,6 @@
 # wexample-prompt
 
-Version: 0.0.93
+Version: 0.0.94
 
 Helper for your tty interactions
 
