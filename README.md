@@ -4,6 +4,40 @@ Version: 0.0.94
 
 Helper for your tty interactions
 
+## Table of Contents
+
+- [Status Compatibility](#status-compatibility)
+- [Basic Usage](#basic-usage)
+- [Api Reference](#api-reference)
+- [Tests](#tests)
+- [Code Quality](#code-quality)
+- [Versioning](#versioning)
+- [Changelog](#changelog)
+- [Migration Notes](#migration-notes)
+- [Roadmap](#roadmap)
+- [Security](#security)
+- [Privacy](#privacy)
+- [Support](#support)
+- [Contribution Guidelines](#contribution-guidelines)
+- [Maintainers](#maintainers)
+- [License](#license)
+- [Useful Links](#useful-links)
+- [Suite Integration](#suite-integration)
+- [Compatibility Matrix](#compatibility-matrix)
+- [Dependencies](#dependencies)
+- [Suite Signature](#suite-signature)
+
+
+## Status & Compatibility
+
+**Maturity**: Production-ready
+
+**Python Support**: >=3.10
+
+**OS Support**: Linux, macOS, Windows
+
+**Status**: Actively maintained
+
 ## Prompt IO Quickstart
 
 ### WithIoManager: owning or sharing the IoManager
@@ -37,54 +71,25 @@ class Child(WithIoMethods):
 
 The executor or parent decides whether to create a fresh manager or cascade an existing one; children only call `ensure_io_manager()` and never worry about the init order.
 
+## API Reference
+
+Full API documentation is available in the source code docstrings.
+
+Key modules and classes are documented with type hints for better IDE support.
+
 ## Tests
 
-This project uses `pytest` for testing and `pytest-cov` for code coverage analysis.
+Run the test suite:
 
-### Installation
-
-First, install the required testing dependencies:
 ```bash
-.venv/bin/python -m pip install pytest pytest-cov
+pytest tests/
 ```
 
-### Basic Usage
+With coverage:
 
-Run all tests with coverage:
 ```bash
-.venv/bin/python -m pytest --cov --cov-report=html
+pytest --cov=wexample-prompt tests/
 ```
-
-### Common Commands
-```bash
-# Run tests with coverage for a specific module
-.venv/bin/python -m pytest --cov=your_module
-
-# Show which lines are not covered
-.venv/bin/python -m pytest --cov=your_module --cov-report=term-missing
-
-# Generate an HTML coverage report
-.venv/bin/python -m pytest --cov=your_module --cov-report=html
-
-# Combine terminal and HTML reports
-.venv/bin/python -m pytest --cov=your_module --cov-report=term-missing --cov-report=html
-
-# Run specific test file with coverage
-.venv/bin/python -m pytest tests/test_file.py --cov=your_module --cov-report=term-missing
-```
-
-### Viewing HTML Reports
-
-After generating an HTML report, open `htmlcov/index.html` in your browser to view detailed line-by-line coverage information.
-
-### Coverage Threshold
-
-To enforce a minimum coverage percentage:
-```bash
-.venv/bin/python -m pytest --cov=your_module --cov-fail-under=80
-```
-
-This will cause the test suite to fail if coverage drops below 80%.
 
 ## Code Quality & Typing
 
@@ -191,6 +196,23 @@ This package is part of the **Wexample Suite** — a collection of high-quality 
 The suite includes packages for configuration management, file handling, prompts, and more. Each package can be used independently or as part of the integrated suite.
 
 Visit the [Wexample Suite documentation](https://docs.wexample.com) for the complete package ecosystem.
+
+## Compatibility Matrix
+
+This package is part of the Wexample suite and is compatible with other suite packages.
+
+Refer to each package's documentation for specific version compatibility requirements.
+
+## Dependencies
+
+- attrs: >=23.1.0
+- cattrs: >=23.1.0
+- colorama: 
+- inquirerpy: 
+- readchar: 
+- wcwidth: 
+- wexample-helpers: ==0.0.85
+
 
 # About us
 
