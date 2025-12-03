@@ -1,6 +1,6 @@
 # wexample-prompt
 
-Version: 0.0.96
+Version: 0.0.97
 
 Helper for your tty interactions
 
@@ -211,7 +211,7 @@ Refer to each package's documentation for specific version compatibility require
 - inquirerpy: 
 - readchar: 
 - wcwidth: 
-- wexample-helpers: ==0.0.87
+- wexample-helpers: ==0.0.88
 
 
 # About us
