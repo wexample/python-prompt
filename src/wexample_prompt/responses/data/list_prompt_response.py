@@ -48,6 +48,7 @@ class ListPromptResponse(AbstractMessageResponse):
     def create_list(
         cls,
         items: list[str],
+        title: str | None = None,
         bullet: str = "•",
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
@@ -56,6 +57,11 @@ class ListPromptResponse(AbstractMessageResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         lines: list[PromptResponseLine] = []
+
+        if title:
+            from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+            lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=title)]))
 
         for item in items:
             # Determine indentation level by counting leading double-spaces
