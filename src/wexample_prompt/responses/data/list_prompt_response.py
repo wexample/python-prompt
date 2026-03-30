@@ -59,9 +59,13 @@ class ListPromptResponse(AbstractMessageResponse):
         lines: list[PromptResponseLine] = []
 
         if title:
-            from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+            from wexample_prompt.common.prompt_response_segment import (
+                PromptResponseSegment,
+            )
 
-            lines.append(PromptResponseLine(segments=[PromptResponseSegment(text=title)]))
+            lines.append(
+                PromptResponseLine(segments=[PromptResponseSegment(text=title)])
+            )
 
         for item in items:
             # Determine indentation level by counting leading double-spaces
