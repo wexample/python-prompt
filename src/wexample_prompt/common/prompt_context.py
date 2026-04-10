@@ -55,6 +55,8 @@ class PromptContext(BaseClass):
     parent_context: PromptContext | None = public_field(
         default=None, description="A parent context"
     )
+    # None means "not explicitly set" — the IoManager will apply its own default_context_verbosity.
+    # Use an explicit VerbosityLevel only when you want to override the io-level setting.
     verbosity: VerbosityLevel | None = public_field(
         default=None,
         description="The context verbosity, saying which response to render or not",
