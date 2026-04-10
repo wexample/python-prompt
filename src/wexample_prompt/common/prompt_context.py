@@ -55,8 +55,8 @@ class PromptContext(BaseClass):
     parent_context: PromptContext | None = public_field(
         default=None, description="A parent context"
     )
-    verbosity: VerbosityLevel = public_field(
-        default=VerbosityLevel.DEFAULT,
+    verbosity: VerbosityLevel | None = public_field(
+        default=None,
         description="The context verbosity, saying which response to render or not",
     )
     width: int | None = public_field(
