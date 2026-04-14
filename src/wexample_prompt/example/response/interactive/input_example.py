@@ -13,21 +13,6 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class InputExample(AbstractResponseExample):
     """Example usage of free-text input prompt responses."""
 
-    def example_simple(self) -> None:
-        """Simple text input."""
-        self.io.input(
-            question="Enter your name:",
-            predefined_answer="Alice",
-        )
-
-    def example_with_default(self) -> None:
-        """Text input with a pre-filled default value."""
-        self.io.input(
-            question="Enter the public URL:",
-            default_value="https://api.myapp.com",
-            predefined_answer="https://api.myapp.com",
-        )
-
     def example_class(self, indentation: int | None = None):
         """Use the response class directly."""
         from wexample_prompt.responses.interactive.input_prompt_response import (
@@ -44,6 +29,21 @@ class InputExample(AbstractResponseExample):
         self.io.input(
             question="Project name:",
             predefined_answer="my-project",
+        )
+
+    def example_simple(self) -> None:
+        """Simple text input."""
+        self.io.input(
+            question="Enter your name:",
+            predefined_answer="Alice",
+        )
+
+    def example_with_default(self) -> None:
+        """Text input with a pre-filled default value."""
+        self.io.input(
+            question="Enter the public URL:",
+            default_value="https://api.myapp.com",
+            predefined_answer="https://api.myapp.com",
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

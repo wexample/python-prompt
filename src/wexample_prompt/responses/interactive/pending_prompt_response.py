@@ -13,7 +13,9 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.example.abstract_response_example import AbstractResponseExample
+    from wexample_prompt.example.abstract_response_example import (
+        AbstractResponseExample,
+    )
 
 
 @base_class
@@ -26,18 +28,17 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
     """
 
     SPINNER_KEY: ClassVar[str] = "pending"
-
     callback: Callable[[], tuple[bool, list[str]]] = public_field(
         description="Called on each poll; returns (is_ready, output_lines). "
         "The loop exits when is_ready is True.",
     )
-    label: str = public_field(
-        default="Waiting...",
-        description="Label displayed next to the spinner on the header line.",
-    )
     interval: float = public_field(
         default=2.0,
         description="Seconds to sleep between polls.",
+    )
+    label: str = public_field(
+        default="Waiting...",
+        description="Label displayed next to the spinner on the header line.",
     )
     max_lines: int = public_field(
         default=5,
@@ -93,7 +94,9 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
             spinner_frame = SpinnerPool.next(key=self.SPINNER_KEY)
             self.lines = [
                 PromptResponseLine(
-                    segments=[PromptResponseSegment(text=f"{spinner_frame} {self.label}")]
+                    segments=[
+                        PromptResponseSegment(text=f"{spinner_frame} {self.label}")
+                    ]
                 )
             ]
             for raw_line in output_lines[-self.max_lines :]:

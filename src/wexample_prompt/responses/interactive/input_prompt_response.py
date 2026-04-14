@@ -24,10 +24,6 @@ class InputPromptResponse(AbstractInteractivePromptResponse):
     Supports ``predefined_answer`` for non-interactive (testing) contexts.
     """
 
-    question: LineMessage = public_field(
-        default="Enter a value:",
-        description="Question shown before the input cursor",
-    )
     default_value: str | None = public_field(
         default=None,
         description="Pre-filled value shown in brackets; accepted when the user presses Enter on an empty line",
@@ -35,6 +31,10 @@ class InputPromptResponse(AbstractInteractivePromptResponse):
     predefined_answer: Any = public_field(
         default=None,
         description="Skip stdin and return this value directly (non-interactive / testing)",
+    )
+    question: LineMessage = public_field(
+        default="Enter a value:",
+        description="Question shown before the input cursor",
     )
 
     @classmethod

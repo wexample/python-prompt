@@ -35,11 +35,11 @@ from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_
 from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import (
     ConfirmPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.input_prompt_response_manager_mixin import (
-    InputPromptResponseManagerMixin,
-)
 from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_manager_mixin import (
     FilePickerPromptResponseManagerMixin,
+)
+from wexample_prompt.mixins.response.interactive.input_prompt_response_manager_mixin import (
+    InputPromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.response.interactive.pending_prompt_response_manager_mixin import (
     PendingPromptResponseManagerMixin,
@@ -179,11 +179,11 @@ class IoManager(
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )
-        from wexample_prompt.responses.interactive.input_prompt_response import (
-            InputPromptResponse,
-        )
         from wexample_prompt.responses.interactive.file_picker_prompt_response import (
             FilePickerPromptResponse,
+        )
+        from wexample_prompt.responses.interactive.input_prompt_response import (
+            InputPromptResponse,
         )
         from wexample_prompt.responses.interactive.pending_prompt_response import (
             PendingPromptResponse,
