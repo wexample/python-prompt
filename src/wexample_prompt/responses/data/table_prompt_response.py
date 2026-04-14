@@ -30,6 +30,9 @@ class TablePromptResponse(AbstractPromptResponse):
     )
     title: str | None = public_field(default=None, description="Optional table title")
 
+    # Cached column widths — computed once from data+headers, reused across renders.
+    _max_widths: list[int] | None = None
+
     @classmethod
     def create_table(
         cls,
@@ -129,12 +132,14 @@ class TablePromptResponse(AbstractPromptResponse):
         if not self.data and not self.headers:
             return ""
 
-        all_rows: list[list[Any]] = []
-        if self.headers:
-            all_rows.append(self.headers)
-        all_rows.extend(self.data)
+        if self._max_widths is None:
+            all_rows: list[list[Any]] = []
+            if self.headers:
+                all_rows.append(self.headers)
+            all_rows.extend(self.data)
+            self._max_widths = self._calculate_max_widths(all_rows)
 
-        max_widths = self._calculate_max_widths(all_rows)
+        max_widths = list(self._max_widths)
         total_width = sum(max_widths) + (len(max_widths) * 3) - 1
 
         # Ensure total_width is at least as wide as the title
