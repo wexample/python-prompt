@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-prompt"
-version = "1.0.1"
+version = "2.0.0"
 description = "Helper for your tty interactions"
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
@@ -16,7 +16,7 @@ dependencies = [
     "inquirerpy",
     "readchar",
     "wcwidth",
-    "wexample-helpers>=1.0.0",
+    "wexample-helpers>=1.1.0",
 ]
 
 [project.readme]
@@ -32,6 +32,7 @@ homepage = "https://github.com/wexample/python-prompt"
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-benchmark>=5.2.3",
     "pytest-cov",
 ]
 

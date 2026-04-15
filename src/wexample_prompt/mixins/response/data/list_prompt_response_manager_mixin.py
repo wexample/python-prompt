@@ -19,6 +19,7 @@ class ListPromptResponseManagerMixin:
     def list(
         self: IoManager,
         items: list[str],
+        title: str | None = None,
         bullet: str = "•",
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
@@ -31,6 +32,7 @@ class ListPromptResponseManagerMixin:
 
         response = ListPromptResponse.create_list(
             items=items,
+            title=title,
             bullet=bullet,
             color=color,
             verbosity=(

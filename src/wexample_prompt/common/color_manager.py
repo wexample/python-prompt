@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from colorama import init
 
@@ -18,6 +18,8 @@ class ColorManager:
 
     # Initialize colorama when class is loaded
     init()
+    # Built once on first use to avoid reconstructing the dict on every call.
+    _STYLE_CODES: ClassVar[dict | None] = None
 
     @classmethod
     def build_prefix(
@@ -67,15 +69,16 @@ class ColorManager:
     @classmethod
     def get_style_ansi(cls, style: TextStyle) -> str:
         """Map TextStyle to ANSI code without reset."""
-        from wexample_prompt.enums.text_style import TextStyle
+        if cls._STYLE_CODES is None:
+            from wexample_prompt.enums.text_style import TextStyle as TS
 
-        style_codes = {
-            TextStyle.BOLD: "\u001b[1m",
-            TextStyle.ITALIC: "\u001b[3m",
-            TextStyle.UNDERLINE: "\u001b[4m",
-            TextStyle.STRIKETHROUGH: "\u001b[9m",
-            TextStyle.DIM: "\u001b[2m",
-            TextStyle.REVERSE: "\u001b[7m",
-            TextStyle.HIDDEN: "\u001b[8m",
-        }
-        return style_codes.get(style, "")
+            cls._STYLE_CODES = {
+                TS.BOLD: "\u001b[1m",
+                TS.ITALIC: "\u001b[3m",
+                TS.UNDERLINE: "\u001b[4m",
+                TS.STRIKETHROUGH: "\u001b[9m",
+                TS.DIM: "\u001b[2m",
+                TS.REVERSE: "\u001b[7m",
+                TS.HIDDEN: "\u001b[8m",
+            }
+        return cls._STYLE_CODES.get(style, "")
