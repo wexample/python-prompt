@@ -29,7 +29,6 @@ class TablePromptResponse(AbstractPromptResponse):
         default=None, description="Optional list of column headers"
     )
     title: str | None = public_field(default=None, description="Optional table title")
-
     # Cached column widths — computed once from data+headers, reused across renders.
     _max_widths: list[int] | None = None
 

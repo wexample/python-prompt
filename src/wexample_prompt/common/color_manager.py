@@ -18,7 +18,6 @@ class ColorManager:
 
     # Initialize colorama when class is loaded
     init()
-
     # Built once on first use to avoid reconstructing the dict on every call.
     _STYLE_CODES: ClassVar[dict | None] = None
 
