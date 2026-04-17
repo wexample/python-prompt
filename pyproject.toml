@@ -4,7 +4,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "wexample-prompt"
-version = "2.0.0"
+version = "6.0.19"
 description = "Helper for your tty interactions"
 authors = [{name = "weeger", email = "contact@wexample.com"}]
 requires-python = ">=3.10"
@@ -16,7 +16,7 @@ dependencies = [
     "inquirerpy",
     "readchar",
     "wcwidth",
-    "wexample-helpers>=1.1.0",
+    "wexample-helpers>=2.0.0",
 ]
 
 [project.readme]
