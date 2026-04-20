@@ -1,6 +1,10 @@
+docker:
+  db: {}
+domains: []
 global:
   name: prompt
-  version: 2.0.0
+  type: app
+  version: 6.0.22
 test:
   coverage:
     last_report:

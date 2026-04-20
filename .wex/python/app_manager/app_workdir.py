@@ -3,15 +3,18 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from wexample_wex_addon_dev_python.workdir.python_package_workdir import PythonPackageWorkdir
+from wexample_wex_addon_dev_python.config_value.python_package_readme_config_value import \
+    PythonPackageReadmeContentConfigValue
 
 if TYPE_CHECKING:
     from wexample_config.const.types import DictConfig
-    from prompt_readme_config_value import PromptReadmeConfigValue
 
+class PromptReadmeConfigValue(PythonPackageReadmeContentConfigValue):
+    """First try but we should probably use pseudocode to export prompt types and import them back into readme"""
+    pass
 
 class AppWorkdir(PythonPackageWorkdir):
     def _get_readme_content(self) -> PromptReadmeConfigValue:
-        from prompt_readme_config_value import PromptReadmeConfigValue
         return PromptReadmeConfigValue(workdir=self)
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
