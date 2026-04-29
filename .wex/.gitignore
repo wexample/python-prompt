@@ -2,3 +2,6 @@
 tmp/*
 tmp/
 local/
+/.env
+/tmp/
+/local/
