@@ -1,6 +1,6 @@
 # prompt
 
-Version: 6.0.24
+Version: 6.1.0
 
 Helper for your tty interactions
 
