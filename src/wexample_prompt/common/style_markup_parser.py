@@ -4,11 +4,6 @@ import re
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
-# Cache for parse_style_markup results. Keys are (text, default_color, base_styles_tuple).
-# Cleared when it reaches the size limit to bound memory usage.
-_PARSE_CACHE: dict[tuple, list] = {}
-_PARSE_CACHE_MAX = 256
-
 from wexample_prompt.enums.terminal_color import TerminalColor
 
 if TYPE_CHECKING:
@@ -101,10 +96,6 @@ def parse_style_markup(
     Nested directives are supported.
     """
     base_styles_key = tuple(base_styles) if base_styles else ()
-    cache_key = (text, default_color, base_styles_key)
-    cached = _PARSE_CACHE.get(cache_key)
-    if cached is not None:
-        return cached
 
     lines: list[list[PromptResponseSegment]] = []
     current_segments: list[PromptResponseSegment] = []
@@ -301,9 +292,5 @@ def parse_style_markup(
 
     if current_segments:
         lines.append(current_segments)
-
-    if len(_PARSE_CACHE) >= _PARSE_CACHE_MAX:
-        _PARSE_CACHE.clear()
-    _PARSE_CACHE[cache_key] = lines
 
     return lines
