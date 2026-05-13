@@ -1,6 +1,6 @@
 # prompt
 
-Version: 6.1.0
+Version: 6.1.1
 
 Helper for your tty interactions
 
@@ -52,7 +52,7 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - inquirerpy: 
 - readchar: 
 - wcwidth: 
-- wexample-helpers: >=6.9.0
+- wexample-helpers: >=6.12.0
 
 ## Versioning & Compatibility Policy
 
