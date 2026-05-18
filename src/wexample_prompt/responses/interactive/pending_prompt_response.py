@@ -91,7 +91,7 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
         while True:
             is_ready, output_lines = self.callback()
 
-            spinner_frame = SpinnerPool.next(key=self.SPINNER_KEY)
+            spinner_frame = SpinnerPool.shared().next(key=self.SPINNER_KEY)
             self.lines = [
                 PromptResponseLine(
                     segments=[
