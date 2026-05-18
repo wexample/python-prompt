@@ -26,6 +26,10 @@ class PromptContext(BaseClass):
     DEFAULT_COLORIZED: ClassVar[bool] = True
     DEFAULT_VERBOSITY: ClassVar[VerbosityLevel] = VerbosityLevel.DEFAULT
     DEFAULT_WIDTH: ClassVar[int] = 80
+    bordered: bool = public_field(
+        default=True,
+        description="Whether child responses should draw their own container borders. Set False by a wrapping response (e.g. frame) to avoid double-bordering.",
+    )
     colorized: bool | None = public_field(
         default=True, description="Allow to return avoid coloration special characters"
     )
@@ -94,6 +98,7 @@ class PromptContext(BaseClass):
     @classmethod
     def create_kwargs_from_context(cls, context: PromptContext) -> Kwargs:
         return {
+            "bordered": context.bordered,
             "indentation": context.indentation,
             "indentation_character": context.indentation_character,
             "indentation_text_color": context.indentation_text_color,
