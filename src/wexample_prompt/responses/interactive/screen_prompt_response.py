@@ -45,6 +45,12 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         default=30,
         description="Approx height in lines reserved for this response block.",
     )
+    min_refresh_interval: float = public_field(
+        default=0.08,
+        description="Minimum seconds between two consecutive redraws (anti-flicker). "
+        "Push events arriving during this window are coalesced — the redraw "
+        "happens once the gap has elapsed. Pull (poll_interval) is unaffected.",
+    )
     poll_interval: float = public_field(
         default=0.05,
         description="Max seconds between two callback runs when nothing pushes a refresh. "
@@ -113,6 +119,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
     def render(self, context: PromptContext | None = None) -> str | None:
         import threading
+        import time
 
         from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.common.prompt_context import PromptContext
@@ -140,6 +147,8 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             self._closed = True
             raise e
 
+        last_draw = time.monotonic()
+
         while True:
             # Clear previous frame area
             self._partial_clear(printed_lines)
@@ -147,6 +156,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
 
             # Render and print current lines
             printed_lines = self._print_render(context=context)
+            last_draw = time.monotonic()
 
             if self._closed:
                 if self.reset_on_finish and printed_lines > 0:
@@ -161,10 +171,16 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
                 self._closed = True
                 raise e
 
-            # If callback didn't request reload and not closed, wait — either
-            # for ``poll_interval`` seconds (safety fallback) or until any
-            # thread calls ``request_refresh()`` (push wake-up).
+            # Wait before next draw:
+            #   - Enforce min_refresh_interval (anti-flicker): coalesce bursts
+            #     of push events into a single redraw per window.
+            #   - Then wait for either a push event (request_refresh()) or
+            #     poll_interval as safety fallback.
             if not self._reload_requested and not self._closed:
+                elapsed = time.monotonic() - last_draw
+                gap = self.min_refresh_interval - elapsed
+                if gap > 0:
+                    time.sleep(gap)
                 self._tick_event.wait(timeout=self.poll_interval)
                 self._tick_event.clear()
 
