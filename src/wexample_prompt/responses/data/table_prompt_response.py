@@ -74,11 +74,26 @@ class TablePromptResponse(AbstractPromptResponse):
         )
 
     @staticmethod
-    def _format_row(row: list[Any], widths: list[int]) -> list[PromptResponseSegment]:
+    def _create_separator_line(width: int, bordered: bool = True) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        if bordered:
+            text = "+" + "-" * width + "+"
+        else:
+            text = "-" * width
+        return PromptResponseLine(segments=[PromptResponseSegment(text=text)])
+
+    @staticmethod
+    def _format_row(
+        row: list[Any], widths: list[int], bordered: bool = True
+    ) -> list[PromptResponseSegment]:
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
-        segments = [PromptResponseSegment(text="|")]
+        segments: list[PromptResponseSegment] = []
+        if bordered:
+            segments.append(PromptResponseSegment(text="|"))
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
 
@@ -91,12 +106,16 @@ class TablePromptResponse(AbstractPromptResponse):
             )
             padding = max(0, widths[i] - cell_text_length)
 
+            is_last = i == len(widths) - 1
             # Add leading space
             segments.append(PromptResponseSegment(text=" "))
             # Add parsed cell content
             segments.extend(cell_segments)
-            # Add padding and closing pipe
-            segments.append(PromptResponseSegment(text=" " * padding + " |"))
+            # Add padding and column separator (skip trailing separator when borderless)
+            if is_last and not bordered:
+                segments.append(PromptResponseSegment(text=" " * padding))
+            else:
+                segments.append(PromptResponseSegment(text=" " * padding + " |"))
 
         return segments
 
@@ -157,36 +176,43 @@ class TablePromptResponse(AbstractPromptResponse):
 
                 total_width = sum(max_widths) + (len(max_widths) * 3) - 1
 
-        lines: list[PromptResponseLine] = []
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+        bordered = context.bordered if context is not None else True
 
-        if self.title:
-            title_padding = max(0, (total_width - len(self.title)) // 2)
-            title_line = PromptResponseLine(
-                segments=[
-                    PromptResponseSegment(text="+" + "-" * title_padding),
-                    PromptResponseSegment(text=f" {self.title} "),
-                    PromptResponseSegment(
-                        text="-" * (total_width - title_padding - len(self.title) - 2)
-                        + "+"
-                    ),
-                ]
-            )
-            lines.append(title_line)
-        else:
-            lines.append(self._create_border_line(total_width))
+        lines: list[PromptResponseLine] = []
+        if bordered:
+            lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+
+            if self.title:
+                title_padding = max(0, (total_width - len(self.title)) // 2)
+                title_line = PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(text="+" + "-" * title_padding),
+                        PromptResponseSegment(text=f" {self.title} "),
+                        PromptResponseSegment(
+                            text="-"
+                            * (total_width - title_padding - len(self.title) - 2)
+                            + "+"
+                        ),
+                    ]
+                )
+                lines.append(title_line)
+            else:
+                lines.append(self._create_border_line(total_width))
 
         if self.headers:
-            header_segments = self._format_row(self.headers, max_widths)
+            header_segments = self._format_row(
+                self.headers, max_widths, bordered=bordered
+            )
             lines.append(PromptResponseLine(segments=header_segments))
-            lines.append(self._create_border_line(total_width))
+            lines.append(self._create_separator_line(total_width, bordered=bordered))
 
         for row in self.data:
-            row_segments = self._format_row(row, max_widths)
+            row_segments = self._format_row(row, max_widths, bordered=bordered)
             lines.append(PromptResponseLine(segments=row_segments))
 
-        lines.append(self._create_border_line(total_width))
-        lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
+        if bordered:
+            lines.append(self._create_border_line(total_width))
+            lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         self.lines = lines
         return super().render(context=context)

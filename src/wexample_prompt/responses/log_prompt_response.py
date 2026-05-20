@@ -54,7 +54,7 @@ class LogPromptResponse(AbstractPromptResponse):
 
         return cls(
             lines=PromptResponseLine.create_from_string(
-                text=message, color=color or TerminalColor.WHITE
+                text=message, color=color or TerminalColor.LIGHT_BLACK
             ),
             verbosity=verbosity,
         )

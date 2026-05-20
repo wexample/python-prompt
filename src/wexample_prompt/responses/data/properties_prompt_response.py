@@ -118,26 +118,26 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             self.properties, max_key_width, self.nested_indent
         )
 
-        # Maintain a leading spacer line so the block visually separates like other responses.
-        lines: list[PromptResponseLine] = [
-            PromptResponseLine(segments=[PromptResponseSegment(text="")])
-        ]
+        lines: list[PromptResponseLine] = []
+        if context.bordered:
+            # Maintain a leading spacer line so the block visually separates like other responses.
+            lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
-        if self.title:
-            title_len = len(self.title)
-            left_pad = max(0, (content_width - title_len) // 2)
-            right_pad = max(0, content_width - title_len - left_pad)
-            lines.append(
-                PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text="-" * left_pad),
-                        PromptResponseSegment(text=f" {self.title} "),
-                        PromptResponseSegment(text="-" * max(0, right_pad - 2)),
-                    ]
+            if self.title:
+                title_len = len(self.title)
+                left_pad = max(0, (content_width - title_len) // 2)
+                right_pad = max(0, content_width - title_len - left_pad)
+                lines.append(
+                    PromptResponseLine(
+                        segments=[
+                            PromptResponseSegment(text="-" * left_pad),
+                            PromptResponseSegment(text=f" {self.title} "),
+                            PromptResponseSegment(text="-" * max(0, right_pad - 2)),
+                        ]
+                    )
                 )
-            )
-        else:
-            lines.append(self._create_border_line(content_width))
+            else:
+                lines.append(self._create_border_line(content_width))
 
         for content in content_lines:
             # Parse content for inline formatting
@@ -149,7 +149,8 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             all_segments = [PromptResponseSegment(text=" ")] + content_segments
             lines.append(PromptResponseLine(segments=all_segments))
 
-        lines.append(self._create_border_line(content_width))
+        if context.bordered:
+            lines.append(self._create_border_line(content_width))
 
         # Replace and delegate to base to apply verbosity and segment rendering
         self.lines = lines

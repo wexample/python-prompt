@@ -20,7 +20,9 @@ class TerminalColor(Enum):
     CYAN = Fore.CYAN
     WHITE = Fore.WHITE
     # Light/Bright colors
-    LIGHT_BLACK = Fore.LIGHTBLACK_EX
+    # Slightly darker than Fore.LIGHTBLACK_EX (ANSI 90) so logs stay
+    # distinguishable from white on light/washed-out terminal themes.
+    LIGHT_BLACK = "\x1b[38;5;244m"
     LIGHT_RED = Fore.LIGHTRED_EX
     LIGHT_GREEN = Fore.LIGHTGREEN_EX
     LIGHT_YELLOW = Fore.LIGHTYELLOW_EX

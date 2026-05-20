@@ -8,6 +8,7 @@ from wexample_helpers.classes.base_class import BaseClass
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
+from wexample_helpers.service.shared_registry import SharedRegistry
 
 
 @base_class
@@ -91,38 +92,33 @@ class Spinner(BaseClass):
 
 
 @base_class
-class SpinnerPool(BaseClass):
-    """Thread-safe pool for per-key spinners."""
+class SpinnerPool(SharedRegistry[Spinner]):
+    """Thread-safe pool for per-key spinners, accessible via SpinnerPool.shared()."""
 
     _lock: ClassVar[Any] = threading.RLock()
-    _spinners: ClassVar[dict[str, Spinner]] = {}
 
-    @classmethod
-    def get(cls, key: str = "default") -> Spinner:
-        with cls._lock:
-            sp = cls._spinners.get(key)
+    def get_or_create(self, key: str = "default") -> Spinner:
+        """Return the spinner for `key`, creating it lazily if missing."""
+        with self._lock:
+            sp = self._items.get(key)
             if sp is None:
                 sp = Spinner()
-                cls._spinners[key] = sp
+                self.register(sp, key=key)
             return sp
 
-    @classmethod
-    def next(cls, key: str = "default") -> str:
-        with cls._lock:
-            return cls.get(key).next()
+    def next(self, key: str = "default") -> str:
+        with self._lock:
+            return self.get_or_create(key).next()
 
-    @classmethod
-    def reset(cls, key: str = "default") -> None:
-        with cls._lock:
-            cls.get(key).reset()
+    def reset(self, key: str = "default") -> None:
+        with self._lock:
+            self.get_or_create(key).reset()
 
-    @classmethod
-    def set_frames(cls, frames: list[str], key: str = "default") -> None:
-        with cls._lock:
-            cls.get(key).set_frames(frames)
+    def set_frames(self, frames: list[str], key: str = "default") -> None:
+        with self._lock:
+            self.get_or_create(key).set_frames(frames)
 
-    @classmethod
-    def set_interval(cls, interval: float, key: str = "default") -> None:
+    def set_interval(self, interval: float, key: str = "default") -> None:
         """Set the advance interval for a specific spinner (in seconds)."""
-        with cls._lock:
-            cls.get(key).set_interval(interval)
+        with self._lock:
+            self.get_or_create(key).set_interval(interval)
