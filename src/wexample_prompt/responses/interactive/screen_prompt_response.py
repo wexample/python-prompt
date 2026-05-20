@@ -29,6 +29,13 @@ if TYPE_CHECKING:
 class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     """A simple screen-like interactive response that repeatedly invokes a user-provided
     callback, allowing the callback to draw text lines, sleep, and request reload/close.
+
+    Refresh model:
+      - Default (pull): callback runs every ``poll_interval`` seconds (50ms).
+      - Push: any thread can call ``request_refresh()`` to wake the loop
+        immediately. Useful when workers off the main thread want to redraw
+        the screen as soon as they update shared state — avoids the 50ms
+        latency and lets the screen feel reactive.
     """
 
     callback: Callable[[ScreenPromptResponse], Any] = public_field(
@@ -38,6 +45,11 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         default=30,
         description="Approx height in lines reserved for this response block.",
     )
+    poll_interval: float = public_field(
+        default=0.05,
+        description="Max seconds between two callback runs when nothing pushes a refresh. "
+        "Acts as a safety fallback so the screen still ticks even without external signals.",
+    )
     reset_on_finish: bool = public_field(
         default=False,
         description="If True, clears printed block when finishing (close).",
@@ -45,6 +57,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     _closed: bool = False
     _io_buffer: PromptBufferOutputHandler | None = None
     _reload_requested: bool = False
+    _tick_event: Any = None
 
     @classmethod
     def create_screen(
@@ -83,8 +96,23 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     def reload(self) -> None:
         self._reload_requested = True
 
+    def request_refresh(self) -> None:
+        """Thread-safe wake-up: forces the render loop to redraw on next tick.
+
+        Safe to call from any thread (workers off the main thread). If the
+        screen is currently rendering and waiting between frames, this returns
+        control to it within ~no time. If the screen isn't rendering yet (not
+        started), the event is simply pre-set and the first wait returns
+        immediately.
+        """
+        import threading
+
+        if self._tick_event is None:
+            self._tick_event = threading.Event()
+        self._tick_event.set()
+
     def render(self, context: PromptContext | None = None) -> str | None:
-        from time import sleep
+        import threading
 
         from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.common.prompt_context import PromptContext
@@ -96,6 +124,8 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         if self._io_buffer is None:
             self._io_buffer = PromptBufferOutputHandler()
             self.io = IoManager(output=self._io_buffer)
+        if self._tick_event is None:
+            self._tick_event = threading.Event()
 
         context = PromptContext.create_if_none(context=context)
 
@@ -131,9 +161,12 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
                 self._closed = True
                 raise e
 
-            # If callback didn't request reload and not closed, avoid busy loop
+            # If callback didn't request reload and not closed, wait — either
+            # for ``poll_interval`` seconds (safety fallback) or until any
+            # thread calls ``request_refresh()`` (push wake-up).
             if not self._reload_requested and not self._closed:
-                sleep(0.05)
+                self._tick_event.wait(timeout=self.poll_interval)
+                self._tick_event.clear()
 
             self._render_buffer()
 
