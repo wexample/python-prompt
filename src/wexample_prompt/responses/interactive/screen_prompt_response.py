@@ -102,21 +102,6 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
     def reload(self) -> None:
         self._reload_requested = True
 
-    def request_refresh(self) -> None:
-        """Thread-safe wake-up: forces the render loop to redraw on next tick.
-
-        Safe to call from any thread (workers off the main thread). If the
-        screen is currently rendering and waiting between frames, this returns
-        control to it within ~no time. If the screen isn't rendering yet (not
-        started), the event is simply pre-set and the first wait returns
-        immediately.
-        """
-        import threading
-
-        if self._tick_event is None:
-            self._tick_event = threading.Event()
-        self._tick_event.set()
-
     def render(self, context: PromptContext | None = None) -> str | None:
         import threading
         import time
@@ -185,6 +170,21 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
                 self._tick_event.clear()
 
             self._render_buffer()
+
+    def request_refresh(self) -> None:
+        """Thread-safe wake-up: forces the render loop to redraw on next tick.
+
+        Safe to call from any thread (workers off the main thread). If the
+        screen is currently rendering and waiting between frames, this returns
+        control to it within ~no time. If the screen isn't rendering yet (not
+        started), the event is simply pre-set and the first wait returns
+        immediately.
+        """
+        import threading
+
+        if self._tick_event is None:
+            self._tick_event = threading.Event()
+        self._tick_event.set()
 
     def _render_buffer(self) -> None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine

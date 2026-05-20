@@ -189,7 +189,8 @@ class TablePromptResponse(AbstractPromptResponse):
                         PromptResponseSegment(text="+" + "-" * title_padding),
                         PromptResponseSegment(text=f" {self.title} "),
                         PromptResponseSegment(
-                            text="-" * (total_width - title_padding - len(self.title) - 2)
+                            text="-"
+                            * (total_width - title_padding - len(self.title) - 2)
                             + "+"
                         ),
                     ]

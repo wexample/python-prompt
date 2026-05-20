@@ -31,18 +31,12 @@ class FrameExample(AbstractResponseExample):
             title="Manager",
         )
 
-    def example_with_color(self) -> None:
-        from wexample_prompt.enums.terminal_color import TerminalColor
-
+    def example_multiline_text(self) -> None:
         self.io.frame(
-            text=["Border in cyan.", "Content keeps its own styling."],
-            title="Colored Border",
-            border_color=TerminalColor.CYAN,
-        )
-
-    def example_no_title(self) -> None:
-        self.io.frame(
-            text="A frame without any title.",
+            text=(
+                "Line one.\n" "Line two with a slightly longer text.\n" "Line three."
+            ),
+            title="Multi-line",
         )
 
     def example_nested_responses(self) -> None:
@@ -63,14 +57,18 @@ class FrameExample(AbstractResponseExample):
             title="Startup",
         )
 
-    def example_multiline_text(self) -> None:
+    def example_no_title(self) -> None:
         self.io.frame(
-            text=(
-                "Line one.\n"
-                "Line two with a slightly longer text.\n"
-                "Line three."
-            ),
-            title="Multi-line",
+            text="A frame without any title.",
+        )
+
+    def example_with_color(self) -> None:
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        self.io.frame(
+            text=["Border in cyan.", "Content keeps its own styling."],
+            title="Colored Border",
+            border_color=TerminalColor.CYAN,
         )
 
     def get_examples(self) -> list[dict[str, Any]]:

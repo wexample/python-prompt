@@ -25,7 +25,7 @@ class FramePromptResponse(AbstractPromptResponse):
     line with the frame characters — content can therefore contain ANSI codes.
     """
 
-    border_color: "TerminalColor | None" = public_field(
+    border_color: TerminalColor | None = public_field(
         default=None,
         description="Color applied to the frame border characters",
     )
@@ -52,9 +52,9 @@ class FramePromptResponse(AbstractPromptResponse):
         text: str | list[str] | None = None,
         responses: list[AbstractPromptResponse] | None = None,
         title: str | None = None,
-        border_color: "TerminalColor | None" = None,
+        border_color: TerminalColor | None = None,
         padding: int = 1,
-        verbosity: "VerbosityLevel | None" = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> FramePromptResponse:
         return cls(
             lines=[],
@@ -72,8 +72,9 @@ class FramePromptResponse(AbstractPromptResponse):
 
         return FrameExample
 
-    def render(self, context: "PromptContext | None" = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_helpers.helpers.ansi import ansi_display_width
+
         from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_context import PromptContext
 
@@ -127,6 +128,18 @@ class FramePromptResponse(AbstractPromptResponse):
     def _build_bottom(self, horiz_w: int) -> str:
         return "╰" + ("─" * horiz_w) + "╯"
 
+    def _build_inner_context(self, context: PromptContext) -> PromptContext:
+        from wexample_prompt.common.prompt_context import PromptContext
+
+        kwargs = PromptContext.create_kwargs_from_context(context=context)
+        # Inner content area: total width minus our own borders + padding
+        outer = context.get_width() - context.get_indentation_visible_width()
+        inner = max(1, outer - 2 - 2 * self.padding)
+        kwargs["width"] = inner
+        kwargs["indentation"] = 0
+        kwargs["bordered"] = False
+        return PromptContext.create_from_kwargs(kwargs=kwargs)
+
     def _build_middle(
         self,
         line: str,
@@ -142,14 +155,7 @@ class FramePromptResponse(AbstractPromptResponse):
             visible = inner_w
         pad_right = inner_w - visible
         pad = " " * self.padding
-        return (
-            colorize("│")
-            + pad
-            + line
-            + (" " * pad_right)
-            + pad
-            + colorize("│")
-        )
+        return colorize("│") + pad + line + (" " * pad_right) + pad + colorize("│")
 
     def _build_top(self, horiz_w: int) -> str:
         if not self.title:
@@ -161,7 +167,7 @@ class FramePromptResponse(AbstractPromptResponse):
         fill = max(0, horiz_w - 3 - title_w)
         return "╭" + "─ " + self.title + " " + ("─" * fill) + "╮"
 
-    def _collect_content_lines(self, context: "PromptContext") -> list[str]:
+    def _collect_content_lines(self, context: PromptContext) -> list[str]:
         lines: list[str] = []
 
         if self.responses:
@@ -181,15 +187,3 @@ class FramePromptResponse(AbstractPromptResponse):
                 lines.extend(item.split("\n"))
 
         return lines
-
-    def _build_inner_context(self, context: "PromptContext") -> "PromptContext":
-        from wexample_prompt.common.prompt_context import PromptContext
-
-        kwargs = PromptContext.create_kwargs_from_context(context=context)
-        # Inner content area: total width minus our own borders + padding
-        outer = context.get_width() - context.get_indentation_visible_width()
-        inner = max(1, outer - 2 - 2 * self.padding)
-        kwargs["width"] = inner
-        kwargs["indentation"] = 0
-        kwargs["bordered"] = False
-        return PromptContext.create_from_kwargs(kwargs=kwargs)
