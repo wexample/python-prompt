@@ -39,10 +39,11 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         )
         rendered = response.render()
         lines = [l for l in rendered.split("\n") if l.strip()]
+        border_starts = ("╭", "╰", "├")
         for line in lines:
-            if not line.startswith("+"):
-                assert line.startswith("|")
-                assert line.endswith("|")
+            if not line.startswith(border_starts):
+                assert line.startswith("│")
+                assert line.endswith("│")
 
     def test_create_table_without_headers(self) -> None:
         from wexample_prompt.responses.data.table_prompt_response import (
@@ -83,8 +84,8 @@ class TestTablePromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "Row 2")
 
     def _assert_specific_format(self, rendered: str) -> None:
-        # Should include table borders/separators
-        self.assertTrue("|" in rendered or "+" in rendered)
+        # Should include table borders/separators (rounded-corner style)
+        self.assertTrue("│" in rendered or "╭" in rendered or "╰" in rendered)
 
     def _create_test_kwargs(self, kwargs=None) -> Kwargs:
         kwargs = kwargs or {}
