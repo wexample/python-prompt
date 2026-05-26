@@ -65,15 +65,6 @@ class TablePromptResponse(AbstractPromptResponse):
         return max_widths
 
     @staticmethod
-    def _create_top_border(width: int) -> PromptResponseLine:
-        from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-
-        return PromptResponseLine(
-            segments=[PromptResponseSegment(text="╭" + "─" * width + "╮")]
-        )
-
-    @staticmethod
     def _create_bottom_border(width: int) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -92,6 +83,15 @@ class TablePromptResponse(AbstractPromptResponse):
         else:
             text = "─" * width
         return PromptResponseLine(segments=[PromptResponseSegment(text=text)])
+
+    @staticmethod
+    def _create_top_border(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text="╭" + "─" * width + "╮")]
+        )
 
     @staticmethod
     def _format_row(

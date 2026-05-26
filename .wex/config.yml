@@ -4,7 +4,7 @@ domains: []
 global:
   name: prompt
   type: app
-  version: 9.0.2
+  version: 9.1.0
 test:
   coverage:
     last_report:
