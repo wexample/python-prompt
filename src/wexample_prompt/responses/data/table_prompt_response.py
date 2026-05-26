@@ -65,12 +65,12 @@ class TablePromptResponse(AbstractPromptResponse):
         return max_widths
 
     @staticmethod
-    def _create_border_line(width: int) -> PromptResponseLine:
+    def _create_bottom_border(width: int) -> PromptResponseLine:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         return PromptResponseLine(
-            segments=[PromptResponseSegment(text="+" + "-" * width + "+")]
+            segments=[PromptResponseSegment(text="╰" + "─" * width + "╯")]
         )
 
     @staticmethod
@@ -79,10 +79,19 @@ class TablePromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         if bordered:
-            text = "+" + "-" * width + "+"
+            text = "├" + "─" * width + "┤"
         else:
-            text = "-" * width
+            text = "─" * width
         return PromptResponseLine(segments=[PromptResponseSegment(text=text)])
+
+    @staticmethod
+    def _create_top_border(width: int) -> PromptResponseLine:
+        from wexample_prompt.common.prompt_response_line import PromptResponseLine
+        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+        return PromptResponseLine(
+            segments=[PromptResponseSegment(text="╭" + "─" * width + "╮")]
+        )
 
     @staticmethod
     def _format_row(
@@ -93,7 +102,7 @@ class TablePromptResponse(AbstractPromptResponse):
 
         segments: list[PromptResponseSegment] = []
         if bordered:
-            segments.append(PromptResponseSegment(text="|"))
+            segments.append(PromptResponseSegment(text="│"))
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
 
@@ -115,7 +124,7 @@ class TablePromptResponse(AbstractPromptResponse):
             if is_last and not bordered:
                 segments.append(PromptResponseSegment(text=" " * padding))
             else:
-                segments.append(PromptResponseSegment(text=" " * padding + " |"))
+                segments.append(PromptResponseSegment(text=" " * padding + " │"))
 
         return segments
 
@@ -183,21 +192,18 @@ class TablePromptResponse(AbstractPromptResponse):
             lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
             if self.title:
-                title_padding = max(0, (total_width - len(self.title)) // 2)
+                # ╭─ Title ─...─╮  → between corners: "─ " + title + " " + fill
+                fill = max(0, total_width - 3 - len(self.title))
                 title_line = PromptResponseLine(
                     segments=[
-                        PromptResponseSegment(text="+" + "-" * title_padding),
-                        PromptResponseSegment(text=f" {self.title} "),
                         PromptResponseSegment(
-                            text="-"
-                            * (total_width - title_padding - len(self.title) - 2)
-                            + "+"
+                            text="╭─ " + self.title + " " + "─" * fill + "╮"
                         ),
                     ]
                 )
                 lines.append(title_line)
             else:
-                lines.append(self._create_border_line(total_width))
+                lines.append(self._create_top_border(total_width))
 
         if self.headers:
             header_segments = self._format_row(
@@ -211,7 +217,7 @@ class TablePromptResponse(AbstractPromptResponse):
             lines.append(PromptResponseLine(segments=row_segments))
 
         if bordered:
-            lines.append(self._create_border_line(total_width))
+            lines.append(self._create_bottom_border(total_width))
             lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
         self.lines = lines
