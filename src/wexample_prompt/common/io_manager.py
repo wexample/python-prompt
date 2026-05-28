@@ -8,6 +8,12 @@ from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
+from wexample_prompt.mixins.response.code_prompt_response_manager_mixin import (
+    CodePromptResponseManagerMixin,
+)
+from wexample_prompt.mixins.response.command_prompt_response_manager_mixin import (
+    CommandPromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
 )
@@ -25,12 +31,6 @@ from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin im
 )
 from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import (
     TreePromptResponseManagerMixin,
-)
-from wexample_prompt.mixins.response.code_prompt_response_manager_mixin import (
-    CodePromptResponseManagerMixin,
-)
-from wexample_prompt.mixins.response.command_prompt_response_manager_mixin import (
-    CommandPromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import (
     EchoPromptResponseManagerMixin,

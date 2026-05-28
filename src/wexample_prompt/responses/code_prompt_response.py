@@ -42,7 +42,7 @@ class CodePromptResponse(AbstractPromptResponse):
         code: str | list[str],
         language: str | None = None,
         line_numbers: bool = False,
-        verbosity: "VerbosityLevel | None" = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> CodePromptResponse:
         return cls(
             lines=[],
@@ -58,7 +58,7 @@ class CodePromptResponse(AbstractPromptResponse):
 
         return CodeExample
 
-    def render(self, context: "PromptContext | None" = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -70,9 +70,7 @@ class CodePromptResponse(AbstractPromptResponse):
         if not self._verbosity_context_allows_display(context=context):
             return None
 
-        code_str = (
-            self.code if isinstance(self.code, str) else "\n".join(self.code)
-        )
+        code_str = self.code if isinstance(self.code, str) else "\n".join(self.code)
 
         lines: list[PromptResponseLine] = []
 

@@ -48,7 +48,7 @@ class CommandPromptResponse(AbstractPromptResponse):
         output: str | list[str] | None = None,
         prompt_char: str = "$",
         executed: bool = False,
-        verbosity: "VerbosityLevel | None" = None,
+        verbosity: VerbosityLevel | None = None,
     ) -> CommandPromptResponse:
         return cls(
             lines=[],
@@ -59,20 +59,13 @@ class CommandPromptResponse(AbstractPromptResponse):
             verbosity=verbosity,
         )
 
-    def _resolve_command_string(self) -> str:
-        if isinstance(self.command, str):
-            return self.command
-        import shlex
-
-        return shlex.join(self.command)
-
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
         from wexample_prompt.example.response.command_example import CommandExample
 
         return CommandExample
 
-    def render(self, context: "PromptContext | None" = None) -> str | None:
+    def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
@@ -125,3 +118,10 @@ class CommandPromptResponse(AbstractPromptResponse):
 
         self.lines = lines
         return super().render(context=context)
+
+    def _resolve_command_string(self) -> str:
+        if isinstance(self.command, str):
+            return self.command
+        import shlex
+
+        return shlex.join(self.command)

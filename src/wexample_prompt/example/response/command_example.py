@@ -18,11 +18,24 @@ class CommandExample(AbstractResponseExample):
 
         return CommandPromptResponse.create_command(command="ls -la")
 
+    def example_executed(self) -> None:
+        self.io.command(
+            command="npm install",
+            output="added 152 packages in 8s",
+            executed=True,
+        )
+
     def example_extended(self) -> None:
         self._class_with_methods.command(command="echo hello")
 
     def example_manager(self) -> None:
         self.io.command(command="ls -la")
+
+    def example_python_repl(self) -> None:
+        self.io.command(command="print('hello')", prompt_char=">>>")
+
+    def example_root_shell(self) -> None:
+        self.io.command(command="systemctl restart nginx", prompt_char="#")
 
     def example_with_output(self) -> None:
         self.io.command(
@@ -34,19 +47,6 @@ class CommandExample(AbstractResponseExample):
                 "-rw-r--r--  1 weeger weeger  340 May 25 14:30 README.md"
             ),
         )
-
-    def example_executed(self) -> None:
-        self.io.command(
-            command="npm install",
-            output="added 152 packages in 8s",
-            executed=True,
-        )
-
-    def example_python_repl(self) -> None:
-        self.io.command(command="print('hello')", prompt_char=">>>")
-
-    def example_root_shell(self) -> None:
-        self.io.command(command="systemctl restart nginx", prompt_char="#")
 
     def get_examples(self) -> list[dict[str, Any]]:
         return [

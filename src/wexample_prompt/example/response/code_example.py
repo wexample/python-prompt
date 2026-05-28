@@ -11,7 +11,7 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 class CodeExample(AbstractResponseExample):
     """Example for the code response."""
 
-    PY = "def greet(name):\n    return f\"hello, {name}!\"\n\nprint(greet(\"world\"))"
+    PY = 'def greet(name):\n    return f"hello, {name}!"\n\nprint(greet("world"))'
     JS = "function greet(name) {\n    return `hello, ${name}!`;\n}\n\nconsole.log(greet('world'));"
     PHP = "<?php\nfunction greet(string $name): string {\n    return \"hello, {$name}!\";\n}\necho greet('world');"
 
@@ -23,21 +23,6 @@ class CodeExample(AbstractResponseExample):
     def example_extended(self) -> None:
         self._class_with_methods.code(code=self.PY, language="python")
 
-    def example_manager(self) -> None:
-        self.io.code(code=self.PY, language="python")
-
-    def example_javascript(self) -> None:
-        self.io.code(code=self.JS, language="javascript")
-
-    def example_php(self) -> None:
-        self.io.code(code=self.PHP, language="php")
-
-    def example_line_numbers(self) -> None:
-        self.io.code(code=self.PY, language="python", line_numbers=True)
-
-    def example_no_language(self) -> None:
-        self.io.code(code="x = 42\nprint(x)")
-
     def example_inside_frame(self) -> None:
         from wexample_prompt.responses.code_prompt_response import CodePromptResponse
 
@@ -45,6 +30,21 @@ class CodeExample(AbstractResponseExample):
             code=self.PY, language="python", line_numbers=True
         )
         self.io.frame(responses=[snippet], title="greet.py")
+
+    def example_javascript(self) -> None:
+        self.io.code(code=self.JS, language="javascript")
+
+    def example_line_numbers(self) -> None:
+        self.io.code(code=self.PY, language="python", line_numbers=True)
+
+    def example_manager(self) -> None:
+        self.io.code(code=self.PY, language="python")
+
+    def example_no_language(self) -> None:
+        self.io.code(code="x = 42\nprint(x)")
+
+    def example_php(self) -> None:
+        self.io.code(code=self.PHP, language="php")
 
     def get_examples(self) -> list[dict[str, Any]]:
         return [
