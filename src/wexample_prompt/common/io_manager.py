@@ -26,6 +26,9 @@ from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin im
 from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import (
     TreePromptResponseManagerMixin,
 )
+from wexample_prompt.mixins.response.command_prompt_response_manager_mixin import (
+    CommandPromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import (
     EchoPromptResponseManagerMixin,
 )
@@ -124,6 +127,7 @@ class IoManager(
     TablePromptResponseManagerMixin,
     TreePromptResponseManagerMixin,
     FramePromptResponseManagerMixin,
+    CommandPromptResponseManagerMixin,
     # Interactive
     ChoicePromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
