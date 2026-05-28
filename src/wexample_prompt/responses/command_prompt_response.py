@@ -25,8 +25,8 @@ class CommandPromptResponse(AbstractPromptResponse):
     checkmark).
     """
 
-    command: str = public_field(
-        description="The command line to display (any style markup is honored)",
+    command: str | list[str] = public_field(
+        description="Shell command to display. Accepts a pre-joined string or a list of argv tokens (joined via shlex).",
     )
     executed: bool = public_field(
         default=False,
@@ -44,7 +44,7 @@ class CommandPromptResponse(AbstractPromptResponse):
     @classmethod
     def create_command(
         cls,
-        command: str,
+        command: str | list[str],
         output: str | list[str] | None = None,
         prompt_char: str = "$",
         executed: bool = False,
@@ -58,6 +58,13 @@ class CommandPromptResponse(AbstractPromptResponse):
             executed=executed,
             verbosity=verbosity,
         )
+
+    def _resolve_command_string(self) -> str:
+        if isinstance(self.command, str):
+            return self.command
+        import shlex
+
+        return shlex.join(self.command)
 
     @classmethod
     def get_example_class(cls) -> type[AbstractResponseExample]:
@@ -77,7 +84,8 @@ class CommandPromptResponse(AbstractPromptResponse):
         if not self._verbosity_context_allows_display(context=context):
             return None
 
-        if not self.command:
+        command_str = self._resolve_command_string()
+        if not command_str:
             self.lines = []
             return super().render(context=context)
 
@@ -98,7 +106,7 @@ class CommandPromptResponse(AbstractPromptResponse):
         # The command itself: parse markup, color the un-styled parts in cyan,
         # and prepend the prefix segment to the very first line only.
         cmd_lines = PromptResponseLine.create_from_string(
-            text=self.command, color=TerminalColor.CYAN
+            text=command_str, color=TerminalColor.CYAN
         )
         if cmd_lines:
             first = cmd_lines[0]

@@ -8,31 +8,25 @@ if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
-    from wexample_prompt.responses.command_prompt_response import (
-        CommandPromptResponse,
-    )
+    from wexample_prompt.responses.code_prompt_response import CodePromptResponse
 
 
-class CommandPromptResponseManagerMixin:
-    def command(
+class CodePromptResponseManagerMixin:
+    def code(
         self: IoManager,
-        command: str | list[str],
-        output: str | list[str] | None = None,
-        prompt_char: str = "$",
-        executed: bool = False,
+        code: str | list[str],
+        language: str | None = None,
+        line_numbers: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
-    ) -> CommandPromptResponse:
-        from wexample_prompt.responses.command_prompt_response import (
-            CommandPromptResponse,
-        )
+    ) -> CodePromptResponse:
+        from wexample_prompt.responses.code_prompt_response import CodePromptResponse
 
-        response = CommandPromptResponse.create_command(
-            command=command,
-            output=output,
-            prompt_char=prompt_char,
-            executed=executed,
+        response = CodePromptResponse.create_code(
+            code=code,
+            language=language,
+            line_numbers=line_numbers,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
@@ -40,7 +34,7 @@ class CommandPromptResponseManagerMixin:
 
         return self.print_response(
             response=response,
-            context=CommandPromptResponse.rebuild_context_for_kwargs(
+            context=CodePromptResponse.rebuild_context_for_kwargs(
                 context=context,
                 parent_kwargs=kwargs,
             ),
