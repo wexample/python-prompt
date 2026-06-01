@@ -27,9 +27,17 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
       - Ctrl+C / Ctrl+D → return None
     """
 
+    bordered: bool = public_field(
+        default=False,
+        description="Frame the input area with horizontal separators above and below.",
+    )
     default_value: str | None = public_field(
         default=None,
         description="Pre-filled text shown in the editor; user can edit or accept it.",
+    )
+    footer_hint: str | None = public_field(
+        default=None,
+        description="Dim helper text shown below the bottom separator (only with bordered=True).",
     )
     predefined_answer: Any = public_field(
         default=None,
@@ -39,18 +47,20 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         default="❯ ",
         description="Inline prefix shown left of the cursor on the first line",
     )
-    question: LineMessage = public_field(
+    question: LineMessage | None = public_field(
         default="Type your message (Esc+Enter for newline, Enter to submit):",
-        description="Prompt header shown above the cursor",
+        description="Prompt header shown above the cursor. Pass None to skip (useful with bordered=True).",
     )
 
     @classmethod
     def create_multiline_input(
         cls,
-        question: LineMessage = "Type your message (Esc+Enter for newline, Enter to submit):",
+        question: LineMessage | None = "Type your message (Esc+Enter for newline, Enter to submit):",
         default_value: str | None = None,
         predefined_answer: Any = None,
         prompt_prefix: str = "❯ ",
+        bordered: bool = False,
+        footer_hint: str | None = None,
         reset_on_finish: bool = False,
     ) -> MultilineInputPromptResponse:
         return cls(
@@ -58,6 +68,8 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             default_value=default_value,
             predefined_answer=predefined_answer,
             prompt_prefix=prompt_prefix,
+            bordered=bordered,
+            footer_hint=footer_hint,
             reset_on_finish=reset_on_finish,
         )
 
@@ -85,31 +97,55 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             self._answer = str(self.predefined_answer)
             return
 
-        # Build the question line (consistent with InputPromptResponse styling).
-        question_lines = PromptResponseLine.create_from_string(self.question)
-        self.lines = []
-        for idx, q_line in enumerate(question_lines):
-            segs = []
-            if idx == 0:
-                segs.append(
-                    PromptResponseSegment(
-                        text="? ",
-                        color=TerminalColor.BLUE,
-                        styles=[TextStyle.BOLD],
+        if self.question:
+            # Build the question line (consistent with InputPromptResponse styling).
+            question_lines = PromptResponseLine.create_from_string(self.question)
+            self.lines = []
+            for idx, q_line in enumerate(question_lines):
+                segs = []
+                if idx == 0:
+                    segs.append(
+                        PromptResponseSegment(
+                            text="? ",
+                            color=TerminalColor.BLUE,
+                            styles=[TextStyle.BOLD],
+                        )
                     )
-                )
-            for seg in q_line.segments:
-                segs.append(
-                    PromptResponseSegment(
-                        text=seg.text,
-                        color=seg.color or TerminalColor.LIGHT_WHITE,
-                        styles=seg.styles or [TextStyle.BOLD],
+                for seg in q_line.segments:
+                    segs.append(
+                        PromptResponseSegment(
+                            text=seg.text,
+                            color=seg.color or TerminalColor.LIGHT_WHITE,
+                            styles=seg.styles or [TextStyle.BOLD],
+                        )
                     )
-                )
-            self.lines.append(PromptResponseLine(segments=segs))
+                self.lines.append(PromptResponseLine(segments=segs))
 
-        self._print_render(context=context)
+            self._print_render(context=context)
+
+        if self.bordered:
+            self._print_separator(context=context)
+
         self._answer = self._read_multiline_input()
+
+        if self.bordered:
+            self._print_separator(context=context)
+            if self.footer_hint:
+                self._print_footer_hint()
+
+    def _print_footer_hint(self) -> None:
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        print(f"{TerminalColor.LIGHT_BLACK.value}{self.footer_hint}\x1b[0m", flush=True)
+
+    def _print_separator(self, context: PromptContext) -> None:
+        width = max(1, context.get_width())
+        from wexample_prompt.enums.terminal_color import TerminalColor
+
+        print(
+            f"{TerminalColor.LIGHT_BLACK.value}{'─' * width}\x1b[0m",
+            flush=True,
+        )
 
     def _read_multiline_input(self) -> str | None:
         from prompt_toolkit import PromptSession

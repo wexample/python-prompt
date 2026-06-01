@@ -17,10 +17,12 @@ if TYPE_CHECKING:
 class MultilineInputPromptResponseManagerMixin:
     def multiline_input(
         self: IoManager,
-        question: LineMessage = "Type your message (Esc+Enter for newline, Enter to submit):",
+        question: LineMessage | None = "Type your message (Esc+Enter for newline, Enter to submit):",
         default_value: str | None = None,
         predefined_answer: Any = None,
         prompt_prefix: str = "❯ ",
+        bordered: bool = False,
+        footer_hint: str | None = None,
         reset_on_finish: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
@@ -35,6 +37,8 @@ class MultilineInputPromptResponseManagerMixin:
             default_value=default_value,
             predefined_answer=predefined_answer,
             prompt_prefix=prompt_prefix,
+            bordered=bordered,
+            footer_hint=footer_hint,
             reset_on_finish=reset_on_finish,
         )
 
