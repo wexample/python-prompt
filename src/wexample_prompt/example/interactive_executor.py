@@ -3,10 +3,12 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from wexample_helpers.classes.example.executor import Executor
+from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.mixins.with_io_methods import WithIoMethods
 
 
+@base_class
 class InteractiveExecutor(Executor, WithIoMethods):
     """
     Executor variant that leverages the prompt IO manager to render progress,
