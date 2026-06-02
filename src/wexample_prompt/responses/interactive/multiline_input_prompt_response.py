@@ -126,7 +126,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         self._answer = self._read_multiline_input(context=context)
 
     def _read_multiline_input(self, context: PromptContext) -> str | None:
-        from wexample_prompt.widget.input_widget import DEFAULT_INFO, InputWidget
+        from wexample_prompt.helper.input_widget import DEFAULT_INFO, InputWidget
 
         widget = InputWidget(
             initial=self.default_value or "",

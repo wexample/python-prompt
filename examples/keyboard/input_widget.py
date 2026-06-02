@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import sys
 
-from wexample_prompt.widget.input_widget import InputWidget
+from wexample_prompt.helper.input_widget import InputWidget
 
 
 def main() -> None:
