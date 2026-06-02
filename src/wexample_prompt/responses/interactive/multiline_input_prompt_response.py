@@ -123,53 +123,21 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
 
             self._print_render(context=context)
 
-        if self.bordered:
-            self._print_separator(context=context)
+        self._answer = self._read_multiline_input(context=context)
 
-        self._answer = self._read_multiline_input()
+    def _read_multiline_input(self, context: PromptContext) -> str | None:
+        from wexample_prompt.widget.input_widget import DEFAULT_INFO, InputWidget
 
-        if self.bordered:
-            self._print_separator(context=context)
-            if self.footer_hint:
-                self._print_footer_hint()
-
-    def _print_footer_hint(self) -> None:
-        from wexample_prompt.enums.terminal_color import TerminalColor
-
-        print(f"{TerminalColor.LIGHT_BLACK.value}{self.footer_hint}\x1b[0m", flush=True)
-
-    def _print_separator(self, context: PromptContext) -> None:
-        width = max(1, context.get_width())
-        from wexample_prompt.enums.terminal_color import TerminalColor
-
-        print(
-            f"{TerminalColor.LIGHT_BLACK.value}{'─' * width}\x1b[0m",
-            flush=True,
+        widget = InputWidget(
+            initial=self.default_value or "",
+            bordered=self.bordered,
+            info=self.footer_hint if self.footer_hint is not None else DEFAULT_INFO,
+            prompt_prefix=self.prompt_prefix,
+            continuation_prefix=("." + self.prompt_prefix[1:])
+            if len(self.prompt_prefix) > 1
+            else ". ",
         )
-
-    def _read_multiline_input(self) -> str | None:
-        from prompt_toolkit import PromptSession
-        from prompt_toolkit.key_binding import KeyBindings
-
-        bindings = KeyBindings()
-
-        @bindings.add("escape", "enter")
-        def _newline_on_esc_enter(event):  # noqa: ANN001
-            event.current_buffer.insert_text("\n")
-
-        @bindings.add("enter")
-        def _submit_on_enter(event):  # noqa: ANN001
-            event.current_buffer.validate_and_handle()
-
-        session: PromptSession[Any] = PromptSession()
-        try:
-            text = session.prompt(
-                message=self.prompt_prefix,
-                default=self.default_value or "",
-                multiline=True,
-                key_bindings=bindings,
-            )
-        except (KeyboardInterrupt, EOFError):
+        text, validated = widget.run()
+        if not validated:
             return None
-
         return text if text else None

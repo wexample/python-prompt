@@ -46,42 +46,6 @@ class MultilineInputExample(AbstractResponseExample):
         )
         self._echo(response.get_value())
 
-    def example_chatty(self) -> None:
-        """Mimic a chat-session look: past turns + bordered input + footer hint."""
-        io = self.io
-
-        # Past turns (scripted) — neutral gray via io.log default.
-        io.log("❯ Salut mon poulet")
-        io.log("")
-        io.log("● Salut ! 🐔 Qu'est-ce qu'on fait aujourd'hui ?")
-        io.log("")
-        io.log("✻ Worked for 2s")
-        io.log("")
-        io.log("❯ On fait juste des tests de conversation")
-        io.log("")
-        io.log(
-            "● Ça marche, on teste tranquille. 😄 Vas-y, balance ce que tu veux — je réponds."
-        )
-        io.log("")
-        io.log("✻ Cogitated for 3s")
-        io.log("")
-
-        response = io.multiline_input(
-            question=None,
-            prompt_prefix="❯ ",
-            bordered=True,
-            footer_hint="? for shortcuts · ← for agents",
-        )
-
-        value = response.get_value()
-        if value is None:
-            io.warning("Cancelled.")
-            return
-        io.log("")
-        io.log(f"● You said: {value}")
-        io.log("")
-        io.log("✻ Replied in 1s")
-
     def _echo(self, value: str | None) -> None:
         if value is None:
             self.io.warning("Cancelled.")
@@ -107,10 +71,5 @@ class MultilineInputExample(AbstractResponseExample):
                 "title": "Custom prefix",
                 "description": "Replace the ❯ with an emoji",
                 "callback": self.example_custom_prefix,
-            },
-            {
-                "title": "Chatty",
-                "description": "Chat-session look: past turns + bordered input + hint",
-                "callback": self.example_chatty,
             },
         ]
