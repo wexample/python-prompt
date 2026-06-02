@@ -158,9 +158,26 @@ class InputWidget:
     def _terminal_width() -> int:
         return min(shutil.get_terminal_size((60, 20)).columns, 80)
 
+    def _visual_rows_for_line(self, line: str) -> int:
+        """Number of visual rows a logical line occupies once the prefix is added
+        and the terminal wraps at ``self.width``.
+        """
+        total = self._prefix_width + display_width(line)
+        if total <= 0:
+            return 1
+        return max(1, (total + self.width - 1) // self.width)
+
     def render(self) -> None:
         lines = self.buffer.split("\n")
         cur_row, cur_col = cursor_rowcol(self.buffer, self.cursor)
+
+        # Visual rows per logical line (accounting for terminal wrap).
+        line_visual_rows = [self._visual_rows_for_line(l) for l in lines]
+        # Cursor's visual offset within its own logical line.
+        cur_visual_offset = (self._prefix_width + cur_col) // self.width
+        cur_visual_col = (self._prefix_width + cur_col) % self.width
+        # Cursor visual row from the top of the input area.
+        cur_visual_row_from_top = sum(line_visual_rows[:cur_row]) + cur_visual_offset
 
         if self._rendered:
             if self._cursor_up_to_top > 0:
@@ -186,19 +203,34 @@ class InputWidget:
                 info_line = f"{info_line}  [key={self.last_key_trace}]"
             write(f"? {info_line}")
 
-        # Position cursor on the input line at the right column.
-        rows_below_input_top = len(lines) - cur_row
-        rows_to_climb = rows_below_input_top
+        # Visual rows between the cursor's visual row and the bottom of what we
+        # just printed. Bordered: cursor sits at end of info text on the same
+        # row as info; non-bordered: cursor sits one row below the last input
+        # line (because of the trailing \r\n).
+        rows_below_cursor_in_input = (
+            line_visual_rows[cur_row] - 1 - cur_visual_offset
+        ) + sum(line_visual_rows[cur_row + 1 :])
         if self.bordered:
-            rows_to_climb += 1  # bottom bar
-        write(f"\r{CSI}{rows_to_climb}A")
-        if self._prefix_width + cur_col > 0:
-            write(f"{CSI}{self._prefix_width + cur_col}C")
+            # info row → climb 1 to bottom bar → climb 1 more to last input row
+            rows_to_climb = rows_below_cursor_in_input + 2
+        else:
+            # one row below last input row
+            rows_to_climb = rows_below_cursor_in_input + 1
+
+        if rows_to_climb > 0:
+            write(f"\r{CSI}{rows_to_climb}A")
+        else:
+            write("\r")
+        if cur_visual_col > 0:
+            write(f"{CSI}{cur_visual_col}C")
 
         self._rendered = True
-        # How many rows above us is the top of the widget (top bar if bordered,
-        # else first input line). Used by the next render to climb back up.
-        self._cursor_up_to_top = cur_row + (1 if self.bordered else 0)
+        # How many rows above the cursor is the top of the widget (top bar if
+        # bordered, else first input row). Used by the next render to climb
+        # back up before erasing.
+        self._cursor_up_to_top = cur_visual_row_from_top + (
+            1 if self.bordered else 0
+        )
 
     def run(self) -> tuple[str, bool]:
         """Run the widget; returns (buffer, validated_by_enter)."""
@@ -302,10 +334,16 @@ class InputWidget:
             if self.bordered:
                 self._erase_widget()
             else:
-                row, _ = cursor_rowcol(self.buffer, self.cursor)
-                total = self.buffer.count("\n") + 1
-                rows_below = total - row
-                write(f"\r{CSI}{rows_below}B\r\n")
+                # Descend below the input area using visual rows (accounting
+                # for terminal wrap), so we don't bury the last visual row.
+                lines = self.buffer.split("\n")
+                cur_row, cur_col = cursor_rowcol(self.buffer, self.cursor)
+                line_visual_rows = [self._visual_rows_for_line(l) for l in lines]
+                cur_visual_offset = (self._prefix_width + cur_col) // self.width
+                rows_below = (
+                    line_visual_rows[cur_row] - 1 - cur_visual_offset
+                ) + sum(line_visual_rows[cur_row + 1 :])
+                write(f"\r{CSI}{rows_below + 1}B\r\n")
 
         return self.buffer, validated
 
