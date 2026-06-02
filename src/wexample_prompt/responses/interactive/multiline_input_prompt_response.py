@@ -55,7 +55,9 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
     @classmethod
     def create_multiline_input(
         cls,
-        question: LineMessage | None = "Type your message (Esc+Enter for newline, Enter to submit):",
+        question: (
+            LineMessage | None
+        ) = "Type your message (Esc+Enter for newline, Enter to submit):",
         default_value: str | None = None,
         predefined_answer: Any = None,
         prompt_prefix: str = "❯ ",

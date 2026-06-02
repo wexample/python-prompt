@@ -286,14 +286,10 @@ class InputWidget:
                     if key == "[":
                         key = read_csi_tail("\x1b[")
                         if self.debug:
-                            self.last_key_trace = " ".join(
-                                f"{ord(c):02x}" for c in key
-                            )
+                            self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
 
                 if key == PASTE_START:
-                    pasted = (
-                        read_paste().replace("\r\n", "\n").replace("\r", "\n")
-                    )
+                    pasted = read_paste().replace("\r\n", "\n").replace("\r", "\n")
                     self._insert(pasted)
                 elif key == "\r":
                     if self.cursor > 0 and self.buffer[self.cursor - 1] == "\\":

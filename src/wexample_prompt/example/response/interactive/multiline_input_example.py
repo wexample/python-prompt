@@ -20,6 +20,13 @@ class MultilineInputExample(AbstractResponseExample):
             predefined_answer="hello\nworld",
         )
 
+    def example_custom_prefix(self) -> None:
+        response = self.io.multiline_input(
+            question="Notes for today:",
+            prompt_prefix="📝 ",
+        )
+        self._echo(response.get_value())
+
     def example_extended(self) -> None:
         response = self._class_with_methods.multiline_input(
             question="Write something (Esc+Enter for newline):",
@@ -39,22 +46,6 @@ class MultilineInputExample(AbstractResponseExample):
         )
         self._echo(response.get_value())
 
-    def example_custom_prefix(self) -> None:
-        response = self.io.multiline_input(
-            question="Notes for today:",
-            prompt_prefix="📝 ",
-        )
-        self._echo(response.get_value())
-
-    def _echo(self, value: str | None) -> None:
-        if value is None:
-            self.io.warning("Cancelled.")
-            return
-        self.io.frame(
-            text=value.split("\n"),
-            title="You typed",
-        )
-
     def get_examples(self) -> list[dict[str, Any]]:
         return [
             {
@@ -73,3 +64,12 @@ class MultilineInputExample(AbstractResponseExample):
                 "callback": self.example_custom_prefix,
             },
         ]
+
+    def _echo(self, value: str | None) -> None:
+        if value is None:
+            self.io.warning("Cancelled.")
+            return
+        self.io.frame(
+            text=value.split("\n"),
+            title="You typed",
+        )

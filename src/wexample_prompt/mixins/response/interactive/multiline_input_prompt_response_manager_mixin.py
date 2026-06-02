@@ -17,7 +17,9 @@ if TYPE_CHECKING:
 class MultilineInputPromptResponseManagerMixin:
     def multiline_input(
         self: IoManager,
-        question: LineMessage | None = "Type your message (Esc+Enter for newline, Enter to submit):",
+        question: (
+            LineMessage | None
+        ) = "Type your message (Esc+Enter for newline, Enter to submit):",
         default_value: str | None = None,
         predefined_answer: Any = None,
         prompt_prefix: str = "❯ ",
