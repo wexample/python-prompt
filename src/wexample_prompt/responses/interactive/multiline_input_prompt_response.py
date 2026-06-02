@@ -31,6 +31,10 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         default=False,
         description="Frame the input area with horizontal separators above and below.",
     )
+    completions: list[tuple[str, str]] = public_field(
+        factory=list,
+        description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
+    )
     default_value: str | None = public_field(
         default=None,
         description="Pre-filled text shown in the editor; user can edit or accept it.",
@@ -63,6 +67,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         prompt_prefix: str = "❯ ",
         bordered: bool = False,
         footer_hint: str | None = None,
+        completions: list[tuple[str, str]] | None = None,
         reset_on_finish: bool = False,
     ) -> MultilineInputPromptResponse:
         return cls(
@@ -72,6 +77,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             prompt_prefix=prompt_prefix,
             bordered=bordered,
             footer_hint=footer_hint,
+            completions=list(completions) if completions else [],
             reset_on_finish=reset_on_finish,
         )
 
@@ -135,6 +141,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             bordered=self.bordered,
             info=self.footer_hint if self.footer_hint is not None else DEFAULT_INFO,
             prompt_prefix=self.prompt_prefix,
+            completions=self.completions or None,
         )
         text, validated = widget.run()
         if not validated:

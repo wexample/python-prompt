@@ -25,6 +25,7 @@ class MultilineInputPromptResponseManagerMixin:
         prompt_prefix: str = "❯ ",
         bordered: bool = False,
         footer_hint: str | None = None,
+        completions: list[tuple[str, str]] | None = None,
         reset_on_finish: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
@@ -41,6 +42,7 @@ class MultilineInputPromptResponseManagerMixin:
             prompt_prefix=prompt_prefix,
             bordered=bordered,
             footer_hint=footer_hint,
+            completions=completions,
             reset_on_finish=reset_on_finish,
         )
 

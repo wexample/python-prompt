@@ -27,6 +27,22 @@ class MultilineInputExample(AbstractResponseExample):
         )
         self._echo(response.get_value())
 
+    def example_completions(self) -> None:
+        response = self.io.multiline_input(
+            question="Type / for commands:",
+            bordered=True,
+            footer_hint="? Type / to see commands · ↑↓ to navigate · Tab/Enter to accept",
+            completions=[
+                ("/add-dir", "Add a new working directory"),
+                ("/advisor", "Configure the Advisor Tool"),
+                ("/agents", "Manage agent configurations"),
+                ("/autofix-pr", "Monitor and autofix issues with the current PR"),
+                ("/help", "Show help"),
+                ("/exit", "Quit the session"),
+            ],
+        )
+        self._echo(response.get_value())
+
     def example_extended(self) -> None:
         response = self._class_with_methods.multiline_input(
             question="Write something (Esc+Enter for newline):",
@@ -62,6 +78,11 @@ class MultilineInputExample(AbstractResponseExample):
                 "title": "Custom prefix",
                 "description": "Replace the ❯ with an emoji",
                 "callback": self.example_custom_prefix,
+            },
+            {
+                "title": "Completions",
+                "description": "Type / to trigger autocomplete in the info zone",
+                "callback": self.example_completions,
             },
         ]
 

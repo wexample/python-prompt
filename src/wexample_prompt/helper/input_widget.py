@@ -121,6 +121,10 @@ def write(s: str) -> None:
 class InputWidget:
     """Reusable multi-line input widget rendered inline (no full-screen)."""
 
+    # Completion list: rows shown at once (after that, the user keeps typing
+    # to filter further).
+    COMPLETION_MAX_ROWS = 10
+
     def __init__(
         self,
         width: int | None = None,
@@ -130,6 +134,7 @@ class InputWidget:
         bordered: bool = True,
         prompt_prefix: str = "> ",
         continuation_prefix: str | None = None,
+        completions: list[tuple[str, str]] | None = None,
     ) -> None:
         self._width_override = width
         self.width = width or self._terminal_width()
@@ -150,6 +155,12 @@ class InputWidget:
         # First-line and continuation prefixes share a single display width to
         # keep cursor math straightforward.
         self._prefix_width = display_width(prompt_prefix)
+        # Slash-triggered autocomplete: list of (name, description) tuples.
+        # Names typically start with "/" but the widget doesn't enforce it —
+        # we only enter completion mode when buffer is "/<word>" (no space,
+        # no newline), so empty list ⇒ no completion mode ever.
+        self.completions = completions or []
+        self._completion_index = 0
         self._rendered = False
         self._cursor_up_to_top = 0
         self._needs_resize = False
@@ -166,6 +177,58 @@ class InputWidget:
         if total <= 0:
             return 1
         return max(1, (total + self.width - 1) // self.width)
+
+    def _in_completion_mode(self) -> bool:
+        """Completion list is active when buffer is a single token starting with /."""
+        return (
+            bool(self.completions)
+            and self.buffer.startswith("/")
+            and " " not in self.buffer
+            and "\n" not in self.buffer
+        )
+
+    def _filtered_completions(self) -> list[tuple[str, str]]:
+        """Completions whose name starts with the typed prefix (case-insensitive)."""
+        if not self._in_completion_mode():
+            return []
+        prefix = self.buffer.lower()
+        return [c for c in self.completions if c[0].lower().startswith(prefix)]
+
+    def _info_rows(self) -> list[str]:
+        """Build the info-zone lines (either the static info or the completion list)."""
+        if self._in_completion_mode():
+            matches = self._filtered_completions()
+            if not matches:
+                return ["? (no matching command)"]
+            # Clamp selection inside available matches.
+            self._completion_index = max(
+                0, min(self._completion_index, len(matches) - 1)
+            )
+            visible = matches[: self.COMPLETION_MAX_ROWS]
+            name_w = max(display_width(n) for n, _ in visible)
+            rows: list[str] = []
+            for i, (name, desc) in enumerate(visible):
+                pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
+                line_raw = f"{name}{pad}{desc}"
+                # Truncate to fit terminal width (no wrap inside completion list).
+                if display_width(line_raw) > self.width:
+                    # Crude truncation: cut description.
+                    avail = self.width - name_w - len(pad) - 1
+                    if avail > 1:
+                        line_raw = f"{name}{pad}{desc[: max(0, avail)]}…"
+                    else:
+                        line_raw = name[: self.width]
+                if i == self._completion_index:
+                    # Highlight selected row via reverse video.
+                    rows.append(f"\x1b[7m{line_raw}\x1b[27m")
+                else:
+                    rows.append(line_raw)
+            return rows
+        # Normal info zone: a single line (may carry the debug key trace).
+        info_line = self.info
+        if self.debug and self.last_key_trace:
+            info_line = f"{info_line}  [key={self.last_key_trace}]"
+        return [f"? {info_line}"]
 
     def render(self) -> None:
         lines = self.buffer.split("\n")
@@ -196,23 +259,26 @@ class InputWidget:
             prefix = self.prompt_prefix if i == 0 else self.continuation_prefix
             write(f"{prefix}{line}\r\n")
 
+        info_rows: list[str] = []
         if self.bordered:
             write(f"{BAR_CHAR * self.width}\r\n")
-            info_line = self.info
-            if self.debug and self.last_key_trace:
-                info_line = f"{info_line}  [key={self.last_key_trace}]"
-            write(f"? {info_line}")
+            info_rows = self._info_rows()
+            for j, info_line in enumerate(info_rows):
+                if j == len(info_rows) - 1:
+                    write(info_line)  # last row: no trailing newline
+                else:
+                    write(f"{info_line}\r\n")
 
         # Visual rows between the cursor's visual row and the bottom of what we
-        # just printed. Bordered: cursor sits at end of info text on the same
-        # row as info; non-bordered: cursor sits one row below the last input
-        # line (because of the trailing \r\n).
+        # just printed. Bordered: cursor sits at end of the last info row;
+        # non-bordered: cursor sits one row below the last input line.
         rows_below_cursor_in_input = (
             line_visual_rows[cur_row] - 1 - cur_visual_offset
         ) + sum(line_visual_rows[cur_row + 1 :])
         if self.bordered:
-            # info row → climb 1 to bottom bar → climb 1 more to last input row
-            rows_to_climb = rows_below_cursor_in_input + 2
+            # last info row → climb (info_rows - 1) → climb 1 to bottom bar
+            #   → climb 1 more to last input row
+            rows_to_climb = rows_below_cursor_in_input + 1 + len(info_rows)
         else:
             # one row below last input row
             rows_to_climb = rows_below_cursor_in_input + 1
@@ -279,6 +345,32 @@ class InputWidget:
                         if self.debug:
                             self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
 
+                # Completion mode: hijack Up/Down/Tab/Enter for navigation
+                # and acceptance, before the generic handlers see them.
+                if self._in_completion_mode():
+                    if key == f"{CSI}A":  # Up
+                        self._completion_index = max(0, self._completion_index - 1)
+                        self.render()
+                        continue
+                    if key == f"{CSI}B":  # Down
+                        matches = self._filtered_completions()
+                        if matches:
+                            self._completion_index = min(
+                                len(matches) - 1, self._completion_index + 1
+                            )
+                        self.render()
+                        continue
+                    if key == "\t" or key == "\r":
+                        matches = self._filtered_completions()
+                        if matches:
+                            name = matches[self._completion_index][0]
+                            self.buffer = name + " "
+                            self.cursor = len(self.buffer)
+                            self._completion_index = 0
+                            self.render()
+                            continue
+                        # No matches: fall through (Enter on \r submits below).
+
                 if key == PASTE_START:
                     pasted = read_paste().replace("\r\n", "\n").replace("\r", "\n")
                     self._insert(pasted)
@@ -322,6 +414,9 @@ class InputWidget:
                     self.debug = not self.debug
                 elif len(key) == 1 and key.isprintable():
                     self._insert(key)
+                    # Typing further in completion mode resets the selection
+                    # to the first match.
+                    self._completion_index = 0
                 else:
                     continue
 
