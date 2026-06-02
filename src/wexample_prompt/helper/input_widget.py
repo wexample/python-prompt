@@ -200,47 +200,6 @@ class InputWidget:
         # else first input line). Used by the next render to climb back up.
         self._cursor_up_to_top = cur_row + (1 if self.bordered else 0)
 
-    def _insert(self, text: str) -> None:
-        self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
-        self.cursor += len(text)
-
-    def _backspace(self) -> None:
-        if self.cursor > 0:
-            self.buffer = self.buffer[: self.cursor - 1] + self.buffer[self.cursor :]
-            self.cursor -= 1
-
-    def _move(self, delta: int) -> None:
-        self.cursor = max(0, min(len(self.buffer), self.cursor + delta))
-
-    def _move_vertical(self, delta: int) -> None:
-        row, col = cursor_rowcol(self.buffer, self.cursor)
-        lines = self.buffer.split("\n")
-        target = row + delta
-        if 0 <= target < len(lines):
-            target_line = lines[target]
-            offset = 0
-            acc = 0
-            for ch in target_line:
-                w = display_width(ch)
-                if acc + w > col:
-                    break
-                acc += w
-                offset += 1
-            self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
-
-    def _home(self) -> None:
-        self.cursor = self.buffer.rfind("\n", 0, self.cursor) + 1
-
-    def _end(self) -> None:
-        nxt = self.buffer.find("\n", self.cursor)
-        self.cursor = len(self.buffer) if nxt == -1 else nxt
-
-    def _handle_resize(self) -> None:
-        if self._width_override is not None:
-            return
-        self.width = self._terminal_width()
-        self._rendered = False  # force full redraw at new width
-
     def run(self) -> tuple[str, bool]:
         """Run the widget; returns (buffer, validated_by_enter)."""
         fd = sys.stdin.fileno()
@@ -350,6 +309,15 @@ class InputWidget:
 
         return self.buffer, validated
 
+    def _backspace(self) -> None:
+        if self.cursor > 0:
+            self.buffer = self.buffer[: self.cursor - 1] + self.buffer[self.cursor :]
+            self.cursor -= 1
+
+    def _end(self) -> None:
+        nxt = self.buffer.find("\n", self.cursor)
+        self.cursor = len(self.buffer) if nxt == -1 else nxt
+
     def _erase_widget(self) -> None:
         """Erase the rendered bordered box from the screen.
 
@@ -362,3 +330,35 @@ class InputWidget:
         else:
             write("\r")
         write(f"{CSI}J")
+
+    def _handle_resize(self) -> None:
+        if self._width_override is not None:
+            return
+        self.width = self._terminal_width()
+        self._rendered = False  # force full redraw at new width
+
+    def _home(self) -> None:
+        self.cursor = self.buffer.rfind("\n", 0, self.cursor) + 1
+
+    def _insert(self, text: str) -> None:
+        self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
+        self.cursor += len(text)
+
+    def _move(self, delta: int) -> None:
+        self.cursor = max(0, min(len(self.buffer), self.cursor + delta))
+
+    def _move_vertical(self, delta: int) -> None:
+        row, col = cursor_rowcol(self.buffer, self.cursor)
+        lines = self.buffer.split("\n")
+        target = row + delta
+        if 0 <= target < len(lines):
+            target_line = lines[target]
+            offset = 0
+            acc = 0
+            for ch in target_line:
+                w = display_width(ch)
+                if acc + w > col:
+                    break
+                acc += w
+                offset += 1
+            self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
