@@ -56,9 +56,12 @@ BAR_CHAR = "─"  # U+2500 BOX DRAWINGS LIGHT HORIZONTAL
 DEFAULT_INFO = "Enter=submit | Shift+Enter=newline | Ctrl+G=debug | Ctrl+C=abort"
 
 
-def write(s: str) -> None:
-    sys.stdout.write(s)
-    sys.stdout.flush()
+def cursor_rowcol(buffer: str, cursor: int) -> tuple[int, int]:
+    before = buffer[:cursor]
+    row = before.count("\n")
+    last_nl = before.rfind("\n")
+    line_before = before if last_nl == -1 else before[last_nl + 1 :]
+    return row, display_width(line_before)
 
 
 def display_width(s: str) -> int:
@@ -110,12 +113,9 @@ def read_paste() -> str:
             return "".join(buf[:-end_len])
 
 
-def cursor_rowcol(buffer: str, cursor: int) -> tuple[int, int]:
-    before = buffer[:cursor]
-    row = before.count("\n")
-    last_nl = before.rfind("\n")
-    line_before = before if last_nl == -1 else before[last_nl + 1 :]
-    return row, display_width(line_before)
+def write(s: str) -> None:
+    sys.stdout.write(s)
+    sys.stdout.flush()
 
 
 class InputWidget:
