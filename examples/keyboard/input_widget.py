@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Multiline input widget rendered in raw terminal mode, stdlib only.
+"""Multiline input widget rendered in raw terminal mode.
+
+Stdlib only except wcwidth (tiny pure-python lib for display-width of
+wide chars like emojis and CJK).
 
 Layout:
     ────────────────────────────────────────
@@ -19,7 +22,8 @@ Keys:
     Ctrl+G                           -> toggle key-trace overlay
     Ctrl+C                           -> abort
 
-Bracketed paste is enabled, so multiline pastes are inserted as a block.
+Bracketed paste is enabled, so multiline pastes (including emojis and
+multi-byte chars) are inserted as a block.
 
 Run:
     python input_widget.py
@@ -29,9 +33,12 @@ from __future__ import annotations
 
 import select
 import shutil
+import signal
 import sys
 import termios
 import tty
+
+from wcwidth import wcswidth
 
 
 CSI = "\x1b["
@@ -46,7 +53,7 @@ PASTE_OFF = "\x1b[?2004l"
 PASTE_START = "\x1b[200~"
 PASTE_END = "\x1b[201~"
 
-BAR_CHAR = "─"  # ─ U+2500 BOX DRAWINGS LIGHT HORIZONTAL
+BAR_CHAR = "─"  # U+2500 BOX DRAWINGS LIGHT HORIZONTAL
 
 DEFAULT_INFO = "Enter=submit | Shift+Enter=newline | Ctrl+G=debug | Ctrl+C=abort"
 
@@ -54,6 +61,26 @@ DEFAULT_INFO = "Enter=submit | Shift+Enter=newline | Ctrl+G=debug | Ctrl+C=abort
 def write(s: str) -> None:
     sys.stdout.write(s)
     sys.stdout.flush()
+
+
+def display_width(s: str) -> int:
+    """Width in terminal columns, treating wide chars (emoji/CJK) as 2."""
+    w = wcswidth(s)
+    return w if w >= 0 else len(s)  # fallback if wcswidth reports unknown
+
+
+def read_csi_tail(prefix: str = "\x1b[") -> str:
+    """Read remaining bytes of a CSI sequence until its final byte."""
+    seq = prefix
+    while True:
+        r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
+        if not r:
+            break
+        c = sys.stdin.read(1)
+        seq += c
+        if 0x40 <= ord(c) <= 0x7E:
+            break
+    return seq
 
 
 def read_key() -> str:
@@ -89,8 +116,8 @@ def cursor_rowcol(buffer: str, cursor: int) -> tuple[int, int]:
     before = buffer[:cursor]
     row = before.count("\n")
     last_nl = before.rfind("\n")
-    col = len(before) if last_nl == -1 else len(before) - last_nl - 1
-    return row, col
+    line_before = before if last_nl == -1 else before[last_nl + 1 :]
+    return row, display_width(line_before)
 
 
 class InputWidget:
@@ -103,8 +130,8 @@ class InputWidget:
         debug: bool = False,
         initial: str = "",
     ) -> None:
-        term_cols = shutil.get_terminal_size((60, 20)).columns
-        self.width = width or min(term_cols, 80)
+        self._width_override = width
+        self.width = width or self._terminal_width()
         self.info = info
         self.debug = debug
         self.last_key_trace = ""
@@ -112,6 +139,11 @@ class InputWidget:
         self.cursor = len(initial)
         self._rendered = False
         self._cursor_up_to_top = 0
+        self._needs_resize = False
+
+    @staticmethod
+    def _terminal_width() -> int:
+        return min(shutil.get_terminal_size((60, 20)).columns, 80)
 
     def render(self) -> None:
         lines = self.buffer.split("\n")
@@ -162,8 +194,17 @@ class InputWidget:
         lines = self.buffer.split("\n")
         target = row + delta
         if 0 <= target < len(lines):
-            target_col = min(col, len(lines[target]))
-            self.cursor = sum(len(l) + 1 for l in lines[:target]) + target_col
+            # Move to the char in target line whose display column matches `col`
+            target_line = lines[target]
+            offset = 0
+            acc = 0
+            for ch in target_line:
+                w = display_width(ch)
+                if acc + w > col:
+                    break
+                acc += w
+                offset += 1
+            self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
 
     def _home(self) -> None:
         self.cursor = self.buffer.rfind("\n", 0, self.cursor) + 1
@@ -172,34 +213,64 @@ class InputWidget:
         nxt = self.buffer.find("\n", self.cursor)
         self.cursor = len(self.buffer) if nxt == -1 else nxt
 
+    def _handle_resize(self) -> None:
+        if self._width_override is not None:
+            return
+        self.width = self._terminal_width()
+        self._rendered = False  # force full redraw at new width
+
     def run(self) -> tuple[str, bool]:
         """Run the widget; returns (buffer, validated_by_enter)."""
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
+        prev_winch = signal.signal(
+            signal.SIGWINCH, lambda *_: setattr(self, "_needs_resize", True)
+        )
         validated = False
         try:
             tty.setraw(fd)
             write(KITTY_ON + MOK_ON + PASTE_ON)
             self.render()
 
-            # gnome-terminal sends \x1b then \r far apart for Shift+Enter / Alt+Enter,
-            # past the ESC_TIMEOUT window — track a pending ESC across iterations.
+            # gnome-terminal sends \x1b then the rest far apart for Shift+Enter
+            # and bracketed-paste markers, past the ESC_TIMEOUT window — track
+            # a pending ESC and reassemble across iterations.
             pending_esc = False
 
             while True:
-                key = read_key()
+                try:
+                    key = read_key()
+                except InterruptedError:
+                    # SIGWINCH interrupted the read; loop back to check the flag
+                    if self._needs_resize:
+                        self._needs_resize = False
+                        self._handle_resize()
+                        self.render()
+                    continue
+
+                if self._needs_resize:
+                    self._needs_resize = False
+                    self._handle_resize()
+                    self.render()
+
                 if self.debug:
                     self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
 
                 if key == "\x1b":
                     pending_esc = True
                     continue
-                if pending_esc and key in ("\r", "\n"):
+                if pending_esc:
                     pending_esc = False
-                    self._insert("\n")
-                    self.render()
-                    continue
-                pending_esc = False
+                    if key in ("\r", "\n"):
+                        self._insert("\n")
+                        self.render()
+                        continue
+                    if key == "[":
+                        # Delayed CSI sequence — re-read its tail and dispatch as if whole
+                        key = read_csi_tail("\x1b[")
+                        if self.debug:
+                            self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
+                    # else: discard the bare ESC, fall through with current key
 
                 if key == PASTE_START:
                     pasted = read_paste().replace("\r\n", "\n").replace("\r", "\n")
@@ -248,6 +319,7 @@ class InputWidget:
         finally:
             write(PASTE_OFF + MOK_OFF + KITTY_OFF)
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            signal.signal(signal.SIGWINCH, prev_winch)
             row, _ = cursor_rowcol(self.buffer, self.cursor)
             total = self.buffer.count("\n") + 1
             write(f"\r{CSI}{(total - row) + 1}B\r\n")
