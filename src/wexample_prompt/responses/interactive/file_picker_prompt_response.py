@@ -91,7 +91,6 @@ class FilePickerPromptResponse(ChoicePromptResponse):
             # Do not copy lines; ChoicePromptResponse.ask rebuilds lines each frame
             choices=parent_response.choices,
             default=parent_response.default,
-            inquirer_kwargs=parent_response.inquirer_kwargs,
             question=parent_response.question,
             question_lines=parent_response.question_lines,
             base_dir=base,

@@ -36,10 +36,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
-    inquirer_kwargs: dict[str, Any] = public_field(
-        factory=dict,
-        description="Additional kwargs forwarded to inquirer.select",
-    )
     predefined_answer: Any = public_field(
         default=None,
         description="The answer of the question, in order to make the response non interactive",
