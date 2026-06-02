@@ -133,9 +133,6 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             bordered=self.bordered,
             info=self.footer_hint if self.footer_hint is not None else DEFAULT_INFO,
             prompt_prefix=self.prompt_prefix,
-            continuation_prefix=("." + self.prompt_prefix[1:])
-            if len(self.prompt_prefix) > 1
-            else ". ",
         )
         text, validated = widget.run()
         if not validated:

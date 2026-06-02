@@ -129,7 +129,7 @@ class InputWidget:
         initial: str = "",
         bordered: bool = True,
         prompt_prefix: str = "> ",
-        continuation_prefix: str = ". ",
+        continuation_prefix: str | None = None,
     ) -> None:
         self._width_override = width
         self.width = width or self._terminal_width()
@@ -140,7 +140,13 @@ class InputWidget:
         self.cursor = len(initial)
         self.bordered = bordered
         self.prompt_prefix = prompt_prefix
-        self.continuation_prefix = continuation_prefix
+        # Default continuation prefix: blank spaces matching the prompt width,
+        # so wrapped lines stay aligned without a visible marker.
+        self.continuation_prefix = (
+            continuation_prefix
+            if continuation_prefix is not None
+            else " " * display_width(prompt_prefix)
+        )
         # First-line and continuation prefixes share a single display width to
         # keep cursor math straightforward.
         self._prefix_width = display_width(prompt_prefix)
