@@ -344,32 +344,25 @@ class InputWidget:
             write(PASTE_OFF + MOK_OFF + KITTY_OFF)
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
             signal.signal(signal.SIGWINCH, prev_winch)
-            if self.bordered and validated:
-                self._compact_after_submit()
+            if self.bordered:
+                self._erase_widget()
             else:
                 row, _ = cursor_rowcol(self.buffer, self.cursor)
                 total = self.buffer.count("\n") + 1
-                rows_below = (total - row) + (1 if self.bordered else 0)
+                rows_below = total - row
                 write(f"\r{CSI}{rows_below}B\r\n")
 
         return self.buffer, validated
 
-    def _compact_after_submit(self) -> None:
-        """Erase the bordered box and reprint the buffer as plain prefixed lines.
+    def _erase_widget(self) -> None:
+        """Erase the rendered bordered box from the screen.
 
-        Called once Enter validated the input. Cleans up the chat scrollback so
-        only ``❯ {value}`` (and continuation lines) survive — same look as a
-        past turn in chatty_example.
+        Leaves the cursor at column 0 of the line where the top bar was, so the
+        caller can print whatever representation of the submitted value it
+        wants (e.g. ``❯ {value}``) into the freed space.
         """
-        # Climb to the top of the rendered widget and clear from there.
         if self._cursor_up_to_top > 0:
             write(f"\r{CSI}{self._cursor_up_to_top}A")
         else:
             write("\r")
         write(f"{CSI}J")
-
-        # Print compact form: prompt_prefix on first line, continuation_prefix
-        # on subsequent lines. No bars, no info zone.
-        for i, line in enumerate(self.buffer.split("\n")):
-            prefix = self.prompt_prefix if i == 0 else self.continuation_prefix
-            write(f"{prefix}{line}\r\n")
