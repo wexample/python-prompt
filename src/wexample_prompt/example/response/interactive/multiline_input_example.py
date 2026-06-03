@@ -20,13 +20,6 @@ class MultilineInputExample(AbstractResponseExample):
             predefined_answer="hello\nworld",
         )
 
-    def example_custom_prefix(self) -> None:
-        response = self.io.multiline_input(
-            question="Notes for today:",
-            prompt_prefix="📝 ",
-        )
-        self._echo(response.get_value())
-
     def example_completions(self) -> None:
         response = self.io.multiline_input(
             question="Type / for commands:",
@@ -40,6 +33,13 @@ class MultilineInputExample(AbstractResponseExample):
                 ("/help", "Show help"),
                 ("/exit", "Quit the session"),
             ],
+        )
+        self._echo(response.get_value())
+
+    def example_custom_prefix(self) -> None:
+        response = self.io.multiline_input(
+            question="Notes for today:",
+            prompt_prefix="📝 ",
         )
         self._echo(response.get_value())
 

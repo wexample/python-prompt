@@ -27,27 +27,13 @@ class SpinnerExample(AbstractResponseExample):
         time.sleep(0.6)
         spinner.stop()
 
-    def example_with_events(self) -> None:
-        spinner = self.io.spinner(label="Thinking…")
-        events = [
-            "$ Bash: git log -1",
-            "$ Read: src/wexample_prompt/responses/log_prompt_response.py",
-            "$ Grep: spinner",
-            "$ Bash: pytest -q",
-        ]
-        for ev in events:
-            time.sleep(0.4)
-            spinner.log(ev)
-        time.sleep(0.4)
-        spinner.stop()
-
     def example_simulated_agent(self) -> None:
         import threading
 
         events: list[str] = []
         lock = threading.Lock()
 
-        def worker():
+        def worker() -> None:
             for label in ("Bash", "Read", "Edit", "Bash"):
                 time.sleep(0.5)
                 with lock:
@@ -69,6 +55,20 @@ class SpinnerExample(AbstractResponseExample):
             while seen < len(events):
                 spinner.log(events[seen])
                 seen += 1
+        spinner.stop()
+
+    def example_with_events(self) -> None:
+        spinner = self.io.spinner(label="Thinking…")
+        events = [
+            "$ Bash: git log -1",
+            "$ Read: src/wexample_prompt/responses/log_prompt_response.py",
+            "$ Grep: spinner",
+            "$ Bash: pytest -q",
+        ]
+        for ev in events:
+            time.sleep(0.4)
+            spinner.log(ev)
+        time.sleep(0.4)
         spinner.stop()
 
     def get_examples(self) -> list[dict[str, Any]]:

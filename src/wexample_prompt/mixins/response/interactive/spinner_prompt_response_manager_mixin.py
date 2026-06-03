@@ -26,9 +26,7 @@ class SpinnerPromptResponseManagerMixin:
             SpinnerPromptResponse,
         )
 
-        response = SpinnerPromptResponse.create_spinner(
-            label=label, interval=interval
-        )
+        response = SpinnerPromptResponse.create_spinner(label=label, interval=interval)
         response.verbosity = (
             verbosity if verbosity is not None else self.default_response_verbosity
         )

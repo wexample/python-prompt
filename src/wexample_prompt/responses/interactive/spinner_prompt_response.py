@@ -65,7 +65,20 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
 
         return SpinnerExample
 
-    def render(self, context: "PromptContext | None" = None) -> None:
+    # ─── handle API ──────────────────────────────────────────────────────
+    def log(self, line: str) -> None:
+        """Print ``line`` as a persistent row above the spinner."""
+        import sys
+
+        if not getattr(self, "_running", False):
+            return
+        with self._lock:
+            sys.stdout.write("\r\x1b[2K")
+            sys.stdout.write(f"{line}\n")
+            sys.stdout.flush()
+            self._draw()
+
+    def render(self, context: PromptContext | None = None) -> None:
         """Start the spinner thread; return immediately so the caller can act."""
         import threading
 
@@ -88,20 +101,6 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         self._thread.start()
         return None
 
-    # ─── handle API ──────────────────────────────────────────────────────
-
-    def log(self, line: str) -> None:
-        """Print ``line`` as a persistent row above the spinner."""
-        import sys
-
-        if not getattr(self, "_running", False):
-            return
-        with self._lock:
-            sys.stdout.write("\r\x1b[2K")
-            sys.stdout.write(f"{line}\n")
-            sys.stdout.flush()
-            self._draw()
-
     def stop(self) -> None:
         """Stop the spinner and erase its line."""
         import sys
@@ -115,8 +114,16 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
             sys.stdout.write("\r\x1b[2K")
             sys.stdout.flush()
 
-    # ─── internals ───────────────────────────────────────────────────────
+    def _draw(self) -> None:
+        import sys
 
+        if not self._running:
+            return
+        frame = self._spinner_inst.next()
+        sys.stdout.write(f"\r\x1b[2K{frame} {self.label}")
+        sys.stdout.flush()
+
+    # ─── internals ───────────────────────────────────────────────────────
     def _spin_loop(self) -> None:
         import time
 
@@ -127,12 +134,3 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
             with self._lock:
                 if self._running:
                     self._draw()
-
-    def _draw(self) -> None:
-        import sys
-
-        if not self._running:
-            return
-        frame = self._spinner_inst.next()
-        sys.stdout.write(f"\r\x1b[2K{frame} {self.label}")
-        sys.stdout.flush()

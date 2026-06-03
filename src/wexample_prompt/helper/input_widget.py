@@ -176,78 +176,6 @@ class InputWidget:
         # demo script and direct InputWidget callers).
         return max(20, shutil.get_terminal_size((80, 20)).columns)
 
-    def _read_live_width(self) -> int:
-        """Ask the provider (or shutil) for the current terminal width."""
-        if self._width_provider is not None:
-            try:
-                value = int(self._width_provider())
-                if value > 0:
-                    return max(20, value)
-            except Exception:
-                pass
-        return self._terminal_width()
-
-    def _visual_rows_for_line(self, line: str) -> int:
-        """Number of visual rows a logical line occupies once the prefix is added
-        and the terminal wraps at ``self.width``.
-        """
-        total = self._prefix_width + display_width(line)
-        if total <= 0:
-            return 1
-        return max(1, (total + self.width - 1) // self.width)
-
-    def _in_completion_mode(self) -> bool:
-        """Completion list is active when buffer is a single token starting with /."""
-        return (
-            bool(self.completions)
-            and self.buffer.startswith("/")
-            and " " not in self.buffer
-            and "\n" not in self.buffer
-        )
-
-    def _filtered_completions(self) -> list[tuple[str, str]]:
-        """Completions whose name starts with the typed prefix (case-insensitive)."""
-        if not self._in_completion_mode():
-            return []
-        prefix = self.buffer.lower()
-        return [c for c in self.completions if c[0].lower().startswith(prefix)]
-
-    def _info_rows(self) -> list[str]:
-        """Build the info-zone lines (either the static info or the completion list)."""
-        if self._in_completion_mode():
-            matches = self._filtered_completions()
-            if not matches:
-                return ["? (no matching command)"]
-            # Clamp selection inside available matches.
-            self._completion_index = max(
-                0, min(self._completion_index, len(matches) - 1)
-            )
-            visible = matches[: self.COMPLETION_MAX_ROWS]
-            name_w = max(display_width(n) for n, _ in visible)
-            rows: list[str] = []
-            for i, (name, desc) in enumerate(visible):
-                pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
-                line_raw = f"{name}{pad}{desc}"
-                # Truncate to fit terminal width (no wrap inside completion list).
-                if display_width(line_raw) > self.width:
-                    # Crude truncation: cut description.
-                    avail = self.width - name_w - len(pad) - 1
-                    if avail > 1:
-                        line_raw = f"{name}{pad}{desc[: max(0, avail)]}…"
-                    else:
-                        line_raw = name[: self.width]
-                if i == self._completion_index:
-                    # Highlight selected row via reverse video.
-                    rows.append(f"\x1b[7m{line_raw}\x1b[27m")
-                else:
-                    rows.append(line_raw)
-            return rows
-        # Normal info zone: a single line (may carry the debug key trace).
-        info_line = self.info
-        if self.debug and self.last_key_trace:
-            info_line = f"{info_line}  [key={self.last_key_trace}]"
-        return [f"? {info_line}"]
-
     def render(self) -> None:
         lines = self.buffer.split("\n")
         cur_row, cur_col = cursor_rowcol(self.buffer, self.cursor)
@@ -312,9 +240,7 @@ class InputWidget:
         # How many rows above the cursor is the top of the widget (top bar if
         # bordered, else first input row). Used by the next render to climb
         # back up before erasing.
-        self._cursor_up_to_top = cur_visual_row_from_top + (
-            1 if self.bordered else 0
-        )
+        self._cursor_up_to_top = cur_visual_row_from_top + (1 if self.bordered else 0)
 
     def run(self) -> tuple[str, bool]:
         """Run the widget; returns (buffer, validated_by_enter)."""
@@ -453,9 +379,9 @@ class InputWidget:
                 cur_row, cur_col = cursor_rowcol(self.buffer, self.cursor)
                 line_visual_rows = [self._visual_rows_for_line(l) for l in lines]
                 cur_visual_offset = (self._prefix_width + cur_col) // self.width
-                rows_below = (
-                    line_visual_rows[cur_row] - 1 - cur_visual_offset
-                ) + sum(line_visual_rows[cur_row + 1 :])
+                rows_below = (line_visual_rows[cur_row] - 1 - cur_visual_offset) + sum(
+                    line_visual_rows[cur_row + 1 :]
+                )
                 write(f"\r{CSI}{rows_below + 1}B\r\n")
 
         return self.buffer, validated
@@ -482,6 +408,13 @@ class InputWidget:
             write("\r")
         write(f"{CSI}J")
 
+    def _filtered_completions(self) -> list[tuple[str, str]]:
+        """Completions whose name starts with the typed prefix (case-insensitive)."""
+        if not self._in_completion_mode():
+            return []
+        prefix = self.buffer.lower()
+        return [c for c in self.completions if c[0].lower().startswith(prefix)]
+
     def _handle_resize(self) -> None:
         if self._width_override is not None:
             return
@@ -490,6 +423,51 @@ class InputWidget:
 
     def _home(self) -> None:
         self.cursor = self.buffer.rfind("\n", 0, self.cursor) + 1
+
+    def _in_completion_mode(self) -> bool:
+        """Completion list is active when buffer is a single token starting with /."""
+        return (
+            bool(self.completions)
+            and self.buffer.startswith("/")
+            and " " not in self.buffer
+            and "\n" not in self.buffer
+        )
+
+    def _info_rows(self) -> list[str]:
+        """Build the info-zone lines (either the static info or the completion list)."""
+        if self._in_completion_mode():
+            matches = self._filtered_completions()
+            if not matches:
+                return ["? (no matching command)"]
+            # Clamp selection inside available matches.
+            self._completion_index = max(
+                0, min(self._completion_index, len(matches) - 1)
+            )
+            visible = matches[: self.COMPLETION_MAX_ROWS]
+            name_w = max(display_width(n) for n, _ in visible)
+            rows: list[str] = []
+            for i, (name, desc) in enumerate(visible):
+                pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
+                line_raw = f"{name}{pad}{desc}"
+                # Truncate to fit terminal width (no wrap inside completion list).
+                if display_width(line_raw) > self.width:
+                    # Crude truncation: cut description.
+                    avail = self.width - name_w - len(pad) - 1
+                    if avail > 1:
+                        line_raw = f"{name}{pad}{desc[: max(0, avail)]}…"
+                    else:
+                        line_raw = name[: self.width]
+                if i == self._completion_index:
+                    # Highlight selected row via reverse video.
+                    rows.append(f"\x1b[7m{line_raw}\x1b[27m")
+                else:
+                    rows.append(line_raw)
+            return rows
+        # Normal info zone: a single line (may carry the debug key trace).
+        info_line = self.info
+        if self.debug and self.last_key_trace:
+            info_line = f"{info_line}  [key={self.last_key_trace}]"
+        return [f"? {info_line}"]
 
     def _insert(self, text: str) -> None:
         self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
@@ -513,3 +491,23 @@ class InputWidget:
                 acc += w
                 offset += 1
             self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
+
+    def _read_live_width(self) -> int:
+        """Ask the provider (or shutil) for the current terminal width."""
+        if self._width_provider is not None:
+            try:
+                value = int(self._width_provider())
+                if value > 0:
+                    return max(20, value)
+            except Exception:
+                pass
+        return self._terminal_width()
+
+    def _visual_rows_for_line(self, line: str) -> int:
+        """Number of visual rows a logical line occupies once the prefix is added
+        and the terminal wraps at ``self.width``.
+        """
+        total = self._prefix_width + display_width(line)
+        if total <= 0:
+            return 1
+        return max(1, (total + self.width - 1) // self.width)

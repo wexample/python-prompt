@@ -35,10 +35,6 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         factory=list,
         description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
     )
-    width_provider: Any = public_field(
-        default=None,
-        description="Optional callable returning the current terminal width (e.g. io.reload_terminal_width). Used for resize handling — keeps the widget in sync with IoManager's cached width.",
-    )
     default_value: str | None = public_field(
         default=None,
         description="Pre-filled text shown in the editor; user can edit or accept it.",
@@ -58,6 +54,10 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
     question: LineMessage | None = public_field(
         default="Type your message (Esc+Enter for newline, Enter to submit):",
         description="Prompt header shown above the cursor. Pass None to skip (useful with bordered=True).",
+    )
+    width_provider: Any = public_field(
+        default=None,
+        description="Optional callable returning the current terminal width (e.g. io.reload_terminal_width). Used for resize handling — keeps the widget in sync with IoManager's cached width.",
     )
 
     @classmethod
