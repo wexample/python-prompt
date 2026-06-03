@@ -135,9 +135,14 @@ class InputWidget:
         prompt_prefix: str = "> ",
         continuation_prefix: str | None = None,
         completions: list[tuple[str, str]] | None = None,
+        width_provider=None,
     ) -> None:
+        # An explicit `width` kwarg fixes the widget at that size and disables
+        # resize handling. `width_provider` is the "live" source — called on
+        # init and on SIGWINCH; if provided it wins over the static fallback.
         self._width_override = width
-        self.width = width or self._terminal_width()
+        self._width_provider = width_provider
+        self.width = width or self._read_live_width()
         self.info = info
         self.debug = debug
         self.last_key_trace = ""
@@ -167,7 +172,20 @@ class InputWidget:
 
     @staticmethod
     def _terminal_width() -> int:
-        return min(shutil.get_terminal_size((60, 20)).columns, 80)
+        # Standalone fallback when no width_provider is wired in (used by the
+        # demo script and direct InputWidget callers).
+        return max(20, shutil.get_terminal_size((80, 20)).columns)
+
+    def _read_live_width(self) -> int:
+        """Ask the provider (or shutil) for the current terminal width."""
+        if self._width_provider is not None:
+            try:
+                value = int(self._width_provider())
+                if value > 0:
+                    return max(20, value)
+            except Exception:
+                pass
+        return self._terminal_width()
 
     def _visual_rows_for_line(self, line: str) -> int:
         """Number of visual rows a logical line occupies once the prefix is added
@@ -467,7 +485,7 @@ class InputWidget:
     def _handle_resize(self) -> None:
         if self._width_override is not None:
             return
-        self.width = self._terminal_width()
+        self.width = self._read_live_width()
         self._rendered = False  # force full redraw at new width
 
     def _home(self) -> None:

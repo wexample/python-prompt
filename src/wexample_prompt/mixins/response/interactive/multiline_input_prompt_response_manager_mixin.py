@@ -43,6 +43,10 @@ class MultilineInputPromptResponseManagerMixin:
             bordered=bordered,
             footer_hint=footer_hint,
             completions=completions,
+            # Reuse IoManager's cached width (refreshed lazily) as single
+            # source of truth for the widget — keeps wrap math aligned with
+            # what the rest of the prompt system uses.
+            width_provider=self.reload_terminal_width,
             reset_on_finish=reset_on_finish,
         )
 

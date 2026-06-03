@@ -35,6 +35,10 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         factory=list,
         description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
     )
+    width_provider: Any = public_field(
+        default=None,
+        description="Optional callable returning the current terminal width (e.g. io.reload_terminal_width). Used for resize handling — keeps the widget in sync with IoManager's cached width.",
+    )
     default_value: str | None = public_field(
         default=None,
         description="Pre-filled text shown in the editor; user can edit or accept it.",
@@ -68,6 +72,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         bordered: bool = False,
         footer_hint: str | None = None,
         completions: list[tuple[str, str]] | None = None,
+        width_provider: Any = None,
         reset_on_finish: bool = False,
     ) -> MultilineInputPromptResponse:
         return cls(
@@ -78,6 +83,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             bordered=bordered,
             footer_hint=footer_hint,
             completions=list(completions) if completions else [],
+            width_provider=width_provider,
             reset_on_finish=reset_on_finish,
         )
 
@@ -142,6 +148,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             info=self.footer_hint if self.footer_hint is not None else DEFAULT_INFO,
             prompt_prefix=self.prompt_prefix,
             completions=self.completions or None,
+            width_provider=self.width_provider,
         )
         text, validated = widget.run()
         if not validated:
