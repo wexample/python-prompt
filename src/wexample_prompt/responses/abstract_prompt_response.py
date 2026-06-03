@@ -27,6 +27,12 @@ if TYPE_CHECKING:
 class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
     """Abstract base class for all prompt responses."""
 
+    created_at: float | None = public_field(
+        default=None,
+        description="Unix timestamp (time.time()) when the response was emitted via io.xxx(). "
+        "Set by IoManager.print_response on capture; None if the response was built "
+        "but never printed (e.g. nested inside a frame).",
+    )
     lines: list[PromptResponseLine] = public_field(
         factory=list,
         description="The list of lines of the response content",
