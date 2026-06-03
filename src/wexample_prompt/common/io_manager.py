@@ -50,6 +50,9 @@ from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_man
 from wexample_prompt.mixins.response.interactive.input_prompt_response_manager_mixin import (
     InputPromptResponseManagerMixin,
 )
+from wexample_prompt.mixins.response.interactive.multiline_input_prompt_response_manager_mixin import (
+    MultilineInputPromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.interactive.pending_prompt_response_manager_mixin import (
     PendingPromptResponseManagerMixin,
 )
@@ -58,6 +61,9 @@ from wexample_prompt.mixins.response.interactive.progress_prompt_response_manage
 )
 from wexample_prompt.mixins.response.interactive.screen_prompt_response_manager_mixin import (
     ScreenPromptResponseManagerMixin,
+)
+from wexample_prompt.mixins.response.interactive.spinner_prompt_response_manager_mixin import (
+    SpinnerPromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import (
     LogPromptResponseManagerMixin,
@@ -138,8 +144,10 @@ class IoManager(
     PendingPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
     ScreenPromptResponseManagerMixin,
+    SpinnerPromptResponseManagerMixin,
     ConfirmPromptResponseManagerMixin,
     InputPromptResponseManagerMixin,
+    MultilineInputPromptResponseManagerMixin,
     # Parent classes
     WithIndentation,
     BaseClass,

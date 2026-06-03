@@ -1,6 +1,6 @@
 # prompt
 
-Version: 9.2.0
+Version: 10.0.0
 
 Helper for your tty interactions
 
@@ -49,7 +49,6 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - attrs: >=23.1.0
 - cattrs: >=23.1.0
 - colorama: 
-- inquirerpy: 
 - readchar: 
 - wcwidth: 
 - wexample-helpers: >=13.1.0
