@@ -62,6 +62,9 @@ from wexample_prompt.mixins.response.interactive.progress_prompt_response_manage
 from wexample_prompt.mixins.response.interactive.screen_prompt_response_manager_mixin import (
     ScreenPromptResponseManagerMixin,
 )
+from wexample_prompt.mixins.response.interactive.spinner_prompt_response_manager_mixin import (
+    SpinnerPromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import (
     LogPromptResponseManagerMixin,
 )
@@ -141,6 +144,7 @@ class IoManager(
     PendingPromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
     ScreenPromptResponseManagerMixin,
+    SpinnerPromptResponseManagerMixin,
     ConfirmPromptResponseManagerMixin,
     InputPromptResponseManagerMixin,
     MultilineInputPromptResponseManagerMixin,
