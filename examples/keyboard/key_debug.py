@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 """Terminal key diagnostic tool.
 
-Prints the raw bytes emitted by each keypress in the current terminal,
-hex + repr. Use this to discover which sequences your terminal produces
-for keys like Shift+Enter, Alt+Enter, Ctrl+Enter, F-keys, etc.
+Prints each raw byte received from the terminal, with:
+  - the byte (hex + repr)
+  - the time gap since the previous byte (milliseconds)
+  - a blank line every time the gap exceeds 100ms (= probable end of a
+    keystroke / escape sequence)
+
+This is the right tool for diagnosing arrow-key bugs in input_widget.py:
+if your terminal delivers `\\x1b` … (>200ms gap) … `[B`, the widget can't
+tell `Down` from a real Escape press unless its CSI tail timeout is
+generous enough.
 
 Activates kitty keyboard protocol (CSI > 1 u) and xterm modifyOtherKeys
-(CSI > 4;2 m) on entry — terminals supporting them will emit distinct
-sequences for modifier+key combos. Unsupported terminals ignore these
-control sequences silently.
+(CSI > 4;2 m) on entry — terminals supporting them emit distinct
+sequences for modifier+key combos. Unsupported terminals ignore them.
 
 Press Ctrl+C to quit.
 
@@ -18,51 +24,52 @@ Run:
 from __future__ import annotations
 
 import os
-import select
 import sys
 import termios
+import time
 import tty
 
 
-ESC_TIMEOUT = 0.05  # seconds
+GAP_FLUSH_MS = 100  # blank line when the gap between bytes exceeds this
 
 
 def main() -> None:
     term = os.environ.get("TERM", "?")
     termprog = os.environ.get("TERM_PROGRAM", "?")
     print(f"TERM={term}  TERM_PROGRAM={termprog}")
-    print("Press keys (Enter, Shift+Enter, Alt+Enter, Ctrl+J, arrows...).")
+    print(
+        "Each row = one byte. Press keys and watch the inter-byte gap "
+        "(ms). Blank line ≈ end of a keystroke."
+    )
     print("Ctrl+C to quit.\r")
 
-    # Try to opt into advanced keyboard protocols
-    sys.stdout.write("\x1b[>1u")        # kitty keyboard protocol
-    sys.stdout.write("\x1b[>4;2m")      # xterm modifyOtherKeys=2
+    # Opt into advanced keyboard protocols.
+    sys.stdout.write("\x1b[>1u")     # kitty keyboard protocol
+    sys.stdout.write("\x1b[>4;2m")   # xterm modifyOtherKeys=2
     sys.stdout.flush()
 
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
+    last_t: float | None = None
     try:
         tty.setraw(fd)
         while True:
             ch = sys.stdin.read(1)
-            buf = [ch]
-            # Aggregate any bytes that follow within the timeout window
-            while True:
-                r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
-                if not r:
-                    break
-                buf.append(sys.stdin.read(1))
-            raw = "".join(buf)
-            if raw == "\x03":
+            now = time.monotonic()
+            gap_ms = (now - last_t) * 1000.0 if last_t is not None else 0.0
+            last_t = now
+            if gap_ms >= GAP_FLUSH_MS:
+                sys.stdout.write("\r\n")
+            if ch == "\x03":
+                sys.stdout.write("(Ctrl+C — quit)\r\n")
                 break
-            hex_repr = " ".join(f"{ord(c):02x}" for c in raw)
             sys.stdout.write(
-                f"len={len(raw):2d}  hex={hex_repr:30s}  repr={raw!r}\r\n"
+                f"  gap={gap_ms:6.1f} ms   byte=0x{ord(ch):02x}   repr={ch!r}\r\n"
             )
             sys.stdout.flush()
     finally:
-        sys.stdout.write("\x1b[<u")        # kitty off
-        sys.stdout.write("\x1b[>4;0m")     # modifyOtherKeys off
+        sys.stdout.write("\x1b[<u")
+        sys.stdout.write("\x1b[>4;0m")
         sys.stdout.flush()
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
 

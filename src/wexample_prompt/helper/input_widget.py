@@ -40,15 +40,17 @@ import tty
 from wcwidth import wcswidth
 
 CSI = "\x1b["
-# Gap allowed between bare ESC and the next byte: short, to disambiguate
-# "user pressed Escape" from "Alt+X" or the start of a CSI sequence.
-ESC_TIMEOUT = 0.2
-# Gap allowed *inside* a CSI / SS3 sequence (after we've already seen
-# `\x1b[` or `\x1bO`). Some terminals (gnome-terminal under load, SSH,
-# remote sessions) deliver these bytes with a noticeable gap; if we time
-# out too early, the final byte (A/B/C/D…) arrives later as a bare key
-# and gets inserted into the buffer. No human types `[A` by hand, so a
-# generous timeout here is safe.
+# Gap allowed between ESC and the next byte, and between the bytes of a
+# CSI/SS3 sequence (after `\x1b[` or `\x1bO`).
+#
+# These values look huge but they're safe: no human types `[A` by hand
+# in any reasonable interval, and bare Escape has no action in this
+# widget — a laggy Escape press is invisible UX-wise. Slow terminals
+# (gnome-terminal under load, SSH, screen, tmux) routinely deliver the
+# bytes of an arrow keystroke with hundreds of ms between them; a tight
+# timeout caused `Down` to insert a literal `B` and the next arrow to
+# act on the previous keystroke (off-by-one).
+ESC_TIMEOUT = 1.0
 CSI_TAIL_TIMEOUT = 1.0
 
 KITTY_ON = "\x1b[>1u"
@@ -79,41 +81,42 @@ def display_width(s: str) -> int:
     return w if w >= 0 else len(s)
 
 
-def read_csi_tail(prefix: str = "\x1b[") -> str:
-    """Read remaining bytes of a CSI sequence until its final byte."""
-    seq = prefix
-    while True:
-        r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
-        if not r:
-            break
-        c = sys.stdin.read(1)
-        seq += c
-        if 0x40 <= ord(c) <= 0x7E:
-            break
-    return seq
-
-
 def read_key() -> str:
-    """Read one logical key, aggregating CSI/SS3 escape sequences."""
+    """Read one logical key, aggregating any ESC-prefixed sequence.
+
+    Single source of truth for the main loop: it always returns one
+    fully-formed key (a single char, an Alt+X combo, or a complete
+    CSI/SS3 sequence). The main loop never needs to look behind it for
+    a follow-up byte — that's what caused the off-by-one with arrows on
+    slow terminals.
+
+    Timing model:
+      - After ESC: wait up to ESC_TIMEOUT for the next byte. None ⇒
+        treat as a bare Escape press.
+      - After `\x1b[` or `\x1bO`: wait up to CSI_TAIL_TIMEOUT for each
+        subsequent byte until the CSI final byte (0x40..0x7E). Slow
+        terminals (gnome-terminal under load, SSH, screen) routinely
+        deliver these with hundreds of ms between bytes.
+    """
     ch = sys.stdin.read(1)
     if ch != "\x1b":
         return ch
-    # First byte after ESC: short timeout to disambiguate bare ESC from
-    # the start of a CSI/SS3 sequence or an Alt+X combo.
+    # ESC + ?
     r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
     if not r:
         return "\x1b"
     c2 = sys.stdin.read(1)
     seq = "\x1b" + c2
     if c2 not in "[O":
+        # Alt+<c2>: a 2-char sequence (Alt+Enter sends `\x1b\r`, etc.).
         return seq
-    # Inside CSI/SS3: subsequent bytes may arrive with a noticeable lag
-    # on slow / remote terminals — use the longer CSI_TAIL_TIMEOUT so we
-    # don't return a half-read `\x1b[` and then mis-handle the trailing
-    # `A/B/C/D` as a literal letter typed by the user.
+    # CSI (`\x1b[`) or SS3 (`\x1bO`): keep reading until the final byte.
     while True:
         r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
         if not r:
+            # Truncated sequence — return what we have. The main loop
+            # will not match it and will skip silently, which is better
+            # than letting a stray `B` arrive next as a literal key.
             break
         c = sys.stdin.read(1)
         seq += c
@@ -274,8 +277,6 @@ class InputWidget:
             write(KITTY_ON + MOK_ON + PASTE_ON)
             self.render()
 
-            pending_esc = False
-
             while True:
                 try:
                     key = read_key()
@@ -294,19 +295,13 @@ class InputWidget:
                 if self.debug:
                     self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
 
-                if key == "\x1b":
-                    pending_esc = True
-                    continue
-                if pending_esc:
-                    pending_esc = False
-                    if key in ("\r", "\n"):
-                        self._insert("\n")
-                        self.render()
-                        continue
-                    if key == "[":
-                        key = read_csi_tail("\x1b[")
-                        if self.debug:
-                            self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
+                # `read_key()` aggregates the full escape sequence (CSI / SS3 /
+                # Alt+X) including under terminals that deliver bytes with a
+                # lag — we do NOT post-process it here. A previous version
+                # had a `pending_esc` flag + a second-stage `read_csi_tail`
+                # call that raced with the next key on slow terminals and
+                # caused an off-by-one in arrow handling (Down inserted `B`,
+                # Up after a Down went the wrong way, etc.).
 
                 # Completion mode: hijack Up/Down/Tab/Enter for navigation
                 # and acceptance, before the generic handlers see them.
