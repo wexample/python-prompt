@@ -40,7 +40,16 @@ import tty
 from wcwidth import wcswidth
 
 CSI = "\x1b["
-ESC_TIMEOUT = 0.2  # max gap between escape-sequence bytes
+# Gap allowed between bare ESC and the next byte: short, to disambiguate
+# "user pressed Escape" from "Alt+X" or the start of a CSI sequence.
+ESC_TIMEOUT = 0.2
+# Gap allowed *inside* a CSI / SS3 sequence (after we've already seen
+# `\x1b[` or `\x1bO`). Some terminals (gnome-terminal under load, SSH,
+# remote sessions) deliver these bytes with a noticeable gap; if we time
+# out too early, the final byte (A/B/C/D…) arrives later as a bare key
+# and gets inserted into the buffer. No human types `[A` by hand, so a
+# generous timeout here is safe.
+CSI_TAIL_TIMEOUT = 1.0
 
 KITTY_ON = "\x1b[>1u"
 KITTY_OFF = "\x1b[<u"
@@ -74,7 +83,7 @@ def read_csi_tail(prefix: str = "\x1b[") -> str:
     """Read remaining bytes of a CSI sequence until its final byte."""
     seq = prefix
     while True:
-        r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
+        r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
         if not r:
             break
         c = sys.stdin.read(1)
@@ -89,16 +98,26 @@ def read_key() -> str:
     ch = sys.stdin.read(1)
     if ch != "\x1b":
         return ch
-    seq = "\x1b"
+    # First byte after ESC: short timeout to disambiguate bare ESC from
+    # the start of a CSI/SS3 sequence or an Alt+X combo.
+    r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
+    if not r:
+        return "\x1b"
+    c2 = sys.stdin.read(1)
+    seq = "\x1b" + c2
+    if c2 not in "[O":
+        return seq
+    # Inside CSI/SS3: subsequent bytes may arrive with a noticeable lag
+    # on slow / remote terminals — use the longer CSI_TAIL_TIMEOUT so we
+    # don't return a half-read `\x1b[` and then mis-handle the trailing
+    # `A/B/C/D` as a literal letter typed by the user.
     while True:
-        r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
+        r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
         if not r:
             break
         c = sys.stdin.read(1)
         seq += c
-        if len(seq) >= 3 and seq[1] == "[" and 0x40 <= ord(c) <= 0x7E:
-            break
-        if len(seq) == 2 and seq[1] not in "[O":
+        if 0x40 <= ord(c) <= 0x7E:
             break
     return seq
 
