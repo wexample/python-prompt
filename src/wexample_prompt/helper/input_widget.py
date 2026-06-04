@@ -30,6 +30,7 @@ multi-byte chars) are inserted as a block.
 
 from __future__ import annotations
 
+import os
 import select
 import shutil
 import signal
@@ -40,18 +41,6 @@ import tty
 from wcwidth import wcswidth
 
 CSI = "\x1b["
-# Gap allowed between ESC and the next byte, and between the bytes of a
-# CSI/SS3 sequence (after `\x1b[` or `\x1bO`).
-#
-# These values look huge but they're safe: no human types `[A` by hand
-# in any reasonable interval, and bare Escape has no action in this
-# widget — a laggy Escape press is invisible UX-wise. Slow terminals
-# (gnome-terminal under load, SSH, screen, tmux) routinely deliver the
-# bytes of an arrow keystroke with hundreds of ms between them; a tight
-# timeout caused `Down` to insert a literal `B` and the next arrow to
-# act on the previous keystroke (off-by-one).
-ESC_TIMEOUT = 1.0
-CSI_TAIL_TIMEOUT = 1.0
 
 KITTY_ON = "\x1b[>1u"
 KITTY_OFF = "\x1b[<u"
@@ -79,75 +68,6 @@ def display_width(s: str) -> int:
     """Width in terminal columns, treating wide chars (emoji/CJK) as 2."""
     w = wcswidth(s)
     return w if w >= 0 else len(s)
-
-
-def read_key(byte_log: list | None = None) -> str:
-    """Read one logical key, aggregating any ESC-prefixed sequence.
-
-    Single source of truth for the main loop: it always returns one
-    fully-formed key (a single char, an Alt+X combo, or a complete
-    CSI/SS3 sequence). The main loop never needs to look behind it for
-    a follow-up byte — that's what caused the off-by-one with arrows on
-    slow terminals.
-
-    Timing model:
-      - After ESC: wait up to ESC_TIMEOUT for the next byte. None ⇒
-        treat as a bare Escape press.
-      - After `\x1b[` or `\x1bO`: wait up to CSI_TAIL_TIMEOUT for each
-        subsequent byte until the CSI final byte (0x40..0x7E).
-
-    If `byte_log` is provided, each individual byte is appended as a
-    `(monotonic_ts, byte_char, awaited_ms)` tuple — `awaited_ms` being
-    how long we waited (with `select`) before this byte showed up. This
-    feeds the debug overlay so the user can see exactly where in the
-    sequence the lag sits.
-    """
-    import time as _t
-
-    t0 = _t.monotonic()
-    ch = sys.stdin.read(1)
-    if byte_log is not None:
-        byte_log.append((_t.monotonic(), ch, (_t.monotonic() - t0) * 1000.0))
-    if ch != "\x1b":
-        return ch
-    # ESC + ?
-    t1 = _t.monotonic()
-    r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
-    if not r:
-        return "\x1b"
-    c2 = sys.stdin.read(1)
-    if byte_log is not None:
-        byte_log.append((_t.monotonic(), c2, (_t.monotonic() - t1) * 1000.0))
-    seq = "\x1b" + c2
-    if c2 not in "[O":
-        # Alt+<c2>: a 2-char sequence (Alt+Enter sends `\x1b\r`, etc.).
-        return seq
-    # CSI (`\x1b[`) or SS3 (`\x1bO`): keep reading until the final byte.
-    while True:
-        t2 = _t.monotonic()
-        r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
-        if not r:
-            # Truncated sequence — return what we have. The main loop
-            # will not match it and will skip silently, which is better
-            # than letting a stray `B` arrive next as a literal key.
-            break
-        c = sys.stdin.read(1)
-        if byte_log is not None:
-            byte_log.append((_t.monotonic(), c, (_t.monotonic() - t2) * 1000.0))
-        seq += c
-        if 0x40 <= ord(c) <= 0x7E:
-            break
-    return seq
-
-
-def read_paste() -> str:
-    """Consume bytes until the bracketed-paste end marker."""
-    buf: list[str] = []
-    end_len = len(PASTE_END)
-    while True:
-        buf.append(sys.stdin.read(1))
-        if "".join(buf[-end_len:]) == PASTE_END:
-            return "".join(buf[:-end_len])
 
 
 def write(s: str) -> None:
@@ -182,12 +102,14 @@ class InputWidget:
         self.width = width or self._read_live_width()
         self.info = info
         self.debug = debug
-        self.last_key_trace = ""
-        # Debug overlay: rolling window of the last N keystrokes, each with
-        # its individual bytes + the inter-byte gap in ms. Updated only when
-        # self.debug is True (toggled at init or via Ctrl+G at runtime).
-        self._debug_history: list[dict] = []
-        self.DEBUG_HISTORY_SIZE = 8
+        # Debug overlay: rolling window of the last N raw bytes received
+        # from stdin, with their inter-byte gap (ms). One entry per byte —
+        # NOT per logical key — so the overlay refreshes the instant a
+        # byte hits the widget, even if the surrounding escape sequence
+        # is incomplete. Bypasses any reconstruction logic. Toggled by
+        # `debug=True` at init or Ctrl+G at runtime.
+        self._debug_history: list[tuple[float, str, float]] = []
+        self.DEBUG_HISTORY_SIZE = 16
         self.buffer = initial
         self.cursor = len(initial)
         self.bordered = bordered
@@ -297,91 +219,115 @@ class InputWidget:
             write(KITTY_ON + MOK_ON + PASTE_ON)
             self.render()
 
-            # Salvage path for fragmented escape sequences. Some terminals
-            # split `\x1b[B` so that `\x1b` arrives in one read window and
-            # `[B` in the next — read_key() can't see it as one sequence
-            # without an unrealistic timeout. We detect the pattern by
-            # noticing a bare ESC immediately followed (next loop iter) by
-            # `[`, `O`, `\r` or `\n` and re-glue them.
-            ESC_SALVAGE_MS = 150  # max gap between the two read_key returns
-            last_esc_ts: float | None = None
+            # Reading is fully decoupled from key parsing:
+            #   - `drain_stdin_nonblocking` reads bytes as they come, in
+            #     bursts, and records each one for the optional debug
+            #     overlay.
+            #   - `_try_extract_key` is a pure function over the byte
+            #     buffer: it returns one complete key at a time (plain
+            #     char / Alt+X / CSI / SS3 / bracketed paste) or None if
+            #     more bytes are needed. Easy to unit-test on its own.
 
             import time as _t
 
-            while True:
-                # When debug is on, capture per-byte timing so the overlay
-                # can show *where* the lag sits (between ESC and `[`, etc.).
-                byte_log: list | None = [] if self.debug else None
-                try:
-                    key = read_key(byte_log)
-                except InterruptedError:
-                    if self._needs_resize:
-                        self._needs_resize = False
-                        self._handle_resize()
-                        self.render()
-                    continue
+            # A bare ESC press has no action in this widget, so we don't
+            # need to disambiguate it quickly. The budget exists only to
+            # eventually drop an ESC that never completes — keeping it
+            # generous costs nothing.
+            ESC_SEQ_BUDGET = 0.5
+            POLL_SLICE = 0.05  # idle pause between non-blocking checks
 
+            buffer = ""
+            esc_seq_started_at: float | None = None
+            last_byte_at: float | None = None
+
+            def _record_byte(c: str) -> None:
+                """Log one freshly-read byte and refresh the overlay."""
+                nonlocal last_byte_at
+                now = _t.monotonic()
+                waited_ms = (
+                    ((now - last_byte_at) * 1000.0)
+                    if last_byte_at is not None
+                    else 0.0
+                )
+                last_byte_at = now
+                if not self.debug:
+                    return
+                self._debug_history.append((now, c, waited_ms))
+                if len(self._debug_history) > self.DEBUG_HISTORY_SIZE:
+                    self._debug_history = self._debug_history[
+                        -self.DEBUG_HISTORY_SIZE :
+                    ]
+                # Render right away so the user sees the byte instantly,
+                # without waiting for the rest of its sequence to arrive.
+                self.render()
+
+            def drain_stdin_nonblocking() -> None:
+                """Pull every available byte from the tty in one syscall.
+
+                Uses `os.read(fd, N)` rather than `sys.stdin.read(1)` to
+                bypass Python's TextIO buffer — otherwise `select()` goes
+                blind to bytes already pulled into that buffer, and the
+                tail of an escape sequence stays invisible until the next
+                keystroke triggers another syscall.
+                """
+                nonlocal buffer, esc_seq_started_at
+                while True:
+                    try:
+                        r, _, _ = select.select([fd], [], [], 0)
+                    except InterruptedError:
+                        break
+                    if not r:
+                        break
+                    chunk_bytes = os.read(fd, 1024)
+                    if not chunk_bytes:
+                        break
+                    chunk = chunk_bytes.decode("utf-8", errors="replace")
+                    for c in chunk:
+                        _record_byte(c)
+                        buffer += c
+                        if c == "\x1b" and esc_seq_started_at is None:
+                            esc_seq_started_at = _t.monotonic()
+
+            while True:
                 if self._needs_resize:
                     self._needs_resize = False
                     self._handle_resize()
                     self.render()
 
-                # Stage 1 — try to recover a fragmented escape sequence.
-                if last_esc_ts is not None:
-                    gap_ms = (_t.monotonic() - last_esc_ts) * 1000.0
-                    last_esc_ts = None
-                    if gap_ms < ESC_SALVAGE_MS:
-                        if key == "[":
-                            # Pull the CSI tail directly — at this point the
-                            # final byte is already in the kernel buffer so a
-                            # tiny timeout is enough.
-                            tail = ""
-                            while True:
-                                r, _, _ = select.select(
-                                    [sys.stdin], [], [], 0.1
-                                )
-                                if not r:
-                                    break
-                                c = sys.stdin.read(1)
-                                if byte_log is not None:
-                                    byte_log.append((_t.monotonic(), c, 0.0))
-                                tail += c
-                                if 0x40 <= ord(c) <= 0x7E:
-                                    break
-                            key = "\x1b[" + tail
-                        elif key == "O":
-                            r, _, _ = select.select([sys.stdin], [], [], 0.1)
-                            if r:
-                                c = sys.stdin.read(1)
-                                if byte_log is not None:
-                                    byte_log.append((_t.monotonic(), c, 0.0))
-                                key = "\x1bO" + c
-                        elif key in ("\r", "\n"):
-                            key = "\x1b" + key  # Alt+Enter
+                drain_stdin_nonblocking()
 
-                if self.debug:
-                    self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
-                    self._debug_history.append(
-                        {"key": key, "bytes": list(byte_log or [])}
-                    )
-                    if len(self._debug_history) > self.DEBUG_HISTORY_SIZE:
-                        self._debug_history = self._debug_history[
-                            -self.DEBUG_HISTORY_SIZE :
-                        ]
+                key, consumed = self._try_extract_key(
+                    buffer, esc_seq_started_at, _t.monotonic(), ESC_SEQ_BUDGET
+                )
 
-                # Stage 2 — if we got a bare ESC, remember it for stage 1
-                # of the NEXT iteration instead of dispatching now.
-                if key == "\x1b":
-                    last_esc_ts = _t.monotonic()
+                if key is None:
+                    # Need more bytes — wait briefly for them. Use the
+                    # raw fd (not sys.stdin) for the same reason as the
+                    # drain loop: avoid Python's TextIO buffer making
+                    # select() blind to bytes that have already arrived.
+                    try:
+                        select.select([fd], [], [], POLL_SLICE)
+                    except InterruptedError:
+                        pass
                     continue
 
-                # `read_key()` aggregates the full escape sequence (CSI / SS3 /
-                # Alt+X) including under terminals that deliver bytes with a
-                # lag — we do NOT post-process it here. A previous version
-                # had a `pending_esc` flag + a second-stage `read_csi_tail`
-                # call that raced with the next key on slow terminals and
-                # caused an off-by-one in arrow handling (Down inserted `B`,
-                # Up after a Down went the wrong way, etc.).
+                # Consume the bytes that made up this key.
+                buffer = buffer[consumed:]
+                if not buffer.startswith("\x1b"):
+                    esc_seq_started_at = None
+
+                # Special: bare-ESC sequence that timed out — drop silently.
+                if key == "__DROP__":
+                    continue
+
+                # Bracketed paste comes pre-extracted as a tuple from the
+                # state machine, before the str-only handlers below.
+                if isinstance(key, tuple) and key and key[0] == "PASTE":
+                    pasted = key[1].replace("\r\n", "\n").replace("\r", "\n")
+                    self._insert(pasted)
+                    self.render()
+                    continue
 
                 # Completion mode: hijack Up/Down/Tab/Enter for navigation
                 # and acceptance, before the generic handlers see them.
@@ -409,10 +355,7 @@ class InputWidget:
                             continue
                         # No matches: fall through (Enter on \r submits below).
 
-                if key == PASTE_START:
-                    pasted = read_paste().replace("\r\n", "\n").replace("\r", "\n")
-                    self._insert(pasted)
-                elif key == "\r":
+                if key == "\r":
                     if self.cursor > 0 and self.buffer[self.cursor - 1] == "\\":
                         self.buffer = (
                             self.buffer[: self.cursor - 1]
@@ -560,29 +503,86 @@ class InputWidget:
             # Normal info zone: a single line.
             rows = [f"? {self.info}"]
 
-        # Debug overlay — appended to *whatever* info zone is active so the
-        # user can compare what keystrokes they pressed vs what the widget
-        # received. Per-byte timing reveals fragmented escape sequences
-        # (the root cause of arrow-key bugs on laggy terminals).
+        # Debug overlay — one row per raw byte received from stdin, in
+        # arrival order, with the gap (ms) since the previous byte. This
+        # is intentionally a flat byte log: NO reconstruction, NO key
+        # aggregation. If `\x1b` arrives now and `[B` only 3s later, you
+        # see them as three separate lines with their real timing — which
+        # is what we need to debug the terminal/tty fragmentation.
         if self.debug and self._debug_history:
-            rows.append(f"── debug (last {len(self._debug_history)} keys) ──")
-            for entry in self._debug_history:
-                key = entry["key"]
-                key_hex = " ".join(f"{ord(c):02x}" for c in key)
-                bytes_repr = []
-                for _ts, b, waited_ms in entry["bytes"]:
-                    bytes_repr.append(f"{ord(b):02x}({waited_ms:.0f}ms)")
-                row = (
-                    f"  key={key!r:14s}  hex=[{key_hex}]  bytes=[{' '.join(bytes_repr)}]"
+            rows.append(f"── debug (last {len(self._debug_history)} bytes) ──")
+            for _ts, b, waited_ms in self._debug_history:
+                rows.append(
+                    f"  +{waited_ms:6.0f} ms   0x{ord(b):02x}   {b!r}"
                 )
-                if display_width(row) > self.width:
-                    row = row[: max(0, self.width - 1)] + "…"
-                rows.append(row)
         return rows
 
     def _insert(self, text: str) -> None:
         self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
         self.cursor += len(text)
+
+    def _try_extract_key(
+        self,
+        buf: str,
+        esc_seq_started_at: float | None,
+        now: float,
+        budget: float,
+    ):
+        """Parse the head of `buf` into one complete key.
+
+        Returns a tuple (key, consumed) where `consumed` is the number of
+        bytes to drop from the buffer. Returns (None, 0) when the buffer
+        is incomplete and we should wait for more bytes.
+
+        Special return: `("__DROP__", n)` means "consume n bytes silently"
+        — used when an ESC sequence didn't complete within the budget.
+        """
+        if not buf:
+            return None, 0
+
+        # Plain char (no escape prefix).
+        if buf[0] != "\x1b":
+            return buf[0], 1
+
+        # Bracketed paste: the most reliable bracketed CSI we know — read
+        # straight through to the end marker before dispatching.
+        if buf.startswith(PASTE_START):
+            end_idx = buf.find(PASTE_END, len(PASTE_START))
+            if end_idx == -1:
+                # Incomplete — wait. (No timeout for paste: we trust the
+                # terminal to deliver the closing marker eventually.)
+                return None, 0
+            text = buf[len(PASTE_START) : end_idx]
+            return ("PASTE", text), end_idx + len(PASTE_END)
+
+        # Need at least 2 bytes to decide what kind of ESC sequence.
+        timed_out = (
+            esc_seq_started_at is not None
+            and (now - esc_seq_started_at) >= budget
+        )
+        if len(buf) < 2:
+            # Bare ESC: wait for more, drop silently after budget.
+            if timed_out:
+                return "__DROP__", 1
+            return None, 0
+
+        c2 = buf[1]
+        if c2 not in "[O":
+            # Alt+<c2>: 2-byte sequence (Alt+Enter, Alt+letter, etc.).
+            return buf[:2], 2
+
+        # CSI (\x1b[) or SS3 (\x1bO): scan for the final byte (0x40..0x7E).
+        for i in range(2, len(buf)):
+            c = buf[i]
+            if 0x40 <= ord(c) <= 0x7E:
+                return buf[: i + 1], i + 1
+
+        # Incomplete CSI/SS3.
+        if timed_out:
+            # Drop the whole partial sequence — including the buffered
+            # bytes — to avoid them re-emerging as literal chars.
+            return "__DROP__", len(buf)
+        return None, 0
 
     def _move(self, delta: int) -> None:
         self.cursor = max(0, min(len(self.buffer), self.cursor + delta))
