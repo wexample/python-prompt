@@ -191,7 +191,11 @@ class IoManager(
 
     def __attrs_post_init__(self) -> None:
         self._init_output()
-        self._install_sigwinch_handler()
+        # Note: SIGWINCH listening is OPT-IN — call `enable_resize_listening()`
+        # explicitly from the owner (typically the kernel) so only the
+        # "primary" IoManager wires the signal. Auto-installing here would
+        # have any later-created IoManager silently steal SIGWINCH from the
+        # one before it (signal.signal replaces, doesn't chain).
 
     @classmethod
     def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
@@ -428,25 +432,33 @@ class IoManager(
 
         return unsubscribe
 
-    def _install_sigwinch_handler(self) -> None:
-        """Wire SIGWINCH to refresh the width cache and notify subscribers.
+    def enable_resize_listening(self) -> bool:
+        """Wire SIGWINCH so this IoManager refreshes the width cache and
+        notifies its subscribers on every terminal resize.
+
+        Opt-in by design: call this from the owner of the *primary*
+        IoManager (typically the kernel) once during setup. Subsequent
+        IoManager instances must NOT call it, otherwise they'd silently
+        steal SIGWINCH from the primary (signal.signal replaces, doesn't
+        chain).
 
         Safe to call from any environment: Windows has no SIGWINCH, and
-        a non-main thread raises ValueError on `signal.signal` — in both
-        cases we silently fall back to lazy width refresh on demand.
+        non-main threads raise on `signal.signal` — both cases are
+        swallowed and we fall back to lazy refresh on demand.
+
+        Returns True if the handler was installed (or already was);
+        False if the environment doesn't support it.
         """
         if self._winch_installed:
-            return
+            return True
         try:
             import signal
 
             signal.signal(signal.SIGWINCH, self._on_sigwinch)
             self._winch_installed = True
+            return True
         except (AttributeError, ValueError, OSError):
-            # No SIGWINCH (Windows) or not on the main thread — leave the
-            # cache lazy. Widgets that own their own loop can still
-            # install a local handler as a fallback.
-            pass
+            return False
 
     def _on_sigwinch(self, signum, frame) -> None:  # noqa: ARG002
         self.reload_terminal_width()

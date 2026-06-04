@@ -9,7 +9,25 @@ def _make_io():
         PromptBufferOutputHandler,
     )
 
+    # The dispatcher itself works without a real SIGWINCH installation;
+    # we call `_on_sigwinch` manually below. Leaving the listener
+    # disabled also avoids tests fighting for the real signal handler.
     return IoManager(output=PromptBufferOutputHandler())
+
+
+def test_listening_is_opt_in() -> None:
+    """A fresh IoManager does NOT hijack the global SIGWINCH handler."""
+    io = _make_io()
+    assert io._winch_installed is False
+
+
+def test_enable_resize_listening_installs_the_handler() -> None:
+    io = _make_io()
+    installed = io.enable_resize_listening()
+    assert installed is True
+    assert io._winch_installed is True
+    # Idempotent: a second call is a no-op.
+    assert io.enable_resize_listening() is True
 
 
 def test_subscribe_returns_callable_unsubscribe() -> None:
