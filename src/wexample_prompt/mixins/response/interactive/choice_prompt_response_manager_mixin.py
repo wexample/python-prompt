@@ -34,6 +34,7 @@ class ChoicePromptResponseManagerMixin:
         context: PromptContext | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
+        detail_provider: Any = None,
         **kwargs: Kwargs,
     ) -> ChoicePromptResponse:
         from wexample_prompt.responses.interactive.choice_prompt_response import (
@@ -51,6 +52,7 @@ class ChoicePromptResponseManagerMixin:
             ),
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
+            detail_provider=detail_provider,
         )
 
         return self.print_response(

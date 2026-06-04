@@ -36,6 +36,14 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         default=None,
         description="Default selected value for the prompt (matched against Choice.value, title, or index)",
     )
+    detail_provider: Any = public_field(
+        default=None,
+        description="Optional callable `(value) -> AbstractPromptResponse | None` invoked "
+        "on every navigation. Returned response is rendered between the choices "
+        "and the controls footer, in naked mode (no own box). Returning None "
+        "skips the detail area for that item. Typically used with "
+        "PropertiesPromptResponse to show a 'fiche' for the highlighted choice.",
+    )
     predefined_answer: Any = public_field(
         default=None,
         description="The answer of the question, in order to make the response non interactive",
@@ -57,6 +65,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         color: TerminalColor | None = None,
         reset_on_finish: bool = False,
         predefined_answer: Any = None,
+        detail_provider: Any = None,
         verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
@@ -109,6 +118,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             verbosity=verbosity,
             reset_on_finish=reset_on_finish,
             predefined_answer=predefined_answer,
+            detail_provider=detail_provider,
         )
 
     @classmethod
@@ -218,6 +228,34 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 ] + title_segments
 
                 self.lines.append(line)
+
+            # Optional detail pane refreshed on every navigation. Provider gets
+            # the currently-highlighted value and may return any PromptResponse
+            # (typically PropertiesPromptResponse). Rendered in naked mode —
+            # the sub-response renders its content without its own box.
+            if self.detail_provider is not None:
+                try:
+                    detail_response = self.detail_provider(self.choices[idx].value)
+                except Exception:
+                    detail_response = None
+                if detail_response is not None:
+                    detail_kwargs = PromptContext.create_kwargs_from_context(
+                        context=context
+                    )
+                    detail_kwargs["bordered"] = False
+                    detail_context = PromptContext.create_from_parent_context_and_kwargs(
+                        parent_context=context.parent_context,
+                        kwargs=detail_kwargs,
+                    )
+                    detail_response.render(context=detail_context)
+                    if detail_response.lines:
+                        # Blank visual separator above the detail block.
+                        self.lines.append(
+                            PromptResponseLine(
+                                segments=[PromptResponseSegment(text="")]
+                            )
+                        )
+                        self.lines.extend(detail_response.lines)
 
             # Controls helper footer (in white)
             controls_line = PromptResponseLine(

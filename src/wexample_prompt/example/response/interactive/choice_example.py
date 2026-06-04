@@ -186,6 +186,45 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="@color:blue{Development}",
         )
 
+    def example_with_detail_pane(self) -> None:
+        """Choice with a live detail pane (PropertiesPromptResponse) under the list."""
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
+
+        agents = {
+            "default": {
+                "description": "Generalist agent used when no specialty is needed.",
+                "model": "claude-opus-4-7",
+                "tools": "all",
+            },
+            "frontend": {
+                "description": "Specialist for UI work — knows the design system.",
+                "model": "claude-sonnet-4-6",
+                "tools": "Read, Edit, Bash",
+            },
+            "backend": {
+                "description": "Database, APIs, infra.",
+                "model": "claude-sonnet-4-6",
+                "tools": "Read, Edit, Bash, Grep",
+            },
+        }
+
+        def detail_for(value):
+            props = agents.get(value)
+            if props is None:
+                return None
+            return PropertiesPromptResponse.create_properties(
+                properties=props, title=str(value).capitalize()
+            )
+
+        self.io.choice(
+            question="Choose an agent",
+            choices={key: key for key in agents},
+            detail_provider=detail_for,
+            predefined_answer="default",
+        )
+
     def example_with_paths(self) -> None:
         """Choice with file paths."""
         self.io.choice(
@@ -229,6 +268,11 @@ class ChoiceExample(AbstractResponseExample):
                 "title": "With Paths",
                 "description": "Choice with clickable file paths (@path)",
                 "callback": self.example_with_paths,
+            },
+            {
+                "title": "With Detail Pane",
+                "description": "Live detail pane (properties) under the list, updates on navigation",
+                "callback": self.example_with_detail_pane,
             },
             {
                 "title": "Nesting",
