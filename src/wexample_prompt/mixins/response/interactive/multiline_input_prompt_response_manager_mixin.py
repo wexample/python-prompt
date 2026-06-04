@@ -27,6 +27,7 @@ class MultilineInputPromptResponseManagerMixin:
         footer_hint: str | None = None,
         completions: list[tuple[str, str]] | None = None,
         reset_on_finish: bool = False,
+        debug: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
@@ -48,6 +49,7 @@ class MultilineInputPromptResponseManagerMixin:
             # what the rest of the prompt system uses.
             width_provider=self.reload_terminal_width,
             reset_on_finish=reset_on_finish,
+            debug=debug,
         )
 
         return self.print_response(

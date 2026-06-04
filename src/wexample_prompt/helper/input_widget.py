@@ -81,7 +81,7 @@ def display_width(s: str) -> int:
     return w if w >= 0 else len(s)
 
 
-def read_key() -> str:
+def read_key(byte_log: list | None = None) -> str:
     """Read one logical key, aggregating any ESC-prefixed sequence.
 
     Single source of truth for the main loop: it always returns one
@@ -94,24 +94,37 @@ def read_key() -> str:
       - After ESC: wait up to ESC_TIMEOUT for the next byte. None ⇒
         treat as a bare Escape press.
       - After `\x1b[` or `\x1bO`: wait up to CSI_TAIL_TIMEOUT for each
-        subsequent byte until the CSI final byte (0x40..0x7E). Slow
-        terminals (gnome-terminal under load, SSH, screen) routinely
-        deliver these with hundreds of ms between bytes.
+        subsequent byte until the CSI final byte (0x40..0x7E).
+
+    If `byte_log` is provided, each individual byte is appended as a
+    `(monotonic_ts, byte_char, awaited_ms)` tuple — `awaited_ms` being
+    how long we waited (with `select`) before this byte showed up. This
+    feeds the debug overlay so the user can see exactly where in the
+    sequence the lag sits.
     """
+    import time as _t
+
+    t0 = _t.monotonic()
     ch = sys.stdin.read(1)
+    if byte_log is not None:
+        byte_log.append((_t.monotonic(), ch, (_t.monotonic() - t0) * 1000.0))
     if ch != "\x1b":
         return ch
     # ESC + ?
+    t1 = _t.monotonic()
     r, _, _ = select.select([sys.stdin], [], [], ESC_TIMEOUT)
     if not r:
         return "\x1b"
     c2 = sys.stdin.read(1)
+    if byte_log is not None:
+        byte_log.append((_t.monotonic(), c2, (_t.monotonic() - t1) * 1000.0))
     seq = "\x1b" + c2
     if c2 not in "[O":
         # Alt+<c2>: a 2-char sequence (Alt+Enter sends `\x1b\r`, etc.).
         return seq
     # CSI (`\x1b[`) or SS3 (`\x1bO`): keep reading until the final byte.
     while True:
+        t2 = _t.monotonic()
         r, _, _ = select.select([sys.stdin], [], [], CSI_TAIL_TIMEOUT)
         if not r:
             # Truncated sequence — return what we have. The main loop
@@ -119,6 +132,8 @@ def read_key() -> str:
             # than letting a stray `B` arrive next as a literal key.
             break
         c = sys.stdin.read(1)
+        if byte_log is not None:
+            byte_log.append((_t.monotonic(), c, (_t.monotonic() - t2) * 1000.0))
         seq += c
         if 0x40 <= ord(c) <= 0x7E:
             break
@@ -168,6 +183,11 @@ class InputWidget:
         self.info = info
         self.debug = debug
         self.last_key_trace = ""
+        # Debug overlay: rolling window of the last N keystrokes, each with
+        # its individual bytes + the inter-byte gap in ms. Updated only when
+        # self.debug is True (toggled at init or via Ctrl+G at runtime).
+        self._debug_history: list[dict] = []
+        self.DEBUG_HISTORY_SIZE = 8
         self.buffer = initial
         self.cursor = len(initial)
         self.bordered = bordered
@@ -278,8 +298,11 @@ class InputWidget:
             self.render()
 
             while True:
+                # When debug is on, capture per-byte timing so the overlay
+                # can show *where* the lag sits (between ESC and `[`, etc.).
+                byte_log: list | None = [] if self.debug else None
                 try:
-                    key = read_key()
+                    key = read_key(byte_log)
                 except InterruptedError:
                     if self._needs_resize:
                         self._needs_resize = False
@@ -294,6 +317,13 @@ class InputWidget:
 
                 if self.debug:
                     self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
+                    self._debug_history.append(
+                        {"key": key, "bytes": list(byte_log or [])}
+                    )
+                    if len(self._debug_history) > self.DEBUG_HISTORY_SIZE:
+                        self._debug_history = self._debug_history[
+                            -self.DEBUG_HISTORY_SIZE :
+                        ]
 
                 # `read_key()` aggregates the full escape sequence (CSI / SS3 /
                 # Alt+X) including under terminals that deliver bytes with a
@@ -449,39 +479,56 @@ class InputWidget:
 
     def _info_rows(self) -> list[str]:
         """Build the info-zone lines (either the static info or the completion list)."""
+        rows: list[str] = []
         if self._in_completion_mode():
             matches = self._filtered_completions()
             if not matches:
-                return ["? (no matching command)"]
-            # Clamp selection inside available matches.
-            self._completion_index = max(
-                0, min(self._completion_index, len(matches) - 1)
-            )
-            visible = matches[: self.COMPLETION_MAX_ROWS]
-            name_w = max(display_width(n) for n, _ in visible)
-            rows: list[str] = []
-            for i, (name, desc) in enumerate(visible):
-                pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
-                line_raw = f"{name}{pad}{desc}"
-                # Truncate to fit terminal width (no wrap inside completion list).
-                if display_width(line_raw) > self.width:
-                    # Crude truncation: cut description.
-                    avail = self.width - name_w - len(pad) - 1
-                    if avail > 1:
-                        line_raw = f"{name}{pad}{desc[: max(0, avail)]}…"
+                rows = ["? (no matching command)"]
+            else:
+                # Clamp selection inside available matches.
+                self._completion_index = max(
+                    0, min(self._completion_index, len(matches) - 1)
+                )
+                visible = matches[: self.COMPLETION_MAX_ROWS]
+                name_w = max(display_width(n) for n, _ in visible)
+                for i, (name, desc) in enumerate(visible):
+                    pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
+                    line_raw = f"{name}{pad}{desc}"
+                    # Truncate to fit terminal width (no wrap inside completion list).
+                    if display_width(line_raw) > self.width:
+                        avail = self.width - name_w - len(pad) - 1
+                        if avail > 1:
+                            line_raw = f"{name}{pad}{desc[: max(0, avail)]}…"
+                        else:
+                            line_raw = name[: self.width]
+                    if i == self._completion_index:
+                        # Highlight selected row via reverse video.
+                        rows.append(f"\x1b[7m{line_raw}\x1b[27m")
                     else:
-                        line_raw = name[: self.width]
-                if i == self._completion_index:
-                    # Highlight selected row via reverse video.
-                    rows.append(f"\x1b[7m{line_raw}\x1b[27m")
-                else:
-                    rows.append(line_raw)
-            return rows
-        # Normal info zone: a single line (may carry the debug key trace).
-        info_line = self.info
-        if self.debug and self.last_key_trace:
-            info_line = f"{info_line}  [key={self.last_key_trace}]"
-        return [f"? {info_line}"]
+                        rows.append(line_raw)
+        else:
+            # Normal info zone: a single line.
+            rows = [f"? {self.info}"]
+
+        # Debug overlay — appended to *whatever* info zone is active so the
+        # user can compare what keystrokes they pressed vs what the widget
+        # received. Per-byte timing reveals fragmented escape sequences
+        # (the root cause of arrow-key bugs on laggy terminals).
+        if self.debug and self._debug_history:
+            rows.append(f"── debug (last {len(self._debug_history)} keys) ──")
+            for entry in self._debug_history:
+                key = entry["key"]
+                key_hex = " ".join(f"{ord(c):02x}" for c in key)
+                bytes_repr = []
+                for _ts, b, waited_ms in entry["bytes"]:
+                    bytes_repr.append(f"{ord(b):02x}({waited_ms:.0f}ms)")
+                row = (
+                    f"  key={key!r:14s}  hex=[{key_hex}]  bytes=[{' '.join(bytes_repr)}]"
+                )
+                if display_width(row) > self.width:
+                    row = row[: max(0, self.width - 1)] + "…"
+                rows.append(row)
+        return rows
 
     def _insert(self, text: str) -> None:
         self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
