@@ -57,6 +57,50 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         return PropertiesExample
 
     @staticmethod
+    def _wrap_long_rows(content_lines: list[str], max_inner_width: int) -> list[str]:
+        """Word-wrap "{key} : {value}" rows wider than `max_inner_width`.
+
+        Continuation lines are padded so they line up with the value column,
+        which keeps the property/value grid readable even when one value
+        spans several rows. Lines without a " : " separator (nested-dict
+        headers) are left untouched.
+        """
+        import textwrap
+
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+        wrapped: list[str] = []
+        for line in content_lines:
+            if terminal_get_visible_width(line) <= max_inner_width:
+                wrapped.append(line)
+                continue
+
+            sep_idx = line.find(" : ")
+            if sep_idx == -1:
+                wrapped.append(line)
+                continue
+
+            prefix = line[: sep_idx + 3]
+            value = line[sep_idx + 3 :]
+            prefix_visible = terminal_get_visible_width(prefix)
+            wrap_width = max(1, max_inner_width - prefix_visible)
+
+            chunks = textwrap.wrap(
+                value,
+                width=wrap_width,
+                break_long_words=True,
+                break_on_hyphens=False,
+                drop_whitespace=True,
+                replace_whitespace=False,
+            ) or [""]
+
+            wrapped.append(prefix + chunks[0])
+            indent = " " * prefix_visible
+            for chunk in chunks[1:]:
+                wrapped.append(indent + chunk)
+        return wrapped
+
+    @staticmethod
     def _format_properties(
         properties: dict[str, Any],
         key_width: int,
@@ -107,6 +151,20 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         )
 
         bordered = context.bordered
+
+        # Cap content to terminal width so the box never overflows. The full
+        # cartouche occupies `inner_width + 4` columns (│ + space + content +
+        # space + │), so the inner area can grow up to terminal_width - 4.
+        target_width = context.get_available_width() if bordered else 0
+        max_inner_width = max(1, target_width - 4) if target_width else 0
+
+        # Wrap rows whose value exceeds the box's usable inner width. The
+        # wrap aligns continuation lines to the value column (right after
+        # "{key} : ") so the property/value relationship stays visually
+        # clear and the box keeps a tidy grid.
+        if max_inner_width:
+            content_lines = self._wrap_long_rows(content_lines, max_inner_width)
+
         lines: list[PromptResponseLine] = []
 
         # Flatten markup once per line so visible-width math uses what will
@@ -124,6 +182,8 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             # Title needs "╭─ <title> ─╮" = 4 extra chars beyond title length.
             title_min = (len(self.title) + 4) if self.title else 0
             inner_width = max(max_content, title_min, 1)
+            if max_inner_width:
+                inner_width = min(inner_width, max_inner_width)
             box_width = inner_width + 2  # leading + trailing space inside │ … │
 
             # Leading blank for visual separation (consistent with table).
