@@ -173,12 +173,25 @@ class IoManager(
         "nested sub-commands capture only their own emissions, not the parent's). "
         "Empty when no command is executing — capture is then a no-op.",
     )
+    _resize_callbacks: list = private_field(
+        factory=list,
+        description="Subscribers notified after a SIGWINCH refreshes the terminal "
+        "width cache. Single source of truth for terminal resize — interactive "
+        "widgets register here instead of installing their own SIGWINCH handlers.",
+    )
     _terminal_width: int = private_field(
         default=None, description="The terminal with cached value."
+    )
+    _winch_installed: bool = private_field(
+        default=False,
+        description="Whether SIGWINCH is wired to our handler. Set on first install; "
+        "stays True for the lifetime of the IoManager (we never uninstall, since "
+        "another IoManager could exist and we want to keep notifying subscribers).",
     )
 
     def __attrs_post_init__(self) -> None:
         self._init_output()
+        self._install_sigwinch_handler()
 
     @classmethod
     def get_response_types(cls) -> list[type[AbstractPromptResponse]]:
@@ -394,6 +407,58 @@ class IoManager(
 
         self._terminal_width = shutil.get_terminal_size().columns
         return self._terminal_width
+
+    def subscribe_resize(self, callback) -> "callable":
+        """Register `callback` to be invoked after each terminal resize.
+
+        The callback receives no arguments. The cache has already been
+        refreshed (`self._terminal_width`) by the time it fires, so the
+        callback can read `self.terminal_width` synchronously.
+
+        Returns an `unsubscribe()` function — call it to detach the
+        callback (e.g. in a widget's `finally`).
+        """
+        self._resize_callbacks.append(callback)
+
+        def unsubscribe() -> None:
+            try:
+                self._resize_callbacks.remove(callback)
+            except ValueError:
+                pass
+
+        return unsubscribe
+
+    def _install_sigwinch_handler(self) -> None:
+        """Wire SIGWINCH to refresh the width cache and notify subscribers.
+
+        Safe to call from any environment: Windows has no SIGWINCH, and
+        a non-main thread raises ValueError on `signal.signal` — in both
+        cases we silently fall back to lazy width refresh on demand.
+        """
+        if self._winch_installed:
+            return
+        try:
+            import signal
+
+            signal.signal(signal.SIGWINCH, self._on_sigwinch)
+            self._winch_installed = True
+        except (AttributeError, ValueError, OSError):
+            # No SIGWINCH (Windows) or not on the main thread — leave the
+            # cache lazy. Widgets that own their own loop can still
+            # install a local handler as a fallback.
+            pass
+
+    def _on_sigwinch(self, signum, frame) -> None:  # noqa: ARG002
+        self.reload_terminal_width()
+        # Iterate over a copy: callbacks may unsubscribe themselves and
+        # mutate the list mid-iteration.
+        for cb in list(self._resize_callbacks):
+            try:
+                cb()
+            except Exception:  # noqa: BLE001
+                # A misbehaving subscriber must not break SIGWINCH for
+                # the others.
+                pass
 
     def _init_output(self) -> None:
         from wexample_prompt.output.prompt_stdout_output_handler import (

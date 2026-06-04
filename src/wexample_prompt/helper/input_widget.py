@@ -93,12 +93,18 @@ class InputWidget:
         continuation_prefix: str | None = None,
         completions: list[tuple[str, str]] | None = None,
         width_provider=None,
+        resize_subscribe=None,
     ) -> None:
         # An explicit `width` kwarg fixes the widget at that size and disables
         # resize handling. `width_provider` is the "live" source — called on
         # init and on SIGWINCH; if provided it wins over the static fallback.
         self._width_override = width
         self._width_provider = width_provider
+        # `resize_subscribe(callback) -> unsubscribe_fn`: hook into a shared
+        # SIGWINCH dispatcher (typically IoManager.subscribe_resize). When
+        # provided, the widget skips installing its own SIGWINCH handler —
+        # avoids fighting with whoever owns the signal globally.
+        self._resize_subscribe = resize_subscribe
         self.width = width or self._read_live_width()
         self.info = info
         self.debug = debug
@@ -210,9 +216,18 @@ class InputWidget:
         """Run the widget; returns (buffer, validated_by_enter)."""
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
-        prev_winch = signal.signal(
-            signal.SIGWINCH, lambda *_: setattr(self, "_needs_resize", True)
-        )
+        # Resize wiring — prefer the shared subscriber (single SIGWINCH
+        # handler at IoManager level); fall back to a local handler when
+        # the widget is used standalone (demo scripts, tests).
+        _on_resize = lambda: setattr(self, "_needs_resize", True)  # noqa: E731
+        if self._resize_subscribe is not None:
+            unsubscribe_resize = self._resize_subscribe(_on_resize)
+            prev_winch = None
+        else:
+            unsubscribe_resize = None
+            prev_winch = signal.signal(
+                signal.SIGWINCH, lambda *_: _on_resize()
+            )
         validated = False
         try:
             tty.setraw(fd)
@@ -406,7 +421,10 @@ class InputWidget:
         finally:
             write(PASTE_OFF + MOK_OFF + KITTY_OFF)
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-            signal.signal(signal.SIGWINCH, prev_winch)
+            if unsubscribe_resize is not None:
+                unsubscribe_resize()
+            elif prev_winch is not None:
+                signal.signal(signal.SIGWINCH, prev_winch)
             if self.bordered:
                 self._erase_widget()
             else:
