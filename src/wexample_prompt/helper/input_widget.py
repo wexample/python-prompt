@@ -297,6 +297,17 @@ class InputWidget:
             write(KITTY_ON + MOK_ON + PASTE_ON)
             self.render()
 
+            # Salvage path for fragmented escape sequences. Some terminals
+            # split `\x1b[B` so that `\x1b` arrives in one read window and
+            # `[B` in the next — read_key() can't see it as one sequence
+            # without an unrealistic timeout. We detect the pattern by
+            # noticing a bare ESC immediately followed (next loop iter) by
+            # `[`, `O`, `\r` or `\n` and re-glue them.
+            ESC_SALVAGE_MS = 150  # max gap between the two read_key returns
+            last_esc_ts: float | None = None
+
+            import time as _t
+
             while True:
                 # When debug is on, capture per-byte timing so the overlay
                 # can show *where* the lag sits (between ESC and `[`, etc.).
@@ -315,6 +326,39 @@ class InputWidget:
                     self._handle_resize()
                     self.render()
 
+                # Stage 1 — try to recover a fragmented escape sequence.
+                if last_esc_ts is not None:
+                    gap_ms = (_t.monotonic() - last_esc_ts) * 1000.0
+                    last_esc_ts = None
+                    if gap_ms < ESC_SALVAGE_MS:
+                        if key == "[":
+                            # Pull the CSI tail directly — at this point the
+                            # final byte is already in the kernel buffer so a
+                            # tiny timeout is enough.
+                            tail = ""
+                            while True:
+                                r, _, _ = select.select(
+                                    [sys.stdin], [], [], 0.1
+                                )
+                                if not r:
+                                    break
+                                c = sys.stdin.read(1)
+                                if byte_log is not None:
+                                    byte_log.append((_t.monotonic(), c, 0.0))
+                                tail += c
+                                if 0x40 <= ord(c) <= 0x7E:
+                                    break
+                            key = "\x1b[" + tail
+                        elif key == "O":
+                            r, _, _ = select.select([sys.stdin], [], [], 0.1)
+                            if r:
+                                c = sys.stdin.read(1)
+                                if byte_log is not None:
+                                    byte_log.append((_t.monotonic(), c, 0.0))
+                                key = "\x1bO" + c
+                        elif key in ("\r", "\n"):
+                            key = "\x1b" + key  # Alt+Enter
+
                 if self.debug:
                     self.last_key_trace = " ".join(f"{ord(c):02x}" for c in key)
                     self._debug_history.append(
@@ -324,6 +368,12 @@ class InputWidget:
                         self._debug_history = self._debug_history[
                             -self.DEBUG_HISTORY_SIZE :
                         ]
+
+                # Stage 2 — if we got a bare ESC, remember it for stage 1
+                # of the NEXT iteration instead of dispatching now.
+                if key == "\x1b":
+                    last_esc_ts = _t.monotonic()
+                    continue
 
                 # `read_key()` aggregates the full escape sequence (CSI / SS3 /
                 # Alt+X) including under terminals that deliver bytes with a

@@ -31,6 +31,12 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         default=False,
         description="Frame the input area with horizontal separators above and below.",
     )
+    debug: bool = public_field(
+        default=False,
+        description="Enable the debug overlay inside the widget: shows the last "
+        "few keystrokes with their raw bytes and per-byte timing. Useful for "
+        "diagnosing arrow-key / escape-sequence issues on laggy terminals.",
+    )
     completions: list[tuple[str, str]] = public_field(
         factory=list,
         description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
@@ -74,6 +80,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         completions: list[tuple[str, str]] | None = None,
         width_provider: Any = None,
         reset_on_finish: bool = False,
+        debug: bool = False,
     ) -> MultilineInputPromptResponse:
         return cls(
             question=question,
@@ -85,6 +92,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             completions=list(completions) if completions else [],
             width_provider=width_provider,
             reset_on_finish=reset_on_finish,
+            debug=debug,
         )
 
     @classmethod
@@ -149,6 +157,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             prompt_prefix=self.prompt_prefix,
             completions=self.completions or None,
             width_provider=self.width_provider,
+            debug=self.debug,
         )
         text, validated = widget.run()
         if not validated:
