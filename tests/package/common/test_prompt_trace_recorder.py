@@ -3,15 +3,6 @@
 from __future__ import annotations
 
 
-def _make_io():
-    from wexample_prompt.common.io_manager import IoManager
-    from wexample_prompt.output.prompt_buffer_output_handler import (
-        PromptBufferOutputHandler,
-    )
-
-    return IoManager(output=PromptBufferOutputHandler())
-
-
 def test_print_response_stamps_created_at_once() -> None:
     """created_at is set on first print_response and preserved on re-print."""
     from wexample_prompt.responses.log_prompt_response import LogPromptResponse
@@ -48,6 +39,24 @@ def test_recorder_captures_only_within_push_pop() -> None:
     assert "captured-2" in captured[1].render()
 
 
+def test_recorder_captures_quiet_responses() -> None:
+    """QUIET silences the CLI render but the trace still records — decision: agent IA sees everything."""
+    from wexample_prompt.enums.verbosity_level import VerbosityLevel
+    from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+
+    io = _make_io()
+
+    buf = io.push_recorder()
+    quiet = LogPromptResponse.create_log(message="quiet-one")
+    quiet.verbosity = VerbosityLevel.QUIET
+    io.print_response(response=quiet)
+    io.pop_recorder()
+
+    assert len(buf) == 1
+    assert buf[0] is quiet
+    assert buf[0].created_at is not None
+
+
 def test_recorder_stack_isolates_nested_buffers() -> None:
     """Nested push: inner captures only its own emissions, outer captures only its own."""
     from wexample_prompt.responses.log_prompt_response import LogPromptResponse
@@ -80,19 +89,10 @@ def test_recorder_stack_isolates_nested_buffers() -> None:
     assert all("inner" not in t for t in outer_texts)
 
 
-def test_recorder_captures_quiet_responses() -> None:
-    """QUIET silences the CLI render but the trace still records — decision: agent IA sees everything."""
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
-    from wexample_prompt.responses.log_prompt_response import LogPromptResponse
+def _make_io() -> IoManager:
+    from wexample_prompt.common.io_manager import IoManager
+    from wexample_prompt.output.prompt_buffer_output_handler import (
+        PromptBufferOutputHandler,
+    )
 
-    io = _make_io()
-
-    buf = io.push_recorder()
-    quiet = LogPromptResponse.create_log(message="quiet-one")
-    quiet.verbosity = VerbosityLevel.QUIET
-    io.print_response(response=quiet)
-    io.pop_recorder()
-
-    assert len(buf) == 1
-    assert buf[0] is quiet
-    assert buf[0].created_at is not None
+    return IoManager(output=PromptBufferOutputHandler())
