@@ -57,15 +57,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         return PropertiesExample
 
     @staticmethod
-    def _create_border_line(width: int) -> PromptResponseLine:
-        from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-
-        return PromptResponseLine(
-            segments=[PromptResponseSegment(text=f"{'-' * width}")]
-        )
-
-    @staticmethod
     def _format_properties(
         properties: dict[str, Any],
         key_width: int,
@@ -92,16 +83,13 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         if not self.properties:
             return ""
 
         context = PromptContext.create_if_none(context=context)
-
-        # Determine content width by aligning with available visible width (indent-aware)
-        indentation_visible_width = context.get_indentation_visible_width()
-        total_width = context.get_width()
-        content_width = max(10, total_width - indentation_visible_width)
 
         max_key_width = 0
 
@@ -118,39 +106,80 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             self.properties, max_key_width, self.nested_indent
         )
 
+        bordered = context.bordered
         lines: list[PromptResponseLine] = []
-        if context.bordered:
-            # Maintain a leading spacer line so the block visually separates like other responses.
+
+        # Flatten markup once per line so visible-width math uses what will
+        # actually be rendered, not the raw `@color{}` source.
+        flattened = [flatten_style_markup(line, joiner=None) for line in content_lines]
+        content_visible_widths = [
+            sum(terminal_get_visible_width(seg.text) for seg in segs)
+            for segs in flattened
+        ]
+
+        if bordered:
+            # Box is sized to content (like TablePromptResponse), not to the
+            # full terminal width — visually consistent with the table cartouche.
+            max_content = max(content_visible_widths, default=0)
+            # Title needs "╭─ <title> ─╮" = 4 extra chars beyond title length.
+            title_min = (len(self.title) + 4) if self.title else 0
+            inner_width = max(max_content, title_min, 1)
+            box_width = inner_width + 2  # leading + trailing space inside │ … │
+
+            # Leading blank for visual separation (consistent with table).
             lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
             if self.title:
-                title_len = len(self.title)
-                left_pad = max(0, (content_width - title_len) // 2)
-                right_pad = max(0, content_width - title_len - left_pad)
+                # ╭─ Title ─…─╮ : 3 chars consumed by "╭─ " + " ", rest is fill before ╮.
+                fill = max(0, box_width - 3 - len(self.title))
                 lines.append(
                     PromptResponseLine(
                         segments=[
-                            PromptResponseSegment(text="-" * left_pad),
-                            PromptResponseSegment(text=f" {self.title} "),
-                            PromptResponseSegment(text="-" * max(0, right_pad - 2)),
+                            PromptResponseSegment(
+                                text="╭─ " + self.title + " " + "─" * fill + "╮"
+                            )
                         ]
                     )
                 )
             else:
-                lines.append(self._create_border_line(content_width))
+                lines.append(
+                    PromptResponseLine(
+                        segments=[
+                            PromptResponseSegment(text="╭" + "─" * box_width + "╮")
+                        ]
+                    )
+                )
 
-        for content in content_lines:
-            # Parse content for inline formatting
-            from wexample_prompt.common.style_markup_parser import flatten_style_markup
+            for content_segments, visible in zip(flattened, content_visible_widths):
+                padding = max(0, inner_width - visible)
+                lines.append(
+                    PromptResponseLine(
+                        segments=[
+                            PromptResponseSegment(text="│ "),
+                            *content_segments,
+                            PromptResponseSegment(text=" " * padding + " │"),
+                        ]
+                    )
+                )
 
-            content_segments = flatten_style_markup(content, joiner=None)
-
-            # Add leading space and parsed content
-            all_segments = [PromptResponseSegment(text=" ")] + content_segments
-            lines.append(PromptResponseLine(segments=all_segments))
-
-        if context.bordered:
-            lines.append(self._create_border_line(content_width))
+            lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(text="╰" + "─" * box_width + "╯")
+                    ]
+                )
+            )
+        else:
+            # Naked mode: no box at all (used when wrapped in a frame, which
+            # already provides its own cartouche).
+            if self.title:
+                lines.append(
+                    PromptResponseLine(
+                        segments=[PromptResponseSegment(text=self.title)]
+                    )
+                )
+            for content_segments in flattened:
+                lines.append(PromptResponseLine(segments=content_segments))
 
         # Replace and delegate to base to apply verbosity and segment rendering
         self.lines = lines

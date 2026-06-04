@@ -36,8 +36,9 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
             properties=nested, nested_indent=4
         )
         rendered = response.render()
-        # Expect at least one line with 4-space indentation
-        assert any(line.startswith("    ") for line in rendered.splitlines())
+        # Expect at least one line with 4-space inner indentation
+        # (after the box border "│ " prefix).
+        assert any("│     " in line for line in rendered.splitlines())
         self._assert_specific_format(rendered)
 
     def test_empty_properties(self) -> None:
