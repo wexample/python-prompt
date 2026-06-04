@@ -165,6 +165,14 @@ class IoManager(
         description="Manages what to do with the generated output (print, or store), "
         "by default print to stdout",
     )
+    _recorder_stack: list[list[AbstractPromptResponse]] = private_field(
+        factory=list,
+        description="LIFO stack of capture buffers for prompt_trace. Each "
+        "execute_kernel_command (and each QueuedCollectionResponse step) pushes a "
+        "fresh buffer here; every print_response appends to the top buffer (so "
+        "nested sub-commands capture only their own emissions, not the parent's). "
+        "Empty when no command is executing — capture is then a no-op.",
+    )
     _terminal_width: int = private_field(
         default=None, description="The terminal with cached value."
     )
@@ -323,12 +331,27 @@ class IoManager(
     ) -> None:
         self.output.erase(response=response)
 
+    def pop_recorder(self) -> list[AbstractPromptResponse]:
+        """Close the top capture buffer and return its contents."""
+        return self._recorder_stack.pop()
+
     def print_response(
         self,
         response: AbstractPromptResponse,
         context: PromptContext | None = None,
     ) -> AbstractPromptResponse:
-        # Quiet mode.
+        import time
+
+        # Stamp emission time once, regardless of verbosity — the recorder
+        # captures even QUIET responses so consumers (agent IA, MCP) see the
+        # full chronology, not just what the CLI happened to render.
+        if response.created_at is None:
+            response.created_at = time.time()
+
+        if self._recorder_stack:
+            self._recorder_stack[-1].append(response)
+
+        # Quiet mode: capture above, but skip the CLI render.
         if response.verbosity == VerbosityLevel.QUIET:
             return response
 
@@ -337,6 +360,12 @@ class IoManager(
         )
 
         return response
+
+    def push_recorder(self) -> list[AbstractPromptResponse]:
+        """Open a fresh capture buffer at the top of the stack and return it."""
+        buf: list[AbstractPromptResponse] = []
+        self._recorder_stack.append(buf)
+        return buf
 
     def reload_terminal_width(self) -> int:
         import shutil
