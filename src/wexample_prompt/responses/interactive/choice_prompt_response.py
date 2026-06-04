@@ -231,30 +231,17 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
 
             # Optional detail pane refreshed on every navigation. Provider gets
             # the currently-highlighted value and may return any PromptResponse
-            # (typically PropertiesPromptResponse). Rendered in naked mode —
-            # the sub-response renders its content without its own box.
+            # (typically PropertiesPromptResponse). We render it with the same
+            # context as the choice itself — so the sub-response keeps its own
+            # cartouche/box when it has one.
             if self.detail_provider is not None:
                 try:
                     detail_response = self.detail_provider(self.choices[idx].value)
                 except Exception:
                     detail_response = None
                 if detail_response is not None:
-                    detail_kwargs = PromptContext.create_kwargs_from_context(
-                        context=context
-                    )
-                    detail_kwargs["bordered"] = False
-                    detail_context = PromptContext.create_from_parent_context_and_kwargs(
-                        parent_context=context.parent_context,
-                        kwargs=detail_kwargs,
-                    )
-                    detail_response.render(context=detail_context)
+                    detail_response.render(context=context)
                     if detail_response.lines:
-                        # Blank visual separator above the detail block.
-                        self.lines.append(
-                            PromptResponseLine(
-                                segments=[PromptResponseSegment(text="")]
-                            )
-                        )
                         self.lines.extend(detail_response.lines)
 
             # Controls helper footer (in white)
