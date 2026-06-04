@@ -25,6 +25,7 @@ class FailurePromptResponseManagerMixin:
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         symbol: str | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> FailurePromptResponse:
         from wexample_prompt.responses.messages.failure_prompt_response import (
@@ -45,4 +46,5 @@ class FailurePromptResponseManagerMixin:
             context=FailurePromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

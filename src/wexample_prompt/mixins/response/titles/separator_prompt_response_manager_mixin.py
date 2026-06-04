@@ -24,6 +24,7 @@ class SeparatorPromptResponseManagerMixin:
         character: str | None = None,
         context: PromptContext | None = None,
         color: TerminalColor | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.responses.titles.separator_prompt_response import (
@@ -45,4 +46,5 @@ class SeparatorPromptResponseManagerMixin:
             context=SeparatorPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

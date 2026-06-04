@@ -24,6 +24,7 @@ class ListPromptResponseManagerMixin:
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> ListPromptResponse:
         from wexample_prompt.responses.data.list_prompt_response import (
@@ -46,4 +47,5 @@ class ListPromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

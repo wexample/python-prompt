@@ -24,6 +24,7 @@ class LogPromptResponseManagerMixin:
         color: TerminalColor | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
@@ -41,4 +42,5 @@ class LogPromptResponseManagerMixin:
             context=LogPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

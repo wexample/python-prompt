@@ -21,6 +21,7 @@ class EchoPromptResponseManagerMixin:
         message: LineMessage,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> EchoPromptResponse:
         from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
@@ -37,4 +38,5 @@ class EchoPromptResponseManagerMixin:
             context=EchoPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

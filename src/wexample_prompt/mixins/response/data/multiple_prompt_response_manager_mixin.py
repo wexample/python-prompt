@@ -27,6 +27,7 @@ class MultiplePromptResponseManagerMixin:
         responses: list[AbstractPromptResponse],
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs,
     ) -> MultiplePromptResponse:
         """Create a multiple prompt response."""
@@ -47,4 +48,5 @@ class MultiplePromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

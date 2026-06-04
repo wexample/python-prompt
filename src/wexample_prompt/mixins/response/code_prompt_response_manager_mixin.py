@@ -17,6 +17,7 @@ class CodePromptResponseManagerMixin:
         code: str | list[str],
         language: str | None = None,
         line_numbers: bool = False,
+        frame: str | bool | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         **kwargs: Kwargs,
@@ -38,4 +39,5 @@ class CodePromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

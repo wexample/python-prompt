@@ -25,6 +25,7 @@ class TaskPromptResponseManagerMixin:
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         symbol: str | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> TaskPromptResponse:
         from wexample_prompt.responses.messages.task_prompt_response import (
@@ -45,4 +46,5 @@ class TaskPromptResponseManagerMixin:
             context=TaskPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

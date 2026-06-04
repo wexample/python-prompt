@@ -26,6 +26,7 @@ class SubtitlePromptResponseManagerMixin:
         width: int | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
         from wexample_prompt.responses.titles.subtitle_prompt_response import (
@@ -51,4 +52,5 @@ class SubtitlePromptResponseManagerMixin:
             context=SubtitlePromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

@@ -25,6 +25,7 @@ class InfoPromptResponseManagerMixin:
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
         symbol: str | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> InfoPromptResponse:
         from wexample_prompt.responses.messages.info_prompt_response import (
@@ -45,4 +46,5 @@ class InfoPromptResponseManagerMixin:
             context=InfoPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )

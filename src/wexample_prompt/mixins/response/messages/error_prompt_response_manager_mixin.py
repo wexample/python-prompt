@@ -27,6 +27,7 @@ class ErrorPromptResponseManagerMixin:
         context: PromptContext | None = None,
         symbol: str | None = None,
         fatal: bool = False,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> ErrorPromptResponse:
         from wexample_prompt.responses.messages.error_prompt_response import (
@@ -48,6 +49,7 @@ class ErrorPromptResponseManagerMixin:
             context=ErrorPromptResponse.rebuild_context_for_kwargs(
                 context=context, parent_kwargs=kwargs
             ),
+            frame=frame,
         )
 
         if fatal:

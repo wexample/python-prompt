@@ -22,6 +22,7 @@ class CommandPromptResponseManagerMixin:
         executed: bool = False,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> CommandPromptResponse:
         from wexample_prompt.responses.command_prompt_response import (
@@ -44,4 +45,5 @@ class CommandPromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

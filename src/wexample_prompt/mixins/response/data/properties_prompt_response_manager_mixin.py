@@ -25,6 +25,7 @@ class PropertiesPromptResponseManagerMixin:
         nested_indent: int = 2,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> PropertiesPromptResponse:
         from wexample_prompt.responses.data.properties_prompt_response import (
@@ -46,4 +47,5 @@ class PropertiesPromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

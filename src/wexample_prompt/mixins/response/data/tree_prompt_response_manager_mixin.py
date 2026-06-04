@@ -24,6 +24,7 @@ class TreePromptResponseManagerMixin:
         data: dict[str, Any],
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> TreePromptResponse:
         from wexample_prompt.responses.data.tree_prompt_response import (
@@ -43,4 +44,5 @@ class TreePromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

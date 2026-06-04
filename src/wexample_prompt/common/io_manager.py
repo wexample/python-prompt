@@ -339,8 +339,30 @@ class IoManager(
         self,
         response: AbstractPromptResponse,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
     ) -> AbstractPromptResponse:
         import time
+
+        # `frame=` shortcut: wrap any response in a FramePromptResponse before
+        # printing. `True` → untitled cartouche, str → titled cartouche. Saves
+        # callers from building Frame(responses=[...]) by hand for the common
+        # "this block deserves its own box" case (agent /info blocks, etc.).
+        if frame:
+            from wexample_prompt.responses.frame_prompt_response import (
+                FramePromptResponse,
+            )
+
+            wrapped = FramePromptResponse.create_frame(
+                title=frame if isinstance(frame, str) else None,
+                responses=[response],
+                verbosity=response.verbosity,
+            )
+            # Print the wrapped version (recurses once, frame=None this time)
+            # so the recorder + verbosity + output handlers stay aligned.
+            self.print_response(response=wrapped, context=context)
+            # Caller still gets the inner response back — preserves the typed
+            # return contract (`io.code()` returns CodePromptResponse, etc.).
+            return response
 
         # Stamp emission time once, regardless of verbosity — the recorder
         # captures even QUIET responses so consumers (agent IA, MCP) see the

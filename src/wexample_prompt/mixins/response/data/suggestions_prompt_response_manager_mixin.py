@@ -29,6 +29,7 @@ class SuggestionsPromptResponseManagerMixin:
         arrow_style: str = "→",
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> SuggestionsPromptResponse:
         from wexample_prompt.responses.data.suggestions_prompt_response import (
@@ -50,4 +51,5 @@ class SuggestionsPromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )

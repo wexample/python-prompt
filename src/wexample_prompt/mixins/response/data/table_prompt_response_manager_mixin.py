@@ -26,6 +26,7 @@ class TablePromptResponseManagerMixin:
         title: str | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
+        frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> TablePromptResponse:
         from wexample_prompt.responses.data.table_prompt_response import (
@@ -47,4 +48,5 @@ class TablePromptResponseManagerMixin:
                 context=context,
                 parent_kwargs=kwargs,
             ),
+            frame=frame,
         )
