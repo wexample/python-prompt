@@ -48,6 +48,9 @@ class MultilineInputPromptResponseManagerMixin:
             # source of truth for the widget — keeps wrap math aligned with
             # what the rest of the prompt system uses.
             width_provider=self.reload_terminal_width,
+            # Share the IoManager's SIGWINCH dispatcher so the widget
+            # doesn't fight us for the global signal handler.
+            resize_subscribe=self.subscribe_resize,
             reset_on_finish=reset_on_finish,
             debug=debug,
         )

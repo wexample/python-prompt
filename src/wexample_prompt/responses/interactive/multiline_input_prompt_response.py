@@ -61,6 +61,12 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         default="Type your message (Esc+Enter for newline, Enter to submit):",
         description="Prompt header shown above the cursor. Pass None to skip (useful with bordered=True).",
     )
+    resize_subscribe: Any = public_field(
+        default=None,
+        description="Optional `subscribe(callback) -> unsubscribe` (typically "
+        "IoManager.subscribe_resize). When provided, the widget hooks into the "
+        "shared SIGWINCH dispatcher instead of installing its own handler.",
+    )
     width_provider: Any = public_field(
         default=None,
         description="Optional callable returning the current terminal width (e.g. io.reload_terminal_width). Used for resize handling — keeps the widget in sync with IoManager's cached width.",
@@ -79,6 +85,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         footer_hint: str | None = None,
         completions: list[tuple[str, str]] | None = None,
         width_provider: Any = None,
+        resize_subscribe: Any = None,
         reset_on_finish: bool = False,
         debug: bool = False,
     ) -> MultilineInputPromptResponse:
@@ -91,6 +98,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             footer_hint=footer_hint,
             completions=list(completions) if completions else [],
             width_provider=width_provider,
+            resize_subscribe=resize_subscribe,
             reset_on_finish=reset_on_finish,
             debug=debug,
         )
@@ -157,6 +165,7 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
             prompt_prefix=self.prompt_prefix,
             completions=self.completions or None,
             width_provider=self.width_provider,
+            resize_subscribe=self.resize_subscribe,
             debug=self.debug,
         )
         text, validated = widget.run()
