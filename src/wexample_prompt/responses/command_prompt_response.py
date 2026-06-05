@@ -96,11 +96,11 @@ class CommandPromptResponse(AbstractPromptResponse):
 
         lines: list[PromptResponseLine] = []
 
-        # The command itself: parse markup, color the un-styled parts in cyan,
-        # and prepend the prefix segment to the very first line only.
-        cmd_lines = PromptResponseLine.create_from_string(
-            text=command_str, color=TerminalColor.CYAN
-        )
+        # The command itself: parse markup and leave un-styled parts at the
+        # terminal's default color. The dim "$ " prefix is enough to mark it
+        # as a command; staying neutral keeps the block readable on any
+        # theme and lets surrounding prose breathe.
+        cmd_lines = PromptResponseLine.create_from_string(text=command_str)
         if cmd_lines:
             first = cmd_lines[0]
             first.segments = [prefix_seg] + first.segments
