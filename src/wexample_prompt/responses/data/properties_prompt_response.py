@@ -60,10 +60,13 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     def _wrap_long_rows(content_lines: list[str], max_inner_width: int) -> list[str]:
         """Word-wrap "{key} : {value}" rows wider than `max_inner_width`.
 
-        Continuation lines are padded so they line up with the value column,
-        which keeps the property/value grid readable even when one value
-        spans several rows. Lines without a " : " separator (nested-dict
-        headers) are left untouched.
+        - Explicit newlines inside the value are preserved as visual line
+          breaks (each becomes its own row, aligned to the value column).
+        - Each segment is then word-wrapped to ``max_inner_width``.
+        - Continuation lines are padded so they line up with the value
+          column, keeping the property/value grid readable.
+        - Lines without a " : " separator (nested-dict headers) are split
+          on ``\n`` but not wrapped.
         """
         import textwrap
 
@@ -71,33 +74,44 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         wrapped: list[str] = []
         for line in content_lines:
-            if terminal_get_visible_width(line) <= max_inner_width:
-                wrapped.append(line)
-                continue
-
             sep_idx = line.find(" : ")
             if sep_idx == -1:
-                wrapped.append(line)
+                # Header row for nested dicts ("outer:") — preserve any
+                # embedded newlines but skip wrap math.
+                wrapped.extend(line.split("\n"))
                 continue
 
             prefix = line[: sep_idx + 3]
             value = line[sep_idx + 3 :]
             prefix_visible = terminal_get_visible_width(prefix)
             wrap_width = max(1, max_inner_width - prefix_visible)
-
-            chunks = textwrap.wrap(
-                value,
-                width=wrap_width,
-                break_long_words=True,
-                break_on_hyphens=False,
-                drop_whitespace=True,
-                replace_whitespace=False,
-            ) or [""]
-
-            wrapped.append(prefix + chunks[0])
             indent = " " * prefix_visible
-            for chunk in chunks[1:]:
-                wrapped.append(indent + chunk)
+
+            # Pre-split on real newlines so textwrap doesn't collapse them
+            # (replace_whitespace=False is brittle when paragraphs flow
+            # together — easier to wrap each paragraph in isolation).
+            value_paragraphs = value.split("\n") or [""]
+            is_first_segment = True
+
+            for paragraph in value_paragraphs:
+                if paragraph == "":
+                    wrapped.append(prefix if is_first_segment else indent)
+                    is_first_segment = False
+                    continue
+
+                if terminal_get_visible_width(paragraph) <= wrap_width:
+                    chunks = [paragraph]
+                else:
+                    chunks = textwrap.wrap(
+                        paragraph,
+                        width=wrap_width,
+                        break_long_words=True,
+                        break_on_hyphens=False,
+                    ) or [paragraph]
+
+                for chunk in chunks:
+                    wrapped.append((prefix if is_first_segment else indent) + chunk)
+                    is_first_segment = False
         return wrapped
 
     @staticmethod
@@ -158,12 +172,12 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         target_width = context.get_available_width() if bordered else 0
         max_inner_width = max(1, target_width - 4) if target_width else 0
 
-        # Wrap rows whose value exceeds the box's usable inner width. The
-        # wrap aligns continuation lines to the value column (right after
-        # "{key} : ") so the property/value relationship stays visually
-        # clear and the box keeps a tidy grid.
-        if max_inner_width:
-            content_lines = self._wrap_long_rows(content_lines, max_inner_width)
+        # Always split values on real newlines (so a multi-line body
+        # doesn't get squashed onto a single grid row), and wrap to
+        # `max_inner_width` when the box is sized to the terminal. In
+        # naked mode (no cap) we still split but skip the wrap step.
+        effective_max = max_inner_width or 10**6
+        content_lines = self._wrap_long_rows(content_lines, effective_max)
 
         lines: list[PromptResponseLine] = []
 
