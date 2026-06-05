@@ -249,7 +249,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 segments=[
                     PromptResponseSegment(
                         text="Use ↑/↓ to navigate • Enter to select • Esc or q to abort",
-                        color=TerminalColor.WHITE,
+                        color=TerminalColor.BLACK,
                         styles=[],
                     )
                 ]
