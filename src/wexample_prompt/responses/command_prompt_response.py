@@ -91,7 +91,7 @@ class CommandPromptResponse(AbstractPromptResponse):
         else:
             prefix_seg = PromptResponseSegment(
                 text=f"{self.prompt_char} ",
-                color=TerminalColor.LIGHT_BLACK,
+                color=TerminalColor.LIGHT_MAGENTA,
             )
 
         lines: list[PromptResponseLine] = []
