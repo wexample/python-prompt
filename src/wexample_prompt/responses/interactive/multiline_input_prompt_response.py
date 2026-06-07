@@ -31,15 +31,15 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         default=False,
         description="Frame the input area with horizontal separators above and below.",
     )
+    completions: list[tuple[str, str]] = public_field(
+        factory=list,
+        description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
+    )
     debug: bool = public_field(
         default=False,
         description="Enable the debug overlay inside the widget: shows the last "
         "few keystrokes with their raw bytes and per-byte timing. Useful for "
         "diagnosing arrow-key / escape-sequence issues on laggy terminals.",
-    )
-    completions: list[tuple[str, str]] = public_field(
-        factory=list,
-        description="Slash-triggered autocomplete entries as (name, description) tuples. Activates when the buffer starts with '/' and contains no space/newline.",
     )
     default_value: str | None = public_field(
         default=None,

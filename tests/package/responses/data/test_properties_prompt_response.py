@@ -50,6 +50,23 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         rendered = response.render()
         assert rendered == ""
 
+    def test_long_value_wraps_within_terminal_width(self) -> None:
+        """When a value is wider than the terminal cap, it wraps to fit."""
+        from wexample_prompt.common.prompt_context import PromptContext
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+        from wexample_prompt.responses.data.properties_prompt_response import (
+            PropertiesPromptResponse,
+        )
+
+        long_value = " ".join(["lorem"] * 40)
+        response = PropertiesPromptResponse.create_properties(
+            properties={"body": long_value},
+        )
+        rendered = response.render(context=PromptContext(bordered=True, width=60))
+        widths = [terminal_get_visible_width(line) for line in rendered.splitlines()]
+        # Box never exceeds the cap (60 columns).
+        assert max(widths) <= 60
+
     def test_nested_properties_rendering(self) -> None:
         from wexample_prompt.responses.data.properties_prompt_response import (
             PropertiesPromptResponse,
@@ -82,13 +99,6 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         self._assert_contains_text(rendered, "30")
         self._assert_specific_format(rendered)
 
-    def test_with_custom_title(self) -> None:
-        custom_title = "User Information"
-        response = self._create_test_response(title=custom_title)
-        rendered = response.render()
-        self._assert_contains_text(rendered, custom_title)
-        self._assert_specific_format(rendered)
-
     def test_value_with_newlines_splits_into_aligned_rows(self) -> None:
         """A multi-line value must not be squashed onto a single grid row."""
         from wexample_prompt.common.prompt_context import PromptContext
@@ -103,27 +113,15 @@ class TestPropertiesPromptResponse(AbstractPromptResponseTest):
         lines = rendered.splitlines()
         # Each paragraph lands on its own framed row.
         assert any("first line" in line and "│" in line for line in lines)
-        assert any(
-            "second line" in line and "first line" not in line for line in lines
-        )
+        assert any("second line" in line and "first line" not in line for line in lines)
         assert any("third line" in line for line in lines)
 
-    def test_long_value_wraps_within_terminal_width(self) -> None:
-        """When a value is wider than the terminal cap, it wraps to fit."""
-        from wexample_prompt.common.prompt_context import PromptContext
-        from wexample_prompt.helper.terminal import terminal_get_visible_width
-        from wexample_prompt.responses.data.properties_prompt_response import (
-            PropertiesPromptResponse,
-        )
-
-        long_value = " ".join(["lorem"] * 40)
-        response = PropertiesPromptResponse.create_properties(
-            properties={"body": long_value},
-        )
-        rendered = response.render(context=PromptContext(bordered=True, width=60))
-        widths = [terminal_get_visible_width(line) for line in rendered.splitlines()]
-        # Box never exceeds the cap (60 columns).
-        assert max(widths) <= 60
+    def test_with_custom_title(self) -> None:
+        custom_title = "User Information"
+        response = self._create_test_response(title=custom_title)
+        rendered = response.render()
+        self._assert_contains_text(rendered, custom_title)
+        self._assert_specific_format(rendered)
 
     def _assert_specific_format(self, rendered: str) -> None:
         # Should contain key-value formatting

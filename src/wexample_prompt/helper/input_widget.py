@@ -225,9 +225,7 @@ class InputWidget:
             prev_winch = None
         else:
             unsubscribe_resize = None
-            prev_winch = signal.signal(
-                signal.SIGWINCH, lambda *_: _on_resize()
-            )
+            prev_winch = signal.signal(signal.SIGWINCH, lambda *_: _on_resize())
         validated = False
         try:
             tty.setraw(fd)
@@ -261,9 +259,7 @@ class InputWidget:
                 nonlocal last_byte_at
                 now = _t.monotonic()
                 waited_ms = (
-                    ((now - last_byte_at) * 1000.0)
-                    if last_byte_at is not None
-                    else 0.0
+                    ((now - last_byte_at) * 1000.0) if last_byte_at is not None else 0.0
                 )
                 last_byte_at = now
                 if not self.debug:
@@ -530,14 +526,42 @@ class InputWidget:
         if self.debug and self._debug_history:
             rows.append(f"── debug (last {len(self._debug_history)} bytes) ──")
             for _ts, b, waited_ms in self._debug_history:
-                rows.append(
-                    f"  +{waited_ms:6.0f} ms   0x{ord(b):02x}   {b!r}"
-                )
+                rows.append(f"  +{waited_ms:6.0f} ms   0x{ord(b):02x}   {b!r}")
         return rows
 
     def _insert(self, text: str) -> None:
         self.buffer = self.buffer[: self.cursor] + text + self.buffer[self.cursor :]
         self.cursor += len(text)
+
+    def _move(self, delta: int) -> None:
+        self.cursor = max(0, min(len(self.buffer), self.cursor + delta))
+
+    def _move_vertical(self, delta: int) -> None:
+        row, col = cursor_rowcol(self.buffer, self.cursor)
+        lines = self.buffer.split("\n")
+        target = row + delta
+        if 0 <= target < len(lines):
+            target_line = lines[target]
+            offset = 0
+            acc = 0
+            for ch in target_line:
+                w = display_width(ch)
+                if acc + w > col:
+                    break
+                acc += w
+                offset += 1
+            self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
+
+    def _read_live_width(self) -> int:
+        """Ask the provider (or shutil) for the current terminal width."""
+        if self._width_provider is not None:
+            try:
+                value = int(self._width_provider())
+                if value > 0:
+                    return max(20, value)
+            except Exception:
+                pass
+        return self._terminal_width()
 
     def _try_extract_key(
         self,
@@ -575,8 +599,7 @@ class InputWidget:
 
         # Need at least 2 bytes to decide what kind of ESC sequence.
         timed_out = (
-            esc_seq_started_at is not None
-            and (now - esc_seq_started_at) >= budget
+            esc_seq_started_at is not None and (now - esc_seq_started_at) >= budget
         )
         if len(buf) < 2:
             # Bare ESC: wait for more, drop silently after budget.
@@ -601,36 +624,6 @@ class InputWidget:
             # bytes — to avoid them re-emerging as literal chars.
             return "__DROP__", len(buf)
         return None, 0
-
-    def _move(self, delta: int) -> None:
-        self.cursor = max(0, min(len(self.buffer), self.cursor + delta))
-
-    def _move_vertical(self, delta: int) -> None:
-        row, col = cursor_rowcol(self.buffer, self.cursor)
-        lines = self.buffer.split("\n")
-        target = row + delta
-        if 0 <= target < len(lines):
-            target_line = lines[target]
-            offset = 0
-            acc = 0
-            for ch in target_line:
-                w = display_width(ch)
-                if acc + w > col:
-                    break
-                acc += w
-                offset += 1
-            self.cursor = sum(len(l) + 1 for l in lines[:target]) + offset
-
-    def _read_live_width(self) -> int:
-        """Ask the provider (or shutil) for the current terminal width."""
-        if self._width_provider is not None:
-            try:
-                value = int(self._width_provider())
-                if value > 0:
-                    return max(20, value)
-            except Exception:
-                pass
-        return self._terminal_width()
 
     def _visual_rows_for_line(self, line: str) -> int:
         """Number of visual rows a logical line occupies once the prefix is added

@@ -147,45 +147,6 @@ class ChoiceExample(AbstractResponseExample):
             predefined_answer="Yes",
         )
 
-    def example_with_dict(self) -> None:
-        """Choice with dict (value: label)."""
-        self.io.choice(
-            question="Select your preferred language:",
-            choices={
-                "py": "🐍 Python",
-                "js": "📜 JavaScript",
-                "rs": "🦀 Rust",
-                "go": "🐹 Go",
-            },
-            default="py",
-            predefined_answer="py",
-        )
-
-    def example_with_emojis(self) -> None:
-        """Choice with emojis."""
-        self.io.choice(
-            question="🚀 Select action:",
-            choices=[
-                "✅ Deploy",
-                "🧪 Run tests",
-                "📊 View stats",
-                "❌ Cancel",
-            ],
-            predefined_answer="🧪 Run tests",
-        )
-
-    def example_with_formatting(self) -> None:
-        """Choice with inline formatting."""
-        self.io.choice(
-            question="@color:cyan+bold{Select deployment environment}:",
-            choices=[
-                "@color:green{Production}",
-                "@color:yellow{Staging}",
-                "@color:blue{Development}",
-            ],
-            predefined_answer="@color:blue{Development}",
-        )
-
     def example_with_detail_pane(self) -> None:
         """Choice with a live detail pane (PropertiesPromptResponse) under the list."""
         from wexample_prompt.responses.data.properties_prompt_response import (
@@ -223,6 +184,45 @@ class ChoiceExample(AbstractResponseExample):
             choices={key: key for key in agents},
             detail_provider=detail_for,
             predefined_answer="default",
+        )
+
+    def example_with_dict(self) -> None:
+        """Choice with dict (value: label)."""
+        self.io.choice(
+            question="Select your preferred language:",
+            choices={
+                "py": "🐍 Python",
+                "js": "📜 JavaScript",
+                "rs": "🦀 Rust",
+                "go": "🐹 Go",
+            },
+            default="py",
+            predefined_answer="py",
+        )
+
+    def example_with_emojis(self) -> None:
+        """Choice with emojis."""
+        self.io.choice(
+            question="🚀 Select action:",
+            choices=[
+                "✅ Deploy",
+                "🧪 Run tests",
+                "📊 View stats",
+                "❌ Cancel",
+            ],
+            predefined_answer="🧪 Run tests",
+        )
+
+    def example_with_formatting(self) -> None:
+        """Choice with inline formatting."""
+        self.io.choice(
+            question="@color:cyan+bold{Select deployment environment}:",
+            choices=[
+                "@color:green{Production}",
+                "@color:yellow{Staging}",
+                "@color:blue{Development}",
+            ],
+            predefined_answer="@color:blue{Development}",
         )
 
     def example_with_paths(self) -> None:

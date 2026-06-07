@@ -9,7 +9,6 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.common.prompt_response_line import PromptResponseLine
     from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
@@ -55,6 +54,28 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         )
 
         return PropertiesExample
+
+    @staticmethod
+    def _format_properties(
+        properties: dict[str, Any],
+        key_width: int,
+        indent: int,
+        current_indent: int = 0,
+    ) -> list[str]:
+        lines: list[str] = []
+        indent_str = " " * current_indent
+        for key, value in properties.items():
+            if isinstance(value, dict):
+                lines.append(f"{indent_str}{str(key)}:")
+                lines.extend(
+                    PropertiesPromptResponse._format_properties(
+                        value, key_width, indent, current_indent + indent
+                    )
+                )
+            else:
+                key_str = str(key).ljust(key_width)
+                lines.append(f"{indent_str}{key_str} : {str(value)}")
+        return lines
 
     @staticmethod
     def _wrap_long_rows(content_lines: list[str], max_inner_width: int) -> list[str]:
@@ -113,28 +134,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                     wrapped.append((prefix if is_first_segment else indent) + chunk)
                     is_first_segment = False
         return wrapped
-
-    @staticmethod
-    def _format_properties(
-        properties: dict[str, Any],
-        key_width: int,
-        indent: int,
-        current_indent: int = 0,
-    ) -> list[str]:
-        lines: list[str] = []
-        indent_str = " " * current_indent
-        for key, value in properties.items():
-            if isinstance(value, dict):
-                lines.append(f"{indent_str}{str(key)}:")
-                lines.extend(
-                    PropertiesPromptResponse._format_properties(
-                        value, key_width, indent, current_indent + indent
-                    )
-                )
-            else:
-                key_str = str(key).ljust(key_width)
-                lines.append(f"{indent_str}{key_str} : {str(value)}")
-        return lines
 
     def render(self, context: PromptContext | None = None) -> str | None:
         """Render the properties into lines using the provided context width."""
@@ -238,9 +237,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
             lines.append(
                 PromptResponseLine(
-                    segments=[
-                        PromptResponseSegment(text="╰" + "─" * box_width + "╯")
-                    ]
+                    segments=[PromptResponseSegment(text="╰" + "─" * box_width + "╯")]
                 )
             )
         else:

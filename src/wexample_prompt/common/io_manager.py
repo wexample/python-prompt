@@ -342,6 +342,34 @@ class IoManager(
             kwargs=context_kwargs,
         )
 
+    def enable_resize_listening(self) -> bool:
+        """Wire SIGWINCH so this IoManager refreshes the width cache and
+        notifies its subscribers on every terminal resize.
+
+        Opt-in by design: call this from the owner of the *primary*
+        IoManager (typically the kernel) once during setup. Subsequent
+        IoManager instances must NOT call it, otherwise they'd silently
+        steal SIGWINCH from the primary (signal.signal replaces, doesn't
+        chain).
+
+        Safe to call from any environment: Windows has no SIGWINCH, and
+        non-main threads raise on `signal.signal` — both cases are
+        swallowed and we fall back to lazy refresh on demand.
+
+        Returns True if the handler was installed (or already was);
+        False if the environment doesn't support it.
+        """
+        if self._winch_installed:
+            return True
+        try:
+            import signal
+
+            signal.signal(signal.SIGWINCH, self._on_sigwinch)
+            self._winch_installed = True
+            return True
+        except (AttributeError, ValueError, OSError):
+            return False
+
     def erase_response(
         self,
         response: AbstractPromptResponse,
@@ -412,7 +440,7 @@ class IoManager(
         self._terminal_width = shutil.get_terminal_size().columns
         return self._terminal_width
 
-    def subscribe_resize(self, callback) -> "callable":
+    def subscribe_resize(self, callback) -> callable:
         """Register `callback` to be invoked after each terminal resize.
 
         The callback receives no arguments. The cache has already been
@@ -432,33 +460,14 @@ class IoManager(
 
         return unsubscribe
 
-    def enable_resize_listening(self) -> bool:
-        """Wire SIGWINCH so this IoManager refreshes the width cache and
-        notifies its subscribers on every terminal resize.
+    def _init_output(self) -> None:
+        from wexample_prompt.output.prompt_stdout_output_handler import (
+            PromptStdoutOutputHandler,
+        )
 
-        Opt-in by design: call this from the owner of the *primary*
-        IoManager (typically the kernel) once during setup. Subsequent
-        IoManager instances must NOT call it, otherwise they'd silently
-        steal SIGWINCH from the primary (signal.signal replaces, doesn't
-        chain).
-
-        Safe to call from any environment: Windows has no SIGWINCH, and
-        non-main threads raise on `signal.signal` — both cases are
-        swallowed and we fall back to lazy refresh on demand.
-
-        Returns True if the handler was installed (or already was);
-        False if the environment doesn't support it.
-        """
-        if self._winch_installed:
-            return True
-        try:
-            import signal
-
-            signal.signal(signal.SIGWINCH, self._on_sigwinch)
-            self._winch_installed = True
-            return True
-        except (AttributeError, ValueError, OSError):
-            return False
+        self.output = (
+            self.output if (self.output is not None) else PromptStdoutOutputHandler()
+        )
 
     def _on_sigwinch(self, signum, frame) -> None:  # noqa: ARG002
         self.reload_terminal_width()
@@ -471,12 +480,3 @@ class IoManager(
                 # A misbehaving subscriber must not break SIGWINCH for
                 # the others.
                 pass
-
-    def _init_output(self) -> None:
-        from wexample_prompt.output.prompt_stdout_output_handler import (
-            PromptStdoutOutputHandler,
-        )
-
-        self.output = (
-            self.output if (self.output is not None) else PromptStdoutOutputHandler()
-        )
