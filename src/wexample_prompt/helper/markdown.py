@@ -119,13 +119,19 @@ def _link_sub(m: re.Match[str]) -> str:
     label_md = m.group(1)
     url = m.group(2).strip()
     # Render inline styles inside the label too (bold/italic links exist).
-    label = _RE_CODE.sub(
-        lambda mm: f"{_REVERSE[0]} {mm.group(1)} {_REVERSE[1]}", label_md
-    )
+    label = _RE_CODE.sub(_code_sub, label_md)
     label = _RE_BOLD.sub(lambda mm: f"{_BOLD[0]}{mm.group(1)}{_BOLD[1]}", label)
     label = _RE_ITALIC.sub(lambda mm: f"{_ITALIC[0]}{mm.group(1)}{_ITALIC[1]}", label)
     # OSC 8 hyperlink + underline fallback for terminals that ignore OSC 8.
     return f"\x1b]8;;{url}\x1b\\{_UNDERLINE[0]}{label}{_UNDERLINE[1]}\x1b]8;;\x1b\\"
+
+
+def _code_sub(m: re.Match[str]) -> str:
+    # Inline code: dim + underline. Reverse-video looked too much like
+    # "highlight/selected" and competed visually with bold — and the LLM
+    # backticks identifiers a lot, so the noise was constant. Underline +
+    # dim still reads as "this is a literal token" without screaming.
+    return f"{_DIM[0]}{_UNDERLINE[0]}{m.group(1)}{_UNDERLINE[1]}{_DIM[1]}"
 
 
 def _render_inline(line: str) -> str:
@@ -134,8 +140,8 @@ def _render_inline(line: str) -> str:
     line = _RE_IMAGE.sub(_image_sub, line)
     # Links → OSC 8 hyperlink + underline (graceful fallback in dumb terms).
     line = _RE_LINK.sub(_link_sub, line)
-    # Inline code: reverse video, tight spacing.
-    line = _RE_CODE.sub(lambda m: f"{_REVERSE[0]} {m.group(1)} {_REVERSE[1]}", line)
+    # Inline code: dim + underline (see `_code_sub` for the rationale).
+    line = _RE_CODE.sub(_code_sub, line)
     # Order matters: bold before italic so `**x**` isn't eaten by `*x*`.
     line = _RE_BOLD.sub(lambda m: f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}", line)
     line = _RE_BOLD_UNDERSCORE.sub(lambda m: f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}", line)

@@ -100,11 +100,15 @@ def test_image_with_empty_alt_falls_back_to_url() -> None:
     assert "https://example.com/x.png" in _visible(out)
 
 
-def test_inline_code_uses_reverse_video() -> None:
-    out = markdown_to_ansi("run `pytest` now")
-    assert "\x1b[7m" in out
-    # The visible payload keeps the spaces padding the code span.
-    assert "pytest" in _visible(out)
+def test_inline_code_uses_dim_underline() -> None:
+    """Inline code reads as a literal token without screaming like reverse video."""
+    out = markdown_to_ansi("use`pytest`now")
+    assert "\x1b[2m" in out  # dim
+    assert "\x1b[4m" in out  # underline
+    assert "\x1b[7m" not in out  # NOT reverse video
+    # No injected padding spaces around the code body — visible payload
+    # must match the source character-for-character.
+    assert _visible(out) == "usepytestnow"
 
 
 def test_italic_star_emits_ansi_italic() -> None:

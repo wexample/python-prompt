@@ -56,6 +56,9 @@ from wexample_prompt.mixins.response.interactive.multiline_input_prompt_response
 from wexample_prompt.mixins.response.interactive.pending_prompt_response_manager_mixin import (
     PendingPromptResponseManagerMixin,
 )
+from wexample_prompt.mixins.response.interactive.leader_line_prompt_response_manager_mixin import (
+    LeaderLinePromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import (
     ProgressPromptResponseManagerMixin,
 )
@@ -142,6 +145,7 @@ class IoManager(
     ChoicePromptResponseManagerMixin,
     FilePickerPromptResponseManagerMixin,
     PendingPromptResponseManagerMixin,
+    LeaderLinePromptResponseManagerMixin,
     ProgressPromptResponseManagerMixin,
     ScreenPromptResponseManagerMixin,
     SpinnerPromptResponseManagerMixin,
