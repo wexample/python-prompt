@@ -96,11 +96,13 @@ class CommandPromptResponse(AbstractPromptResponse):
 
         lines: list[PromptResponseLine] = []
 
-        # The command itself: parse markup and leave un-styled parts at the
-        # terminal's default color. The dim "$ " prefix is enough to mark it
-        # as a command; staying neutral keeps the block readable on any
-        # theme and lets surrounding prose breathe.
-        cmd_lines = PromptResponseLine.create_from_string(text=command_str)
+        # The command itself: parse markup and grey the un-styled parts so
+        # the line reads as "metadata about a command" rather than active
+        # prose. The pink "$ " prefix marks the role; the grey body keeps
+        # the block visually quiet next to surrounding output.
+        cmd_lines = PromptResponseLine.create_from_string(
+            text=command_str, color=TerminalColor.LIGHT_BLACK
+        )
         if cmd_lines:
             first = cmd_lines[0]
             first.segments = [prefix_seg] + first.segments
