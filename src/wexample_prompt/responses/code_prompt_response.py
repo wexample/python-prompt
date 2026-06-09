@@ -24,6 +24,10 @@ class CodePromptResponse(AbstractPromptResponse):
     with ``frame`` for a boxed snippet.
     """
 
+    chevrons: bool = public_field(
+        default=False,
+        description="Wrap the snippet with chevron separators: `︿…` above and `﹀…` below.",
+    )
     code: str | list[str] = public_field(
         description="Code snippet. A list is joined with newlines.",
     )
@@ -42,6 +46,7 @@ class CodePromptResponse(AbstractPromptResponse):
         code: str | list[str],
         language: str | None = None,
         line_numbers: bool = False,
+        chevrons: bool = False,
         verbosity: VerbosityLevel | None = None,
     ) -> CodePromptResponse:
         return cls(
@@ -49,6 +54,7 @@ class CodePromptResponse(AbstractPromptResponse):
             code=code,
             language=language,
             line_numbers=line_numbers,
+            chevrons=chevrons,
             verbosity=verbosity,
         )
 
@@ -64,6 +70,7 @@ class CodePromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         context = PromptContext.create_if_none(context=context)
 
@@ -90,17 +97,59 @@ class CodePromptResponse(AbstractPromptResponse):
         code_lines = code_str.split("\n")
         width = len(str(len(code_lines))) if self.line_numbers else 0
 
+        body_lines: list[PromptResponseLine] = []
+        max_body_visible = 0
         for idx, line in enumerate(code_lines, start=1):
             segments: list[PromptResponseSegment] = []
+            line_visible = 0
             if self.line_numbers:
+                prefix = f"{idx:>{width}} │ "
                 segments.append(
                     PromptResponseSegment(
-                        text=f"{idx:>{width}} │ ",
+                        text=prefix,
                         color=TerminalColor.LIGHT_BLACK,
                     )
                 )
+                line_visible += terminal_get_visible_width(prefix)
             segments.append(PromptResponseSegment(text=line))
-            lines.append(PromptResponseLine(segments=segments))
+            line_visible += terminal_get_visible_width(line)
+            max_body_visible = max(max_body_visible, line_visible)
+            body_lines.append(PromptResponseLine(segments=segments))
+
+        if self.chevrons:
+            # Build the top/bottom rows from `︿`/`﹀` (CJK presentation forms,
+            # each 2 cols wide) sized to match the widest body line — that
+            # way the decoration visually "hugs" the snippet without
+            # spilling past it.
+            up, down = "︿", "﹀"
+            unit_width = max(1, terminal_get_visible_width(up))
+            target = max(max_body_visible, terminal_get_visible_width(self.language or ""))
+            count = max(1, target // unit_width)
+            lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(
+                            text=up * count,
+                            color=TerminalColor.LIGHT_BLACK,
+                            styles=[TextStyle.DIM],
+                        )
+                    ]
+                )
+            )
+            lines.extend(body_lines)
+            lines.append(
+                PromptResponseLine(
+                    segments=[
+                        PromptResponseSegment(
+                            text=down * count,
+                            color=TerminalColor.LIGHT_BLACK,
+                            styles=[TextStyle.DIM],
+                        )
+                    ]
+                )
+            )
+        else:
+            lines.extend(body_lines)
 
         self.lines = lines
         return super().render(context=context)

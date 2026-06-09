@@ -17,6 +17,7 @@ class CodePromptResponseManagerMixin:
         code: str | list[str],
         language: str | None = None,
         line_numbers: bool = False,
+        chevrons: bool = False,
         frame: str | bool | None = None,
         verbosity: VerbosityLevel | None = None,
         context: PromptContext | None = None,
@@ -28,6 +29,7 @@ class CodePromptResponseManagerMixin:
             code=code,
             language=language,
             line_numbers=line_numbers,
+            chevrons=chevrons,
             verbosity=(
                 verbosity if verbosity is not None else self.default_response_verbosity
             ),
