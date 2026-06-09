@@ -469,8 +469,26 @@ class InputWidget:
     def _handle_resize(self) -> None:
         if self._width_override is not None:
             return
+        # Wipe the old widget BEFORE re-measuring. Without this, render()
+        # would take the `_rendered=False` branch (no erase, just `\r`) and
+        # paint the new geometry below the stale one — each resize would
+        # stack a new top bar onto the previous render.
+        #
+        # We climb exactly `_cursor_up_to_top` rows (the count measured at
+        # the OLD width) and erase to end of screen. In terminals that
+        # reflow already-drawn lines on resize (gnome-terminal, kitty,
+        # iTerm2) a narrower window may leave a single row of stale top
+        # bar above — visible but harmless. We deliberately don't
+        # over-climb to compensate: non-reflowing terminals (xterm) would
+        # then erase the user's scrollback above us, which is much worse.
+        if self._rendered:
+            if self._cursor_up_to_top > 0:
+                write(f"\r{CSI}{self._cursor_up_to_top}A")
+            else:
+                write("\r")
+            write(f"{CSI}J")
         self.width = self._read_live_width()
-        self._rendered = False  # force full redraw at new width
+        self._rendered = False  # next render() paints fresh, no climb
 
     def _home(self) -> None:
         self.cursor = self.buffer.rfind("\n", 0, self.cursor) + 1
