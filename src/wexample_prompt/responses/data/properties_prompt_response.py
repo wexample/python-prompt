@@ -83,14 +83,16 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         - Explicit newlines inside the value are preserved as visual line
           breaks (each becomes its own row, aligned to the value column).
-        - Each segment is then word-wrapped to ``max_inner_width``.
+        - Each paragraph is then ANSI-aware word-wrapped to ``max_inner_width``
+          via ``ansi_aware_wrap`` — styles open at a wrap boundary close
+          cleanly at end-of-line and re-open at start of the next, so
+          padding spaces and box borders never inherit them.
         - Continuation lines are padded so they line up with the value
           column, keeping the property/value grid readable.
         - Lines without a " : " separator (nested-dict headers) are split
           on ``\n`` but not wrapped.
         """
-        import textwrap
-
+        from wexample_prompt.helper.ansi_wrap import ansi_aware_wrap
         from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         wrapped: list[str] = []
@@ -108,9 +110,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             wrap_width = max(1, max_inner_width - prefix_visible)
             indent = " " * prefix_visible
 
-            # Pre-split on real newlines so textwrap doesn't collapse them
-            # (replace_whitespace=False is brittle when paragraphs flow
-            # together — easier to wrap each paragraph in isolation).
             value_paragraphs = value.split("\n") or [""]
             is_first_segment = True
 
@@ -120,16 +119,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                     is_first_segment = False
                     continue
 
-                if terminal_get_visible_width(paragraph) <= wrap_width:
-                    chunks = [paragraph]
-                else:
-                    chunks = textwrap.wrap(
-                        paragraph,
-                        width=wrap_width,
-                        break_long_words=True,
-                        break_on_hyphens=False,
-                    ) or [paragraph]
-
+                chunks = ansi_aware_wrap(paragraph, wrap_width) or [paragraph]
                 for chunk in chunks:
                     wrapped.append((prefix if is_first_segment else indent) + chunk)
                     is_first_segment = False
