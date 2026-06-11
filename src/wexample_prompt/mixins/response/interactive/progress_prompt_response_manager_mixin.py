@@ -50,23 +50,25 @@ class ProgressPromptResponseManagerMixin:
             ),
         )
 
+        rebuilt_context = ProgressPromptResponse.rebuild_context_for_kwargs(
+            context=context,
+            parent_kwargs=kwargs,
+        )
+
         # We may need to initialize a hidden progress handle.
         if print_response:
             # The first print is done without progress handle.
             response = self.print_response(
                 response=response,
-                context=ProgressPromptResponse.rebuild_context_for_kwargs(
-                    context=context,
-                    parent_kwargs=kwargs,
-                ),
+                context=rebuilt_context,
             )
-        else:
-            rebuilt_context = ProgressPromptResponse.rebuild_context_for_kwargs(
-                context=context,
-                parent_kwargs=kwargs,
-            )
-            effective_context = self.create_context(context=rebuilt_context)
-            response.init_handle(context=effective_context)
+
+        # Rendering may have been skipped entirely (quiet verbosity,
+        # suppressed output target), in which case it did not build the
+        # handle. init_handle creates once, so this is a no-op when the
+        # render already did the job.
+        effective_context = self.create_context(context=rebuilt_context)
+        response.init_handle(context=effective_context)
 
         # The first print is done without progress handle.
         response.get_handle().output = self.output
