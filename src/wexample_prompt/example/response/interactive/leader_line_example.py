@@ -12,17 +12,27 @@ from wexample_prompt.example.abstract_response_example import AbstractResponseEx
 
 @base_class
 class LeaderLineExample(AbstractResponseExample):
-    def example_simple(self) -> None:
-        """Default preset (✓/✗), straightforward success path."""
-        handle = self.io.leader_line("Migrating database").get_handle()
-        time.sleep(0.3)
-        handle.success()
+    def example_class(self, indentation: int | None = None):
+        from wexample_prompt.responses.interactive.leader_line_prompt_response import (
+            LeaderLinePromptResponse,
+        )
+
+        return LeaderLinePromptResponse.create_leader_line(
+            message="Direct render",
+            state="success",
+        )
+
+    def example_extended(self) -> None:
+        self._class_with_methods.leader_line(message="Class method demo")
 
     def example_failure_with_status(self) -> None:
         """Failure path with a free-form error string after the marker."""
         handle = self.io.leader_line("Connecting to broker").get_handle()
         time.sleep(0.3)
         handle.failure("connection refused")
+
+    def example_manager(self) -> None:
+        self.io.leader_line(message="IoManager demo")
 
     def example_ok_ko_preset(self) -> None:
         """ASCII-only preset for terminals without unicode support."""
@@ -54,21 +64,11 @@ class LeaderLineExample(AbstractResponseExample):
             else:
                 handle.failure("assertion error")
 
-    def example_class(self, indentation: int | None = None):
-        from wexample_prompt.responses.interactive.leader_line_prompt_response import (
-            LeaderLinePromptResponse,
-        )
-
-        return LeaderLinePromptResponse.create_leader_line(
-            message="Direct render",
-            state="success",
-        )
-
-    def example_extended(self) -> None:
-        self._class_with_methods.leader_line(message="Class method demo")
-
-    def example_manager(self) -> None:
-        self.io.leader_line(message="IoManager demo")
+    def example_simple(self) -> None:
+        """Default preset (✓/✗), straightforward success path."""
+        handle = self.io.leader_line("Migrating database").get_handle()
+        time.sleep(0.3)
+        handle.success()
 
     def get_examples(self) -> list[dict[str, Any]]:
         return [

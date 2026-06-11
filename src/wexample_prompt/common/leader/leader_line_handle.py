@@ -35,42 +35,10 @@ class LeaderLineHandle(BaseClass):
         description="The leader-line response this handle drives."
     )
 
-    def update(
-        self,
-        state: str | None = None,
-        status: str | None = None,
-        message: str | None = None,
-        auto_render: bool = True,
-    ) -> str | None:
-        if state is not None:
-            self.response.state = state
-        if status is not None:
-            self.response.status = status
-        if message is not None:
-            self.response.message = message
-        if auto_render:
-            return self.render()
-        return None
-
-    def success(
-        self, status: str | None = None, auto_render: bool = True
-    ) -> str | None:
-        return self.update(state="success", status=status, auto_render=auto_render)
-
     def failure(
         self, status: str | None = None, auto_render: bool = True
     ) -> str | None:
         return self.update(state="failure", status=status, auto_render=auto_render)
-
-    def warning(
-        self, status: str | None = None, auto_render: bool = True
-    ) -> str | None:
-        return self.update(state="warning", status=status, auto_render=auto_render)
-
-    def skipped(
-        self, status: str | None = None, auto_render: bool = True
-    ) -> str | None:
-        return self.update(state="skipped", status=status, auto_render=auto_render)
 
     def finish(
         self,
@@ -92,3 +60,35 @@ class LeaderLineHandle(BaseClass):
             return self.response.render(context=self.context)
         finally:
             self.response._redraw_in_place = False
+
+    def skipped(
+        self, status: str | None = None, auto_render: bool = True
+    ) -> str | None:
+        return self.update(state="skipped", status=status, auto_render=auto_render)
+
+    def success(
+        self, status: str | None = None, auto_render: bool = True
+    ) -> str | None:
+        return self.update(state="success", status=status, auto_render=auto_render)
+
+    def update(
+        self,
+        state: str | None = None,
+        status: str | None = None,
+        message: str | None = None,
+        auto_render: bool = True,
+    ) -> str | None:
+        if state is not None:
+            self.response.state = state
+        if status is not None:
+            self.response.status = status
+        if message is not None:
+            self.response.message = message
+        if auto_render:
+            return self.render()
+        return None
+
+    def warning(
+        self, status: str | None = None, auto_render: bool = True
+    ) -> str | None:
+        return self.update(state="warning", status=status, auto_render=auto_render)

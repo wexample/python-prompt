@@ -123,7 +123,9 @@ class CodePromptResponse(AbstractPromptResponse):
             # spilling past it.
             up, down = "︿", "﹀"
             unit_width = max(1, terminal_get_visible_width(up))
-            target = max(max_body_visible, terminal_get_visible_width(self.language or ""))
+            target = max(
+                max_body_visible, terminal_get_visible_width(self.language or "")
+            )
             count = max(1, target // unit_width)
             lines.append(
                 PromptResponseLine(

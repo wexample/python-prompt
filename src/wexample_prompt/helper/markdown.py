@@ -108,6 +108,14 @@ def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
     return "\n".join(out)
 
 
+def _code_sub(m: re.Match[str]) -> str:
+    # Inline code: dim + underline. Reverse-video looked too much like
+    # "highlight/selected" and competed visually with bold — and the LLM
+    # backticks identifiers a lot, so the noise was constant. Underline +
+    # dim still reads as "this is a literal token" without screaming.
+    return f"{_DIM[0]}{_UNDERLINE[0]}{m.group(1)}{_UNDERLINE[1]}{_DIM[1]}"
+
+
 def _image_sub(m: re.Match[str]) -> str:
     alt = m.group(1).strip()
     url = m.group(2).strip()
@@ -124,14 +132,6 @@ def _link_sub(m: re.Match[str]) -> str:
     label = _RE_ITALIC.sub(lambda mm: f"{_ITALIC[0]}{mm.group(1)}{_ITALIC[1]}", label)
     # OSC 8 hyperlink + underline fallback for terminals that ignore OSC 8.
     return f"\x1b]8;;{url}\x1b\\{_UNDERLINE[0]}{label}{_UNDERLINE[1]}\x1b]8;;\x1b\\"
-
-
-def _code_sub(m: re.Match[str]) -> str:
-    # Inline code: dim + underline. Reverse-video looked too much like
-    # "highlight/selected" and competed visually with bold — and the LLM
-    # backticks identifiers a lot, so the noise was constant. Underline +
-    # dim still reads as "this is a literal token" without screaming.
-    return f"{_DIM[0]}{_UNDERLINE[0]}{m.group(1)}{_UNDERLINE[1]}{_DIM[1]}"
 
 
 def _render_inline(line: str) -> str:

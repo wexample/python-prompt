@@ -45,7 +45,6 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
     """Single-line widget with a left message, dot leader, and a state marker."""
 
     DEFAULT_DOT_CHAR: ClassVar[str] = "."
-
     # --- Built-in presets ---------------------------------------------------
     MARKERS_PRESET_CHECK: ClassVar[LeaderLineMarkers] = LeaderLineMarkers(
         pending=StatusMarker(label="…", color=TerminalColor.LIGHT_BLACK, styles=_DIM),
@@ -66,9 +65,10 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
         success=StatusMarker(label="PASS", color=TerminalColor.GREEN, styles=_BOLD),
         failure=StatusMarker(label="FAIL", color=TerminalColor.RED, styles=_BOLD),
         warning=StatusMarker(label="WARN", color=TerminalColor.YELLOW, styles=_BOLD),
-        skipped=StatusMarker(label="SKIP", color=TerminalColor.LIGHT_BLACK, styles=_DIM),
+        skipped=StatusMarker(
+            label="SKIP", color=TerminalColor.LIGHT_BLACK, styles=_DIM
+        ),
     )
-
     # --- Instance fields ----------------------------------------------------
     dot_char: str = public_field(
         default=DEFAULT_DOT_CHAR,
@@ -81,9 +81,7 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
     markers: LeaderLineMarkers = public_field(
         description="Bundle of state→marker mappings driving the right-hand cell."
     )
-    message: str = public_field(
-        description="Left-hand text — what the line describes."
-    )
+    message: str = public_field(description="Left-hand text — what the line describes.")
     state: str = public_field(
         default="pending",
         description="Current lifecycle state — one of pending/success/failure/warning/skipped.",
@@ -172,18 +170,14 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
         segments: list[PromptResponseSegment] = [
             PromptResponseSegment(text=self.message),
             PromptResponseSegment(text=" "),
-            PromptResponseSegment(
-                text=self.dot_char * dot_count, color=self.dot_color
-            ),
+            PromptResponseSegment(text=self.dot_char * dot_count, color=self.dot_color),
             PromptResponseSegment(text=" "),
             PromptResponseSegment(
                 text=marker_text, color=marker.color, styles=marker.styles
             ),
         ]
         if status_text:
-            segments.append(
-                PromptResponseSegment(text=status_text, color=marker.color)
-            )
+            segments.append(PromptResponseSegment(text=status_text, color=marker.color))
 
         self.lines = [PromptResponseLine(segments=segments)]
         rendered = super().render(context=context)

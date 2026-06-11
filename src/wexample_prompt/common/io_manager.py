@@ -50,14 +50,14 @@ from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_man
 from wexample_prompt.mixins.response.interactive.input_prompt_response_manager_mixin import (
     InputPromptResponseManagerMixin,
 )
+from wexample_prompt.mixins.response.interactive.leader_line_prompt_response_manager_mixin import (
+    LeaderLinePromptResponseManagerMixin,
+)
 from wexample_prompt.mixins.response.interactive.multiline_input_prompt_response_manager_mixin import (
     MultilineInputPromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.response.interactive.pending_prompt_response_manager_mixin import (
     PendingPromptResponseManagerMixin,
-)
-from wexample_prompt.mixins.response.interactive.leader_line_prompt_response_manager_mixin import (
-    LeaderLinePromptResponseManagerMixin,
 )
 from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import (
     ProgressPromptResponseManagerMixin,

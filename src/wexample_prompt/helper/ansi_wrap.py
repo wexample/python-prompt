@@ -31,35 +31,14 @@ _SGR_RE = re.compile(r"\x1b\[([0-9;]*)m")
 
 # Map SGR closer param → opener params it cancels.
 _SGR_CLOSERS: dict[str, frozenset[str]] = {
-    "22": frozenset({"1", "2"}),                                              # bold + dim
-    "23": frozenset({"3"}),                                                   # italic
-    "24": frozenset({"4"}),                                                   # underline
-    "27": frozenset({"7"}),                                                   # reverse
-    "29": frozenset({"9"}),                                                   # strikethrough
-    "39": frozenset(str(i) for i in (*range(30, 38), *range(90, 98))),        # default fg
-    "49": frozenset(str(i) for i in (*range(40, 48), *range(100, 108))),      # default bg
+    "22": frozenset({"1", "2"}),  # bold + dim
+    "23": frozenset({"3"}),  # italic
+    "24": frozenset({"4"}),  # underline
+    "27": frozenset({"7"}),  # reverse
+    "29": frozenset({"9"}),  # strikethrough
+    "39": frozenset(str(i) for i in (*range(30, 38), *range(90, 98))),  # default fg
+    "49": frozenset(str(i) for i in (*range(40, 48), *range(100, 108))),  # default bg
 }
-
-
-def _apply_sgr(active: list[str], params: str) -> list[str]:
-    """Fold an SGR escape's params into the running opener stack."""
-    parts = [p for p in params.split(";") if p]
-    if not parts or parts == ["0"]:
-        return []
-    out = list(active)
-    for p in parts:
-        if p == "0":
-            out = []
-        elif p in _SGR_CLOSERS:
-            cancel = _SGR_CLOSERS[p]
-            out = [a for a in out if a not in cancel]
-        else:
-            out.append(p)
-    return out
-
-
-def _emit_sgr(active: list[str]) -> str:
-    return f"\x1b[{';'.join(active)}m" if active else ""
 
 
 def ansi_aware_wrap(text: str, width: int) -> list[str]:
@@ -143,8 +122,8 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
     lines: list[str] = []
     line_chunks: list[str] = []
     line_visible = 0
-    active_state: list[str] = []         # SGR opener stack right now
-    line_start_state: list[str] = []     # SGR opener stack at start of current line
+    active_state: list[str] = []  # SGR opener stack right now
+    line_start_state: list[str] = []  # SGR opener stack at start of current line
 
     def flush_line() -> None:
         nonlocal line_chunks, line_visible, line_start_state
@@ -192,11 +171,7 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
 
         # Word longer than width: hard-split, then drain pieces onto lines.
         for sub in hard_split(atom, width):
-            sub_w = sum(
-                terminal_get_visible_width(t[1])
-                for t in sub
-                if t[0] != "sgr"
-            )
+            sub_w = sum(terminal_get_visible_width(t[1]) for t in sub if t[0] != "sgr")
             if line_visible + sub_w > width and line_visible > 0:
                 flush_line()
             line_chunks.append(atom_text(sub))
@@ -207,3 +182,24 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
         flush_line()
 
     return lines or [""]
+
+
+def _apply_sgr(active: list[str], params: str) -> list[str]:
+    """Fold an SGR escape's params into the running opener stack."""
+    parts = [p for p in params.split(";") if p]
+    if not parts or parts == ["0"]:
+        return []
+    out = list(active)
+    for p in parts:
+        if p == "0":
+            out = []
+        elif p in _SGR_CLOSERS:
+            cancel = _SGR_CLOSERS[p]
+            out = [a for a in out if a not in cancel]
+        else:
+            out.append(p)
+    return out
+
+
+def _emit_sgr(active: list[str]) -> str:
+    return f"\x1b[{';'.join(active)}m" if active else ""

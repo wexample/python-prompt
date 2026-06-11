@@ -24,10 +24,10 @@ if TYPE_CHECKING:
 class StatusMarker(BaseClass):
     """One visible cell of a leader-line state (pending/success/failure/…)."""
 
-    label: str = public_field(description="The marker text rendered after the dots.")
     color: TerminalColor | None = public_field(
         default=None, description="Optional foreground color for the marker."
     )
+    label: str = public_field(description="The marker text rendered after the dots.")
     styles: list[TextStyle] = public_field(
         factory=list,
         description="Optional ANSI text styles applied to the marker (bold, dim, …).",
@@ -44,18 +44,18 @@ class LeaderLineMarkers(BaseClass):
     to surface a "this passed but with a non-fatal note" outcome).
     """
 
+    failure: StatusMarker = public_field(description="Marker for the failure state.")
     pending: StatusMarker = public_field(
         description="Marker shown before success/failure is decided."
-    )
-    success: StatusMarker = public_field(description="Marker for the success state.")
-    failure: StatusMarker = public_field(description="Marker for the failure state.")
-    warning: StatusMarker | None = public_field(
-        default=None,
-        description="Optional marker for a non-fatal warning outcome.",
     )
     skipped: StatusMarker | None = public_field(
         default=None,
         description="Optional marker when the operation was deliberately skipped.",
+    )
+    success: StatusMarker = public_field(description="Marker for the success state.")
+    warning: StatusMarker | None = public_field(
+        default=None,
+        description="Optional marker for a non-fatal warning outcome.",
     )
 
     def get(self, state: str) -> StatusMarker:
