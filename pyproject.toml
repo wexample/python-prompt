@@ -15,7 +15,7 @@ dependencies = [
     "colorama",
     "readchar",
     "wcwidth",
-    "wexample-helpers>=13.1.0",
+    "wexample-helpers>=14.0.0",
 ]
 
 [project.readme]
