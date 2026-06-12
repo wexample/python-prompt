@@ -8,11 +8,11 @@ global:
 test:
   coverage:
     last_report:
-      covered: 3407
-      excluded: 438
-      missing: 1058
-      percent: 76.30459126539753
-      total: 4465
+      covered: 2774
+      excluded: 439
+      missing: 2883
+      percent: 49.0365918331271
+      total: 5657
 wex:
   migration: 1
   version: 6.0.112
