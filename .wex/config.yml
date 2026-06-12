@@ -4,10 +4,11 @@ domains: []
 global:
   name: prompt
   type: app
-  version: 13.1.1
+  version: 13.1.2
 test:
   coverage:
     last_report:
+      commit_hash: 580108e8ebdb8b71f2fc7481fd217519c94ef69d
       covered: 2774
       excluded: 439
       missing: 2883
