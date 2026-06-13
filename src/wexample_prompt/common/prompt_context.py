@@ -119,10 +119,10 @@ class PromptContext(BaseClass):
             width: Desired total width including indentation. When None, the context width is used.
             minimum: Lower bound for the returned value.
         """
-        target_width = self.get_width() if width is None else max(0, width)
+        context_width = self.get_width()
+        target_width = context_width if width is None else max(0, width)
 
         # Clamp explicit width to the context's effective width when available.
-        context_width = self.get_width()
         if width is not None and context_width:
             target_width = min(target_width, context_width)
 

@@ -53,10 +53,11 @@ class LeaderLineExample(AbstractResponseExample):
             LeaderLinePromptResponse,
         )
 
+        _markers = LeaderLinePromptResponse.MARKERS_PRESET_PASS_FAIL
         for name, ok in [("test_foo", True), ("test_bar", False), ("test_baz", True)]:
             handle = self.io.leader_line(
                 name,
-                markers=LeaderLinePromptResponse.MARKERS_PRESET_PASS_FAIL,
+                markers=_markers,
             ).get_handle()
             time.sleep(0.1)
             if ok:

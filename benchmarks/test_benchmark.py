@@ -184,7 +184,7 @@ def _make_echo_response(n_lines: int) -> AbstractPromptResponse:
     from wexample_prompt.responses.echo_prompt_response import EchoPromptResponse
 
     lines = PromptResponseLine.create_from_string(
-        "\n".join([f"Line {i}: some content" for i in range(n_lines)])
+        "\n".join(f"Line {i}: some content" for i in range(n_lines))
     )
     return EchoPromptResponse(lines=lines)
 

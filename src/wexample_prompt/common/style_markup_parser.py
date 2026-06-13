@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 _STYLE_DIRECTIVE_PATTERN = re.compile(
     r"@([\w🔴🟥🟠🟧🟡🟨🟢🟩🔵🟦🟣🟪🟤⚫⚪🔷🔹🔶🔸+]+)(?::([^\{\}]+))?\{", re.IGNORECASE
 )
+_TOKEN_NORMALIZE_PATTERN = re.compile(r"[^0-9A-Z_]", re.IGNORECASE)
 _EMOJI_COLOR_MAP: dict[str, TerminalColor] = {
     "🔴": TerminalColor.RED,
     "🟥": TerminalColor.RED,
@@ -168,7 +169,7 @@ def parse_style_markup(
                 updated_color = _EMOJI_COLOR_MAP[token]
                 continue
 
-            normalized = re.sub(r"[^0-9A-Z_]", "_", token, flags=re.IGNORECASE).upper()
+            normalized = _TOKEN_NORMALIZE_PATTERN.sub("_", token).upper()
 
             if normalized in TextStyle.__members__:
                 style = TextStyle[normalized]
@@ -185,7 +186,8 @@ def parse_style_markup(
     def extract_braced_content(source: str, start_index: int) -> tuple[str, int]:
         depth = 0
         i = start_index
-        while i < len(source):
+        source_len = len(source)
+        while i < source_len:
             if source[i] == "{":
                 depth += 1
             elif source[i] == "}":
@@ -236,7 +238,8 @@ def parse_style_markup(
         active_styles: list[TextStyle],
     ) -> None:
         index = 0
-        while index < len(section_text):
+        section_len = len(section_text)
+        while index < section_len:
             match = _STYLE_DIRECTIVE_PATTERN.search(section_text, index)
             if not match:
                 remaining = section_text[index:]

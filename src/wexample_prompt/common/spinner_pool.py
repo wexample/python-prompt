@@ -60,10 +60,7 @@ class Spinner(BaseClass):
 
         # Compute how many whole intervals have elapsed since we last advanced.
         elapsed = now - self._last_time
-        if self._interval <= 0:
-            steps = 1  # fallback: always advance
-        else:
-            steps = int(elapsed / self._interval)
+        steps = int(elapsed / self._interval)
 
         if steps > 0:
             self._idx = (self._idx + steps) % len(self.frames)

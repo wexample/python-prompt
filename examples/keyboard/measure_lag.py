@@ -52,7 +52,7 @@ def main() -> None:
             # Enter sequence: read tail while bytes keep coming under CAP.
             sequences += 1
             last = time.monotonic()
-            tail = "\x1b"
+            tail: list[str] = ["\x1b"]
             while True:
                 r, _, _ = select.select([sys.stdin], [], [], CAP)
                 if not r:
@@ -61,7 +61,7 @@ def main() -> None:
                 now = time.monotonic()
                 gap_ms = (now - last) * 1000.0
                 gaps_ms.append(gap_ms)
-                tail += c
+                tail.append(c)
                 last = now
                 # Stop heuristics matching input_widget.read_key()
                 if len(tail) >= 3 and tail[1] == "[" and 0x40 <= ord(c) <= 0x7E:
