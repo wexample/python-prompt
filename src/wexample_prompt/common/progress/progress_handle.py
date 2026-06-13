@@ -237,9 +237,7 @@ class ProgressHandle(BaseClass):
             if current is not None:
                 # Normalize against child total; supports percentage strings.
                 _eff_total = self._effective_total()
-                norm = ProgressPromptResponse._normalize_value(
-                    _eff_total, current
-                )
+                norm = ProgressPromptResponse._normalize_value(_eff_total, current)
                 # Map virtual position to physical position
                 if self._virtual_total is not None:
                     physical_size = float(self.range_end - self.range_start)  # type: ignore[arg-type]

@@ -90,7 +90,10 @@ class FramePromptResponse(AbstractPromptResponse):
         # 2 corners + 2*padding minimum reserved for border/padding
         max_inner = max(1, total_width - indent_width - 2 - 2 * self.padding)
 
-        inner_w = min(max((ansi_display_width(line) for line in content_lines), default=0), max_inner)
+        inner_w = min(
+            max((ansi_display_width(line) for line in content_lines), default=0),
+            max_inner,
+        )
 
         title = self.title
         if title:

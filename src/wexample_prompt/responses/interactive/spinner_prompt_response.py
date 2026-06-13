@@ -125,6 +125,7 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
     # ─── internals ───────────────────────────────────────────────────────
     def _spin_loop(self) -> None:
         import time
+
         _interval = self.interval
 
         while self._running:

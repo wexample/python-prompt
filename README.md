@@ -1,6 +1,6 @@
 # prompt
 
-Version: 13.1.3
+Version: 13.2.0
 
 Helper for your tty interactions
 
@@ -51,7 +51,7 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 - colorama: 
 - readchar: 
 - wcwidth: 
-- wexample-helpers: >=16.0.0
+- wexample-helpers: >=16.2.0
 
 ## Versioning & Compatibility Policy
 

@@ -66,7 +66,11 @@ class OutputMessageMixin:
         # Get the response class for this method
         response_types = IoManager.get_response_types()
         response_class = next(
-            (rc for rc in response_types if rc.get_snake_short_class_name() == method_name),
+            (
+                rc
+                for rc in response_types
+                if rc.get_snake_short_class_name() == method_name
+            ),
             None,
         )
 

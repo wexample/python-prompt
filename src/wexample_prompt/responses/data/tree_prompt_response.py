@@ -83,11 +83,7 @@ class TreePromptResponse(AbstractPromptResponse):
         _pipe = self.pipe_style
         for i, (key, value) in enumerate(items):
             is_last = i == last_idx
-            current_prefix = (
-                f"{_leaf}{_dash} "
-                if is_last
-                else f"{_branch}{_dash} "
-            )
+            current_prefix = f"{_leaf}{_dash} " if is_last else f"{_branch}{_dash} "
 
             # Parse key for inline formatting
             from wexample_prompt.common.style_markup_parser import flatten_style_markup
@@ -109,8 +105,6 @@ class TreePromptResponse(AbstractPromptResponse):
 
                 # Prepend prefix and tree symbols
                 all_value_segments = [
-                    PromptResponseSegment(
-                        text=f"{next_prefix}{_leaf}{_dash} "
-                    )
+                    PromptResponseSegment(text=f"{next_prefix}{_leaf}{_dash} ")
                 ] + value_segments
                 lines.append(PromptResponseLine(segments=all_value_segments))

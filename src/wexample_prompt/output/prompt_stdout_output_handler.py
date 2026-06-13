@@ -51,6 +51,8 @@ class PromptStdoutOutputHandler(AbstractPromptOutputHandler):
         cols = max(1, shutil.get_terminal_size(fallback=(80, 24)).columns)
         lines = content.split("\n")
 
-        total_rows = sum(max(1, (ansi_display_width(line) + cols - 1) // cols) for line in lines)
+        total_rows = sum(
+            max(1, (ansi_display_width(line) + cols - 1) // cols) for line in lines
+        )
 
         return "\x1b[F" + "\r\x1b[2K\x1b[1A" * (total_rows - 1) + "\r\x1b[2K\r"

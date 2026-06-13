@@ -197,7 +197,9 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         term_width = context.get_width()
 
         # Build options text in the order provided by the mapping (insertion order)
-        parts: list[tuple[str, str, str]] = [(k, v, label) for k, (v, label) in self.options.items()]
+        parts: list[tuple[str, str, str]] = [
+            (k, v, label) for k, (v, label) in self.options.items()
+        ]
 
         # Determine question lines. We do NOT adapt the box width to content; we
         # strictly use the terminal/context width as the fixed width.

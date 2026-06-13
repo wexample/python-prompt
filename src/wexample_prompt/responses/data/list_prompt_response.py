@@ -78,7 +78,7 @@ class ListPromptResponse(AbstractMessageResponse):
 
             # If the content already starts with the bullet, strip it
             if content.startswith(_bullet_prefix):
-                content = content[len(_bullet_prefix):]
+                content = content[len(_bullet_prefix) :]
 
             bullet_text = ("  " * indent_level) + _bullet_prefix
 

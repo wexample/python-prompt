@@ -113,9 +113,7 @@ class TablePromptResponse(AbstractPromptResponse):
             cell_segments = flatten_style_markup(cell, joiner=None)
 
             # Calculate actual text length (without markup and ANSI codes)
-            cell_text_length = sum(
-                len(_strip_ansi(seg.text)) for seg in cell_segments
-            )
+            cell_text_length = sum(len(_strip_ansi(seg.text)) for seg in cell_segments)
             padding = max(0, widths[i] - cell_text_length)
 
             is_last = i == last_idx
