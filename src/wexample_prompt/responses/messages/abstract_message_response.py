@@ -43,7 +43,7 @@ class AbstractMessageResponse(AbstractPromptResponse):
         # Handle message parameter
         if "message" in kwargs:
             kwargs["message"] = final_prefix + kwargs["message"]
-        elif len(args) > 0 and isinstance(args[0], str):
+        elif args and isinstance(args[0], str):
             # Handle positional message argument
             args = (final_prefix + args[0],) + args[1:]
 

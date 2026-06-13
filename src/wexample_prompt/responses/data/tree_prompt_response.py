@@ -76,12 +76,17 @@ class TreePromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         items = list(data.items())
+        last_idx = len(items) - 1
+        _leaf = self.leaf_style
+        _branch = self.branch_style
+        _dash = self.dash_style
+        _pipe = self.pipe_style
         for i, (key, value) in enumerate(items):
-            is_last = i == len(items) - 1
+            is_last = i == last_idx
             current_prefix = (
-                f"{self.leaf_style}{self.dash_style} "
+                f"{_leaf}{_dash} "
                 if is_last
-                else f"{self.branch_style}{self.dash_style} "
+                else f"{_branch}{_dash} "
             )
 
             # Parse key for inline formatting
@@ -95,18 +100,17 @@ class TreePromptResponse(AbstractPromptResponse):
             ] + key_segments
             lines.append(PromptResponseLine(segments=all_segments))
 
+            next_prefix = prefix + ("    " if is_last else f"{_pipe}   ")
             if isinstance(value, dict):
-                next_prefix = prefix + ("    " if is_last else f"{self.pipe_style}   ")
                 self._build_tree(value, next_prefix, lines)
             elif value is not None:
-                next_prefix = prefix + ("    " if is_last else f"{self.pipe_style}   ")
                 # Parse value for inline formatting
                 value_segments = flatten_style_markup(str(value), joiner=None)
 
                 # Prepend prefix and tree symbols
                 all_value_segments = [
                     PromptResponseSegment(
-                        text=f"{next_prefix}{self.leaf_style}{self.dash_style} "
+                        text=f"{next_prefix}{_leaf}{_dash} "
                     )
                 ] + value_segments
                 lines.append(PromptResponseLine(segments=all_value_segments))

@@ -41,6 +41,7 @@ _STRIKE = ("\x1b[9m", "\x1b[29m")
 _REVERSE = ("\x1b[7m", "\x1b[27m")
 
 _HEADING_BULLETS = ("█", "▓", "▒", "░", "·", "·")
+_HEADING_BULLETS_COUNT = len(_HEADING_BULLETS)
 
 
 def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
@@ -73,7 +74,7 @@ def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
         m = _RE_HEADING.match(raw)
         if m:
             level = len(m.group(1))
-            marker = _HEADING_BULLETS[min(level, len(_HEADING_BULLETS)) - 1]
+            marker = _HEADING_BULLETS[min(level, _HEADING_BULLETS_COUNT) - 1]
             label = _render_inline(m.group(2))
             if level == 1:
                 out.append(

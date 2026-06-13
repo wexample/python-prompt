@@ -41,7 +41,7 @@ class InteractiveExecutor(Executor, WithIoMethods):
                 example.execute()
 
         if self.filters and not matched:
-            tokens: Iterable[str] = self.filters or ()
+            tokens: Iterable[str] = self.filters
             filters = ", ".join(tokens)
             self.warning(message=f"No examples matched filters: {filters}")
 

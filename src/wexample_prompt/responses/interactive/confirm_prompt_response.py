@@ -117,14 +117,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
-        return (
-            self._answer == True
-            or self._answer == 1
-            or self._answer == "yes"
-            or self._answer == "yes_all"
-            or self._answer == "ok"
-            or self._answer == "continue"
-        )
+        return self._answer in {True, 1, "yes", "yes_all", "ok", "continue"}
 
     def render(self, context: PromptContext | None = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
@@ -204,9 +197,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         term_width = context.get_width()
 
         # Build options text in the order provided by the mapping (insertion order)
-        parts: list[tuple[str, str, str]] = []  # (key, value, label)
-        for k, (v, label) in self.options.items():
-            parts.append((k, v, label))
+        parts: list[tuple[str, str, str]] = [(k, v, label) for k, (v, label) in self.options.items()]
 
         # Determine question lines. We do NOT adapt the box width to content; we
         # strictly use the terminal/context width as the fixed width.
@@ -272,7 +263,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         # Options line LEFT-ALIGNED; let terminal wrap naturally. Highlight default_value if set.
         # Apply the same left padding rule: two spaces if it fits on one line; otherwise none.
         option_segments: list[PromptResponseSegment] = []
-        raw_options = " ".join([f"〔{k}: {label}〕" for k, _, label in parts])
+        raw_options = " ".join(f"〔{k}: {label}〕" for k, _, label in parts)
         o_pad = "  " if ansi_display_width(raw_options) + 2 <= box_width else ""
         if o_pad:
             option_segments.append(

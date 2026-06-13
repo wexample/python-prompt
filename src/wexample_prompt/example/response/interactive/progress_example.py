@@ -76,7 +76,7 @@ class ProgressExample(AbstractResponseExample):
 
         stages = ["Compilation", "Testing", "Packaging"]
 
-        for stage_idx, stage_name in enumerate(stages):
+        for stage_name in stages:
             self.io.indentation += 1
             stage_handle = root.create_range_handle(to_step=1, virtual_total=5)
 

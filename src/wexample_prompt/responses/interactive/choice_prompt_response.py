@@ -168,6 +168,8 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
             else self.default
         )
         printed_lines = 0  # how many lines we printed last frame
+        n_choices = len(self.choices)
+        _rkey = readchar.key
 
         while True:
             # Clear only our previous render block (not the whole screen)
@@ -203,7 +205,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 title_color = (
                     TerminalColor.LIGHT_WHITE if is_selected else TerminalColor.RESET
                 )
-                [TextStyle.BOLD] if is_selected else []
 
                 # Parse title for inline formatting
                 from wexample_prompt.common.style_markup_parser import (
@@ -267,11 +268,11 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 return
 
             key = self._read_key()
-            if key == readchar.key.UP:
-                idx = (idx - 1) % len(self.choices)
-            elif key == readchar.key.DOWN:
-                idx = (idx + 1) % len(self.choices)
-            elif key in (readchar.key.ENTER, "\r", "\n"):
+            if key == _rkey.UP:
+                idx = (idx - 1) % n_choices
+            elif key == _rkey.DOWN:
+                idx = (idx + 1) % n_choices
+            elif key in (_rkey.ENTER, "\r", "\n"):
                 selected = self.choices[idx]
                 if selected.value == ChoiceValue.ABORT:
                     if self.reset_on_finish and printed_lines > 0:
@@ -282,7 +283,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     self._partial_clear(printed_lines)
                 self._answer = selected.value
                 return
-            elif key in (readchar.key.ESC, "q", "Q"):
+            elif key in (_rkey.ESC, "q", "Q"):
                 # Quick abort with ESC or q/Q
                 if self.reset_on_finish and printed_lines > 0:
                     self._partial_clear(printed_lines)

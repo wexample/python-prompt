@@ -56,11 +56,12 @@ class TablePromptResponse(AbstractPromptResponse):
             return []
         num_columns = max(len(row) for row in rows)
         max_widths = [0] * num_columns
+        _get_visible_width = TablePromptResponse._get_visible_width
         for row in rows:
             for i in range(num_columns):
                 cell = str(row[i]) if i < len(row) else ""
                 # Use visible width instead of len()
-                visible_width = TablePromptResponse._get_visible_width(cell)
+                visible_width = _get_visible_width(cell)
                 max_widths[i] = max(max_widths[i], visible_width)
         return max_widths
 
@@ -103,6 +104,8 @@ class TablePromptResponse(AbstractPromptResponse):
         segments: list[PromptResponseSegment] = []
         if bordered:
             segments.append(PromptResponseSegment(text="│"))
+        _strip_ansi = TablePromptResponse._strip_ansi
+        last_idx = len(widths) - 1
         for i in range(len(widths)):
             cell = str(row[i]) if i < len(row) else ""
 
@@ -111,11 +114,11 @@ class TablePromptResponse(AbstractPromptResponse):
 
             # Calculate actual text length (without markup and ANSI codes)
             cell_text_length = sum(
-                len(TablePromptResponse._strip_ansi(seg.text)) for seg in cell_segments
+                len(_strip_ansi(seg.text)) for seg in cell_segments
             )
             padding = max(0, widths[i] - cell_text_length)
 
-            is_last = i == len(widths) - 1
+            is_last = i == last_idx
             # Add leading space
             segments.append(PromptResponseSegment(text=" "))
             # Add parsed cell content
@@ -137,11 +140,10 @@ class TablePromptResponse(AbstractPromptResponse):
         # Parse markup to get segments
         segments = flatten_style_markup(text, joiner=None)
         # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
-        total_width = 0
-        for seg in segments:
-            clean_text = TablePromptResponse._strip_ansi(seg.text)
-            total_width += terminal_get_visible_width(clean_text)
-        return total_width
+        return sum(
+            terminal_get_visible_width(TablePromptResponse._strip_ansi(seg.text))
+            for seg in segments
+        )
 
     @staticmethod
     def _strip_ansi(text: str) -> str:

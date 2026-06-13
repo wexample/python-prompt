@@ -151,8 +151,6 @@ class WithIoManager(BaseClass):
             inherited = parent.ensure_io_manager()
             object.__setattr__(self, "io", inherited)
             object.__setattr__(self, "_owns_io", False)
-        else:
-            object.__setattr__(self, "parent_io_handler", None)
 
     def use_io_manager(self, io: IoManager) -> IoManager:
         object.__setattr__(self, "io", io)

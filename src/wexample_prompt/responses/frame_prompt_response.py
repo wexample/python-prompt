@@ -90,8 +90,7 @@ class FramePromptResponse(AbstractPromptResponse):
         # 2 corners + 2*padding minimum reserved for border/padding
         max_inner = max(1, total_width - indent_width - 2 - 2 * self.padding)
 
-        content_widths = [ansi_display_width(line) for line in content_lines] or [0]
-        inner_w = min(max(content_widths), max_inner)
+        inner_w = min(max((ansi_display_width(line) for line in content_lines), default=0), max_inner)
 
         title = self.title
         if title:
@@ -178,11 +177,10 @@ class FramePromptResponse(AbstractPromptResponse):
                     continue
                 # Inner indentation is added by the response itself; we wrap each output
                 # line as-is so ANSI codes are preserved.
-                for sub in rendered.split("\n"):
-                    lines.append(sub)
+                lines.extend(rendered.split("\n"))
 
         if self.text is not None:
-            raw = [self.text] if isinstance(self.text, str) else list(self.text)
+            raw = [self.text] if isinstance(self.text, str) else self.text
             for item in raw:
                 lines.extend(item.split("\n"))
 

@@ -141,14 +141,14 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
                             styles=[TextStyle.BOLD],
                         )
                     )
-                for seg in q_line.segments:
-                    segs.append(
-                        PromptResponseSegment(
-                            text=seg.text,
-                            color=seg.color or TerminalColor.LIGHT_WHITE,
-                            styles=seg.styles or [TextStyle.BOLD],
-                        )
+                segs.extend(
+                    PromptResponseSegment(
+                        text=seg.text,
+                        color=seg.color or TerminalColor.LIGHT_WHITE,
+                        styles=seg.styles or [TextStyle.BOLD],
                     )
+                    for seg in q_line.segments
+                )
                 self.lines.append(PromptResponseLine(segments=segs))
 
             self._print_render(context=context)
@@ -171,4 +171,4 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         text, validated = widget.run()
         if not validated:
             return None
-        return text if text else None
+        return text or None

@@ -57,6 +57,7 @@ class ListPromptResponse(AbstractMessageResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         lines: list[PromptResponseLine] = []
+        _bullet_prefix = f"{bullet} "
 
         if title:
             from wexample_prompt.common.prompt_response_segment import (
@@ -76,10 +77,10 @@ class ListPromptResponse(AbstractMessageResponse):
                 content = content[2:]
 
             # If the content already starts with the bullet, strip it
-            if content.startswith(f"{bullet} "):
-                content = content[len(bullet) + 1 :]
+            if content.startswith(_bullet_prefix):
+                content = content[len(_bullet_prefix):]
 
-            bullet_text = ("  " * indent_level) + f"{bullet} "
+            bullet_text = ("  " * indent_level) + _bullet_prefix
 
             bullet_segment = PromptResponseSegment(text=bullet_text, color=color)
 

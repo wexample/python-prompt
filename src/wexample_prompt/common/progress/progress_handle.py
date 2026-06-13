@@ -76,9 +76,7 @@ class ProgressHandle(BaseClass):
         if self._is_child():
             # Adjust child absolute end within parent bounds
             start = int(self.range_start)  # type: ignore[arg-type]
-            parent_total = (
-                self.parent.response.total if self.parent else self.response.total
-            )
+            parent_total = self.response.total
             end = max(0, min(parent_total, start + new_total))
             # Ensure monotonicity (end >= start)
             if end < start:
@@ -157,8 +155,9 @@ class ProgressHandle(BaseClass):
             raise ValueError("Sub-range total must be >= 0")
         end = start + total
         # Clamp to parent bounds
-        start = max(0, min(self.response.total, start))
-        end = max(0, min(self.response.total, end))
+        resp_total = self.response.total
+        start = max(0, min(resp_total, start))
+        end = max(0, min(resp_total, end))
         if end < start:
             start, end = end, start
 
@@ -223,9 +222,7 @@ class ProgressHandle(BaseClass):
                 self.total = int(total)
             if to is not None:
                 # Set absolute end bound within parent
-                parent_total = (
-                    self.parent.response.total if self.parent else self.response.total
-                )
+                parent_total = self.response.total
                 new_end = max(0, min(parent_total, int(to)))
                 start = int(self.range_start)  # type: ignore[arg-type]
                 if new_end < start:
@@ -239,8 +236,9 @@ class ProgressHandle(BaseClass):
 
             if current is not None:
                 # Normalize against child total; supports percentage strings.
+                _eff_total = self._effective_total()
                 norm = ProgressPromptResponse._normalize_value(
-                    self._effective_total(), current
+                    _eff_total, current
                 )
                 # Map virtual position to physical position
                 if self._virtual_total is not None:
@@ -252,7 +250,7 @@ class ProgressHandle(BaseClass):
                         physical_progress = 0.0
                     mapped = float(self.range_start) + max(0.0, min(physical_size, physical_progress))  # type: ignore[arg-type]
                 else:
-                    mapped = float(self.range_start) + max(0, min(self._effective_total(), norm))  # type: ignore[arg-type]
+                    mapped = float(self.range_start) + max(0, min(_eff_total, norm))  # type: ignore[arg-type]
                 # Directly set absolute current on the shared response
                 self.response.current = mapped
             if label is not None:
@@ -286,18 +284,21 @@ class ProgressHandle(BaseClass):
         # Derive child-relative current from parent's absolute current
         if not self._is_child():
             return self.response.current
-        cur = max(self.range_start, min(self.range_end, self.response.current))  # type: ignore[arg-type]
+        range_start = self.range_start
+        range_end = self.range_end
+        cur = max(range_start, min(range_end, self.response.current))  # type: ignore[arg-type]
         # Map physical position to virtual position
-        physical_progress = cur - float(self.range_start)  # type: ignore[arg-type]
-        physical_size = float(self.range_end - self.range_start)  # type: ignore[arg-type]
+        physical_progress = cur - float(range_start)  # type: ignore[arg-type]
+        physical_size = float(range_end - range_start)  # type: ignore[arg-type]
         if physical_size == 0:
             return 0.0
         # If virtual total is set, scale the progress
-        if self._virtual_total is not None:
-            virtual_progress = physical_progress * self._virtual_total / physical_size
+        _vt = self._virtual_total
+        if _vt is not None:
+            virtual_progress = physical_progress * _vt / physical_size
             # Round to avoid floating point accumulation errors
             virtual_progress = round(virtual_progress, 10)
-            return max(0.0, min(float(self._virtual_total), virtual_progress))
+            return max(0.0, min(float(_vt), virtual_progress))
         return max(0.0, min(float(self._effective_total()), physical_progress))
 
     def _effective_total(self) -> int:

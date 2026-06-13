@@ -73,8 +73,7 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         if not getattr(self, "_running", False):
             return
         with self._lock:
-            sys.stdout.write("\r\x1b[2K")
-            sys.stdout.write(f"{line}\n")
+            sys.stdout.write(f"\r\x1b[2K{line}\n")
             sys.stdout.flush()
             self._draw()
 
@@ -126,9 +125,10 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
     # ─── internals ───────────────────────────────────────────────────────
     def _spin_loop(self) -> None:
         import time
+        _interval = self.interval
 
         while self._running:
-            time.sleep(self.interval)
+            time.sleep(_interval)
             if not self._running:
                 break
             with self._lock:

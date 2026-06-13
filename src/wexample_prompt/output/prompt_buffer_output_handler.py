@@ -39,7 +39,7 @@ class PromptBufferOutputHandler(AbstractPromptOutputHandler):
 
     @property
     def rendered_str(self) -> str:
-        return "".join([str(s) for s in self._buffer_rendered])
+        return "".join(str(s) for s in self._buffer_rendered)
 
     @property
     def responses(self) -> list[AbstractPromptResponse]:

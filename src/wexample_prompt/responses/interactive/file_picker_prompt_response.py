@@ -56,14 +56,16 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         # Build mapping with ".." first, then folders (with icon), then files
         dirs: dict[str, str] = {}
         files: dict[str, str] = {}
+        include_dirs = mode in (FilePickerMode.BOTH, FilePickerMode.DIRS)
+        include_files = mode in (FilePickerMode.BOTH, FilePickerMode.FILES)
         try:
             for element in os.listdir(base):
                 full_path = os.path.join(base, element)
                 if os.path.isdir(full_path):
-                    if mode in (FilePickerMode.BOTH, FilePickerMode.DIRS):
+                    if include_dirs:
                         dirs[element] = f"📁 {element}"
                 else:
-                    if mode in (FilePickerMode.BOTH, FilePickerMode.FILES):
+                    if include_files:
                         files[element] = element
         except Exception:
             pass

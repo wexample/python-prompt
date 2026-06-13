@@ -86,7 +86,7 @@ class CodePromptResponse(AbstractPromptResponse):
                 PromptResponseLine(
                     segments=[
                         PromptResponseSegment(
-                            text=f"{self.language}",
+                            text=self.language,
                             color=TerminalColor.LIGHT_BLACK,
                             styles=[TextStyle.DIM],
                         ),

@@ -42,15 +42,12 @@ class ErrorPromptResponse(AbstractMessageResponse):
                 PromptResponseSegment,
             )
 
-            header_text = (
-                message
-                if (message is not None and message != "")
-                else "An error occurred"
-            )
+            header_text = message if message else "An error occurred"
 
             # First line: symbol + header in red
             # Parse header_text to support color markups like @color:magenta+bold{...}
             effective_symbol = symbol or cls.SYMBOL
+            effective_color = color or TerminalColor.RED
 
             # Parse the header text to extract color/style markups
             from wexample_prompt.common.style_markup_parser import flatten_style_markup
@@ -59,13 +56,13 @@ class ErrorPromptResponse(AbstractMessageResponse):
             if effective_symbol:
                 header_segments.append(
                     PromptResponseSegment(
-                        text=f"{effective_symbol} ", color=(color or TerminalColor.RED)
+                        text=f"{effective_symbol} ", color=effective_color
                     )
                 )
 
             # Parse header text with markup support, using default color if no markup specified
             parsed_segments = flatten_style_markup(
-                header_text, default_color=(color or TerminalColor.RED), joiner=None
+                header_text, default_color=effective_color, joiner=None
             )
             header_segments.extend(parsed_segments)
 
@@ -79,11 +76,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
             return cls._create(lines=lines, verbosity=verbosity)
 
         else:
-            text = (
-                message
-                if (message is not None and message != "")
-                else "An error occurred"
-            )
+            text = message if message else "An error occurred"
             return cls._create_symbol_message(
                 text=text, color=(color or TerminalColor.RED), verbosity=verbosity
             )

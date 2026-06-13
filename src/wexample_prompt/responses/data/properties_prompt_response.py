@@ -110,7 +110,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             wrap_width = max(1, max_inner_width - prefix_visible)
             indent = " " * prefix_visible
 
-            value_paragraphs = value.split("\n") or [""]
+            value_paragraphs = value.split("\n")
             is_first_segment = True
 
             for paragraph in value_paragraphs:

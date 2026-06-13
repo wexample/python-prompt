@@ -92,7 +92,7 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
         return terminal_get_visible_width(atom_text(atom))
 
     def atom_update(atom: list[tuple], state: list[str]) -> list[str]:
-        s = list(state)
+        s = state
         for t in atom:
             if t[0] == "sgr":
                 s = _apply_sgr(s, t[2])
@@ -135,7 +135,8 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
         line_start_state = list(active_state)
 
     for atom in atoms:
-        atom_w = atom_visible(atom)
+        raw = atom_text(atom)
+        atom_w = terminal_get_visible_width(raw)
         is_space = atom[0][0] == "space"
 
         if is_space:
@@ -149,13 +150,13 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
                 # End-of-line trailing space: drop it, flush.
                 flush_line()
                 continue
-            line_chunks.append(atom_text(atom))
+            line_chunks.append(raw)
             line_visible += atom_w
             continue
 
         # Word atom — may include SGR codes.
         if atom_w <= width and line_visible + atom_w <= width:
-            line_chunks.append(atom_text(atom))
+            line_chunks.append(raw)
             line_visible += atom_w
             active_state = atom_update(atom, active_state)
             continue
@@ -164,7 +165,7 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
             # Whole word fits on a new line — flush current then place.
             if line_visible > 0:
                 flush_line()
-            line_chunks.append(atom_text(atom))
+            line_chunks.append(raw)
             line_visible += atom_w
             active_state = atom_update(atom, active_state)
             continue

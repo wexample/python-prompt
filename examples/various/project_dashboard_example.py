@@ -51,7 +51,7 @@ class ProjectDashboardExample(InteractiveExample):
             return {
                 "branch": branch,
                 "remote": remote,
-                "clean": len(status) == 0,
+                "clean": not status,
                 "changes": len(status.split("\n")) if status else 0
             }
         except (subprocess.CalledProcessError, FileNotFoundError):
@@ -64,7 +64,7 @@ class ProjectDashboardExample(InteractiveExample):
     
     def _count_files(self, pattern: str) -> int:
         """Count files matching a pattern."""
-        return len(list(self.project_path.rglob(pattern)))
+        return sum(1 for _ in self.project_path.rglob(pattern))
     
     def _get_coverage(self) -> int:
         """Get test coverage percentage (simulated for demo)."""
@@ -112,7 +112,7 @@ class ProjectDashboardExample(InteractiveExample):
         
         # Count various file types
         test_count = self._count_files("test_*.py")
-        example_count = len(list((self.project_path / "examples").rglob("*.py"))) if (self.project_path / "examples").exists() else 0
+        example_count = sum(1 for _ in (self.project_path / "examples").rglob("*.py")) if (self.project_path / "examples").exists() else 0
         src_count = self._count_files("*.py")
         coverage = self._get_coverage()
         

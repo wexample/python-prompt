@@ -110,7 +110,7 @@ class CommandPromptResponse(AbstractPromptResponse):
 
         # Output: indent 2 spaces, render dim/gray. Empty output is skipped.
         if self.output is not None:
-            raw = [self.output] if isinstance(self.output, str) else list(self.output)
+            raw = [self.output] if isinstance(self.output, str) else self.output
             for chunk in raw:
                 for sub in chunk.split("\n"):
                     out_lines = PromptResponseLine.create_from_string(

@@ -37,7 +37,7 @@ class EchoPromptResponse(AbstractPromptResponse):
         # Handle message parameter
         if "message" in kwargs:
             kwargs["message"] = prefix + kwargs["message"]
-        elif len(args) > 0 and isinstance(args[0], str):
+        elif args and isinstance(args[0], str):
             # Handle positional message argument
             args = (prefix + args[0],) + args[1:]
 

@@ -97,7 +97,7 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         self._closed = True
 
     def print(self, text: str) -> None:
-        self._io_buffer.append_rendered(str(text))
+        self._io_buffer.append_rendered(text)
 
     def reload(self) -> None:
         self._reload_requested = True
@@ -133,6 +133,8 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             raise e
 
         last_draw = time.monotonic()
+        _min_refresh = self.min_refresh_interval
+        _poll_interval = self.poll_interval
 
         while True:
             # Clear previous frame area
@@ -163,10 +165,10 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             #     poll_interval as safety fallback.
             if not self._reload_requested and not self._closed:
                 elapsed = time.monotonic() - last_draw
-                gap = self.min_refresh_interval - elapsed
+                gap = _min_refresh - elapsed
                 if gap > 0:
                     time.sleep(gap)
-                self._tick_event.wait(timeout=self.poll_interval)
+                self._tick_event.wait(timeout=_poll_interval)
                 self._tick_event.clear()
 
             self._render_buffer()
@@ -192,8 +194,9 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         # Consume buffered output as a single string, split into lines
         rendered = self._io_buffer.flush()
         # Normalize to lines
-        for raw_line in rendered:
-            if raw_line is None:
-                continue
-            for line in PromptResponseLine.create_from_string(raw_line):
-                self.lines.append(line)
+        self.lines.extend(
+            line
+            for raw_line in rendered
+            if raw_line is not None
+            for line in PromptResponseLine.create_from_string(raw_line)
+        )

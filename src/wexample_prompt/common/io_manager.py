@@ -323,7 +323,7 @@ class IoManager(
         base_indentation_length = (
             context_kwargs.get("indentation_length") or self.indentation_length
         )
-        base_indentation = context_kwargs.get("indentation") or 0
+        base_indentation = context_kwargs.get("indentation", 0)
         total_indentation = base_indentation + self.indentation
 
         context_kwargs["colorized"] = base_context.colorized

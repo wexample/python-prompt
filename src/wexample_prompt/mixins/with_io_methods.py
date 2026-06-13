@@ -29,7 +29,7 @@ class WithIoMethods(WithIoManager):
             if callable(attr):
 
                 def wrapper(*args, **kwargs):
-                    if "context" not in kwargs or kwargs["context"] is None:
+                    if kwargs.get("context") is None:
                         kwargs["context"] = self.create_io_context()
 
                     if kwargs.pop("prefix", False):

@@ -195,11 +195,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
             empty = 0
 
         # Build plain bar text (ANSI will be applied by segment color handling, after splitting)
-        bar_text = (
-            f"{self.FILL_CHAR * filled}{self.EMPTY_CHAR * empty}"
-            if bar_width > 0
-            else ""
-        )
+        bar_text = f"{self.FILL_CHAR * filled}{self.EMPTY_CHAR * empty}"
 
         segments = []
         if label_segments:

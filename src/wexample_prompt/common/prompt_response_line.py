@@ -32,13 +32,12 @@ class PromptResponseLine(BaseClass):
         """
         from wexample_prompt.common.style_markup_parser import parse_style_markup
 
-        raw_inputs = [text] if isinstance(text, str) else list(text)
-        lines: list[PromptResponseLine] = []
-        for raw in raw_inputs:
-            for segments in parse_style_markup(raw, default_color=color):
-                lines.append(cls(segments=segments))
-
-        return lines
+        raw_inputs = [text] if isinstance(text, str) else text
+        return [
+            cls(segments=segments)
+            for raw in raw_inputs
+            for segments in parse_style_markup(raw, default_color=color)
+        ]
 
     def render(self, context: PromptContext) -> str:
         """Render the line within the context width, wrapping segments as needed.
@@ -66,20 +65,11 @@ class PromptResponseLine(BaseClass):
 
     def _render_no_formatting(self, context: PromptContext, indentation: str) -> str:
         """Render all segments on a single line, without wrapping."""
-        rendered_segments = []
-        for seg in self.segments:
-            # Provide a very large remaining width to avoid splitting segments
-            rendered, _ = seg.render(context, line_remaining_width=10**9)
-            rendered_segments.append(rendered)
-        return f"{indentation}{''.join(rendered_segments)}"
+        return f"{indentation}{''.join(seg.render(context, line_remaining_width=10**9)[0] for seg in self.segments)}"
 
     def _render_unbounded(self, context: PromptContext, indentation: str) -> str:
         """Render without width restriction (no wrapping)."""
-        rendered_segments = []
-        for seg in self.segments:
-            rendered, _ = seg.render(context, line_remaining_width=10**9)
-            rendered_segments.append(rendered)
-        return f"{indentation}{''.join(rendered_segments)}"
+        return f"{indentation}{''.join(seg.render(context, line_remaining_width=10**9)[0] for seg in self.segments)}"
 
     def _render_wrapped(
         self, context: PromptContext, indentation: str, max_content_width: int

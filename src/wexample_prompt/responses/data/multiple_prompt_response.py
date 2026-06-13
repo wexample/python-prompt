@@ -85,11 +85,11 @@ class MultiplePromptResponse(AbstractPromptResponse):
         if not self._verbosity_context_allows_display(context=context):
             return None
 
-        rendered_parts: list[str] = []
-        for response in self.responses:
-            part = response.render(context=context)
-            if part is not None:
-                rendered_parts.append(part)
+        rendered_parts = [
+            part
+            for response in self.responses
+            if (part := response.render(context=context)) is not None
+        ]
 
         self._rendered_content = "\n".join(rendered_parts) if rendered_parts else None
         return self._rendered_content

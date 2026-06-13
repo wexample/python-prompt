@@ -27,8 +27,9 @@ def terminal_get_visible_width(text: str) -> int:
     # In that case, fall back to character-by-character calculation
     if width == -1:
         width = 0
+        _wcwidth = wcwidth.wcwidth
         for char in text:
-            char_width = wcwidth.wcwidth(char)
+            char_width = _wcwidth(char)
             # wcwidth returns -1 for control characters, treat as 0
             if char_width == -1:
                 char_width = 0

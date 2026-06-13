@@ -177,7 +177,7 @@ class InputWidget:
 
         info_rows: list[str] = []
         if self.bordered:
-            write(f"{BAR_CHAR * self.width}\r\n")
+            write(f"{bar}\r\n")
             info_rows = self._info_rows()
             for j, info_line in enumerate(info_rows):
                 if j == len(info_rows) - 1:
@@ -296,9 +296,9 @@ class InputWidget:
                     chunk = chunk_bytes.decode("utf-8", errors="replace")
                     for c in chunk:
                         _record_byte(c)
-                        buffer += c
                         if c == "\x1b" and esc_seq_started_at is None:
                             esc_seq_started_at = _t.monotonic()
+                    buffer += chunk
 
             while True:
                 if self._needs_resize:
@@ -516,8 +516,8 @@ class InputWidget:
                 )
                 visible = matches[: self.COMPLETION_MAX_ROWS]
                 name_w = max(display_width(n) for n, _ in visible)
+                pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
                 for i, (name, desc) in enumerate(visible):
-                    pad = " " * max(2, 30 - name_w)  # at least 2 spaces gutter
                     line_raw = f"{name}{pad}{desc}"
                     # Truncate to fit terminal width (no wrap inside completion list).
                     if display_width(line_raw) > self.width:
@@ -562,8 +562,9 @@ class InputWidget:
             target_line = lines[target]
             offset = 0
             acc = 0
+            _dw = display_width
             for ch in target_line:
-                w = display_width(ch)
+                w = _dw(ch)
                 if acc + w > col:
                     break
                 acc += w
@@ -633,7 +634,7 @@ class InputWidget:
         # CSI (\x1b[) or SS3 (\x1bO): scan for the final byte (0x40..0x7E).
         for i in range(2, len(buf)):
             c = buf[i]
-            if 0x40 <= ord(c) <= 0x7E:
+            if "\x40" <= c <= "\x7e":
                 return buf[: i + 1], i + 1
 
         # Incomplete CSI/SS3.

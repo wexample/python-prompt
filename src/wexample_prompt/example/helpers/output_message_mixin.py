@@ -65,12 +65,10 @@ class OutputMessageMixin:
 
         # Get the response class for this method
         response_types = IoManager.get_response_types()
-        response_class = None
-
-        for resp_class in response_types:
-            if resp_class.get_snake_short_class_name() == method_name:
-                response_class = resp_class
-                break
+        response_class = next(
+            (rc for rc in response_types if rc.get_snake_short_class_name() == method_name),
+            None,
+        )
 
         if not response_class:
             # Fallback: try to call the method directly

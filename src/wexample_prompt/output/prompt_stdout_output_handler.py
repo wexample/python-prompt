@@ -51,19 +51,6 @@ class PromptStdoutOutputHandler(AbstractPromptOutputHandler):
         cols = max(1, shutil.get_terminal_size(fallback=(80, 24)).columns)
         lines = content.split("\n")
 
-        total_rows = 0
-        for line in lines:
-            w = ansi_display_width(line)
-            rows = max(1, (w + cols - 1) // cols)
-            total_rows += rows
+        total_rows = sum(max(1, (ansi_display_width(line) + cols - 1) // cols) for line in lines)
 
-        parts: list[str] = []
-        # Move cursor up from the trailing newline printed by print().
-        parts.append("\x1b[F")
-        for i in range(total_rows):
-            parts.append("\r\x1b[2K")  # Clear entire line
-            if i < total_rows - 1:
-                parts.append("\x1b[1A")  # Move up one visual row
-
-        parts.append("\r")
-        return "".join(parts)
+        return "\x1b[F" + "\r\x1b[2K\x1b[1A" * (total_rows - 1) + "\r\x1b[2K\r"

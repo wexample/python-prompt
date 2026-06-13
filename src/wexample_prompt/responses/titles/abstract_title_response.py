@@ -142,8 +142,9 @@ class AbstractTitleResponse(AbstractMessageResponse):
 
         # Calculate width of all segments except fill
         # (prefix + all text segments, which may be multiple if markup was parsed)
+        _fill_segment = self.fill_segment
         for segment in self.lines[0].segments:
-            if segment is not self.fill_segment:
+            if segment is not _fill_segment:
                 remaining -= terminal_get_visible_width(segment.text)
 
         target_width = max(0, remaining)

@@ -106,7 +106,6 @@ class InputPromptResponse(AbstractInteractivePromptResponse):
         self._print_render(context=context)
 
         # Build the inline prompt string for input().
-        prompt_str = ""
         if self.default_value is not None:
             prompt_str = f"  [{self.default_value}] "
         else:

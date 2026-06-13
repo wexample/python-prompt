@@ -54,12 +54,11 @@ class FilePickerExample(AbstractResponseExample):
         """File picker in specific directory."""
         import os
 
+        _tmp_files = os.listdir("/tmp")
         self.io.file_picker(
             question="Select from /tmp:",
             base_dir="/tmp",
-            predefined_answer=(
-                os.listdir("/tmp")[0] if os.listdir("/tmp") else "file.txt"
-            ),
+            predefined_answer=_tmp_files[0] if _tmp_files else "file.txt",
         )
 
     def example_with_emojis(self) -> None:
