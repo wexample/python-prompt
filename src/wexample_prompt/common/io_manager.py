@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.base_class import BaseClass
@@ -390,8 +391,6 @@ class IoManager(
         context: PromptContext | None = None,
         frame: str | bool | None = None,
     ) -> AbstractPromptResponse:
-        import time
-
         # `frame=` shortcut: wrap any response in a FramePromptResponse before
         # printing. `True` → untitled cartouche, str → titled cartouche. Saves
         # callers from building Frame(responses=[...]) by hand for the common
