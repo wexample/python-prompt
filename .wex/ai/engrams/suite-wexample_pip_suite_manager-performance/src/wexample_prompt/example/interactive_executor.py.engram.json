@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/example/interactive_executor.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:45:54+00:00",
+  "last_rev": "4e524d607b55d26d9aea4c37c6aaa325e0eed17b",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "executor scaffolding; one-shot init and human-paced example loop, no redundant work in any hot path",
+  "in_progress": null
+}
