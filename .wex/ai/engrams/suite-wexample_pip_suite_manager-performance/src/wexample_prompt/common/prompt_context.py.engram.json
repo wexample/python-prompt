@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/prompt_context.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:40:28+00:00",
+  "last_rev": "e4b17313d134f04e8ec0b565b9586df2e6dbd0cb",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "pure data-model with thin rendering helpers; all calls are human-speed, no redundant work in any hot path",
+  "in_progress": null
+}
