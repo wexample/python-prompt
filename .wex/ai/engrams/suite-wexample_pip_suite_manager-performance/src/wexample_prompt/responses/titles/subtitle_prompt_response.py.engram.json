@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/titles/subtitle_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:43:48+00:00",
+  "last_rev": "4a01e6599e27868e9abe7bb58bdd612728cb98a5",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed redundant runtime import of VerbosityLevel; TYPE_CHECKING guard already covers it under PEP 563",
+  "in_progress": null
+}
