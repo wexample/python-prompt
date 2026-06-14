@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/data/properties_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:16:24+00:00",
+  "last_rev": "8cab51e1d842e5aa760d64cc25877209cf8b58dd",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "cached self.properties/self.title in render, hoisted _fmt alias in _format_properties, replaced max() with if-branch in scan_keys",
+  "in_progress": null
+}

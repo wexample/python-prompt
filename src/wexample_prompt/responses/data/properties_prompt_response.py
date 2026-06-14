@@ -64,13 +64,12 @@ class PropertiesPromptResponse(AbstractPromptResponse):
     ) -> list[str]:
         lines: list[str] = []
         indent_str = " " * current_indent
+        _fmt = PropertiesPromptResponse._format_properties  # cache: avoids module-global lookup on each recursive call
         for key, value in properties.items():
             if isinstance(value, dict):
                 lines.append(f"{indent_str}{str(key)}:")
                 lines.extend(
-                    PropertiesPromptResponse._format_properties(
-                        value, key_width, indent, current_indent + indent
-                    )
+                    _fmt(value, key_width, indent, current_indent + indent)
                 )
             else:
                 key_str = str(key).ljust(key_width)
@@ -132,7 +131,8 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
-        if not self.properties:
+        properties = self.properties
+        if not properties:
             return ""
 
         context = PromptContext.create_if_none(context=context)
@@ -142,17 +142,20 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         def scan_keys(obj: dict[str, Any]) -> None:
             nonlocal max_key_width
             for k, v in obj.items():
-                max_key_width = max(max_key_width, len(str(k)))
+                key_len = len(str(k))
+                if key_len > max_key_width:  # avoids max() call overhead per key
+                    max_key_width = key_len
                 if isinstance(v, dict):
                     scan_keys(v)
 
-        scan_keys(self.properties)
+        scan_keys(properties)
 
         content_lines = self._format_properties(
-            self.properties, max_key_width, self.nested_indent
+            properties, max_key_width, self.nested_indent
         )
 
         bordered = context.bordered
+        title = self.title  # cache: accessed 7× below across bordered and naked paths
 
         # Cap content to terminal width so the box never overflows. The full
         # cartouche occupies `inner_width + 4` columns (│ + space + content +
@@ -186,7 +189,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             # full terminal width — visually consistent with the table cartouche.
             max_content = max(content_visible_widths, default=0)
             # Title needs "╭─ <title> ─╮" = 4 extra chars beyond title length.
-            title_min = (len(self.title) + 4) if self.title else 0
+            title_min = (len(title) + 4) if title else 0
             inner_width = max(max_content, title_min, 1)
             if max_inner_width:
                 inner_width = min(inner_width, max_inner_width)
@@ -196,14 +199,14 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             # Leading blank for visual separation (consistent with table).
             lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
 
-            if self.title:
+            if title:
                 # ╭─ Title ─…─╮ : 3 chars consumed by "╭─ " + " ", rest is fill before ╮.
-                fill = max(0, box_width - 3 - len(self.title))
+                fill = max(0, box_width - 3 - len(title))
                 lines.append(
                     PromptResponseLine(
                         segments=[
                             PromptResponseSegment(
-                                text=f"╭─ {self.title} {'─' * fill}╮"
+                                text=f"╭─ {title} {'─' * fill}╮"
                             )
                         ]
                     )
@@ -237,10 +240,10 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         else:
             # Naked mode: no box at all (used when wrapped in a frame, which
             # already provides its own cartouche).
-            if self.title:
+            if title:
                 lines.append(
                     PromptResponseLine(
-                        segments=[PromptResponseSegment(text=self.title)]
+                        segments=[PromptResponseSegment(text=title)]
                     )
                 )
             for content_segments in flattened:
