@@ -18,8 +18,9 @@ class AbstractPromptMessageResponseTest(AbstractPromptResponseTest):
     # Common tests for all message-type responses
     def test_single_line_by_default(self) -> None:
         """Message responses are typically single-line; if expected is 1, ensure no extra newlines."""
+        if self.get_expected_lines() != 1:
+            return
         response = self._create_test_response({"message": self._test_message})
         rendered = response.render()
-        if self.get_expected_lines() == 1:
-            # No newline characters expected for single-line messages
-            self.assertNotIn("\n", rendered)
+        # No newline characters expected for single-line messages
+        self.assertNotIn("\n", rendered)
