@@ -88,18 +88,27 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
         context = PromptContext.create_if_none(context=context)
         printed_lines = 0
 
-        while True:
-            is_ready, output_lines = self.callback()
+        # Hoist repeated attribute lookups and shared-pool call out of the loop.
+        _callback = self.callback
+        _label = self.label
+        _max_lines = self.max_lines
+        _output_color = self.output_color
+        _interval = self.interval
+        _spinner_key = self.SPINNER_KEY
+        _spinner_pool = SpinnerPool.shared()
 
-            spinner_frame = SpinnerPool.shared().next(key=self.SPINNER_KEY)
+        while True:
+            is_ready, output_lines = _callback()
+
+            spinner_frame = _spinner_pool.next(key=_spinner_key)
             self.lines = [
                 PromptResponseLine(
                     segments=[
-                        PromptResponseSegment(text=f"{spinner_frame} {self.label}")
+                        PromptResponseSegment(text=f"{spinner_frame} {_label}")
                     ]
                 )
             ]
-            for raw_line in output_lines[-self.max_lines :]:
+            for raw_line in output_lines[-_max_lines:]:
                 stripped = raw_line.rstrip()
                 if stripped:
                     self.lines.append(
@@ -107,7 +116,7 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
                             segments=[
                                 PromptResponseSegment(
                                     text=f"  {stripped}",
-                                    color=self.output_color,
+                                    color=_output_color,
                                 )
                             ]
                         )
@@ -121,4 +130,4 @@ class PendingPromptResponse(AbstractInteractivePromptResponse):
                     self._partial_clear(printed_lines)
                 return None
 
-            time.sleep(self.interval)
+            time.sleep(_interval)

@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/pending_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:30:21+00:00",
+  "last_rev": "a6855e880ad3d1a28d043eb58072c0c8de8ebef8",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted 6 attribute lookups and SpinnerPool.shared() call out of while-True poll loop in render()",
+  "in_progress": null
+}
