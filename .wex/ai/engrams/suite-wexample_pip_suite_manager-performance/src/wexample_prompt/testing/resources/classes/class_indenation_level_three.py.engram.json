@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/resources/classes/class_indenation_level_three.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:51:46+00:00",
+  "last_rev": "afa6156dd7ce5b19062ae849f0c1addaf52d38cc",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "testing resource with no hot paths; imports and context objects already used optimally",
+  "in_progress": null
+}
