@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/output/prompt_stdout_output_handler.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:11:09+00:00",
+  "last_rev": "772ce8da358a7c6a6a0db80e0c932630037c59f0",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "human-speed stdout output; sys.stdout double-lookup and tuple allocation are negligible outside tight loops",
+  "in_progress": null
+}
