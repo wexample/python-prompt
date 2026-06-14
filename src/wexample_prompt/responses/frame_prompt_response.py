@@ -104,23 +104,26 @@ class FramePromptResponse(AbstractPromptResponse):
 
         horiz_w = inner_w + 2 * self.padding
 
+        _border_color = self.border_color
         colorize = (
-            (lambda s: ColorManager.colorize(s, color=self.border_color))
-            if context.colorized and self.border_color
+            (lambda s: ColorManager.colorize(s, color=_border_color))
+            if context.colorized and _border_color
             else (lambda s: s)
         )
 
         indent = context.render_indentation()
+        pad_str = " " * self.padding
 
         out_lines: list[str] = []
         out_lines.append(indent + colorize(self._build_top(horiz_w)))
-        for line in content_lines:
+        if content_lines:
+            for line in content_lines:
+                out_lines.append(
+                    indent + self._build_middle(line, inner_w, colorize, ansi_display_width, pad_str)
+                )
+        else:
             out_lines.append(
-                indent + self._build_middle(line, inner_w, colorize, ansi_display_width)
-            )
-        if not content_lines:
-            out_lines.append(
-                indent + self._build_middle("", inner_w, colorize, ansi_display_width)
+                indent + self._build_middle("", inner_w, colorize, ansi_display_width, pad_str)
             )
         out_lines.append(indent + colorize(self._build_bottom(horiz_w)))
 
@@ -148,7 +151,10 @@ class FramePromptResponse(AbstractPromptResponse):
         inner_w: int,
         colorize,
         width_fn,
+        pad: str | None = None,
     ) -> str:
+        if pad is None:
+            pad = " " * self.padding
         visible = width_fn(line)
         if visible > inner_w:
             from wexample_helpers.helpers.ansi import ansi_truncate_visible
@@ -156,7 +162,6 @@ class FramePromptResponse(AbstractPromptResponse):
             line = ansi_truncate_visible(line, inner_w)
             visible = inner_w
         pad_right = inner_w - visible
-        pad = " " * self.padding
         return colorize("│") + pad + line + (" " * pad_right) + pad + colorize("│")
 
     def _build_top(self, horiz_w: int) -> str:

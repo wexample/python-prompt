@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/frame_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:22:31+00:00",
+  "last_rev": "f574fc4417439d2677c6fccf40aaf84c6d6ebe98",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted border_color attr lookup and pad string alloc out of per-line loop; restructured post-loop empty-check to if/for/else",
+  "in_progress": null
+}
