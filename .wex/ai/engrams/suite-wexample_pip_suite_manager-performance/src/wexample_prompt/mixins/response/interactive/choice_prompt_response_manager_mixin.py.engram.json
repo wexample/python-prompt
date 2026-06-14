@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/response/interactive/choice_prompt_response_manager_mixin.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:04:23+00:00",
+  "last_rev": "ab53c263a7405a8f8fad12b0b96c2383ce0c67aa",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "single thin manager method; no logic, no hot paths, nothing to optimize",
+  "in_progress": null
+}
