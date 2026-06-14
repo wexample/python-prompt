@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/data/suggestions_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:18:09+00:00",
+  "last_rev": "0164c4a7852dc4ac31b647f456dd974161cc7a5f",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed duplicate VerbosityLevel TYPE_CHECKING import; replaced list concat with unpack spread in suggestion segments hot path",
+  "in_progress": null
+}

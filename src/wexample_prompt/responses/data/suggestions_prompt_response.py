@@ -11,7 +11,6 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -60,7 +59,7 @@ class SuggestionsPromptResponse(AbstractPromptResponse):
                         seg.styles.append(TextStyle.BOLD)
 
                 lines.append(
-                    PromptResponseLine(segments=[arrow_segment] + sline.segments)
+                    PromptResponseLine(segments=[arrow_segment, *sline.segments])
                 )
 
         # Bottom spacer
