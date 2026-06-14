@@ -95,7 +95,7 @@ class PromptResponseLine(BaseClass):
                 remaining -= self._visible_len(rendered)
                 carry_over = remainder
 
-            if remaining <= 0 or (carry_over is not None and remaining == 0):
+            if remaining <= 0:
                 lines.append(f"{indentation}{current_line}")
                 current_line = ""
                 remaining = max_content_width

@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/prompt_response_line.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:41:23+00:00",
+  "last_rev": "ce14f6e480ce0de054a65e05407383026646f1e8",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "drop redundant disjunct in _render_wrapped wrap-boundary check; remaining==0 is already covered by remaining<=0",
+  "in_progress": null
+}
