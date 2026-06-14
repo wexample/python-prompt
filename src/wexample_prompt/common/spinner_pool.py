@@ -40,8 +40,6 @@ class Spinner(BaseClass):
         from wexample_prompt.const.spinners import DEFAULT_SPINNER_FRAMES
 
         self.frames: list[str] = list(self.frames or DEFAULT_SPINNER_FRAMES)
-        if not self.frames:
-            self.frames = list(DEFAULT_SPINNER_FRAMES)
         self._idx: int = 0
         # Minimum time between frame advances (seconds).
         self._interval: float = max(0.0, float(self.interval)) or 0.2

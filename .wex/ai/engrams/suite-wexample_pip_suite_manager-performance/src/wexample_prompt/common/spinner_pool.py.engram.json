@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/spinner_pool.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:42:41+00:00",
+  "last_rev": "1ee940add48d2268d6c55b0370c0d1d256d0d2c7",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "drop dead `if not self.frames` guard in __attrs_post_init__; the `or DEFAULT_SPINNER_FRAMES` on the preceding line already covers the empty-frames case",
+  "in_progress": null
+}
