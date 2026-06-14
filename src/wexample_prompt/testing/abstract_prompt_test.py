@@ -24,7 +24,7 @@ class AbstractPromptTest(unittest.TestCase):
     _io: IoManager
     __test__ = False  # Prevent pytest from discovering this abstract class
     _test_message: str = "Test message"
-    _test_message_multiline: str = "\n".join(["Line 1", "Line 2", "Line 3"])
+    _test_message_multiline: str = "Line 1\nLine 2\nLine 3"
 
     def setUp(self) -> None:
         """Set up common test fixtures."""
@@ -39,7 +39,7 @@ class AbstractPromptTest(unittest.TestCase):
     def _assert_rendered_lines_count(
         self, response: AbstractPromptResponse, lines_count: int
     ) -> None:
-        assert len(response.rendered_content.split("\n")) == lines_count
+        assert response.rendered_content.count("\n") + 1 == lines_count
 
     def _asset_response_render_is_multiline(
         self, response: AbstractPromptResponse

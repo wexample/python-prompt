@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/abstract_prompt_test.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:46:27+00:00",
+  "last_rev": "6ebe6138c08775c7ecf4688fbd8ed5a542457b30",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "replaced list-join class constant with string literal; replaced split+len with count+1 to avoid list allocation",
+  "in_progress": null
+}
