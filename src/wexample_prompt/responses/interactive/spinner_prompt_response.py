@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import sys
+import threading
+import time
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.field import public_field
@@ -40,6 +43,9 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         spinner.stop()
     """
 
+    # Class-level sentinel: lets log()/stop() use direct attr access before render().
+    _running: bool = False
+
     interval: float = public_field(
         default=0.1,
         description="Seconds between spinner frame advances.",
@@ -68,9 +74,7 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
     # ─── handle API ──────────────────────────────────────────────────────
     def log(self, line: str) -> None:
         """Print ``line`` as a persistent row above the spinner."""
-        import sys
-
-        if not getattr(self, "_running", False):
+        if not self._running:
             return
         with self._lock:
             sys.stdout.write(f"\r\x1b[2K{line}\n")
@@ -79,8 +83,6 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
 
     def render(self, context: PromptContext | None = None) -> None:
         """Start the spinner thread; return immediately so the caller can act."""
-        import threading
-
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.spinner_pool import Spinner
 
@@ -102,9 +104,7 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
 
     def stop(self) -> None:
         """Stop the spinner and erase its line."""
-        import sys
-
-        if not getattr(self, "_running", False):
+        if not self._running:
             return
         self._running = False
         if self._thread is not None:
@@ -114,8 +114,6 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
             sys.stdout.flush()
 
     def _draw(self) -> None:
-        import sys
-
         if not self._running:
             return
         frame = self._spinner_inst.next()
@@ -124,14 +122,16 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
 
     # ─── internals ───────────────────────────────────────────────────────
     def _spin_loop(self) -> None:
-        import time
-
+        # Cache frequently-accessed names as locals to reduce per-tick attr lookups.
         _interval = self.interval
+        _lock = self._lock
+        _draw = self._draw
+        _sleep = time.sleep
 
         while self._running:
-            time.sleep(_interval)
+            _sleep(_interval)
             if not self._running:
                 break
-            with self._lock:
+            with _lock:
                 if self._running:
-                    self._draw()
+                    _draw()

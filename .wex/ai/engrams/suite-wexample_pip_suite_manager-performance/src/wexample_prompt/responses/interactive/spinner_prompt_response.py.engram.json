@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/spinner_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:34:58+00:00",
+  "last_rev": "52a3add01ffea58ed2a535d468a48083bf2cd32f",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted sys/threading/time to module-level, replaced getattr sentinel with class-attr _running, cached lock/draw/sleep locals in _spin_loop hot path",
+  "in_progress": null
+}
