@@ -119,7 +119,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                     is_first_segment = False
                     continue
 
-                chunks = ansi_aware_wrap(paragraph, wrap_width) or [paragraph]
+                chunks = ansi_aware_wrap(paragraph, wrap_width) or (paragraph,)
                 for chunk in chunks:
                     wrapped.append((prefix if is_first_segment else indent) + chunk)
                     is_first_segment = False
