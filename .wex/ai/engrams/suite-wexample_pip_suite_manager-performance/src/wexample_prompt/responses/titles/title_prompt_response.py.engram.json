@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/titles/title_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:44:10+00:00",
+  "last_rev": "ddf7846f4bd4c1d6850f552f3f47ac90d3670959",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed duplicate VerbosityLevel import from TYPE_CHECKING block (already imported at module level)",
+  "in_progress": null
+}
