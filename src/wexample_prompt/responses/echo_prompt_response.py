@@ -10,7 +10,6 @@ from wexample_prompt.responses.abstract_prompt_response import AbstractPromptRes
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.const.types import LineMessage
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )

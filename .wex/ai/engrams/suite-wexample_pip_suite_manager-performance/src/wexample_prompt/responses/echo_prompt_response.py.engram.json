@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/echo_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:20:56+00:00",
+  "last_rev": "e7424e4f6db3720f31c815ce55527c77e5d3adbe",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed redundant VerbosityLevel re-import from TYPE_CHECKING block (already imported at runtime)",
+  "in_progress": null
+}
