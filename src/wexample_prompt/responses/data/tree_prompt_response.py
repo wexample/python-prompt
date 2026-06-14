@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING, Any
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.common.prompt_context import PromptContext
-from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
 if TYPE_CHECKING:
@@ -74,20 +72,18 @@ class TreePromptResponse(AbstractPromptResponse):
     ) -> None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
-        items = list(data.items())
-        last_idx = len(items) - 1
+        last_idx = len(data) - 1
         _leaf = self.leaf_style
         _branch = self.branch_style
         _dash = self.dash_style
         _pipe = self.pipe_style
-        for i, (key, value) in enumerate(items):
+        for i, (key, value) in enumerate(data.items()):
             is_last = i == last_idx
             current_prefix = f"{_leaf}{_dash} " if is_last else f"{_branch}{_dash} "
 
             # Parse key for inline formatting
-            from wexample_prompt.common.style_markup_parser import flatten_style_markup
-
             key_segments = flatten_style_markup(key, joiner=None)
 
             # Prepend prefix and tree symbols

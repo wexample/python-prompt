@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/data/tree_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:19:56+00:00",
+  "last_rev": "fd8cc8334a2ee4357839ecc6e92487263d16e7bb",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed dead runtime imports of PromptContext/VerbosityLevel, hoisted flatten_style_markup import out of for-loop, replaced list(data.items()) with len(data)/data.items()",
+  "in_progress": null
+}
