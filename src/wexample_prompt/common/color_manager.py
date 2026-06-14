@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, ClassVar
 
-from colorama import init
+from colorama import Style, init
 
 from wexample_prompt.enums.terminal_bg_color import TerminalBgColor
 from wexample_prompt.enums.terminal_color import TerminalColor
@@ -47,8 +47,6 @@ class ColorManager:
         bg: TerminalBgColor | None = None,
         styles: list[TextStyle] | None = None,
     ) -> str:
-        from colorama import Style
-
         # Backward compatibility: if caller passes single style via `style`
         # (which historically reused TerminalColor entries BOLD/DIM),
         # we still honor it. New code should use `styles` and/or `bg`.
