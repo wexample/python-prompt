@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/enums/terminal_color.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:43:58+00:00",
+  "last_rev": "9849f0b6ace68352ac913939491f8dfd68c3a68d",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "pure enum data; no logic, no hot paths, nothing to optimize",
+  "in_progress": null
+}
