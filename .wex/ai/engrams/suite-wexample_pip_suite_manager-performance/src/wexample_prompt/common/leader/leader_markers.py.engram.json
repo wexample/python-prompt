@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/leader/leader_markers.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:33:23+00:00",
+  "last_rev": "b27f30897daac36f1b3fbec2597f82687cb04749",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "pure data-model fields plus a single-getattr get(); no hot path or repeated work",
+  "in_progress": null
+}
