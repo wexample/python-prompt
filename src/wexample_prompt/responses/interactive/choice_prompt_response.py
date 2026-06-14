@@ -17,8 +17,6 @@ if TYPE_CHECKING:
     from wexample_prompt.common.choice.choice import Choice
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
-    from wexample_prompt.const.types import LineMessage
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
@@ -69,8 +67,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> ChoicePromptResponse:
         """Factory to create a ChoicePromptResponse."""
-        from collections.abc import Mapping
-
         from wexample_prompt.common.choice.choice import Choice
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.enums.choice import ChoiceValue
@@ -136,6 +132,7 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
         from wexample_prompt.enums.choice import ChoiceValue
         from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
@@ -207,10 +204,6 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                 )
 
                 # Parse title for inline formatting
-                from wexample_prompt.common.style_markup_parser import (
-                    flatten_style_markup,
-                )
-
                 title_segments = flatten_style_markup(str(choice.title), joiner=None)
 
                 # Apply selection styling to segments that don't have color
@@ -220,13 +213,16 @@ class ChoicePromptResponse(AbstractInteractivePromptResponse):
                     if is_selected and TextStyle.BOLD not in seg.styles:
                         seg.styles.append(TextStyle.BOLD)
 
-                line.segments = [
+                # Prepend the prefix segment in-place to avoid an extra list allocation
+                title_segments.insert(
+                    0,
                     PromptResponseSegment(
                         text=prefix,
                         color=prefix_color,
                         styles=prefix_styles,
                     ),
-                ] + title_segments
+                )
+                line.segments = title_segments
 
                 self.lines.append(line)
 
