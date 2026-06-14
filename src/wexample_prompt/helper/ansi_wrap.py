@@ -88,9 +88,6 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
     def atom_text(atom: list[tuple]) -> str:
         return "".join(t[1] for t in atom)
 
-    def atom_visible(atom: list[tuple]) -> int:
-        return terminal_get_visible_width(atom_text(atom))
-
     def atom_update(atom: list[tuple], state: list[str]) -> list[str]:
         s = state
         for t in atom:
@@ -155,7 +152,7 @@ def ansi_aware_wrap(text: str, width: int) -> list[str]:
             continue
 
         # Word atom — may include SGR codes.
-        if atom_w <= width and line_visible + atom_w <= width:
+        if line_visible + atom_w <= width:
             line_chunks.append(raw)
             line_visible += atom_w
             active_state = atom_update(atom, active_state)

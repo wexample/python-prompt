@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/helper/ansi_wrap.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:56:33+00:00",
+  "last_rev": "196a09c92d2fe407fdb0bc89d780c34628c89221",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "remove dead atom_visible closure and drop redundant atom_w<=width conjunct from word-fit fast path in ansi_aware_wrap",
+  "in_progress": null
+}
