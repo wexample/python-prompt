@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/abstract_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:11:49+00:00",
+  "last_rev": "7557435fa91b9eeed4d925d117e1cd5cce81e95f",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "lazy PromptContext import is circular-import-forced; render path has no redundant computation; clone is cold code",
+  "in_progress": null
+}
