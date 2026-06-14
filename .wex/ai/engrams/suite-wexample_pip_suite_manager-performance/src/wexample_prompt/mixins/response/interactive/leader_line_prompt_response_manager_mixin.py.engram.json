@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/response/interactive/leader_line_prompt_response_manager_mixin.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:05:16+00:00",
+  "last_rev": "f43623c25141e1d98aec729801ed3f27bb735efa",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "lazy TerminalColor import cached in sys.modules after first call; no hot path, no redundant computation",
+  "in_progress": null
+}
