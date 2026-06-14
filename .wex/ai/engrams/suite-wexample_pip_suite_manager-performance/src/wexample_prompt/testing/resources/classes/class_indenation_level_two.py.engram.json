@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/resources/classes/class_indenation_level_two.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:52:26+00:00",
+  "last_rev": "2b939cb5ccb6efc78a77844eea7f82986e44cdd0",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed dead TYPE_CHECKING import and empty if TYPE_CHECKING: pass block",
+  "in_progress": null
+}
