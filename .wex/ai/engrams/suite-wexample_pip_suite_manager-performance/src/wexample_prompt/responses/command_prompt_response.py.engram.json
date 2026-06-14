@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/command_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:52:32+00:00",
+  "last_rev": "befc26ce546b24bb603fa5121ea7f57d08888447",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoist shlex import to module top; replace prefix list concat with in-place insert(0)",
+  "in_progress": null
+}

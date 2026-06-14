@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shlex
 from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.field import public_field
@@ -105,7 +106,7 @@ class CommandPromptResponse(AbstractPromptResponse):
         )
         if cmd_lines:
             first = cmd_lines[0]
-            first.segments = [prefix_seg] + first.segments
+            first.segments.insert(0, prefix_seg)
             lines.extend(cmd_lines)
 
         # Output: indent 2 spaces, render dim/gray. Empty output is skipped.
@@ -124,6 +125,4 @@ class CommandPromptResponse(AbstractPromptResponse):
     def _resolve_command_string(self) -> str:
         if isinstance(self.command, str):
             return self.command
-        import shlex
-
         return shlex.join(self.command)
