@@ -81,11 +81,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         _context_prefix = kwargs.pop("_context_prefix", None)
 
         # Prepend context prefix if provided (e.g., "[child] ❯ " instead of "❯ ")
-        prefix_text = (
-            f"{_context_prefix}{cls.DEFAULT_PREFIX} "
-            if _context_prefix
-            else f"{cls.DEFAULT_PREFIX} "
-        )
+        prefix_text = f"{_context_prefix or ''}{cls.DEFAULT_PREFIX} "
 
         prefix = PromptResponseSegment(
             text=prefix_text,
@@ -117,7 +113,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
         )
 
         # Build segments list: prefix + parsed text segments + fill
-        segments = [prefix] + text_segments + [fill]
+        segments = [prefix, *text_segments, fill]
 
         return cls(
             prefix_segment=prefix,
@@ -155,7 +151,7 @@ class AbstractTitleResponse(AbstractMessageResponse):
                 fill_pattern = self.DEFAULT_CHARACTER
                 pattern_width = terminal_get_visible_width(fill_pattern) or 1
 
-            repeats = target_width // pattern_width if pattern_width else 0
+            repeats = target_width // pattern_width
             fill_text = fill_pattern * repeats
             visible = repeats * pattern_width
 

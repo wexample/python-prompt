@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/titles/abstract_title_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:42:21+00:00",
+  "last_rev": "27e053faa74b074e5aba85e372f9d7c52e1b29c4",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "collapsed dead branch in repeats division, replaced list concat with unpacking, simplified prefix_text ternary with `or ''`",
+  "in_progress": null
+}
