@@ -34,11 +34,11 @@ class LogPromptResponse(AbstractPromptResponse):
             Tuple of (modified_args, modified_kwargs)
         """
         # Handle message parameter
-        if "message" in kwargs:
-            kwargs["message"] = prefix + kwargs["message"]
+        if (msg := kwargs.get("message")) is not None:
+            kwargs["message"] = prefix + msg
         elif args and isinstance(args[0], str):
             # Handle positional message argument
-            args = (prefix + args[0],) + args[1:]
+            args = (prefix + args[0], *args[1:])
 
         return args, kwargs
 

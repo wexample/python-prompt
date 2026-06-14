@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/log_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:35:39+00:00",
+  "last_rev": "7e7a153ce77fcb3adeedc5b34f36780e2a4b9e24",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "replace dict double-lookup with walrus+get; replace tuple concat with unpack in apply_prefix_to_kwargs",
+  "in_progress": null
+}
