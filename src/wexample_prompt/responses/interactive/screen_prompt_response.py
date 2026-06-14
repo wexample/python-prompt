@@ -13,10 +13,7 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from wexample_prompt.common.prompt_context import PromptContext
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
@@ -136,24 +133,34 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
         _min_refresh = self.min_refresh_interval
         _poll_interval = self.poll_interval
 
+        # Hoist stable references out of the hot loop (avoids per-iteration
+        # bound-method creation and attribute lookups at ~20 Hz).
+        _monotonic = time.monotonic
+        _partial_clear = self._partial_clear
+        _print_render = self._print_render
+        _render_buffer = self._render_buffer
+        _io_buffer = self._io_buffer
+        _callback = self.callback
+        _tick_event = self._tick_event
+
         while True:
             # Clear previous frame area
-            self._partial_clear(printed_lines)
-            self._io_buffer.clear()
+            _partial_clear(printed_lines)
+            _io_buffer.clear()
 
             # Render and print current lines
-            printed_lines = self._print_render(context=context)
-            last_draw = time.monotonic()
+            printed_lines = _print_render(context=context)
+            last_draw = _monotonic()
 
             if self._closed:
                 if self.reset_on_finish and printed_lines > 0:
-                    self._partial_clear(printed_lines)
+                    _partial_clear(printed_lines)
                 return None
 
             # Prepare next frame
             self._reload_requested = False
             try:
-                self.callback(self)
+                _callback(self)
             except Exception as e:
                 self._closed = True
                 raise e
@@ -164,14 +171,14 @@ class ScreenPromptResponse(WithIoMethods, AbstractInteractivePromptResponse):
             #   - Then wait for either a push event (request_refresh()) or
             #     poll_interval as safety fallback.
             if not self._reload_requested and not self._closed:
-                elapsed = time.monotonic() - last_draw
+                elapsed = _monotonic() - last_draw
                 gap = _min_refresh - elapsed
                 if gap > 0:
                     time.sleep(gap)
-                self._tick_event.wait(timeout=_poll_interval)
-                self._tick_event.clear()
+                _tick_event.wait(timeout=_poll_interval)
+                _tick_event.clear()
 
-            self._render_buffer()
+            _render_buffer()
 
     def request_refresh(self) -> None:
         """Thread-safe wake-up: forces the render loop to redraw on next tick.

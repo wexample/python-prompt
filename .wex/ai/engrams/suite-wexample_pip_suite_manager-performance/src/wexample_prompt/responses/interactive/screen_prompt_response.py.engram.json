@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/screen_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:33:09+00:00",
+  "last_rev": "2b951b348525da4cadf75942f628bc42c2d33e9d",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed duplicate Callable/VerbosityLevel TYPE_CHECKING imports; hoisted bound methods, io_buffer, tick_event, monotonic, and callback out of ~20Hz render loop",
+  "in_progress": null
+}
