@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
+
+# Compiled once at import time; reused across all _assert_no_color_codes calls.
+_ANSI_ESCAPE_RE = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
 
 from wexample_helpers.classes.abstract_method import abstract_method
 
@@ -119,11 +123,8 @@ class AbstractPromptResponseTest(AbstractPromptTest):
 
     def _assert_no_color_codes(self, text: str) -> None:
         """Assert that a string contains no ANSI escape sequences (colors/styles)."""
-        import re
-
         # Generic ANSI escape sequence regex (covers CSI, OSC, and single-char escapes)
-        ansi_pattern = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
-        assert not ansi_pattern.search(
+        assert not _ANSI_ESCAPE_RE.search(
             text
         ), f"Unexpected ANSI escape sequences found in: {text!r}"
 

@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/abstract_prompt_response_test.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:45:46+00:00",
+  "last_rev": "4905ee70649dc9d96ba1a28253cb5435c5c9084e",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted re.compile for ANSI pattern to module-level constant, removing per-call recompilation in _assert_no_color_codes",
+  "in_progress": null
+}
