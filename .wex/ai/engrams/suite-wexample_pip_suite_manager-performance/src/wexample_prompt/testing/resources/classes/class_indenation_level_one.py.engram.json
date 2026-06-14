@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/resources/classes/class_indenation_level_one.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:50:51+00:00",
+  "last_rev": "74aad23e444f6623f5bba50bfc61f7b11e8c63ed",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "cached create_io_context() result to avoid redundant call in print_deep_log_one",
+  "in_progress": null
+}

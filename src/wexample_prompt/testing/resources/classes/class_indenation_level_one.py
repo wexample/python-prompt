@@ -14,8 +14,9 @@ class ClassIndentationLevelOne(WithIoManager):
             ClassIndentationLevelTwo,
         )
 
-        self.io.log("test deep log one", context=self.create_io_context())
-        self.io.log(string_generate_lorem_ipsum(1000), context=self.create_io_context())
+        io_context = self.create_io_context()
+        self.io.log("test deep log one", context=io_context)
+        self.io.log(string_generate_lorem_ipsum(1000), context=io_context)
 
         level_two = ClassIndentationLevelTwo(parent_io_handler=self)
 
