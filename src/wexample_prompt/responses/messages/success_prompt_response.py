@@ -12,7 +12,6 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
