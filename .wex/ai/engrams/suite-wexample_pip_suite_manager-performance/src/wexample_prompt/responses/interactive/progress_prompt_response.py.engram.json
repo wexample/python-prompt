@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/progress_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:31:28+00:00",
+  "last_rev": "f19f174e8c455e042f76ab171fad90ae95fa124c",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed stray `pass`, replaced `dict(...)` with `{}` literal in create_progress, hoisted duplicate `terminal_get_visible_width` import to render method top",
+  "in_progress": null
+}

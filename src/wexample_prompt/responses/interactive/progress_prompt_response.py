@@ -52,8 +52,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
         show_percentage: bool = False,
         verbosity: VerbosityLevel | None = None,
     ) -> ProgressPromptResponse:
-        pass
-
         if total <= 0:
             raise ValueError("Total must be greater than 0")
         if width is not None and width < 1:
@@ -61,15 +59,15 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
         norm_current = cls._normalize_value(total, current)
 
-        init_kwargs = dict(
-            lines=[],
-            total=total,
-            current=norm_current,
-            width=width,
-            label=label,
-            show_percentage=show_percentage,
-            verbosity=verbosity,
-        )
+        init_kwargs = {
+            "lines": [],
+            "total": total,
+            "current": norm_current,
+            "width": width,
+            "label": label,
+            "show_percentage": show_percentage,
+            "verbosity": verbosity,
+        }
         if color is not None:
             init_kwargs["color"] = color
 
@@ -145,6 +143,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
 
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         context = self.init_handle(context=context)
 
@@ -159,8 +158,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
         label_segments: list[PromptResponseSegment] = []
         label_visible_width = 0
         if self.label:
-            from wexample_prompt.helper.terminal import terminal_get_visible_width
-
             label_segments = flatten_style_markup(self.label, joiner=" ")
             # Calculate visible width: strip ANSI codes and count emojis as 2 chars
             for seg in label_segments:
@@ -177,8 +174,6 @@ class ProgressPromptResponse(AbstractPromptResponse):
             right_percent = f" {current}/{self.total}"
 
         # Determine bar width to perfectly fit the line
-        from wexample_prompt.helper.terminal import terminal_get_visible_width
-
         bar_width = max(
             0,
             max_content_width
