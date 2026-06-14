@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/with_io_manager.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:09:32+00:00",
+  "last_rev": "8d1ba6820facae4f7b3df372cf56dc55b43f3474",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "initialization and setup methods only; no hot paths; elif dead-code removal is ambiguous given private_field constructor semantics",
+  "in_progress": null
+}
