@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/messages/debug_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:37:35+00:00",
+  "last_rev": "eac6a5eddd1cc597cd517be7f8795b231ec08dff",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed redundant runtime import of VerbosityLevel (already TYPE_CHECKING-gated; only used in annotations, PEP 563 active)",
+  "in_progress": null
+}
