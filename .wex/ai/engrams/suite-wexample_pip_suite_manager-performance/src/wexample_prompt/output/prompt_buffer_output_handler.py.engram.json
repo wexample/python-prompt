@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/output/prompt_buffer_output_handler.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:10:45+00:00",
+  "last_rev": "891adeeae6859c0ba6888ff64c65f9b628c0df62",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "buffer management methods; not a hot path, no redundant computation, nothing to optimize",
+  "in_progress": null
+}
