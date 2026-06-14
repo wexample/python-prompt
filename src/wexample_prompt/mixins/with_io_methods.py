@@ -24,8 +24,8 @@ class WithIoMethods(WithIoManager):
     def _get_io_methods(self, name: str) -> Any:
         io = self.ensure_io_manager()
 
-        if hasattr(io, name):
-            attr = getattr(io, name)
+        attr = getattr(io, name, None)
+        if attr is not None:
             if callable(attr):
 
                 def wrapper(*args, **kwargs):

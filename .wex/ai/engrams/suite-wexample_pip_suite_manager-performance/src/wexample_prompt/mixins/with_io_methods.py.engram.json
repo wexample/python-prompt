@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/with_io_methods.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:10:13+00:00",
+  "last_rev": "c74fd69254dba40c50121594cbd6c409e2cdf047",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "replaced hasattr+getattr double lookup with single getattr(io, name, None) in __getattr__ hot path",
+  "in_progress": null
+}
