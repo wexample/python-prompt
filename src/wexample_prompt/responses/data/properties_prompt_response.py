@@ -131,7 +131,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
         from wexample_prompt.common.style_markup_parser import flatten_style_markup
-        from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         if not self.properties:
             return ""
@@ -165,7 +164,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         # doesn't get squashed onto a single grid row), and wrap to
         # `max_inner_width` when the box is sized to the terminal. In
         # naked mode (no cap) we still split but skip the wrap step.
-        effective_max = max_inner_width or 10**6
+        effective_max = max_inner_width or 1_000_000
         content_lines = self._wrap_long_rows(content_lines, effective_max)
 
         lines: list[PromptResponseLine] = []
@@ -173,12 +172,16 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         # Flatten markup once per line so visible-width math uses what will
         # actually be rendered, not the raw `@color{}` source.
         flattened = [flatten_style_markup(line, joiner=None) for line in content_lines]
-        content_visible_widths = [
-            sum(terminal_get_visible_width(seg.text) for seg in segs)
-            for segs in flattened
-        ]
 
         if bordered:
+            from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+            # Visible widths are only needed for the bordered path; compute them
+            # here to avoid the terminal_get_visible_width calls in naked mode.
+            content_visible_widths = [
+                sum(terminal_get_visible_width(seg.text) for seg in segs)
+                for segs in flattened
+            ]
             # Box is sized to content (like TablePromptResponse), not to the
             # full terminal width — visually consistent with the table cartouche.
             max_content = max(content_visible_widths, default=0)
@@ -188,6 +191,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
             if max_inner_width:
                 inner_width = min(inner_width, max_inner_width)
             box_width = inner_width + 2  # leading + trailing space inside │ … │
+            h_bar = "─" * box_width  # hoisted: reused for top (no-title) and bottom bars
 
             # Leading blank for visual separation (consistent with table).
             lines.append(PromptResponseLine(segments=[PromptResponseSegment(text="")]))
@@ -199,7 +203,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                     PromptResponseLine(
                         segments=[
                             PromptResponseSegment(
-                                text="╭─ " + self.title + " " + "─" * fill + "╮"
+                                text=f"╭─ {self.title} {'─' * fill}╮"
                             )
                         ]
                     )
@@ -208,7 +212,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
                 lines.append(
                     PromptResponseLine(
                         segments=[
-                            PromptResponseSegment(text="╭" + "─" * box_width + "╮")
+                            PromptResponseSegment(text=f"╭{h_bar}╮")
                         ]
                     )
                 )
@@ -227,7 +231,7 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
             lines.append(
                 PromptResponseLine(
-                    segments=[PromptResponseSegment(text="╰" + "─" * box_width + "╯")]
+                    segments=[PromptResponseSegment(text=f"╰{h_bar}╯")]
                 )
             )
         else:
