@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/confirm_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:25:49+00:00",
+  "last_rev": "79b5c7a933146a4e873f9ed7a7f181f532a2e319",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted is_ok set to ClassVar frozenset, dropped duplicate TYPE_CHECKING imports, removed redundant TerminalColor deferred import in _build_lines",
+  "in_progress": null
+}

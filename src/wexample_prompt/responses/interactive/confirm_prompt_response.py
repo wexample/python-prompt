@@ -17,8 +17,6 @@ from wexample_prompt.responses.interactive.abstract_interactive_prompt_response 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
-    from wexample_prompt.const.types import LineMessage
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -43,6 +41,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
         "y": ("continue", "Continue"),
         "n": ("cancel", "Cancel"),
     }
+    _OK_VALUES: ClassVar[frozenset] = frozenset({True, 1, "yes", "yes_all", "ok", "continue"})
     allow_abort: bool = public_field(
         default=True, description="ESC/q aborts and returns None when allowed."
     )
@@ -117,7 +116,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
     def is_ok(self) -> bool:
         """Response match with one of common positive value"""
-        return self._answer in {True, 1, "yes", "yes_all", "ok", "continue"}
+        return self._answer in self._OK_VALUES
 
     def render(self, context: PromptContext | None = None) -> None:
         from wexample_prompt.common.prompt_context import PromptContext
@@ -189,7 +188,6 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
 
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_prompt.enums.terminal_color import TerminalColor
         from wexample_prompt.enums.text_style import TextStyle
 
         # No centering/truncation: allow natural terminal wrapping.
