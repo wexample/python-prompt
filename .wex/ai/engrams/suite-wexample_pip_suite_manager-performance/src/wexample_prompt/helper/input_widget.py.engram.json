@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/helper/input_widget.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:57:48+00:00",
+  "last_rev": "139adc3c124f473a3622fe4144d724964f9f233b",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "cache BAR_CHAR*width as self._bar in __init__ and _handle_resize to avoid per-keypress string allocation in render() hot path",
+  "in_progress": null
+}

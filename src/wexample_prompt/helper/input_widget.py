@@ -139,6 +139,7 @@ class InputWidget:
         self._rendered = False
         self._cursor_up_to_top = 0
         self._needs_resize = False
+        self._bar = BAR_CHAR * self.width
 
     @staticmethod
     def _terminal_width() -> int:
@@ -168,8 +169,7 @@ class InputWidget:
             write("\r")
 
         if self.bordered:
-            bar = BAR_CHAR * self.width
-            write(f"{bar}\r\n")
+            write(f"{self._bar}\r\n")
 
         for i, line in enumerate(lines):
             prefix = self.prompt_prefix if i == 0 else self.continuation_prefix
@@ -177,7 +177,7 @@ class InputWidget:
 
         info_rows: list[str] = []
         if self.bordered:
-            write(f"{bar}\r\n")
+            write(f"{self._bar}\r\n")
             info_rows = self._info_rows()
             for j, info_line in enumerate(info_rows):
                 if j == len(info_rows) - 1:
@@ -488,6 +488,7 @@ class InputWidget:
                 write("\r")
             write(f"{CSI}J")
         self.width = self._read_live_width()
+        self._bar = BAR_CHAR * self.width
         self._rendered = False  # next render() paints fresh, no climb
 
     def _home(self) -> None:
