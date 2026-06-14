@@ -297,7 +297,7 @@ class ProgressHandle(BaseClass):
             # Round to avoid floating point accumulation errors
             virtual_progress = round(virtual_progress, 10)
             return max(0.0, min(float(_vt), virtual_progress))
-        return max(0.0, min(float(self._effective_total()), physical_progress))
+        return max(0.0, min(physical_size, physical_progress))
 
     def _effective_total(self) -> int:
         # If a virtual total is set, use it instead of the physical range size

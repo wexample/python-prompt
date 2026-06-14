@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/progress/progress_handle.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:38:24+00:00",
+  "last_rev": "260f530a357d631f039ee57132d727daa00eed9b",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "fix NameError in update() by adding missing ProgressPromptResponse import; inline physical_size in _child_current() to drop redundant _effective_total() call",
+  "in_progress": null
+}
