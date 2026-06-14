@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/messages/abstract_message_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:36:56+00:00",
+  "last_rev": "46e498780b10b4ba8e82013723746dcfaed75915",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "eliminate dead-store in apply_prefix_to_kwargs and replace tuple-concat with starred-unpack for args rebuild",
+  "in_progress": null
+}
