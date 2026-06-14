@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/data/table_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:19:06+00:00",
+  "last_rev": "b1c6ab48b346ff3e1ba1067217ec633f00131082",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoist _ANSI_ESCAPE_RE compile to module level, drop duplicate TYPE_CHECKING imports, use map(len) in _calculate_max_widths",
+  "in_progress": null
+}

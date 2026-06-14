@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, Any
 
 from wexample_helpers.classes.field import public_field
@@ -11,11 +12,12 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
+# Compiled once at import time; reused across every cell in every render.
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
+
 if TYPE_CHECKING:
-    from wexample_prompt.common.prompt_context import PromptContext
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -54,7 +56,7 @@ class TablePromptResponse(AbstractPromptResponse):
     def _calculate_max_widths(rows: list[list[Any]]) -> list[int]:
         if not rows:
             return []
-        num_columns = max(len(row) for row in rows)
+        num_columns = max(map(len, rows))
         max_widths = [0] * num_columns
         _get_visible_width = TablePromptResponse._get_visible_width
         for row in rows:
@@ -146,11 +148,8 @@ class TablePromptResponse(AbstractPromptResponse):
     @staticmethod
     def _strip_ansi(text: str) -> str:
         """Strip ANSI escape sequences from text."""
-        import re
-
-        # Remove ANSI escape sequences (including hyperlinks)
-        ansi_escape = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
-        return ansi_escape.sub("", text)
+        # Uses module-level _ANSI_ESCAPE_RE compiled once at import time.
+        return _ANSI_ESCAPE_RE.sub("", text)
 
     def render(self, context: PromptContext | None = None) -> str | None:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
