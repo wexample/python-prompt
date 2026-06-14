@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/helper/markdown.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:58:40+00:00",
+  "last_rev": "6c47cd206b7dd96842ffae86487ea2615530606c",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoist 5 per-call lambdas in _render_inline and 2 in _link_sub to module-level _bold_sub/_italic_sub/_strike_sub, eliminating per-line function allocations",
+  "in_progress": null
+}

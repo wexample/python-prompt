@@ -44,6 +44,18 @@ _HEADING_BULLETS = ("█", "▓", "▒", "░", "·", "·")
 _HEADING_BULLETS_COUNT = len(_HEADING_BULLETS)
 
 
+def _bold_sub(m: re.Match[str]) -> str:
+    return f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}"
+
+
+def _italic_sub(m: re.Match[str]) -> str:
+    return f"{_ITALIC[0]}{m.group(1)}{_ITALIC[1]}"
+
+
+def _strike_sub(m: re.Match[str]) -> str:
+    return f"{_STRIKE[0]}{m.group(1)}{_STRIKE[1]}"
+
+
 def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
     """Render markdown-flavored ``text`` to ANSI/OSC8 terminal output.
 
@@ -129,8 +141,8 @@ def _link_sub(m: re.Match[str]) -> str:
     url = m.group(2).strip()
     # Render inline styles inside the label too (bold/italic links exist).
     label = _RE_CODE.sub(_code_sub, label_md)
-    label = _RE_BOLD.sub(lambda mm: f"{_BOLD[0]}{mm.group(1)}{_BOLD[1]}", label)
-    label = _RE_ITALIC.sub(lambda mm: f"{_ITALIC[0]}{mm.group(1)}{_ITALIC[1]}", label)
+    label = _RE_BOLD.sub(_bold_sub, label)
+    label = _RE_ITALIC.sub(_italic_sub, label)
     # OSC 8 hyperlink + underline fallback for terminals that ignore OSC 8.
     return f"\x1b]8;;{url}\x1b\\{_UNDERLINE[0]}{label}{_UNDERLINE[1]}\x1b]8;;\x1b\\"
 
@@ -144,11 +156,9 @@ def _render_inline(line: str) -> str:
     # Inline code: dim + underline (see `_code_sub` for the rationale).
     line = _RE_CODE.sub(_code_sub, line)
     # Order matters: bold before italic so `**x**` isn't eaten by `*x*`.
-    line = _RE_BOLD.sub(lambda m: f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}", line)
-    line = _RE_BOLD_UNDERSCORE.sub(lambda m: f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}", line)
-    line = _RE_ITALIC.sub(lambda m: f"{_ITALIC[0]}{m.group(1)}{_ITALIC[1]}", line)
-    line = _RE_ITALIC_UNDERSCORE.sub(
-        lambda m: f"{_ITALIC[0]}{m.group(1)}{_ITALIC[1]}", line
-    )
-    line = _RE_STRIKE.sub(lambda m: f"{_STRIKE[0]}{m.group(1)}{_STRIKE[1]}", line)
+    line = _RE_BOLD.sub(_bold_sub, line)
+    line = _RE_BOLD_UNDERSCORE.sub(_bold_sub, line)
+    line = _RE_ITALIC.sub(_italic_sub, line)
+    line = _RE_ITALIC_UNDERSCORE.sub(_italic_sub, line)
+    line = _RE_STRIKE.sub(_strike_sub, line)
     return line
