@@ -30,7 +30,6 @@ class TitlePromptResponseManagerMixin:
         frame: str | bool | None = None,
         **kwargs: Kwargs,
     ) -> AbstractPromptResponse:
-        from wexample_prompt.common.io_manager import IoManager
         from wexample_prompt.responses.titles.title_prompt_response import (
             TitlePromptResponse,
         )

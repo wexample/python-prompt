@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/response/titles/title_prompt_response_manager_mixin.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:08:42+00:00",
+  "last_rev": "fa5074d65fe6d9c3aa536b1991d2ebf6494f9b64",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed redundant per-call IoManager import; cast uses string literal so no runtime class needed",
+  "in_progress": null
+}
