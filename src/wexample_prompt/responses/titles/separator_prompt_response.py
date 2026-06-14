@@ -49,10 +49,6 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             parent.__attrs_post_init__()
 
         if not self.separator_response_segment:
-            from wexample_prompt.common.prompt_response_segment import (
-                PromptResponseSegment,
-            )
-
             character = self.character or self.DEFAULT_CHARACTER
             self.separator_response_segment = PromptResponseSegment(text=character)
 
@@ -77,7 +73,6 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         verbosity: VerbosityLevel | None = None,
     ) -> SeparatorPromptResponse:
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
-        from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
 
         segments: list[PromptResponseSegment] = []
 
@@ -98,7 +93,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
             label_segments=label_segments,
             label=label,
             width=width,
-            character=character or SeparatorPromptResponse.DEFAULT_CHARACTER,
+            character=character or cls.DEFAULT_CHARACTER,
             lines=[PromptResponseLine(segments=segments)],
             verbosity=verbosity,
         )

@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/titles/separator_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:43:14+00:00",
+  "last_rev": "60ce219ca095c411cc9ad9c3e4d2b10b972dc599",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed redundant deferred PromptResponseSegment imports (already top-level); cls.DEFAULT_CHARACTER replaces class-name lookup in create_separator",
+  "in_progress": null
+}
