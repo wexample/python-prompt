@@ -80,27 +80,32 @@ class InputPromptResponse(AbstractInteractivePromptResponse):
 
         # Build the question line (same style as ConfirmPromptResponse).
         question_lines = PromptResponseLine.create_from_string(self.question)
+        _bold = [TextStyle.BOLD]  # hoisted: avoids a new list allocation per segment
         self.lines = []
 
-        for idx, q_line in enumerate(question_lines):
-            segs = []
-            if idx == 0:
-                segs.append(
-                    PromptResponseSegment(
-                        text="? ",
-                        color=TerminalColor.BLUE,
-                        styles=[TextStyle.BOLD],
-                    )
+        if question_lines:
+            # Peel the first line so the "? " prefix check is not repeated inside
+            # the loop on every subsequent iteration.
+            first = question_lines[0]
+            self.lines.append(PromptResponseLine(segments=[
+                PromptResponseSegment(text="? ", color=TerminalColor.BLUE, styles=_bold),
+            ] + [
+                PromptResponseSegment(
+                    text=seg.text,
+                    color=seg.color or TerminalColor.LIGHT_WHITE,
+                    styles=seg.styles or _bold,
                 )
-            for seg in q_line.segments:
-                segs.append(
+                for seg in first.segments
+            ]))
+            for q_line in question_lines[1:]:
+                self.lines.append(PromptResponseLine(segments=[
                     PromptResponseSegment(
                         text=seg.text,
                         color=seg.color or TerminalColor.LIGHT_WHITE,
-                        styles=seg.styles or [TextStyle.BOLD],
+                        styles=seg.styles or _bold,
                     )
-                )
-            self.lines.append(PromptResponseLine(segments=segs))
+                    for seg in q_line.segments
+                ]))
 
         # Print the question block.
         self._print_render(context=context)

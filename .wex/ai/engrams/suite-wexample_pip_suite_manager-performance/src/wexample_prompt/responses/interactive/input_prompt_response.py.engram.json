@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/input_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:27:20+00:00",
+  "last_rev": "56bddcec630b63a6adf2c3d969cc2ef00d8712fa",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted _bold list and peeled first-line iteration to eliminate per-loop branch and per-segment list allocation in render()",
+  "in_progress": null
+}
