@@ -97,12 +97,21 @@ class CodePromptResponse(AbstractPromptResponse):
         code_lines = code_str.split("\n")
         width = len(str(len(code_lines))) if self.line_numbers else 0
 
+        # Hoist both the attribute lookup and the constant prefix-width
+        # computation out of the per-line loop.  The right-aligned format
+        # f"{idx:>{width}}" always renders to exactly `width` visible columns
+        # regardless of the digit count, so the separator prefix has the same
+        # terminal width on every iteration.
+        line_numbers = self.line_numbers
+        prefix_visible = (
+            terminal_get_visible_width(f"{'':>{width}} │ ") if line_numbers else 0
+        )
+
         body_lines: list[PromptResponseLine] = []
         max_body_visible = 0
         for idx, line in enumerate(code_lines, start=1):
             segments: list[PromptResponseSegment] = []
-            line_visible = 0
-            if self.line_numbers:
+            if line_numbers:
                 prefix = f"{idx:>{width}} │ "
                 segments.append(
                     PromptResponseSegment(
@@ -110,9 +119,10 @@ class CodePromptResponse(AbstractPromptResponse):
                         color=TerminalColor.LIGHT_BLACK,
                     )
                 )
-                line_visible += terminal_get_visible_width(prefix)
+                line_visible = prefix_visible + terminal_get_visible_width(line)
+            else:
+                line_visible = terminal_get_visible_width(line)
             segments.append(PromptResponseSegment(text=line))
-            line_visible += terminal_get_visible_width(line)
             max_body_visible = max(max_body_visible, line_visible)
             body_lines.append(PromptResponseLine(segments=segments))
 

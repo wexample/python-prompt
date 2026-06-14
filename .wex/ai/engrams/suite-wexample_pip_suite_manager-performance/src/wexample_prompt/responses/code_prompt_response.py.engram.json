@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/code_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:51:42+00:00",
+  "last_rev": "9519de8e24a173d4f39a8427eb5fc2fcbe4e62ca",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted line_numbers attr lookup and constant prefix width call out of per-line render loop",
+  "in_progress": null
+}
