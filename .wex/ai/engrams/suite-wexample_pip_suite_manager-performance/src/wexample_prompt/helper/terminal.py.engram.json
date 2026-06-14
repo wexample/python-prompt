@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/helper/terminal.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:59:30+00:00",
+  "last_rev": "fdcd822788da2940b51d8883dd9be6adb258253b",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoist OSC_SEQUENCE_RE and ansi_strip to module level, eliminating two per-call lazy imports in the terminal_get_visible_width hot path",
+  "in_progress": null
+}

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import wcwidth
+from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
+from wexample_helpers.helpers.ansi import ansi_strip
 
 
 def terminal_get_visible_width(text: str) -> int:
@@ -40,8 +42,5 @@ def terminal_get_visible_width(text: str) -> int:
 
 def terminal_strip_sequences(text: str) -> str:
     """Strip CSI/OSC ANSI escape sequences so width calculations see only visible chars."""
-    from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
-    from wexample_helpers.helpers.ansi import ansi_strip
-
     cleaned = ansi_strip(text)
     return OSC_SEQUENCE_RE.sub("", cleaned)
