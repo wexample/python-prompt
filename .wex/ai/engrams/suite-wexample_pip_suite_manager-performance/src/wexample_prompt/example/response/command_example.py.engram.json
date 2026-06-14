@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/example/response/command_example.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:47:19+00:00",
+  "last_rev": "89afbe4d22187eb60c64a41cc77dc8d94dc1538b",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "demo scaffolding only; no logic, no hot paths, all calls are human-speed terminal output",
+  "in_progress": null
+}
