@@ -2,10 +2,10 @@
   "engram_version": 1,
   "source_key": "src/wexample_prompt/common/color_manager.py",
   "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
-  "last_visited_at": "2026-06-14T11:16:33+00:00",
+  "last_visited_at": "2026-06-14T11:32:40+00:00",
   "last_rev": "b5ffa171f32fd94fdd79f3cd303fabf7c484d5b5",
-  "last_decision": "edit",
+  "last_decision": "skip",
   "kinds": [],
-  "notes": "hoisted per-call `from colorama import Style` to module top in colorize hot path",
+  "notes": "already optimized: _STYLE_CODES lazy-cached; only trivial string concat hot paths remain",
   "in_progress": null
 }
