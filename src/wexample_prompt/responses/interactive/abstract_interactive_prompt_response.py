@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import shutil
 from typing import Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
+from wexample_helpers.helpers.ansi import ansi_display_width
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
@@ -41,10 +43,6 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse):
         (ANSI stripped). This ensures _partial_clear erases the correct height
         even when lines wrap.
         """
-        import shutil
-
-        from wexample_helpers.helpers.ansi import ansi_display_width
-
         rendered = super().render(context=context)
         if rendered is None:
             return 0
@@ -52,10 +50,10 @@ class AbstractInteractivePromptResponse(AbstractPromptResponse):
 
         # Determine columns from context or fallback to terminal/env
         try:
+            _get_width = getattr(context, "get_width", None)
             cols = (
-                int(getattr(context, "get_width", lambda: 0)())
-                or shutil.get_terminal_size().columns
-            )
+                int(_get_width()) if _get_width is not None else 0
+            ) or shutil.get_terminal_size().columns
         except Exception:
             cols = 80
         cols = max(1, cols)

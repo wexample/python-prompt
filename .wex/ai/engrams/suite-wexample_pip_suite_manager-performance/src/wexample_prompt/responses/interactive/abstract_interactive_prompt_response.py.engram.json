@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/abstract_interactive_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:23:14+00:00",
+  "last_rev": "499a38a7c4fc65d1483a6a5a53ffe4a94babde7f",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoist shutil/ansi_display_width imports to module level and replace lambda:0 getattr default with None sentinel in _print_render hot path",
+  "in_progress": null
+}
