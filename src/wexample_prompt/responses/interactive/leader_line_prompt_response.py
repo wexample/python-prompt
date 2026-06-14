@@ -154,11 +154,15 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
 
         marker = self.markers.get(self.state)
         marker_text = marker.label
-        status_text = f" {self.status}" if self.status else ""
 
         message_visible = terminal_get_visible_width(self.message)
         marker_visible = terminal_get_visible_width(marker_text)
-        status_visible = terminal_get_visible_width(status_text)
+        if self.status:
+            status_text = f" {self.status}"
+            status_visible = terminal_get_visible_width(status_text)
+        else:
+            status_text = ""
+            status_visible = 0
 
         max_content_width = context.get_available_width(self.width, minimum=0)
         # 2 spaces consumed: one between message and dots, one between dots and marker.
@@ -181,7 +185,7 @@ class LeaderLinePromptResponse(AbstractPromptResponse):
 
         self.lines = [PromptResponseLine(segments=segments)]
         rendered = super().render(context=context)
-        if rendered is not None and self._redraw_in_place:
+        if self._redraw_in_place and rendered is not None:
             # CSI 1A: cursor up one row. CSI 2K: erase entire current line.
             # \r: snap back to col 0 so the new frame overwrites cleanly.
             return f"\x1b[1A\x1b[2K\r{rendered}"

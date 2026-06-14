@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/leader_line_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:28:29+00:00",
+  "last_rev": "3fceaec8911cbae8246b722c6b910d0169164ede",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "skip terminal_get_visible_width(\"\") on no-status path; check cheap _redraw_in_place bool before is-not-None in render",
+  "in_progress": null
+}
