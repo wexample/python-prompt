@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/output/abstract_prompt_output_handler.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:10:25+00:00",
+  "last_rev": "aa741e402394f4bc66fbe6dc7ccea22518b1054f",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "pure abstract interface; only method stubs, nothing to optimize",
+  "in_progress": null
+}
