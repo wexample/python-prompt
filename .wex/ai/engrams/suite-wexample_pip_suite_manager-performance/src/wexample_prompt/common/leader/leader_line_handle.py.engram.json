@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/leader/leader_line_handle.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:33:10+00:00",
+  "last_rev": "165723ed67f21aa76831680e76df67ffe30c6a37",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "thin interactive handle; only human-speed state transitions, no hot path or repeated work",
+  "in_progress": null
+}
