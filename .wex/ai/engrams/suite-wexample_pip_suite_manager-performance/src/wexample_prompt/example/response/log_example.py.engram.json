@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/example/response/log_example.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:52:53+00:00",
+  "last_rev": "a1824b4c8d58f38cab82f9189f22f137530c6330",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "demo scaffolding only; thin subclass with single-literal helper, no logic, no hot paths",
+  "in_progress": null
+}
