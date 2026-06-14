@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/testing/abstract_title_prompt_response_test.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T16:31:00+00:00",
+  "last_rev": "9b8caea88939de0f91f93a6b0a9c48d1465f19b2",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "cached response.rendered_content in local var to eliminate duplicate attribute lookup in test_custom_fill_char",
+  "in_progress": null
+}

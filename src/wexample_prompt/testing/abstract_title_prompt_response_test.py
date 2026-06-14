@@ -23,5 +23,6 @@ class AbstractTitlePromptResponseTest(AbstractPromptResponseTest):
         response.render()
 
         self._assert_common_response_structure(response)
-        self._assert_contains_text(response.rendered_content, self._test_message)
-        self.assertIn(character, response.rendered_content)
+        rendered = response.rendered_content
+        self._assert_contains_text(rendered, self._test_message)
+        self.assertIn(character, rendered)
