@@ -16,7 +16,6 @@ from wexample_prompt.responses.interactive.choice_prompt_response import (
 
 if TYPE_CHECKING:
     from wexample_prompt.const.types import LineMessage
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
 
 
 @base_class
@@ -73,9 +72,9 @@ class FilePickerPromptResponse(ChoicePromptResponse):
         merged: dict[str, str] = {}
         if allow_parent_selection:
             merged[".."] = ".."
-        for name in sorted(dirs.keys(), key=str.casefold):
+        for name in sorted(dirs, key=str.casefold):
             merged[name] = dirs[name]
-        for name in sorted(files.keys(), key=str.casefold):
+        for name in sorted(files, key=str.casefold):
             merged[name] = files[name]
 
         # Build parent Choice response using mapping (key=value, value=title)

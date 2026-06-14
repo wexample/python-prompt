@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/interactive/file_picker_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:26:18+00:00",
+  "last_rev": "18c1da982cb3015781c2829afbf74a8f29b59417",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "removed duplicate VerbosityLevel TYPE_CHECKING import; dropped redundant .keys() in sorted() calls",
+  "in_progress": null
+}
