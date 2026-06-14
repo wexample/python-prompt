@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/example/abstract_response_example.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:44:16+00:00",
+  "last_rev": "72678253a96c826495818d74d41c7b7dbc70febd",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "example scaffolding with abstract stubs only; no logic, no hot paths, nothing to optimize",
+  "in_progress": null
+}
