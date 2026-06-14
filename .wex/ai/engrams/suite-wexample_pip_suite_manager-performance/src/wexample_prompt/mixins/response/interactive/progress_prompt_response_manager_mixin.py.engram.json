@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/response/interactive/progress_prompt_response_manager_mixin.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:05:56+00:00",
+  "last_rev": "05c10c27761d1d7ae9fa1bcd237c94650c7190f1",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "human-speed manager methods; no hot paths, no redundant computation, no dead code worth optimizing",
+  "in_progress": null
+}
