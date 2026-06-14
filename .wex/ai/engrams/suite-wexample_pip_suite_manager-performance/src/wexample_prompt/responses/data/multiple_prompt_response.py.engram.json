@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/data/multiple_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:55:18+00:00",
+  "last_rev": "8cdaaf6443d3a8ce9150817354c8e15e1419e163",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted empty-responses early-exit before lazy import and context creation in render()",
+  "in_progress": null
+}

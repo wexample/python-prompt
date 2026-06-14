@@ -78,6 +78,11 @@ class MultiplePromptResponse(AbstractPromptResponse):
         Returns:
             The concatenated rendered string, skipping None parts.
         """
+        # Fast path: nothing to render — skip context creation and verbosity check.
+        if not self.responses:
+            self._rendered_content = None
+            return None
+
         from wexample_prompt.common.prompt_context import PromptContext
 
         context = PromptContext.create_if_none(context=context)
