@@ -74,6 +74,6 @@ class RangeProgressHandle(BaseClass):
             )
 
     def _child_current(self) -> int:
-        # Current child value derived from parent's current
+        # cur is clamped to [start, end], so cur - start is already in [0, total]
         cur = max(self.start, min(self.end, self.parent.response.current))
-        return max(0, min(self.total, cur - self.start))
+        return cur - self.start

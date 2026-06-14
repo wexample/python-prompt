@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/progress/range_progress_handle.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:39:31+00:00",
+  "last_rev": "1026f22d8f547441aae51c3e834a5d0ee94388c3",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "drop redundant double-clamp in _child_current(); invariant from line 78 guarantees cur - start is already in [0, total]",
+  "in_progress": null
+}
