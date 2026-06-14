@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/responses/messages/warning_prompt_response.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T13:41:31+00:00",
+  "last_rev": "235aefef481bead0586ec557e0eae5f6bbd29060",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "hoisted TerminalColor to module-level import and removed duplicate VerbosityLevel from TYPE_CHECKING block",
+  "in_progress": null
+}
