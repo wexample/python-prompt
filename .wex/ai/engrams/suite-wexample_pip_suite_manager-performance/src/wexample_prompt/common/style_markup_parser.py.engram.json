@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/common/style_markup_parser.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T11:43:30+00:00",
+  "last_rev": "acb8304a8329fde0022d5b27bf1208abd888daf8",
+  "last_decision": "edit",
+  "kinds": [],
+  "notes": "drop dead intermediate tuple base_styles_key in parse_style_markup; convert base_styles directly to list instead of tuple then list",
+  "in_progress": null
+}
