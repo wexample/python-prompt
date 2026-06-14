@@ -11,7 +11,6 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
@@ -20,6 +19,7 @@ if TYPE_CHECKING:
 @base_class
 class ErrorPromptResponse(AbstractMessageResponse):
     SYMBOL: ClassVar[str] = "❌"
+    DEFAULT_MESSAGE: ClassVar[str] = "An error occurred"
 
     @classmethod
     def create_error(
@@ -42,7 +42,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
                 PromptResponseSegment,
             )
 
-            header_text = message if message else "An error occurred"
+            header_text = message if message else cls.DEFAULT_MESSAGE
 
             # First line: symbol + header in red
             # Parse header_text to support color markups like @color:magenta+bold{...}
@@ -76,7 +76,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
             return cls._create(lines=lines, verbosity=verbosity)
 
         else:
-            text = message if message else "An error occurred"
+            text = message if message else cls.DEFAULT_MESSAGE
             return cls._create_symbol_message(
                 text=text, color=(color or TerminalColor.RED), verbosity=verbosity
             )
