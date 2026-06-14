@@ -130,22 +130,26 @@ class MultilineInputPromptResponse(AbstractInteractivePromptResponse):
         if self.question:
             # Build the question line (consistent with InputPromptResponse styling).
             question_lines = PromptResponseLine.create_from_string(self.question)
+            # Hoist repeated lookups out of the per-segment inner loop.
+            _Seg = PromptResponseSegment
+            _light_white = TerminalColor.LIGHT_WHITE
+            _bold = [TextStyle.BOLD]
             self.lines = []
             for idx, q_line in enumerate(question_lines):
                 segs = []
                 if idx == 0:
                     segs.append(
-                        PromptResponseSegment(
+                        _Seg(
                             text="? ",
                             color=TerminalColor.BLUE,
-                            styles=[TextStyle.BOLD],
+                            styles=_bold,
                         )
                     )
                 segs.extend(
-                    PromptResponseSegment(
+                    _Seg(
                         text=seg.text,
-                        color=seg.color or TerminalColor.LIGHT_WHITE,
-                        styles=seg.styles or [TextStyle.BOLD],
+                        color=seg.color or _light_white,
+                        styles=seg.styles or _bold,
                     )
                     for seg in q_line.segments
                 )
