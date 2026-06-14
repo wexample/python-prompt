@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/response/messages/error_prompt_response_manager_mixin.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:06:45+00:00",
+  "last_rev": "f4f809224a61e438777ebe54f2487d660c5ae7bf",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "human-speed manager method; fatal path is exceptional, no hot paths to optimize",
+  "in_progress": null
+}
