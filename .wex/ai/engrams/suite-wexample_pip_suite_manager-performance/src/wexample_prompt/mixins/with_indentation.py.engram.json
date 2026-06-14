@@ -1,0 +1,11 @@
+{
+  "engram_version": 1,
+  "source_key": "src/wexample_prompt/mixins/with_indentation.py",
+  "cache_nonce": "1c2800147ebc4367950bb7b61bd21d00",
+  "last_visited_at": "2026-06-14T12:09:01+00:00",
+  "last_rev": "d11c8b3c3b3594780ff91ac17c838e5af56df2e7",
+  "last_decision": "skip",
+  "kinds": [],
+  "notes": "human-speed indentation management; no hot paths, branch vs max() is ambiguous, nothing to optimize",
+  "in_progress": null
+}
