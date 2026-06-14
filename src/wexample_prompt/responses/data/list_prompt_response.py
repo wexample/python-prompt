@@ -11,7 +11,6 @@ from wexample_prompt.responses.messages.abstract_message_response import (
 
 if TYPE_CHECKING:
     from wexample_prompt.enums.terminal_color import TerminalColor
-    from wexample_prompt.enums.verbosity_level import VerbosityLevel
     from wexample_prompt.example.abstract_response_example import (
         AbstractResponseExample,
     )
@@ -59,11 +58,9 @@ class ListPromptResponse(AbstractMessageResponse):
         lines: list[PromptResponseLine] = []
         _bullet_prefix = f"{bullet} "
 
-        if title:
-            from wexample_prompt.common.prompt_response_segment import (
-                PromptResponseSegment,
-            )
+        from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
+        if title:
             lines.append(
                 PromptResponseLine(segments=[PromptResponseSegment(text=title)])
             )
@@ -85,8 +82,6 @@ class ListPromptResponse(AbstractMessageResponse):
             bullet_segment = PromptResponseSegment(text=bullet_text, color=color)
 
             # Parse content for inline formatting (@color, @path, @time, etc.)
-            from wexample_prompt.common.style_markup_parser import flatten_style_markup
-
             content_segments = flatten_style_markup(
                 content, default_color=color, joiner=None
             )
