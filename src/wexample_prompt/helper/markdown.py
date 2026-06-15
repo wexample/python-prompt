@@ -44,18 +44,6 @@ _HEADING_BULLETS = ("█", "▓", "▒", "░", "·", "·")
 _HEADING_BULLETS_COUNT = len(_HEADING_BULLETS)
 
 
-def _bold_sub(m: re.Match[str]) -> str:
-    return f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}"
-
-
-def _italic_sub(m: re.Match[str]) -> str:
-    return f"{_ITALIC[0]}{m.group(1)}{_ITALIC[1]}"
-
-
-def _strike_sub(m: re.Match[str]) -> str:
-    return f"{_STRIKE[0]}{m.group(1)}{_STRIKE[1]}"
-
-
 def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
     """Render markdown-flavored ``text`` to ANSI/OSC8 terminal output.
 
@@ -121,6 +109,10 @@ def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
     return "\n".join(out)
 
 
+def _bold_sub(m: re.Match[str]) -> str:
+    return f"{_BOLD[0]}{m.group(1)}{_BOLD[1]}"
+
+
 def _code_sub(m: re.Match[str]) -> str:
     # Inline code: dim + underline. Reverse-video looked too much like
     # "highlight/selected" and competed visually with bold — and the LLM
@@ -134,6 +126,10 @@ def _image_sub(m: re.Match[str]) -> str:
     url = m.group(2).strip()
     label = alt or url
     return f"{_DIM[0]}[image: {label}]{_DIM[1]}"
+
+
+def _italic_sub(m: re.Match[str]) -> str:
+    return f"{_ITALIC[0]}{m.group(1)}{_ITALIC[1]}"
 
 
 def _link_sub(m: re.Match[str]) -> str:
@@ -162,3 +158,7 @@ def _render_inline(line: str) -> str:
     line = _RE_ITALIC_UNDERSCORE.sub(_italic_sub, line)
     line = _RE_STRIKE.sub(_strike_sub, line)
     return line
+
+
+def _strike_sub(m: re.Match[str]) -> str:
+    return f"{_STRIKE[0]}{m.group(1)}{_STRIKE[1]}"

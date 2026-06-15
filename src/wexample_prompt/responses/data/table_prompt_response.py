@@ -12,12 +12,12 @@ from wexample_prompt.common.prompt_context import PromptContext
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 
-# Compiled once at import time; reused across every cell in every render.
-_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
-
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_response_line import PromptResponseLine
     from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
+
+# Compiled once at import time; reused across every cell in every render.
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*m|\x1b\]8;;[^\x1b]*\x1b\\")
 
 
 @base_class

@@ -42,10 +42,6 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         worker.join()
         spinner.stop()
     """
-
-    # Class-level sentinel: lets log()/stop() use direct attr access before render().
-    _running: bool = False
-
     interval: float = public_field(
         default=0.1,
         description="Seconds between spinner frame advances.",
@@ -54,6 +50,8 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         default="Thinking…",
         description="Text shown next to the spinning glyph.",
     )
+    # Class-level sentinel: lets log()/stop() use direct attr access before render().
+    _running: bool = False
 
     @classmethod
     def create_spinner(
