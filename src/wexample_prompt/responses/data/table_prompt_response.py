@@ -60,8 +60,9 @@ class TablePromptResponse(AbstractPromptResponse):
         max_widths = [0] * num_columns
         _get_visible_width = TablePromptResponse._get_visible_width
         for row in rows:
+            row_len = len(row)
             for i in range(num_columns):
-                cell = str(row[i]) if i < len(row) else ""
+                cell = str(row[i]) if i < row_len else ""
                 # Use visible width instead of len()
                 visible_width = _get_visible_width(cell)
                 max_widths[i] = max(max_widths[i], visible_width)
@@ -106,16 +107,17 @@ class TablePromptResponse(AbstractPromptResponse):
         segments: list[PromptResponseSegment] = []
         if bordered:
             segments.append(PromptResponseSegment(text="│"))
-        _strip_ansi = TablePromptResponse._strip_ansi
+        _sub = _ANSI_ESCAPE_RE.sub
         last_idx = len(widths) - 1
+        row_len = len(row)
         for i in range(len(widths)):
-            cell = str(row[i]) if i < len(row) else ""
+            cell = str(row[i]) if i < row_len else ""
 
             # Parse cell content for inline formatting
             cell_segments = flatten_style_markup(cell, joiner=None)
 
             # Calculate actual text length (without markup and ANSI codes)
-            cell_text_length = sum(len(_strip_ansi(seg.text)) for seg in cell_segments)
+            cell_text_length = sum(len(_sub("", seg.text)) for seg in cell_segments)
             padding = max(0, widths[i] - cell_text_length)
 
             is_last = i == last_idx
@@ -138,10 +140,11 @@ class TablePromptResponse(AbstractPromptResponse):
         from wexample_prompt.helper.terminal import terminal_get_visible_width
 
         # Parse markup to get segments
+        _sub = _ANSI_ESCAPE_RE.sub
         segments = flatten_style_markup(text, joiner=None)
         # Strip ANSI codes from each segment and sum visible widths (using wcwidth)
         return sum(
-            terminal_get_visible_width(TablePromptResponse._strip_ansi(seg.text))
+            terminal_get_visible_width(_sub("", seg.text))
             for seg in segments
         )
 
