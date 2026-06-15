@@ -33,6 +33,10 @@ _RE_NUMBERED = re.compile(r"^(\s*)(\d+)\.\s+(.+)$")
 _RE_HR = re.compile(r"^\s*(?:-{3,}|\*{3,}|_{3,})\s*$")
 _RE_FENCE = re.compile(r"^\s*```")
 
+# Characters that trigger inline-markup scanning.  When none of these appear
+# in a line, `_render_inline` can return early without running any regex.
+_INLINE_TRIGGER: frozenset[str] = frozenset("![`*_~")
+
 _BOLD = ("\x1b[1m", "\x1b[22m")
 _ITALIC = ("\x1b[3m", "\x1b[23m")
 _DIM = ("\x1b[2m", "\x1b[22m")
@@ -74,7 +78,7 @@ def markdown_to_ansi(text: str, *, hr_width: int = 40) -> str:
         m = _RE_HEADING.match(raw)
         if m:
             level = len(m.group(1))
-            marker = _HEADING_BULLETS[min(level, _HEADING_BULLETS_COUNT) - 1]
+            marker = _HEADING_BULLETS[level - 1]  # regex #{1,6} keeps level in [1,6]
             label = _render_inline(m.group(2))
             if level == 1:
                 out.append(
@@ -123,7 +127,7 @@ def _code_sub(m: re.Match[str]) -> str:
 
 def _image_sub(m: re.Match[str]) -> str:
     alt = m.group(1).strip()
-    url = m.group(2).strip()
+    url = m.group(2)  # [^)\s]+ already excludes whitespace
     label = alt or url
     return f"{_DIM[0]}[image: {label}]{_DIM[1]}"
 
@@ -134,7 +138,7 @@ def _italic_sub(m: re.Match[str]) -> str:
 
 def _link_sub(m: re.Match[str]) -> str:
     label_md = m.group(1)
-    url = m.group(2).strip()
+    url = m.group(2)  # [^)\s]+ already excludes whitespace
     # Render inline styles inside the label too (bold/italic links exist).
     label = _RE_CODE.sub(_code_sub, label_md)
     label = _RE_BOLD.sub(_bold_sub, label)
@@ -144,6 +148,9 @@ def _link_sub(m: re.Match[str]) -> str:
 
 
 def _render_inline(line: str) -> str:
+    # Fast-path: skip all regex work when no markup character is present.
+    if _INLINE_TRIGGER.isdisjoint(line):
+        return line
     # Images first — they look like links but should NOT become hyperlinks
     # (the terminal can't render the image; fall back to a label).
     line = _RE_IMAGE.sub(_image_sub, line)
