@@ -95,7 +95,6 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         self._running = True
         self._thread = threading.Thread(target=self._spin_loop, daemon=True)
 
-        self._draw_locked = False  # guard against re-entry
         self._draw()
         self._thread.start()
         return None
@@ -123,8 +122,11 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
         # Cache frequently-accessed names as locals to reduce per-tick attr lookups.
         _interval = self.interval
         _lock = self._lock
-        _draw = self._draw
         _sleep = time.sleep
+        _next = self._spinner_inst.next  # bound method — avoids two attr lookups per tick
+        _label = self.label              # immutable during spinner lifetime
+        _write = sys.stdout.write
+        _flush = sys.stdout.flush
 
         while self._running:
             _sleep(_interval)
@@ -132,4 +134,5 @@ class SpinnerPromptResponse(AbstractInteractivePromptResponse):
                 break
             with _lock:
                 if self._running:
-                    _draw()
+                    _write(f"\r\x1b[2K{_next()} {_label}")
+                    _flush()
