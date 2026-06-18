@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import wcwidth
 from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
-from wexample_helpers.helpers.ansi import ansi_strip
+from wexample_helpers.helper.ansi import ansi_strip
 
 
 def terminal_get_visible_width(text: str) -> int:

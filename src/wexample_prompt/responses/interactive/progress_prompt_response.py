@@ -139,7 +139,7 @@ class ProgressPromptResponse(AbstractPromptResponse):
         return context
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wexample_helpers.helpers.ansi import ansi_strip
+        from wexample_helpers.helper.ansi import ansi_strip
 
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

@@ -73,7 +73,7 @@ class FramePromptResponse(AbstractPromptResponse):
         return FrameExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wexample_helpers.helpers.ansi import ansi_display_width
+        from wexample_helpers.helper.ansi import ansi_display_width
 
         from wexample_prompt.common.color_manager import ColorManager
         from wexample_prompt.common.prompt_context import PromptContext
@@ -157,7 +157,7 @@ class FramePromptResponse(AbstractPromptResponse):
             pad = " " * self.padding
         visible = width_fn(line)
         if visible > inner_w:
-            from wexample_helpers.helpers.ansi import ansi_truncate_visible
+            from wexample_helpers.helper.ansi import ansi_truncate_visible
 
             line = ansi_truncate_visible(line, inner_w)
             visible = inner_w
@@ -168,7 +168,7 @@ class FramePromptResponse(AbstractPromptResponse):
         if not self.title:
             return "╭" + ("─" * horiz_w) + "╮"
         # ╭─ Title ─...─╮  → between corners: "─ " + title + " " + fill
-        from wexample_helpers.helpers.ansi import ansi_display_width
+        from wexample_helpers.helper.ansi import ansi_display_width
 
         title_w = ansi_display_width(self.title)
         fill = max(0, horiz_w - 3 - title_w)

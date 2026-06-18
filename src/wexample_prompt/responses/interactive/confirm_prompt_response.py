@@ -184,7 +184,7 @@ class ConfirmPromptResponse(AbstractInteractivePromptResponse):
                 return
 
     def _build_lines(self, context: PromptContext) -> None:
-        from wexample_helpers.helpers.ansi import ansi_display_width
+        from wexample_helpers.helper.ansi import ansi_display_width
 
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment

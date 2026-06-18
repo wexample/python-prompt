@@ -154,6 +154,6 @@ def test_visible_width_compatible_with_terminal_helper() -> None:
 def _visible(text: str) -> str:
     """Strip ANSI/OSC sequences so assertions read against plain content."""
     from wexample_helpers.const.terminal import OSC_SEQUENCE_RE
-    from wexample_helpers.helpers.ansi import ansi_strip
+    from wexample_helpers.helper.ansi import ansi_strip
 
     return OSC_SEQUENCE_RE.sub("", ansi_strip(text))

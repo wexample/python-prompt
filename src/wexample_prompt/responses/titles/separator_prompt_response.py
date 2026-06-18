@@ -107,7 +107,7 @@ class SeparatorPromptResponse(AbstractMessageResponse):
         return SeparatorExample
 
     def render(self, context: PromptContext | None = None) -> str | None:
-        from wexample_helpers.helpers.ansi import ansi_strip
+        from wexample_helpers.helper.ansi import ansi_strip
 
         from wexample_prompt.helper.terminal import terminal_get_visible_width
 

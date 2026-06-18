@@ -7,7 +7,7 @@ from typing import Any
 
 from wexample_helpers.classes.field import public_field
 from wexample_helpers.decorator.base_class import base_class
-from wexample_helpers.helpers.ansi import ansi_display_width
+from wexample_helpers.helper.ansi import ansi_display_width
 
 from wexample_prompt.responses.abstract_prompt_response import AbstractPromptResponse
 

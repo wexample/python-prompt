@@ -112,6 +112,6 @@ class PromptResponseLine(BaseClass):
         return "\n".join(lines)
 
     def _visible_len(self, s: str) -> int:
-        from wexample_helpers.helpers.ansi import ansi_strip
+        from wexample_helpers.helper.ansi import ansi_strip
 
         return len(ansi_strip(s))

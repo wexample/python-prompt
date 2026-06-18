@@ -41,7 +41,7 @@ class PromptStdoutOutputHandler(AbstractPromptOutputHandler):
         return rendered_response
 
     def _render_erase(self, response: AbstractPromptResponse) -> str:
-        from wexample_helpers.helpers.ansi import ansi_display_width
+        from wexample_helpers.helper.ansi import ansi_display_width
 
         content = response.rendered_content
         if not content:
