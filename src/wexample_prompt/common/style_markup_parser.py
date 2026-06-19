@@ -199,7 +199,7 @@ def parse_style_markup(
     def format_path(path: str, short: bool = False) -> str:
         """Format a file path, optionally making it clickable."""
         try:
-            from wexample_helpers.helpers.cli import cli_make_clickable_path
+            from wexample_helpers.helper.cli import cli_make_clickable_path
 
             if short and "/" in path:
                 # Show only filename for short format
