@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
+from wexample_prompt.mixin.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_prompt.common.io_manager import IoManager

@@ -9,100 +9,100 @@ from wexample_helpers.classes.private_field import private_field
 from wexample_helpers.decorator.base_class import base_class
 
 from wexample_prompt.enums.verbosity_level import VerbosityLevel
-from wexample_prompt.mixins.response.code_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.code_prompt_response_manager_mixin import (
     CodePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.command_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.command_prompt_response_manager_mixin import (
     CommandPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.list_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.list_prompt_response_manager_mixin import (
     ListPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.multiple_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.multiple_prompt_response_manager_mixin import (
     MultiplePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.properties_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.properties_prompt_response_manager_mixin import (
     PropertiesPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.suggestions_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.suggestions_prompt_response_manager_mixin import (
     SuggestionsPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.table_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.table_prompt_response_manager_mixin import (
     TablePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.data.tree_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.data.tree_prompt_response_manager_mixin import (
     TreePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.echo_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.echo_prompt_response_manager_mixin import (
     EchoPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.frame_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.frame_prompt_response_manager_mixin import (
     FramePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.choice_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.choice_prompt_response_manager_mixin import (
     ChoicePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.confirm_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.confirm_prompt_response_manager_mixin import (
     ConfirmPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.file_picker_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.file_picker_prompt_response_manager_mixin import (
     FilePickerPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.input_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.input_prompt_response_manager_mixin import (
     InputPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.leader_line_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.leader_line_prompt_response_manager_mixin import (
     LeaderLinePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.multiline_input_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.multiline_input_prompt_response_manager_mixin import (
     MultilineInputPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.pending_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.pending_prompt_response_manager_mixin import (
     PendingPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.progress_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.progress_prompt_response_manager_mixin import (
     ProgressPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.screen_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.screen_prompt_response_manager_mixin import (
     ScreenPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.interactive.spinner_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.interactive.spinner_prompt_response_manager_mixin import (
     SpinnerPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.log_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.log_prompt_response_manager_mixin import (
     LogPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.debug_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.debug_prompt_response_manager_mixin import (
     DebugPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.error_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.error_prompt_response_manager_mixin import (
     ErrorPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.failure_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.failure_prompt_response_manager_mixin import (
     FailurePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.info_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.info_prompt_response_manager_mixin import (
     InfoPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.success_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.success_prompt_response_manager_mixin import (
     SuccessPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.task_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.task_prompt_response_manager_mixin import (
     TaskPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.messages.warning_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.messages.warning_prompt_response_manager_mixin import (
     WarningPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.titles.separator_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.titles.separator_prompt_response_manager_mixin import (
     SeparatorPromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.titles.subtitle_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.titles.subtitle_prompt_response_manager_mixin import (
     SubtitlePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.response.titles.title_prompt_response_manager_mixin import (
+from wexample_prompt.mixin.response.titles.title_prompt_response_manager_mixin import (
     TitlePromptResponseManagerMixin,
 )
-from wexample_prompt.mixins.with_indentation import WithIndentation
+from wexample_prompt.mixin.with_indentation import WithIndentation
 
 if TYPE_CHECKING:
     from wexample_prompt.common.prompt_context import PromptContext

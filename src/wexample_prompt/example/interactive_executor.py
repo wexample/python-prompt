@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from wexample_helpers.classes.example.executor import Executor
 from wexample_helpers.decorator.base_class import base_class
 
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
+from wexample_prompt.mixin.with_io_methods import WithIoMethods
 
 
 @base_class

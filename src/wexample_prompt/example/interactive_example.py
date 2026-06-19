@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from wexample_helpers.classes.example.example import Example
 
-from wexample_prompt.mixins.with_io_methods import WithIoMethods
+from wexample_prompt.mixin.with_io_methods import WithIoMethods
 
 if TYPE_CHECKING:
     from wexample_prompt.example.interactive_executor import InteractiveExecutor
