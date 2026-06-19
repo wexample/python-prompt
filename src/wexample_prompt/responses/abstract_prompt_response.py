@@ -134,7 +134,7 @@ class AbstractPromptResponse(HasSnakeShortClassNameClassMixin):
         per_field_copy: Mapping[str, Callable[[Any], Any]] | None = None,
     ) -> dict:
         from wexample_helpers.enums.field_visibility import FieldVisibility
-        from wexample_helpers.helpers.variable import copy_shallow
+        from wexample_helpers.helper.variable import copy_shallow
 
         out = {}
         for a in attrs.fields(self.__class__):

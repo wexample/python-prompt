@@ -30,7 +30,7 @@ class ErrorPromptResponse(AbstractMessageResponse):
         symbol: str | None = None,
         verbosity: VerbosityLevel | None = None,
     ) -> ErrorPromptResponse:
-        from wexample_helpers.helpers.error import error_format
+        from wexample_helpers.helper.error import error_format
 
         from wexample_prompt.enums.terminal_color import TerminalColor
 

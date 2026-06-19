@@ -18,7 +18,7 @@ class AppWorkdir(PythonPackageWorkdir):
         return PromptReadmeConfigValue(workdir=self)
 
     def prepare_value(self, raw_value: DictConfig | None = None) -> DictConfig:
-        from wexample_helpers.helpers.string import string_to_kebab_case
+        from wexample_helpers.helper.string import string_to_kebab_case
 
         raw_value = super().prepare_value(raw_value=raw_value)
 

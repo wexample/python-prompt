@@ -8,7 +8,7 @@ from wexample_prompt.mixins.with_io_manager import WithIoManager
 @base_class
 class ClassIndentationLevelOne(WithIoManager):
     def print_deep_log_one(self) -> None:
-        from wexample_helpers.helpers.string import string_generate_lorem_ipsum
+        from wexample_helpers.helper.string import string_generate_lorem_ipsum
 
         from wexample_prompt.testing.resources.classes.class_indenation_level_two import (
             ClassIndentationLevelTwo,
