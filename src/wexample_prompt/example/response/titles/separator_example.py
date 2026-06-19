@@ -51,7 +51,7 @@ class SeparatorExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Separator with nested parent/child classes."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         self.io.separator(label="@color:yellow+bold{Nesting Demo}")
         parent = ParentTask(io=self.io)

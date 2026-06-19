@@ -2,7 +2,7 @@
 """Test with prefix explicitly enabled to verify order."""
 
 from wexample_prompt.common.io_manager import IoManager
-from wexample_prompt.example.helpers.nesting_demo_classes import ChildTask, GrandchildTask
+from wexample_prompt.example.helper.nesting_demo_classes import ChildTask, GrandchildTask
 
 # Create IO manager
 io = IoManager()

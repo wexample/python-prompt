@@ -179,7 +179,7 @@ class MultipleExample(AbstractResponseExample):
 
     def example_with_nesting(self) -> MultiplePromptResponse | None:
         """Multiple responses with nested parent/child."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
         from wexample_prompt.responses.log_prompt_response import LogPromptResponse
 
         responses = [

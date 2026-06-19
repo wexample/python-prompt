@@ -44,7 +44,7 @@ class AbstractTitleExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Title with nested parent/child classes."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         method = self.get_io_method()
         method(text="@color:yellow+bold{Nesting Demo}")

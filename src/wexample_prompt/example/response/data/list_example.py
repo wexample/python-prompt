@@ -111,7 +111,7 @@ class ListExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """List with nested parent/child classes demonstrating automatic indentation."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         self.io.list(
             items=["@color:yellow+bold{Nesting Demo: Parent/Child/Grandchild}"]

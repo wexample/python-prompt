@@ -37,7 +37,7 @@ class FilePickerExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """File picker with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         self.io.file_picker(
             question="@color:yellow+bold{Nesting Demo} - Select file:",

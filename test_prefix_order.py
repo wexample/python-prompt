@@ -2,7 +2,7 @@
 """Test script to verify prefix and symbol order."""
 
 from wexample_prompt.common.io_manager import IoManager
-from wexample_prompt.example.helpers.nesting_demo_classes import ChildTask
+from wexample_prompt.example.helper.nesting_demo_classes import ChildTask
 
 # Create IO manager
 io = IoManager()

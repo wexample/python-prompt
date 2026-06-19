@@ -117,7 +117,7 @@ class TreeExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Tree with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         self.io.tree(
             data={

@@ -147,7 +147,7 @@ class AbstractSimpleMessageExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Message with nested parent/child classes demonstrating automatic indentation."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         method = self.get_io_method()
         response_name = self.get_response_name()

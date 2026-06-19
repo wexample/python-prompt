@@ -173,7 +173,7 @@ class ConfirmExample(AbstractResponseExample):
 
     def example_nesting_demo(self) -> None:
         """Confirmation with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
         from wexample_prompt.responses.interactive.confirm_prompt_response import (
             ConfirmPromptResponse,
         )

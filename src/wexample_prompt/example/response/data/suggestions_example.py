@@ -87,7 +87,7 @@ class SuggestionsExample(AbstractResponseExample):
 
     def example_nesting(self) -> None:
         """Suggestions with parent/child nesting."""
-        from wexample_prompt.example.helpers.nesting_demo_classes import ParentTask
+        from wexample_prompt.example.helper.nesting_demo_classes import ParentTask
 
         self.io.suggestions(
             message="@color:yellow+bold{Nesting Demo}", suggestions=["demo1", "demo2"]
