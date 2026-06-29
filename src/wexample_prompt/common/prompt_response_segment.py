@@ -70,10 +70,23 @@ class PromptResponseSegment(BaseClass):
         """Split text so that the first part fits within `width` visible chars.
 
         Returns (fit, remainder). If width <= 0, fit is '', remainder is text.
+
+        Most segments hold raw text (no inline ANSI), so len() equals visible
+        width and a byte-slice is correct. Some upstream renderers (e.g.
+        Properties) pre-resolve `@color{}` markup to inline ANSI before
+        building the segment, in which case len() over-counts. We probe the
+        cheap len() path first and only escalate to `terminal_get_visible_width`
+        when it might over-report — keeps the hot path on a single len().
         """
         if width <= 0 or not text:
             return "", text
-        # Since text is raw (no ANSI), visible length equals len.
         if len(text) <= width:
             return text, ""
+        # len > width — either real overflow OR len inflated by inline ANSI.
+        # Recompute against visible width to know which.
+        from wexample_prompt.helper.terminal import terminal_get_visible_width
+
+        if terminal_get_visible_width(text) <= width:
+            return text, ""
+        # True overflow on raw text: hard byte-slice (original behavior).
         return text[:width], text[width:]
