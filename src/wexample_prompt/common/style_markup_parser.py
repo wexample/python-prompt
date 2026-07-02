@@ -75,6 +75,29 @@ def flatten_style_markup(
     return segments
 
 
+def markup_to_ansi_string(text: str, *, colorized: bool = True) -> str:
+    """Flatten `@color{…}` markup into a single string.
+
+    When ``colorized`` is True, each parsed segment is wrapped with the
+    matching ANSI color/style prefix and a reset suffix (via
+    :meth:`ColorManager.colorize`). When False, only the raw text content
+    is kept.
+
+    Useful upstream of any width/wrap helper that knows about ANSI escapes
+    but not about `@xxx{…}` markup — pre-resolving here guarantees the
+    wrapper never splits inside a directive.
+    """
+    from wexample_prompt.common.color_manager import ColorManager
+
+    segments = flatten_style_markup(text, joiner=None)
+    if not colorized:
+        return "".join(seg.text for seg in segments)
+    return "".join(
+        ColorManager.colorize(seg.text, color=seg.color, styles=seg.styles)
+        for seg in segments
+    )
+
+
 def parse_style_markup(
     text: str,
     default_color: TerminalColor | None = None,

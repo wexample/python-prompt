@@ -129,7 +129,6 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         from wexample_prompt.common.prompt_context import PromptContext
         from wexample_prompt.common.prompt_response_line import PromptResponseLine
         from wexample_prompt.common.prompt_response_segment import PromptResponseSegment
-        from wexample_prompt.common.style_markup_parser import flatten_style_markup
 
         properties = self.properties
         if not properties:
@@ -163,6 +162,19 @@ class PropertiesPromptResponse(AbstractPromptResponse):
         target_width = context.get_available_width() if bordered else 0
         max_inner_width = max(1, target_width - 4) if target_width else 0
 
+        # Resolve `@color{…}` markup to inline ANSI BEFORE wrapping. The wrap
+        # helper knows about ANSI escape codes but not about our `@xxx{…}`
+        # spans, so a mid-span break would leave a dangling `@color:…{` on one
+        # line and an orphan `}` on the next — both falling back to literal
+        # source. Pre-resolution lets the wrap split at the right places and
+        # the SGR close/reopen mechanism keep continuity across rows.
+        from wexample_prompt.common.style_markup_parser import markup_to_ansi_string
+
+        content_lines = [
+            markup_to_ansi_string(line, colorized=context.colorized)
+            for line in content_lines
+        ]
+
         # Always split values on real newlines (so a multi-line body
         # doesn't get squashed onto a single grid row), and wrap to
         # `max_inner_width` when the box is sized to the terminal. In
@@ -172,9 +184,10 @@ class PropertiesPromptResponse(AbstractPromptResponse):
 
         lines: list[PromptResponseLine] = []
 
-        # Flatten markup once per line so visible-width math uses what will
-        # actually be rendered, not the raw `@color{}` source.
-        flattened = [flatten_style_markup(line, joiner=None) for line in content_lines]
+        # Each wrapped line already carries its ANSI inline; wrap it in a
+        # single bare segment so PromptResponseSegment.render doesn't try to
+        # re-apply color/styles on top of an already-styled string.
+        flattened = [[PromptResponseSegment(text=line)] for line in content_lines]
 
         if bordered:
             from wexample_prompt.helper.terminal import terminal_get_visible_width
